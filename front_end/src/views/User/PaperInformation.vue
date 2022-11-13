@@ -80,6 +80,8 @@
                             <div class="comment">
                                 <remark/>
                             </div>
+                            <div class="creat_comment">
+                            </div>
                       </el-tab-pane>
                       <el-tab-pane label="笔记">
 
@@ -156,7 +158,7 @@ export default {
     },
     components:{
         aboutCard,
-        remark
+        remark,
     },
     created() {},
     mounted() {

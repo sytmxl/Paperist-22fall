@@ -5,16 +5,16 @@
     <!-- <el-button style="float: right; padding: 3px 0" type="text">操作按钮</el-button> -->
   </div>
     <div class="text item">
-    {{author}}
-  </div>
-    <div class="text item">
     {{intro}}
   </div>
+  <div class="text item">
+    作者：{{author}}
+  </div>
    <div class="text item">
-    {{origin}}
+    来源：{{origin}}
   </div>
     <div class="text item">
-    {{cite}}
+    引用量：{{cite}}
   </div>
 </el-card>
 </template>
