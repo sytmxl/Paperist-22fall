@@ -90,8 +90,11 @@
                 <el-aside>
                     <el-container>
                         <div class="about">
-                                <div class="about_content" style="width:100%;height:150px">
+                                <div class="about_content" style="width:100%;height:80px">
                                     来源期刊
+                                    <div class="ogjournal">
+                                        <a href="https://book.qq.com/book-detail/34129913" style="text-decoration:none">山海经</a>
+                                    </div>
                                     
                                 </div>
                                 <div class="about_content" style="width:100%;height:200px">
@@ -179,6 +182,10 @@ export default {
 }
 .el-side{
   width:600px;
+}
+.ogjournal{
+  margin-top:25px;
+  font-size: 15px;
 }
 .about_content{
    margin-top: 20px;
