@@ -8,7 +8,7 @@
                  <div class="main">
                     <el-card class="box-card">
                       <div>
-                        <h2>杰尾油</h2>
+                        <span style="font-size:25px;font-weight:bolder">杰尾油</span>
                         <h5>来源：小马文学 &#12288; 引用次数：19156</h5>
                       </div>
                        <div  class="text item">
@@ -26,6 +26,36 @@
                        <div  class="text item">
                         doi：swmrw7
                       </div>
+                      <div class="button">
+                          <el-button round icon="el-icon-star-off">收藏</el-button>
+                          <el-button round icon="el-icon-link">引用</el-button>
+                          <el-button round icon="el-icon-warning-outline">申诉</el-button>
+                          <el-button round icon="el-icon-share">分享</el-button>
+                      </div>
+
+                    </el-card>
+                    <el-card class="box-card2">
+                       <span style="font-size:25px;font-weight:bolder">全部来源</span>
+                       <div class="origion">
+                            <div class="org">
+                                <div class="logo">
+                                    <img src="../../assets/Aminer.png" alt="" width="20px" height="20px">
+                                </div>
+                                 Aminer
+                            </div>
+                            <div class="org">
+                                <div class="logo">
+                                    <img src="../../assets/Aminer.png" alt="" width="20px" height="20px">
+                                </div>
+                                 Aminer
+                            </div>
+                            <div class="org">
+                              <div class="logo">
+                                  <img src="../../assets/Aminer.png" alt="" width="20px" height="20px">
+                              </div>
+                               Aminer
+                            </div>
+                       </div>
                     </el-card>
                  </div>
                 <div class="remark">
@@ -36,18 +66,24 @@
                                     <aboutCard name="论杰哥" author="马哥" cite="12345" origin="小马文学" intro="这是一本介绍传奇男子swmrw7的故事，全文毫无尿点"/>
                                 </div>
                                   <div class="relative">
-                                    <aboutCard/>
+                                    <aboutCard name="论杰哥" author="马哥" cite="12345" origin="小马文学" intro="这是一本介绍传奇男子swmrw7的故事，全文毫无尿点"/>
                                 </div>
                                   <div class="relative">
-                                    <aboutCard/>
+                                    <aboutCard name="论杰哥" author="马哥" cite="12345" origin="小马文学" intro="这是一本介绍传奇男子swmrw7的故事，全文毫无尿点"/>
                                 </div>
                                   <div class="relative">
-                                    <aboutCard/>
+                                    <aboutCard name="论杰哥" author="马哥" cite="12345" origin="小马文学" intro="这是一本介绍传奇男子swmrw7的故事，全文毫无尿点"/>
                                 </div>
                         </div>
                       </el-tab-pane>
-                      <el-tab-pane label="评论">评论</el-tab-pane>
-                      <el-tab-pane label="笔记">笔记</el-tab-pane>
+                      <el-tab-pane label="评论">
+                            <div class="comment">
+                                <remark/>
+                            </div>
+                      </el-tab-pane>
+                      <el-tab-pane label="笔记">
+
+                      </el-tab-pane>
                     </el-tabs>
                 </div>
                 </el-main>
@@ -56,7 +92,7 @@
                         <div class="about">
                                 <div class="about_content" style="width:100%;height:150px">
                                     来源期刊
-
+                                    
                                 </div>
                                 <div class="about_content" style="width:100%;height:200px">
                                     研究领域
@@ -83,6 +119,7 @@
 import * as echarts from 'echarts/core'
 import { init } from 'echarts';
 import aboutCard from "../../components/aboutCard.vue"
+import remark from "../../components/remark.vue"
 export default {
     data(){
       return{
@@ -115,7 +152,8 @@ export default {
       }
     },
     components:{
-        aboutCard
+        aboutCard,
+        remark
     },
     created() {},
     mounted() {
@@ -139,12 +177,25 @@ export default {
 .about{
     margin-left:10px;
 }
+.el-side{
+  width:600px;
+}
 .about_content{
    margin-top: 20px;
    width: 280px;
    font-weight: bold;
    text-align: left;
    font-size: 18px;
+}
+.button{
+  margin-top: 20px;
+}
+.logo{
+  float: left;
+  margin-right: 20px;
+}
+.button .el-button{
+  margin-right:50px;
 }
 .relative{
   margin-top: 20px;
@@ -156,6 +207,15 @@ export default {
   margin-top: 10px;
   margin-left:10px;
   color: #000;
+}
+.org{
+  margin-top:15px;
+  margin-bottom:15px;
+  float: left;
+  width: 50%;
+}
+.comment{
+  
 }
 .el-tag{
   background-color:#f5f8f9;
@@ -175,6 +235,11 @@ export default {
     width: 100%;
     text-align: left;
   }
+  .box-card2 {
+    width: 100%;
+    text-align: left;
+    margin-top: 25px;
+  }
   .el-tabs{
     height: 100%;
   }
@@ -182,6 +247,6 @@ export default {
     width:100%;
  }
  .el-tabs>>>.el-tabs__item{
-    width:33.3%;
+    width:33.4%;
  }
 </style>
