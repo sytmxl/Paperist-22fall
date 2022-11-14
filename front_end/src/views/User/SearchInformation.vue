@@ -52,7 +52,7 @@
       </el-aside>
 <!--      搜索结果-->
       <el-main style="max-height: calc(90vh)">
-        <h2 >搜索结果</h2>
+        <h3 >搜索结果</h3>
         <div style="overflow-y: scroll; height: calc(75vh)">
           <el-card style="background: #B3C0D1; min-height: calc(75vh)">
             <el-card v-for="searchResult in searchResults" v-loading = "true"
