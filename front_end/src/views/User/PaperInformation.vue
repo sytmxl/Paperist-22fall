@@ -29,9 +29,85 @@
                       <div class="button">
                           <el-button round icon="el-icon-star-off">收藏</el-button>
                           <el-button round icon="el-icon-link">引用</el-button>
-                          <el-button round icon="el-icon-warning-outline">申诉</el-button>
+                          <el-button round icon="el-icon-warning-outline" @click="ComplainVisible = true">申诉</el-button>
                           <el-button round icon="el-icon-share">分享</el-button>
                       </div>
+                                       <el-dialog
+                                            title="文章申诉"
+                                            :visible.sync="ComplainVisible"
+                                            width="60%"
+                                            :before-close="handleClose" class="complain">
+                                            <div class="describe">
+                                                问题描述：
+                                              <el-input
+                                                type="textarea"
+                                                :autosize="{ minRows: 2, maxRows: 4}"
+                                                placeholder="请输入需要申诉的内容"
+                                                v-model="describe"
+                                                maxlength="200"
+                                                show-word-limit
+                                                >
+                                              </el-input>
+                                            </div>
+                                            <div class="picture">
+                                              相关图片：
+                                              <el-upload
+                                                  action="#"
+                                                  list-type="picture-card"
+                                                  :auto-upload="false"
+                                                  :accept="jpg"
+                                                  :limit="4"
+                                                  :on-exceed="handleExceed">
+                                                    <i slot="default" class="el-icon-plus"></i>
+                                                    <div slot="file" slot-scope="{file}">
+                                                      <img
+                                                        class="el-upload-list__item-thumbnail"
+                                                        :src="file.url" alt=""
+                                                      >
+                                                      <span class="el-upload-list__item-actions">
+                                                        <span
+                                                          class="el-upload-list__item-preview"
+                                                          @click="handlePictureCardPreview(file)"
+                                                        >
+                                                          <i class="el-icon-zoom-in"></i>
+                                                        </span>
+                                                        <span
+                                                          v-if="!disabled"
+                                                          class="el-upload-list__item-delete"
+                                                          @click="handleDownload(file)"
+                                                        >
+                                                          <i class="el-icon-download"></i>
+                                                        </span>
+                                                        <span
+                                                          v-if="!disabled"
+                                                          class="el-upload-list__item-delete"
+                                                          @click="handleRemove(file)"
+                                                        >
+                                                          <i class="el-icon-delete"></i>
+                                                        </span>
+                                                      </span>
+                                                    </div>
+                                                </el-upload>
+                                                <el-dialog :visible.sync="dialogVisible">
+                                                  <img width="100%" :src="dialogImageUrl" alt="">
+                                                </el-dialog>
+                                            </div>
+                                            <div class="contact">
+                                              联系方式：
+                                              <el-input
+                                                type="text"
+                                                placeholder="请输入你的联系方式，手机号、微信号、邮箱均可"
+                                                v-model="contact"
+                                                maxlength="25"
+                                                show-word-limit
+                                              >
+                                              </el-input>
+                                            </div>
+                                            <span slot="footer" class="dialog-footer">
+                                              <!-- <el-button @click="dialogVisible = false">取 消</el-button> -->
+                                              <el-button type="primary" @click="dialogVisible = false">提交申诉</el-button>
+                                            </span>
+                                       </el-dialog>
 
                     </el-card>
                     <el-card class="box-card2">
@@ -60,32 +136,54 @@
                  </div>
                 <div class="remark">
                     <el-tabs type="border-card">
-                      <el-tab-pane label="相关文献">
+                      <el-tab-pane label="相关文献" @click="refresh()">
                           <div class="about">
                                 <div class="relative">
-                                    <aboutCard name="论杰哥" author="马哥" cite="12345" origin="小马文学" intro="这是一本介绍传奇男子swmrw7的故事，全文毫无尿点"/>
+                                    <aboutCard name="论杰哥" author="马哥" cite="12345" origin="小马文学" intro="这是一本介绍传奇男子swmrw7的故事，全文毫无尿点" date="2018"/>
                                 </div>
                                   <div class="relative">
-                                    <aboutCard name="论杰哥" author="马哥" cite="12345" origin="小马文学" intro="这是一本介绍传奇男子swmrw7的故事，全文毫无尿点"/>
+                                    <aboutCard name="论杰哥" author="马哥" cite="12345" origin="小马文学" intro="这是一本介绍传奇男子swmrw7的故事，全文毫无尿点" date="2018"/>
                                 </div>
                                   <div class="relative">
-                                    <aboutCard name="论杰哥" author="马哥" cite="12345" origin="小马文学" intro="这是一本介绍传奇男子swmrw7的故事，全文毫无尿点"/>
+                                    <aboutCard name="论杰哥" author="马哥" cite="12345" origin="小马文学" intro="这是一本介绍传奇男子swmrw7的故事，全文毫无尿点" date="2018"/>
                                 </div>
                                   <div class="relative">
-                                    <aboutCard name="论杰哥" author="马哥" cite="12345" origin="小马文学" intro="这是一本介绍传奇男子swmrw7的故事，全文毫无尿点"/>
+                                    <aboutCard name="论杰哥" author="马哥" cite="12345" origin="小马文学" intro="这是一本介绍传奇男子swmrw7的故事，全文毫无尿点" date="2018"/>
                                 </div>
                         </div>
+                         <div id="load">
+                          <el-button style="width:100%" @click="load()" v-loading = "start">加载更多</el-button>
+                        </div>
                       </el-tab-pane>
-                      <el-tab-pane label="评论">
-                            <div class="comment">
-                                <remark/>
+                      <el-tab-pane label="评论" @click="refresh()">
+                         <div class="creat_comment">
+                                <el-button @click="CreatCommentVisible =true">我要评论</el-button>
                             </div>
-                            <div class="creat_comment">
+                            <div class="comment" v-for="i in remark_list" :key="i">
+                                <remark :list="i"/>
                             </div>
+                           
+                            <el-dialog
+                                title="留下你的评论吧~"
+                                :visible.sync="CreatCommentVisible"
+                                width="30%"
+                                :before-close="handleClose">
+                                <CreateComment/>
+                              </el-dialog>
                       </el-tab-pane>
-                      <el-tab-pane label="笔记">
-
+                      <el-tab-pane label="笔记" @click="refresh()">
+                            <div class="creat_mark">
+                                <el-button @click="CreatMark =true">上传笔记</el-button>
+                            </div>
+                             <el-dialog
+                                title="上传笔记"
+                                :visible.sync="CreatMark"
+                                width="30%"
+                                :before-close="handleClose">
+                                <uploadMark/>
+                              </el-dialog>
                       </el-tab-pane>
+                       
                     </el-tabs>
                 </div>
                 </el-main>
@@ -95,7 +193,7 @@
                                 <div class="about_content" style="width:100%;height:80px">
                                     来源期刊
                                     <div class="ogjournal">
-                                        <a href="https://book.qq.com/book-detail/34129913" style="text-decoration:none">山海经</a>
+                                        <a href="https://book.qq.com/book-detail/34129913" style="text-decoration:none" class="journal_content">山海经</a>
                                     </div>
                                     
                                 </div>
@@ -122,13 +220,32 @@
 
 <script>
 import * as echarts from 'echarts/core'
+import { Loading } from 'element-ui';
 import { init } from 'echarts';
 import aboutCard from "../../components/aboutCard.vue"
 import remark from "../../components/remark.vue"
+import CreateComment from "../../components/CreateComment.vue"
+import uploadMark from "../../components/uploadMark.vue"
+let loading
 export default {
+  inject: ['reload'],
     data(){
       return{
-
+        number:4,//后期要改成session
+        start:false,
+        ComplainVisible:false,
+        dialogImageUrl: '',
+        dialogVisible: false,
+        CreatCommentVisible:false,
+        CreatMark:false,
+        describe:'',
+        contact:'',
+        remark_list:{1:{1:{flag:0,name:'胡博轩',image:"../assets/Cooper.jpg",comment:"马哥太尴尬了哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈"},2:{flag:1,name:'李阳',image:"../assets/Cooper.jpg",res_name:'胡博轩',comment:"确实，怎么可以这么尬"},3:{flag:1,name:'朱康乐',image:"../assets/le.jpg",res_name:'李阳',comment:"你是懂尴尬的"},4:{flag:1,name:'马泽远',image:"../assets/ma.jpg",res_name:'胡博轩',comment:"基操勿6"}},
+        2:{1:{flag:0,name:'马泽远',image:"../assets/ma.jpg",comment:"感谢大家支持"}},
+        3:{1:{flag:0,name:'王域杰',image:"../assets/jie.jpg",comment:"苏珊，小心我告你"},2:{flag:1,name:'王域杰',image:"../assets/jie.jpg",res_name:'王域杰',comment:"别来沾边"},3:{flag:1,name:'朱康乐',image:"../assets/le.jpg",res_name:'王域杰',comment:"支持杰哥维权"},4:{flag:1,name:'马泽远',image:"../assets/ma.jpg",res_name:'王域杰',comment:"我错了杰哥，我苏珊"}},
+        4:{1:{flag:0,name:'马泽远',image:"../assets/ma.jpg",comment:"感谢大家支持"}},
+        5:{1:{flag:0,name:'王域杰',image:"../assets/jie.jpg",comment:"苏珊，小心我告你"},2:{flag:1,name:'王域杰',image:"../assets/jie.jpg",res_name:'王域杰',comment:"别来沾边"},3:{flag:1,name:'朱康乐',image:"../assets/le.jpg",res_name:'王域杰',comment:"支持杰哥维权"},4:{flag:1,name:'马泽远',image:"../assets/ma.jpg",res_name:'王域杰',comment:"我错了杰哥，我苏珊"}},},
+        mark_list:{}
       }
     },
     methods:{
@@ -154,11 +271,34 @@ export default {
           }
         ]
         });
-      }
+      },
+      refresh(){
+        this.number = 4;
+      },
+      load(){
+        this.number = this.number + 6;
+        this.start = true;
+        setTimeout(this.reload(), 1500 )
+      },
+      handleRemove(file) {
+        console.log(file);
+      },
+      handlePictureCardPreview(file) {
+        this.dialogImageUrl = file.url;
+        this.dialogVisible = true;
+      },
+      handleDownload(file) {
+        console.log(file);
+      },
+      handleExceed(files, fileList) {
+        this.$message.warning(`当前限制选择 4 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`);
+      },
     },
     components:{
         aboutCard,
         remark,
+        CreateComment,
+        uploadMark
     },
     created() {},
     mounted() {
@@ -196,6 +336,9 @@ export default {
    text-align: left;
    font-size: 18px;
 }
+#load{
+  margin-top:20px
+}
 .button{
   margin-top: 20px;
 }
@@ -217,20 +360,30 @@ export default {
   margin-left:10px;
   color: #000;
 }
+.journal_content:hover{
+  color: antiquewhite;
+}
+.journal_content{
+  margin-top: 10px;
+  margin-left:10px;
+  color: #000;
+}
 .org{
   margin-top:15px;
   margin-bottom:15px;
   float: left;
   width: 50%;
 }
-.comment{
-  
-}
 .el-tag{
   background-color:#f5f8f9;
 }
 .remark{
     margin-top:50px;
+}
+.el-tabs>>>.el-tabs__content{
+height: 800px;
+overflow-y: scroll;
+
 }
   .text {
     font-size: 14px;
@@ -258,4 +411,33 @@ export default {
  .el-tabs>>>.el-tabs__item{
     width:33.4%;
  }
+.describe{
+ width: 60%;
+ padding: 20px;
+}
+.picture{
+  padding: 20px;
+}
+.contact{
+  width: 60%;
+  padding: 20px;
+}
+.creat_comment{
+  width:100%;
+ 
+}
+.creat_comment .el-button{
+  width:100%;
+  opacity: 0.6;
+
+}
+.creat_mark{
+  width:100%;
+ 
+}
+.creat_mark .el-button{
+  width:100%;
+  opacity: 0.6;
+
+}
 </style>

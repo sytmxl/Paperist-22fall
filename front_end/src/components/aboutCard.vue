@@ -16,6 +16,9 @@
     <div class="text item">
     引用量：{{cite}}
   </div>
+    <div class="text item">
+    发表时间：{{date}}
+  </div>
 </el-card>
 </template>
 
@@ -27,6 +30,7 @@ export default {
     intro:{default: ""},
     origin: {default: ""},
     cite:{default: ""},
+    date:{default:""},
   },
 }
 </script>
