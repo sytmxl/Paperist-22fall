@@ -38,7 +38,7 @@
             </el-checkbox-group>
           </el-card>
 
-          <div v-for="i in 10">
+          <div v-for="i in 10" :key="i">
             <el-card style="background: #B3C0D1; margin-bottom: 10px">
               <!--        复选框组2-->
               <el-checkbox-group v-model="secondarySearchFilters02" size="mini">
@@ -55,7 +55,7 @@
         <h3 >搜索结果</h3>
         <div style="overflow-y: scroll; height: calc(75vh)">
           <el-card style="background: #B3C0D1; min-height: calc(75vh)">
-            <el-card v-for="searchResult in searchResults" v-loading = "true"
+            <el-card v-for="searchResult in searchResults" :key="searchResult" v-loading = "true"
                      style = "height: 150px;margin-bottom: 10px">
               <!-- TODO 之后需要复用搜索结果的卡片-->
               <h5 style="margin-left: 10%; text-align: left;">{{searchResult}}</h5>
@@ -68,7 +68,7 @@
       <el-aside>
         <h3 style="text-align: right; margin-left: 10%">推荐</h3>
         <el-card style="background: #B3C0D1;height:calc(80vh); overflow-y: scroll">
-          <el-card v-for="recommend in recommends" v-loading = "true"
+          <el-card v-for="recommend in recommends" :key="recommend" v-loading = "true"
                    style = "height: 75px;margin-bottom: 10px">
             <h5 style="margin-left: 10%; text-align: left;">{{recommend}}</h5>
           </el-card>
