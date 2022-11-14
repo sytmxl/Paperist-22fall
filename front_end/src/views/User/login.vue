@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-card style="height: calc(50vh); width: calc(25vw);
+    <el-card style="height: calc(45vh + 5vw); width: calc(25vw);
   margin-top: calc(20vh); margin-left: calc(37.5vw);
   min-width: 300px">
       <h1 style="margin-bottom: 20%">欢迎回来</h1>

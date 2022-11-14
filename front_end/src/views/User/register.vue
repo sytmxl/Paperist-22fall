@@ -1,8 +1,8 @@
 <template>
   <div>
-    <el-card style="height: calc(70vh); width: calc(25vw);
+    <el-card style="height: calc(65vh + 7vw); width: calc(25vw);
   margin-top: calc(15vh); margin-left: calc(37.5vw);
-  min-width: 300px">
+  min-width: 300px; min-height: 400px ">
       <h1 style="margin-bottom: 20%">欢迎加入</h1>
       <el-input placeholder="用户名" v-model="username" style="margin-bottom: 10%"/>
       <el-input placeholder="邮箱" v-model="email" style="margin-bottom: 10%"/>
