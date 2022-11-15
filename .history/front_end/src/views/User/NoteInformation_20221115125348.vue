@@ -266,7 +266,7 @@ export default {
 }
 .left .notes{
     margin-top:50px;
-    height: 550px;
+    height: 1550px;
     overflow-y:scroll;
     overflow-x:hidden;
 }

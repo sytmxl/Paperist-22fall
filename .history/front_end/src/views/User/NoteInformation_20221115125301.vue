@@ -269,6 +269,7 @@ export default {
     height: 550px;
     overflow-y:scroll;
     overflow-x:hidden;
+    border: 1px solid grey;
 }
 .right{
     width: 70%;

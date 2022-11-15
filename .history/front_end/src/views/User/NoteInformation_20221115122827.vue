@@ -57,10 +57,7 @@
             </div>
             <div class="remark">
                 <el-card>
-                     <div class="creat_comment">
-                                <el-button @click="CreatCommentVisible =true">我要评论</el-button>
-                    </div>
-                                <div v-if="Object.keys(remark_list).length!=0">
+                 <div v-if="Object.keys(remark_list).length!=0">
                               <div class="comment" v-for="i in remark_list" :key="i">
                                 <remark :list="i"/>
                             </div>
@@ -83,13 +80,8 @@
 <script>
 let PDFJS = require('pdfjs-dist');
 PDFJS.GlobalWorkerOptions.workerSrc = require("pdfjs-dist/build/pdf.worker.entry.js");
-import remark from "../../components/remark.vue"
-import CreateComment from "../../components/CreateComment.vue"
 export default {
-    components:{
-        remark,
-        CreateComment,
-    },
+
     data(){
         return{
             list:{1:{name:"论杰哥",intro:"介绍奇人杰哥",likes:8,collections:10,remarks:9},
@@ -103,12 +95,7 @@ export default {
   	 	    pdf_pages:[],
   	 	    pdf_div_width:'',
   	 	    pdf_src:null,
-            CreatCommentVisible:false,
-            remark_list:{1:{1:{flag:0,name:'胡博轩',image:"../assets/Cooper.jpg",comment:"马哥太尴尬了哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈"},2:{flag:1,name:'李阳',image:"../assets/Cooper.jpg",res_name:'胡博轩',comment:"确实，怎么可以这么尬"},3:{flag:1,name:'朱康乐',image:"../assets/le.jpg",res_name:'李阳',comment:"你是懂尴尬的"},4:{flag:1,name:'马泽远',image:"../assets/ma.jpg",res_name:'胡博轩',comment:"基操勿6"}},
-        2:{1:{flag:0,name:'马泽远',image:"../assets/ma.jpg",comment:"感谢大家支持"}},
-        3:{1:{flag:0,name:'王域杰',image:"../assets/jie.jpg",comment:"苏珊，小心我告你"},2:{flag:1,name:'王域杰',image:"../assets/jie.jpg",res_name:'王域杰',comment:"别来沾边"},3:{flag:1,name:'朱康乐',image:"../assets/le.jpg",res_name:'王域杰',comment:"支持杰哥维权"},4:{flag:1,name:'马泽远',image:"../assets/ma.jpg",res_name:'王域杰',comment:"我错了杰哥，我苏珊"}},
-        4:{1:{flag:0,name:'马泽远',image:"../assets/ma.jpg",comment:"感谢大家支持"}},
-        5:{1:{flag:0,name:'王域杰',image:"../assets/jie.jpg",comment:"苏珊，小心我告你"},2:{flag:1,name:'王域杰',image:"../assets/jie.jpg",res_name:'王域杰',comment:"别来沾边"},3:{flag:1,name:'朱康乐',image:"../assets/le.jpg",res_name:'王域杰',comment:"支持杰哥维权"},4:{flag:1,name:'马泽远',image:"../assets/ma.jpg",res_name:'王域杰',comment:"我错了杰哥，我苏珊"}},},
+            CreatCommentVisible:false
         }
     },
       methods:{
@@ -259,14 +246,13 @@ export default {
 .el-card{
     width:100%;
     height: 100%;
-    /* border: 1px solid grey; */
 }
 .left .el-card{
     height: auto;
 }
 .left .notes{
     margin-top:50px;
-    height: 550px;
+    height: 650px;
     overflow-y:scroll;
     overflow-x:hidden;
 }
@@ -277,30 +263,17 @@ export default {
 }
 .right .content{
     height: 1000px;
+  
 }
-
 .right .content .el-card{
     height: 100%;
     overflow-y: scroll;
 }
 .right .remark{
-    height: 600px;
+    height: auto;
     margin-top: 50px;
- 
 }
-.right .remark .el-card{
-      overflow-y: scroll;
-    overflow-x:hidden;
-}
-.creat_comment{
-  width:100%;
- 
-}
-.creat_comment .el-button{
-  width:100%;
-  opacity: 0.6;
 
-}
 .home_wrap{
    width: 100%;
    height: 100%;

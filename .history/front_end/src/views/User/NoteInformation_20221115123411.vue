@@ -59,8 +59,8 @@
                 <el-card>
                      <div class="creat_comment">
                                 <el-button @click="CreatCommentVisible =true">我要评论</el-button>
-                    </div>
-                                <div v-if="Object.keys(remark_list).length!=0">
+                            </div>
+                 <div v-if="Object.keys(remark_list).length!=0">
                               <div class="comment" v-for="i in remark_list" :key="i">
                                 <remark :list="i"/>
                             </div>
@@ -259,7 +259,6 @@ export default {
 .el-card{
     width:100%;
     height: 100%;
-    /* border: 1px solid grey; */
 }
 .left .el-card{
     height: auto;
@@ -284,12 +283,9 @@ export default {
     overflow-y: scroll;
 }
 .right .remark{
-    height: 600px;
+    height: 800px;
     margin-top: 50px;
- 
-}
-.right .remark .el-card{
-      overflow-y: scroll;
+    overflow-y: scroll;
     overflow-x:hidden;
 }
 .creat_comment{

@@ -269,6 +269,7 @@ export default {
     height: 550px;
     overflow-y:scroll;
     overflow-x:hidden;
+    border: 1px solid grey;
 }
 .right{
     width: 70%;
@@ -286,11 +287,11 @@ export default {
 .right .remark{
     height: 600px;
     margin-top: 50px;
- 
+    overflow-y: scroll;
+    overflow-x:hidden;
 }
 .right .remark .el-card{
-      overflow-y: scroll;
-    overflow-x:hidden;
+   height: 100%;
 }
 .creat_comment{
   width:100%;
