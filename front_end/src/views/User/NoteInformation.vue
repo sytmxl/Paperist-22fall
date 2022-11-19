@@ -47,8 +47,8 @@
                               <div class="pdf_set_left"  @click="scaleD()">放大</div>
                               <div class="pdf_set_middle" @click="scaleX()">缩小</div>
                           </div>
-                   
-                          
+
+
                           <div :style="{width:pdf_div_width,margin:'0 auto'}" >
                               <canvas v-for="page in pdf_pages" :id="'the_canvas'+page" :key="page"></canvas>
                           </div>
@@ -89,7 +89,7 @@ export default {
     components:{
         remark,
         CreateComment,
-        
+
     },
     data(){
         return{
@@ -126,7 +126,7 @@ export default {
          }
          this.pdf_scale = this.pdf_scale+0.1
          this._loadFile(this.pdf_src)
-     },   
+     },
      scaleX() {  //缩小
          let min = 1.0
          if(this.pdf_scale <= min){
@@ -198,7 +198,7 @@ export default {
               this._renderPage(num + 1)
             }
           })
-     },  
+     },
   },
      mounted () {
           this.get_pdfurl()
@@ -288,7 +288,7 @@ export default {
 .right .remark{
     height: 600px;
     margin-top: 50px;
- 
+
 }
 .right .remark .el-card{
       overflow-y: scroll;
@@ -296,7 +296,7 @@ export default {
 }
 .creat_comment{
   width:100%;
- 
+
 }
 .creat_comment .el-button{
   width:100%;
@@ -334,5 +334,5 @@ export default {
       margin-right: 5px;
       cursor: pointer;
  }
-	
+
 </style>
