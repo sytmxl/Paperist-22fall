@@ -1,8 +1,23 @@
 <template>
   <div id="app">
-    <router-view/>
+    <div class="main"><router-view /></div>
+    <Footer v-show="!this.$route.path.includes('login')"></Footer>
   </div>
 </template>
+<script>
+import footer from "@/components/Footer";
+export default {
+  name: "App",
+  components: {
+    Footer: footer,
+  },
+  data() {
+    return {
+      msg: "Hello Vue.js!",
+    };
+  },
+};
+</script>
 
 <style>
 #app {
@@ -12,7 +27,17 @@
   text-align: center;
   color: #2c3e50;
 }
-
+* {
+  margin: 0;
+  padding: 0;
+}
+.main {
+  background-image: url(./assets/homebg.png);
+  background-repeat: no-repeat;
+  background-position: 50% 0;
+  background-size: cover;
+  margin-bottom: 20px;
+}
 nav {
   padding: 30px;
 }
