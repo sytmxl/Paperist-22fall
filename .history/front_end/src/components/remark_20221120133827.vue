@@ -59,8 +59,7 @@ export default {
         CreateComment
     },
   props: {
-    list:{image:{required: true,type:String}},
-    imglist:{}
+    list:{image:{ required: true,type:String}}
   },
   data(){
     return{
@@ -68,9 +67,9 @@ export default {
     }
   },
   methods:{
+   
   },
   mounted() {
-
     }
 }
 
