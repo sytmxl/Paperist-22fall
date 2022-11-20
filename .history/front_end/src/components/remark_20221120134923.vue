@@ -21,7 +21,7 @@
     </div>
     <div class="responser" v-if="i.flag==1">
         <div class="image">
-            <img :src="i.image" alt="">
+            <img :src="pro_img(i.image)" alt="">
         </div>
         <div class="content">
             <div class="name">
@@ -59,7 +59,7 @@ export default {
         CreateComment
     },
   props: {
-    list:{image:{required: true,type:String}},
+    list:{image:{ required: true,type:String}},
     imglist:{}
   },
   data(){
@@ -68,6 +68,9 @@ export default {
     }
   },
   methods:{
+    pro_img(url){
+            return require(url);
+        },
   },
   mounted() {
 

@@ -319,13 +319,17 @@ import SearchBox from "../../components/SearchBox.vue";
 import aboutCard from "@/components/aboutCard.vue";
 import UploadText from "@/components/UploadText.vue";
 import MissTextComplain from "@/components/MissTextComplain.vue";
+import RelationShip from "@/components/RelationShip.vue";
+import ScholarLine from "@/components/ScholarLine.vue";
 export default {
   inject: ["reload"],
   components: {
     SearchBox,
     aboutCard,
     UploadText,
-    MissTextComplain
+    MissTextComplain,
+    RelationShip,
+    ScholarLine,
   },
   created() {
     //获取信息
@@ -441,7 +445,7 @@ export default {
           this.resetForm("MissDomains");
           this.Miss_Active = 0;
           this.$nextTick(() => {
-            this.MissTextDialogVisible= false;
+            this.MissTextDialogVisible = false;
           });
           //
         } else {
@@ -502,6 +506,7 @@ export default {
   },
   data() {
     return {
+      username: "乔丹",
       active: 0,
       Miss_Active: 0,
       input3: "",

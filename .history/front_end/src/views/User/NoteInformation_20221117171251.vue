@@ -47,8 +47,8 @@
                               <div class="pdf_set_left"  @click="scaleD()">放大</div>
                               <div class="pdf_set_middle" @click="scaleX()">缩小</div>
                           </div>
-
-
+                   
+                          
                           <div :style="{width:pdf_div_width,margin:'0 auto'}" >
                               <canvas v-for="page in pdf_pages" :id="'the_canvas'+page" :key="page"></canvas>
                           </div>
@@ -82,14 +82,14 @@
 
 <script>
 let PDFJS = require('pdfjs-dist');
-PDFJS.GlobalWorkerOptions.workerSrc = require("pdfjs-dist/build/pdf.worker.entry.js");
+PDFJS.GlobalWorkerOptions.workerSrc = require("/soft-ware-web-front-end/node_moudles/pdfjs-dist/build/pdf.worker.entry.js");
 import remark from "../../components/remark.vue"
 import CreateComment from "../../components/CreateComment.vue"
 export default {
     components:{
         remark,
         CreateComment,
-
+        
     },
     data(){
         return{
@@ -105,18 +105,15 @@ export default {
   	 	    pdf_div_width:'',
   	 	    pdf_src:null,
             CreatCommentVisible:false,
-            remark_list:{1:{1:{flag:0,name:'胡博轩',image:require("../../assets/Cooper.jpg"),comment:"马哥太尴尬了哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈"},2:{flag:1,name:'李阳',image:require("../../assets/Cooper.jpg"),res_name:'胡博轩',comment:"确实，怎么可以这么尬"},3:{flag:1,name:'朱康乐',image:require("../../assets/le.jpg"),res_name:'李阳',comment:"你是懂尴尬的"},4:{flag:1,name:'马泽远',image:require("../../assets/ma.jpg"),res_name:'胡博轩',comment:"基操勿6"}},
-        2:{1:{flag:0,name:'马泽远',image:require("../../assets/ma.jpg"),comment:"感谢大家支持"}},
-        3:{1:{flag:0,name:'王域杰',image:require("../../assets/jie.jpg"),comment:"苏珊，小心我告你"},2:{flag:1,name:'王域杰',image:require("../../assets/jie.jpg"),res_name:'王域杰',comment:"别来沾边"},3:{flag:1,name:'朱康乐',image:require("../../assets/le.jpg"),res_name:'王域杰',comment:"支持杰哥维权"},4:{flag:1,name:'马泽远',image:require("../../assets/ma.jpg"),res_name:'王域杰',comment:"我错了杰哥，我苏珊"}},
-        4:{1:{flag:0,name:'马泽远',image:require("../../assets/ma.jpg"),comment:"感谢大家支持"}},
-        5:{1:{flag:0,name:'王域杰',image:require("../../assets/jie.jpg"),comment:"苏珊，小心我告你"},2:{flag:1,name:'王域杰',image:require("../../assets/jie.jpg"),res_name:'王域杰',comment:"别来沾边"},3:{flag:1,name:'朱康乐',image:require("../../assets/le.jpg"),res_name:'王域杰',comment:"支持杰哥维权"},4:{flag:1,name:'马泽远',image:require("../../assets/ma.jpg"),res_name:'王域杰',comment:"我错了杰哥，我苏珊"}},},
+            remark_list:{1:{1:{flag:0,name:'胡博轩',image:"../assets/Cooper.jpg",comment:"马哥太尴尬了哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈"},2:{flag:1,name:'李阳',image:"../assets/Cooper.jpg",res_name:'胡博轩',comment:"确实，怎么可以这么尬"},3:{flag:1,name:'朱康乐',image:"../assets/le.jpg",res_name:'李阳',comment:"你是懂尴尬的"},4:{flag:1,name:'马泽远',image:"../assets/ma.jpg",res_name:'胡博轩',comment:"基操勿6"}},
+        2:{1:{flag:0,name:'马泽远',image:"../assets/ma.jpg",comment:"感谢大家支持"}},
+        3:{1:{flag:0,name:'王域杰',image:"../assets/jie.jpg",comment:"苏珊，小心我告你"},2:{flag:1,name:'王域杰',image:"../assets/jie.jpg",res_name:'王域杰',comment:"别来沾边"},3:{flag:1,name:'朱康乐',image:"../assets/le.jpg",res_name:'王域杰',comment:"支持杰哥维权"},4:{flag:1,name:'马泽远',image:"../assets/ma.jpg",res_name:'王域杰',comment:"我错了杰哥，我苏珊"}},
+        4:{1:{flag:0,name:'马泽远',image:"../assets/ma.jpg",comment:"感谢大家支持"}},
+        5:{1:{flag:0,name:'王域杰',image:"../assets/jie.jpg",comment:"苏珊，小心我告你"},2:{flag:1,name:'王域杰',image:"../assets/jie.jpg",res_name:'王域杰',comment:"别来沾边"},3:{flag:1,name:'朱康乐',image:"../assets/le.jpg",res_name:'王域杰',comment:"支持杰哥维权"},4:{flag:1,name:'马泽远',image:"../assets/ma.jpg",res_name:'王域杰',comment:"我错了杰哥，我苏珊"}},},
         textarea:''
         }
     },
       methods:{
-        // pro_img(url){
-        //     return require(url);
-        // },
      scaleD() {  //放大
          let max = 0
          if (window.screen.width > 1440) {
@@ -129,7 +126,7 @@ export default {
          }
          this.pdf_scale = this.pdf_scale+0.1
          this._loadFile(this.pdf_src)
-     },
+     },   
      scaleX() {  //缩小
          let min = 1.0
          if(this.pdf_scale <= min){
@@ -142,9 +139,8 @@ export default {
 
      	   //加载本地
          this.pdf_src = 'https://mozilla.github.io/pdf.js/web/compressed.tracemonkey-pldi-09.pdf'
-     
         // this.pdf_src = 'adminapi/blogs/%E5%89%8D%E7%AB%AF%E9%9D%A2%E8%AF%95/4%E3%80%81%E7%AC%AC%E5%9B%9B%E9%83%A8%E5%88%86%EF%BC%9A%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80%2814%E9%A2%98%29.pdf'
-        // this.pdf_src = encodeURIComponent('../../../assets/test.pdf');
+        // this.pdf_src = encodeURIComponent('../../assets/test.pdf');
          this._loadFile(this.pdf_src)
      	   return
 
@@ -157,7 +153,6 @@ export default {
         //  })
      },
      _loadFile (url) {  //初始化pdf
-     console.log(url);
         let loadingTask = PDFJS.getDocument(url)
         loadingTask.promise
         .then((pdf) => {
@@ -203,7 +198,7 @@ export default {
               this._renderPage(num + 1)
             }
           })
-     },
+     },  
   },
      mounted () {
           this.get_pdfurl()
@@ -293,7 +288,7 @@ export default {
 .right .remark{
     height: 600px;
     margin-top: 50px;
-
+ 
 }
 .right .remark .el-card{
       overflow-y: scroll;
@@ -301,7 +296,7 @@ export default {
 }
 .creat_comment{
   width:100%;
-
+ 
 }
 .creat_comment .el-button{
   width:100%;
@@ -339,5 +334,5 @@ export default {
       margin-right: 5px;
       cursor: pointer;
  }
-
+	
 </style>
