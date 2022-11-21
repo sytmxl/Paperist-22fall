@@ -2,7 +2,7 @@
   <div style="height:calc(100vh) width:calc(100vh)">
     <el-row class="header_show"> 这里是Header组件区 </el-row>
     <el-row class="logo_area">
-      <div><img src="../../assets/mosy.jpg" class="home_logo" /></div>
+      <div><img src="../../assets/logo/bar_name_logo.svg" class="home_logo" /></div>
     </el-row>
     <el-row class="search_area">
       <SearchBox />

@@ -32,7 +32,7 @@ export default {
   padding: 0;
 }
 .main {
-  background-image: url(./assets/homebg.png);
+  background-image: url(./assets/bg.svg);
   background-repeat: no-repeat;
   background-position: 50% 0;
   background-size: cover;

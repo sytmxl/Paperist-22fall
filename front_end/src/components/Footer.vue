@@ -98,7 +98,7 @@
   </template>
   
   <script>
-  import logo from '../assets/logo.jpg'
+  import logo from '../assets/logo/bar_name_logo.svg'
   import QQ from '../assets/qq.jpg'
   import WX from '../assets/wx.jpg'
   
