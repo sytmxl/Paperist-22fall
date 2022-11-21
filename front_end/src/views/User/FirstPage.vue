@@ -1,8 +1,11 @@
-<template>
-  <div style="height:calc(100vh) width:calc(100vh)">
-    <el-row class="header_show"> 这里是Header组件区 </el-row>
+<template >
+  <div id="switch" class="light-mode" style="height:calc(100vh) width:calc(100vh)">
+    <el-row class="header_show"> 
+      这里是Header组件区 
+      <button type="button" name="dark_light" @click="toggleDarkLight" title="Toggle dark/light mode">🌛</button>
+    </el-row>
     <el-row class="logo_area">
-      <div><img src="../../assets/logo/bar_name_logo.svg" class="home_logo" /></div>
+      <div id="logo1" class="home_logo"></div>
     </el-row>
     <el-row class="search_area">
       <SearchBox />
@@ -321,6 +324,7 @@ import UploadText from "@/components/UploadText.vue";
 import MissTextComplain from "@/components/MissTextComplain.vue";
 import RelationShip from "@/components/RelationShip.vue";
 import ScholarLine from "@/components/ScholarLine.vue";
+import toggleDarkLight from "../../App.vue";
 export default {
   inject: ["reload"],
   components: {
@@ -503,6 +507,11 @@ export default {
         key: Date.now(),
       });
     },
+    toggleDarkLight() {
+      var body = document.getElementById("app");
+      var currentClass = body.className;
+      body.className = currentClass == "dark-mode" ? "light-mode" : "dark-mode";
+    },
   },
   data() {
     return {
@@ -642,7 +651,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .home_logo {
   width: 200px;
   height: 70px;
@@ -660,14 +669,14 @@ export default {
   padding-top: 12px;
   clear: both;
 }
-.header_show {
-  height: 45px;
-  background-color: #409eff;
-  color: #fff;
-  font-size: 20px;
-  line-height: 45px;
-  text-align: center;
-}
+// .header_show {
+//   height: 45px;
+//   background-color: #409eff;
+//   color: #fff;
+//   font-size: 20px;
+//   line-height: 45px;
+//   text-align: center;
+// }
 
 .display_zone {
   width: 100%;

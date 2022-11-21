@@ -114,9 +114,9 @@
   }
   </script>
   
-  <style scoped>
+  <style lang="scss" scoped>
   .footer {
-    /* background-color: #1c2b40; */
+    background-color: #ffffff; 
     padding-bottom: 12px;
     min-height: 20vh;
     color: #a4acb7;
