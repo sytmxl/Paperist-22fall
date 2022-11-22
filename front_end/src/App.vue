@@ -29,11 +29,11 @@ export default {
 <style lang="scss">
 $dark-color: #111;
 $light-color: #eee;
+$dark-theme: #001C2A;
 
 #app.dark-mode {
   background-image: url('./assets/bg_dark.svg');
   color: $light-color;
-
   .header_show {
     height: 45px;
     background-color: #151617;

@@ -652,9 +652,20 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@media (max-width: 800px) {
+  .header_show {
+    height: 45px;
+    background-color: #6cdc93 !important;
+    color: #fff;
+    font-size: 20px;
+    line-height: 45px;
+    text-align: center;
+  }
+}
 .home_logo {
   width: 200px;
   height: 70px;
+  margin: 0 auto;
 }
 .logo_area {
   width: 100%;
