@@ -682,7 +682,7 @@ export default {
   width: 100%;
   min-height: 400px;
   margin: 0 auto;
-  padding-top: 40px;
+  padding-top: 20px;
   clear: both;
 }
 .clearfix {

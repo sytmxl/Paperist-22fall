@@ -122,7 +122,6 @@ export default {
         "#FF5403",
         "#1687A7",
         "#84DFFF",
-        "#CD1818",
         "#5E454B",
         "#FF87CA",
         "#FFCE45",
@@ -136,7 +135,7 @@ export default {
         // draggable: true,
         symbolSize: [25, 25],
         itemStyle: {
-          color: color[3],
+          color: "#CD1818",
         },
         category: this.Mname,
         label: {
@@ -181,7 +180,7 @@ export default {
         // backgroundColor: "#ccc", // 背景颜色
         title: {
           // 图表标题
-          text: "学者关系图",
+          // text: "学者关系图",
           left: "3%", // 标题距离左侧边距
           top: "3%", // 标题距顶部边距
           textStyle: {
@@ -284,5 +283,7 @@ export default {
   height: 500px;
   border: 1px solid #eee;
   box-shadow: 0 2px 4px hsla(0, 0%, 92.5%, 0.5);
+  margin-top:20px;
+  margin-bottom: 20px;
 }
 </style>
