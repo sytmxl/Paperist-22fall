@@ -1,8 +1,8 @@
 <template >
-  <div id="switch" class="light-mode" style="height:calc(100vh) width:calc(100vh)">
+  <div class="light-mode" style="height:calc(100vh) width:calc(100vh)">
     <el-row class="header_show"> 
       这里是Header组件区 
-      <button type="button" name="dark_light" @click="toggleDarkLight" title="Toggle dark/light mode">🌛</button>
+      <button id="switch" name="dark_light" @click="toggleDarkLight" title="Toggle dark/light mode">日/夜</button>
     </el-row>
     <el-row class="logo_area">
       <div id="logo1" class="home_logo"></div>
@@ -65,8 +65,8 @@
           </el-tabs>
         </div>
       </el-col>
-      <el-col :offset="1" :span="6"
-        ><el-card class="box-card">
+      <el-col :offset="1" :span="6">
+        <el-card class="box-card">
           <div class="index_new_paper_rank_meau">
             <div class="meau_title index_bold_font">热门领域</div>
             <div class="meau_params">热度</div>
@@ -664,7 +664,7 @@ export default {
 }
 .home_logo {
   width: 200px;
-  height: 70px;
+  height: 120px;
   margin: 0 auto;
 }
 .logo_area {
@@ -675,9 +675,9 @@ export default {
 }
 .search_area {
   width: 100%;
-  /* min-height: 300px; */
+  min-height: calc(10vh) ;
   margin: 0 auto;
-  padding-top: 12px;
+  // padding-top: calc(5vh);
   clear: both;
 }
 // .header_show {
@@ -706,7 +706,7 @@ export default {
   float: left;
   width: 100%;
   height: 100%;
-  border-radius: 5px;
+  border-radius: 10px;
   padding: 3px 15px 20px 15px;
   box-shadow: 0 0 10px #ccc;
   border-radius: 5px;
@@ -809,5 +809,11 @@ export default {
   max-height: 500px !important;
   min-height: 100px;
   overflow-y: auto;
+}
+#switch {
+  padding: 5px;
+  background-color: #fff !important;
+  color: #003B55 !important;
+  border: 2px solid #003B55 !important;
 }
 </style>
