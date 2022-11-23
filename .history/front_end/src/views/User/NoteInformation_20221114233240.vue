@@ -88,7 +88,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .left{
     width: 25%;
     margin-left: 100px;

@@ -66,7 +66,7 @@
         </div>
       </el-col>
       <el-col :offset="1" :span="6">
-        <el-card class="box-card">
+        <el-card class="hot">
           <div class="index_new_paper_rank_meau">
             <div class="meau_title index_bold_font">热门领域</div>
             <div class="meau_params">热度</div>
@@ -706,13 +706,33 @@ export default {
   float: left;
   width: 100%;
   height: 100%;
-  border-radius: 10px;
-  padding: 3px 15px 20px 15px;
+  border-radius: 20px !important;
+  padding: 3px 15px 15px 15px;
+  margin-bottom: 20px;
   box-shadow: 0 0 10px #ccc;
   border-radius: 5px;
-  background-color: #fff;
+  background-color: rgba(255, 255, 255, 0.5);
+  backdrop-filter: blur(40px) brightness(105%);
   overflow: hidden;
 }
+.hot {
+  border-radius: 20px !important;
+  background-color: rgba(255, 255, 255, 0.5);
+  backdrop-filter: blur(40px) brightness(105%);
+  margin-bottom: 15px !important;
+  border: none;
+}
+.dark-mode {
+  .leftone {
+    background-color: rgba(143, 155, 167, 0.49);
+    box-shadow: 0 0 0px #ccc;
+  }
+  .hot {
+    background-color: rgba(143, 155, 167, 0.49);
+    box-shadow: 0 0 0px #ccc;
+  }
+}
+
 .index_new_paper_rank_meau {
   height: 22px;
   line-height: 22px;
@@ -815,5 +835,31 @@ export default {
   background-color: #fff !important;
   color: #003B55 !important;
   border: 2px solid #003B55 !important;
+}
+//tabs
+.el-tabs--left {
+  color: rgb(164, 170, 183) !important;
+  /* background: #000; */
+  border: rgba(164, 170, 183, 0.403) solid 1px;
+  border-radius: 28px !important;
+  // background-color: #ffffff7a;
+  padding: 10px 0px;
+}
+/* 这里的样式应该只能用/deep/改 */
+/deep/ .el-tabs__item.is-active {
+  color: rgb(2, 2, 2);
+}
+/deep/ .el-tabs__item:hover {
+  color: #75889c;
+}
+/deep/ .el-tabs__item {
+  color: #909399;
+  font-size: 14px;
+  font-weight: 500;
+}
+/deep/ .el-tabs__active-bar {
+  height: 4px;
+  border-radius: 2px;
+  background: #003B55;
 }
 </style>

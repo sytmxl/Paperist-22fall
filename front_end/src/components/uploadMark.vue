@@ -37,7 +37,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .intro .el-input{
     margin-top: 20px;
 }

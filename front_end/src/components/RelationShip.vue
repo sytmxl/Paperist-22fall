@@ -278,7 +278,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 #chart2 {
   height: 500px;
   border: 1px solid #eee;

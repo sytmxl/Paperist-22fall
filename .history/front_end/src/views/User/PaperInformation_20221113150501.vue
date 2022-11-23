@@ -20,7 +20,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .content{
     margin-top: 50px;
     height: 100%;
