@@ -701,7 +701,6 @@ export default {
   font-size: 20px;
   clear: both;
 }
-/* 给leftone添加阴影 */
 .leftone {
   float: left;
   width: 100%;
@@ -709,8 +708,7 @@ export default {
   border-radius: 20px !important;
   padding: 3px 15px 15px 15px;
   margin-bottom: 20px;
-  box-shadow: 0 0 10px #ccc;
-  border-radius: 5px;
+  box-shadow: 0 0 7px rgba(204, 204, 204, 0.713);
   background-color: rgba(255, 255, 255, 0.5);
   backdrop-filter: blur(40px) brightness(105%);
   overflow: hidden;

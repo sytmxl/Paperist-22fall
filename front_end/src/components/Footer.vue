@@ -116,10 +116,12 @@
   
   <style lang="scss" scoped>
   .footer {
-    background-color: #ffffff; 
+    // background-color: #ffffff; 
     padding-bottom: 12px;
     min-height: 20vh;
     color: #a4acb7;
+    background-color: rgba(255, 255, 255, 0.5);
+    backdrop-filter: blur(40px) brightness(105%);
   }
   
   .footer-left {

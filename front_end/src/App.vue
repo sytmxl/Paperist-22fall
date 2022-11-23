@@ -84,7 +84,7 @@ $theme: #003B55;
     color: $dark-theme;
   }
   .el-button--primary {
-    background-color: #385872cb ;
+    background-color: #647c90 ;
   }
 }
 #app {
@@ -153,6 +153,18 @@ $theme: #003B55;
 }
 
 //custom
+// .el-card {
+//   border-radius: 10px !important;
+//   box-shadow: 0 0 7px rgba(204, 204, 204, 0.713);
+//   background-color: rgba(255, 255, 255, 0.5);
+//   backdrop-filter: blur(40px) brightness(105%);
+// }
+// .dark-mode {
+//   .el-card {
+//     background-color: rgba(143, 155, 167, 0.49);
+//     box-shadow: 0 0 0px #ccc;
+//   }
+// }
 el-icon:hover, el-icon-close:hover {
     color:  #748391 !important;
 }
@@ -183,10 +195,12 @@ el-icon:hover, el-icon-close:hover {
 .el-popper, .el-dropdown-menu__item {
   color: #35424e !important;
   font-family: 微软雅黑 !important;
+  border-radius: 10px !important;
 }
 .el-dropdown-menu__item:hover {
   color: #35424e !important;
   background: rgba(191, 202, 217, 0.495) !important;
+  border-radius: 10px !important;
 }
 
 ::-webkit-scrollbar {
