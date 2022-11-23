@@ -20,7 +20,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .el-header, .el-footer {
     background-color: #B3C0D1;
     color: #333;

@@ -661,7 +661,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .picture {
   height: 150px;
   width: 150px;

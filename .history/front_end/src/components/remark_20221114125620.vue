@@ -55,7 +55,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .prvoker{
     margin-top:15px;
     /* height: 100px; */

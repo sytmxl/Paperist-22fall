@@ -60,7 +60,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .el-col-12{
   width: 15%;
 }

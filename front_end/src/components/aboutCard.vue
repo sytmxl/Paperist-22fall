@@ -1,25 +1,25 @@
 <template>
-    <el-card class="box-card">
-  <div slot="header" class="clearfix">
-    <span>{{name}}</span>
-    <!-- <el-button style="float: right; padding: 3px 0" type="text">操作按钮</el-button> -->
-  </div>
+  <el-card class="box-card">
+    <div slot="header" class="clearfix">
+      <span>{{name}}</span>
+      <!-- <el-button style="float: right; padding: 3px 0" type="text">操作按钮</el-button> -->
+    </div>
+      <div class="text item">
+      {{intro}}
+    </div>
     <div class="text item">
-    {{intro}}
-  </div>
-  <div class="text item">
-    作者：{{author}}
-  </div>
-   <div class="text item">
-    来源：{{origin}}
-  </div>
+      作者：{{author}}
+    </div>
     <div class="text item">
-    引用量：{{cite}}
-  </div>
-    <div class="text item">
-    发表时间：{{date}}
-  </div>
-</el-card>
+      来源：{{origin}}
+    </div>
+      <div class="text item">
+      引用量：{{cite}}
+    </div>
+      <div class="text item">
+      发表时间：{{date}}
+    </div>
+  </el-card>
 </template>
 
 <script>
@@ -35,25 +35,28 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .text {
-    font-size: 14px;
-  }
+  font-size: 14px;
+}
 
-  .item {
-    margin-bottom: 18px;
-  }
+.item {
+  margin-bottom: 18px;
+}
 
-  .clearfix:before,
-  .clearfix:after {
-    display: table;
-    content: "";
+.el-card {
+  width: auto !important;
+  border-radius: 10px !important;
+  background: none;
+  
+  margin-bottom: 15px !important;
+}
+.dark-mode {
+  .el-card {
+    background-color: rgba(255, 255, 255, 0.2);
+    border: none !important;
+    color: rgb(0, 0, 0) !important;
+    backdrop-filter: blur(20px) brightness(100%);
   }
-  .clearfix:after {
-    clear: both
-  }
-
-  .box-card {
-    width: 1250px;
-  }
+}
 </style>

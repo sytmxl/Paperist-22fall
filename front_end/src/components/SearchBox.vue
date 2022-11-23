@@ -257,7 +257,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .search_input {
   width: 55%;
   margin: 20px auto;
