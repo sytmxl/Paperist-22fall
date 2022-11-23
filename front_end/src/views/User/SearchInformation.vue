@@ -10,6 +10,7 @@
         <div>
           <el-card style="margin-bottom: 10px" class="display_zone" shadow="never">
             <!--        复选框组1-->
+            <p style="text-align: left; color: #B3C0D1">来源</p>
             <el-checkbox-group  v-model="secondarySearchFilters01" size="mini">
               <el-checkbox border v-for="filter in filterGroup01" :label="filter" :key="filter"
                            style="background: white; margin: 1% ;float: left"/>
@@ -17,6 +18,7 @@
           </el-card>
           <el-card style="margin-bottom: 10px" class="display_zone">
             <!--        复选框组2-->
+            <p style="text-align: left; color: #B3C0D1">领域</p>
             <el-checkbox-group v-model="secondarySearchFilters02" size="mini">
               <el-checkbox border v-for="filter in filterGroup02" :label="filter" :key="filter"
                            style="background: white; margin: 1% ;float: left"/>
