@@ -28,7 +28,38 @@
           <el-input type="textarea" :rows="8" v-model="questionForm.abstract"></el-input>
         </el-form-item>
         <el-form-item label="关键词">
-          <el-input type="text" v-model="questionForm.keyword"></el-input>
+          <div v-for="(item, index) in questionForm.keywords" :key="index">
+            <el-form-item>
+              <el-input
+                  type="text"
+                  v-model.number="item.num"
+                  @input="
+                  (val) => {
+                    handleNumChange(val, index)
+                  }
+                "
+              ></el-input>
+              <span
+                  v-if="index === 0"
+                  :class="
+                  item.num === null || item.keyword === ''
+                    ? 'change-icon-add'
+                    : 'change-icon'
+                "
+              ><i
+                  :style="{
+                    pointerEvents:
+                      item.num === null ? 'none' : 'auto',
+                  }"
+                  class="el-icon-circle-plus-outline"
+                  @click="addItem()"
+              ></i
+              ></span>
+              <span v-else class="change-icon" @click="deleteItem(index)"
+              ><i class="el-icon-remove-outline"></i
+              ></span>
+            </el-form-item>
+          </div>
         </el-form-item>
         <el-form-item label="年份">
           <el-input type="text" v-model="questionForm.year"></el-input>
@@ -87,7 +118,7 @@ export default {
         title: "",
         author: "",
         abstract: "",
-        keyword: "",
+        keywords: [{keyword: ""}],
         year: "",
         cites: "",
         link: "",
@@ -102,7 +133,7 @@ export default {
         title: "",
         author: "",
         abstract: "",
-        keyword: "",
+        keywords: [{keyword: ""}],
         year: "",
         cites: "",
         link: "",
@@ -113,6 +144,19 @@ export default {
     async createData() {
       const params = this.questionForm;
       alert(JSON.stringify(params))
+    },
+    //addKeyword
+    handleNumChange(v, i) {
+      console.log(v)
+      console.log(i)
+    },
+    addItem() {
+      this.questionForm.keywords.push({
+        keyword: "",
+      })
+    },
+    deleteItem(i) {
+      this.questionForm.keywords.splice(i, 1)
     },
   },
 };

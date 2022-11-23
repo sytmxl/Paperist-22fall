@@ -1,5 +1,5 @@
 <template>
-<p>auditLack</p>
+  <p>auditLack</p>
 </template>
 
 <script>
