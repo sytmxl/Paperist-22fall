@@ -123,6 +123,11 @@
     background-color: rgba(255, 255, 255, 0.5);
     backdrop-filter: blur(40px) brightness(105%);
   }
+  .dark-mode {
+    * {
+      color: rgba(245, 245, 245, 0.775) !important;
+    }
+  }
   
   .footer-left {
     color: #a4acb7;

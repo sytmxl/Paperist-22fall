@@ -728,6 +728,10 @@ export default {
   .hot {
     background-color: rgba(143, 155, 167, 0.49);
     box-shadow: 0 0 0px #ccc;
+    color: rgb(245, 245, 245) !important;
+    .content_item_title, .content_item_cite, .meau_params {
+      color: rgb(245, 245, 245) !important;
+    }
   }
 }
 
