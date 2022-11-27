@@ -1,8 +1,8 @@
 <template>
   <div class="search_input">
     <el-row :gutter="10">
-      <el-col :span="20"
-        ><el-input
+      <el-col :span="20">
+        <el-input
           placeholder="请输入内容"
           v-model="input"
           class="input-with-select"
@@ -16,24 +16,21 @@
               :value="item.value"
             ></el-option>
           </el-select>
-          <el-button
-            type="primary"
-            slot="append"
-            icon="el-icon-search"
-            @click="SimpletoResult"
-            >开始搜索</el-button
-          >
-        </el-input></el-col
-      >
-      <el-col :span="4"
-        ><el-button
+          <el-button id="search-button" type="default" slot="append" icon="el-icon-search" @click="SimpletoResult">
+            <!-- 开始搜索 -->
+          </el-button>
+        </el-input>
+        
+      </el-col>
+      <el-col class="advsearch" :span="4">
+        <el-button
+    
           type="primary"
-          icon="el-icon-search"
           round
           @click="AdvancedSearch()"
-          >高级搜索</el-button
-        ></el-col
-      >
+          >高级搜索
+        </el-button>
+      </el-col>
     </el-row>
     <el-row
       v-if="this.isAdvanced"
@@ -259,22 +256,39 @@ export default {
 
 <style lang="scss" scoped>
 .search_input {
-  width: 55%;
-  margin: 20px auto;
+  // width: 55%;
+  // margin: 20px auto;
+  // padding: auto;
 }
 
 .el-select {
-  width: 110px;
+  // width: 100px;
 }
 .input-with-select .el-input-group__prepend {
-  background-color: #fff;
+  // background-color: #fff;
 }
+
 /deep/.el-input-group__prepend {
-  border-radius: 18px 0 0 18px;
+  border-radius: 10px;
+  // border: 1px solid #647c90 ;
+  width: 50px;
+  border: 0px;
+  color: white;
+  background-color: #647c90;
 }
 /deep/.el-input-group__append {
-  border-radius: 0 18px 18px 0;
-  color: #fff;
-  background-color: #409eff;
+  border-radius: 0 10px 10px 0;
+  // color: #fff;
+  border: 0px;
+  background-color: #40a0ff00;
+}
+#search-button {
+  border: 1px solid white;
+}
+/deep/.el-select-dropdown__list {
+  border: 10px !important;
+}
+.el-select-dropdown__item.selected {
+  color: #003B55;
 }
 </style>

@@ -1,9 +1,11 @@
 <template >
   <div class="light-mode" style="height:calc(100vh) width:calc(100vh)">
-    <el-row class="header_show"> 
+    <!-- <el-row class="header_show"> 
       这里是Header组件区 
       <button id="switch" name="dark_light" @click="toggleDarkLight" title="Toggle dark/light mode">日/夜</button>
-    </el-row>
+    </el-row> -->
+    <!-- <TopBar/> -->
+    <!-- 比较特殊 顶栏等定制 -->
     <el-row class="logo_area">
       <div id="logo1" class="home_logo"></div>
     </el-row>
@@ -325,6 +327,7 @@ import MissTextComplain from "@/components/MissTextComplain.vue";
 import RelationShip from "@/components/RelationShip.vue";
 import ScholarLine from "@/components/ScholarLine.vue";
 import toggleDarkLight from "../../App.vue";
+import TopBar from "@/components/TopBar";
 export default {
   inject: ["reload"],
   components: {
@@ -334,6 +337,7 @@ export default {
     MissTextComplain,
     RelationShip,
     ScholarLine,
+    TopBar,
   },
   created() {
     //获取信息
@@ -662,6 +666,13 @@ export default {
     text-align: center;
   }
 }
+.search_input {
+  margin: 10px auto;
+  width: 800px;
+  transition: 0.3s;
+  // padding: auto;
+  // overflow: hidden;
+}
 .home_logo {
   width: 200px;
   height: 120px;
@@ -701,16 +712,14 @@ export default {
   font-size: 20px;
   clear: both;
 }
-/* 给leftone添加阴影 */
 .leftone {
   float: left;
   width: 100%;
   height: 100%;
-  border-radius: 20px !important;
   padding: 3px 15px 15px 15px;
   margin-bottom: 20px;
-  box-shadow: 0 0 10px #ccc;
-  border-radius: 5px;
+  border-radius: 20px !important;
+  box-shadow: 0 0 7px rgba(204, 204, 204, 0.713);
   background-color: rgba(255, 255, 255, 0.5);
   backdrop-filter: blur(40px) brightness(105%);
   overflow: hidden;
@@ -730,6 +739,10 @@ export default {
   .hot {
     background-color: rgba(143, 155, 167, 0.49);
     box-shadow: 0 0 0px #ccc;
+    color: rgb(245, 245, 245) !important;
+    .content_item_title, .content_item_cite, .meau_params {
+      color: rgb(245, 245, 245) !important;
+    }
   }
 }
 

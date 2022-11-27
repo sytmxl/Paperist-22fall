@@ -1,8 +1,5 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import HomeView from '../views/HomeView.vue'
-import UserRoot from "@/views/UserRoot";
-
 Vue.use(VueRouter)
 
 const routes = [
