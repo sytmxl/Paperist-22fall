@@ -1,9 +1,7 @@
 <template>
   <el-container id="SearchInformation" class="light-mode">
 <!--    顶栏-->
-    <el-header>
-    <search-bar/>
-    </el-header>
+    <top-bar/>
     <el-container style="width: calc(80vw);align-self: center">
 <!--      左侧栏-->
       <el-aside style="max-width: calc(20vw); margin-top: calc(5vh)">
@@ -74,13 +72,13 @@
 
 <script>
 
-import SearchBar from "@/components/SearchBar";
+import TopBar from "@/components/TopBar";
 import PaperCard from "@/components/PaperCard";
 import PaperInformation from "@/views/User/PaperInformation";
 import {$data} from "../../../static/pdf/build/pdf.worker";
 export default {
   name:"SearchInformation",
-  components: {PaperInformation, PaperCard, SearchBar},
+  components: {PaperInformation, PaperCard, TopBar},
   props :{
   },
   data() {

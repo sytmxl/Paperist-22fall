@@ -1,5 +1,6 @@
 <template>
   <el-row class="tac">
+    <TopBar/>
     <el-col :span="12">
       <h5>嘎嘎</h5>
       <el-menu
@@ -41,8 +42,12 @@
 </template>
 
 <script>
+import TopBar from "@/components/TopBar";
 export default {
   name: "index",
+  components: {
+    TopBar,
+  },
   data(){
     return {};
   },

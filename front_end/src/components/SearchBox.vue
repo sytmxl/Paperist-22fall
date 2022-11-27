@@ -16,14 +16,15 @@
               :value="item.value"
             ></el-option>
           </el-select>
-          <el-button type="default" slot="append" icon="el-icon-search" @click="SimpletoResult">
+          <el-button id="search-button" type="default" slot="append" icon="el-icon-search" @click="SimpletoResult">
             <!-- 开始搜索 -->
           </el-button>
         </el-input>
         
       </el-col>
-      <el-col :span="4">
+      <el-col class="advsearch" :span="4">
         <el-button
+    
           type="primary"
           round
           @click="AdvancedSearch()"
@@ -255,12 +256,13 @@ export default {
 
 <style lang="scss" scoped>
 .search_input {
-  width: 55%;
-  margin: 20px auto;
+  // width: 55%;
+  // margin: 20px auto;
+  // padding: auto;
 }
 
 .el-select {
-  width: 100px;
+  // width: 100px;
 }
 .input-with-select .el-input-group__prepend {
   // background-color: #fff;
@@ -269,6 +271,7 @@ export default {
 /deep/.el-input-group__prepend {
   border-radius: 10px;
   // border: 1px solid #647c90 ;
+  width: 50px;
   border: 0px;
   color: white;
   background-color: #647c90;
@@ -278,6 +281,9 @@ export default {
   // color: #fff;
   border: 0px;
   background-color: #40a0ff00;
+}
+#search-button {
+  border: 1px solid white;
 }
 /deep/.el-select-dropdown__list {
   border: 10px !important;

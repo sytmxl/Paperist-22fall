@@ -1,9 +1,11 @@
 <template >
   <div class="light-mode" style="height:calc(100vh) width:calc(100vh)">
-    <el-row class="header_show"> 
+    <!-- <el-row class="header_show"> 
       这里是Header组件区 
       <button id="switch" name="dark_light" @click="toggleDarkLight" title="Toggle dark/light mode">日/夜</button>
-    </el-row>
+    </el-row> -->
+    <!-- <TopBar/> -->
+    <!-- 比较特殊 顶栏等定制 -->
     <el-row class="logo_area">
       <div id="logo1" class="home_logo"></div>
     </el-row>
@@ -325,6 +327,7 @@ import MissTextComplain from "@/components/MissTextComplain.vue";
 import RelationShip from "@/components/RelationShip.vue";
 import ScholarLine from "@/components/ScholarLine.vue";
 import toggleDarkLight from "../../App.vue";
+import TopBar from "@/components/TopBar";
 export default {
   inject: ["reload"],
   components: {
@@ -334,6 +337,7 @@ export default {
     MissTextComplain,
     RelationShip,
     ScholarLine,
+    TopBar,
   },
   created() {
     //获取信息
@@ -661,6 +665,13 @@ export default {
     line-height: 45px;
     text-align: center;
   }
+}
+.search_input {
+  margin: 10px auto;
+  width: 800px;
+  transition: 0.3s;
+  // padding: auto;
+  // overflow: hidden;
 }
 .home_logo {
   width: 200px;

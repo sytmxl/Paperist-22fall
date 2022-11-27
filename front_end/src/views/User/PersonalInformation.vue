@@ -1,5 +1,7 @@
 <template>
+  <!-- <TopBar/> -->
   <el-card class="mainCard">
+    
     <el-button @click="isScholar = !isScholar"
       >学者转换,去掉该按钮样式即恢复正常</el-button
     >
@@ -560,11 +562,13 @@
 <script>
 import RelationShip from "@/components/RelationShip.vue";
 import ScholarLine from "@/components/ScholarLine.vue";
+import TopBar from "@/components/TopBar";
 export default {
   name: "PersonalInformation",
   components: {
     RelationShip,
     ScholarLine,
+    TopBar,
   },
   data() {
     return {
@@ -669,9 +673,9 @@ export default {
   border-radius: 50%;
 }
 .mainCard {
-  height: 90%;
+  // height: 90%;
   width: 70%;
-  margin-top: 5%;
+  // margin-top: 5%;
   margin-left: 15%;
 }
 

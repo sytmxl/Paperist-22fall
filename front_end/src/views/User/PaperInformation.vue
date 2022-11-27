@@ -1,5 +1,6 @@
 <template>
     <el-container class="root">
+      <TopBar/>
         <el-header>
             顶部导航栏组件
         </el-header>
@@ -235,6 +236,7 @@ import remark from "../../components/remark.vue"
 import CreateComment from "../../components/CreateComment.vue"
 import uploadMark from "../../components/uploadMark.vue"
 import note from "../../components/note.vue"
+import TopBar from "@/components/TopBar";
 let loading
 export default {
   inject: ['reload'],
@@ -310,7 +312,8 @@ export default {
         remark,
         CreateComment,
         uploadMark,
-        note
+        note,
+        TopBar,
     },
     created() {},
     mounted() {

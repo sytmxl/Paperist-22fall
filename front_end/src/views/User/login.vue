@@ -1,8 +1,9 @@
 <template>
+  <!-- <TopBar/> -->
   <div>
     <el-card style="height: calc(45vh + 5vw); width: calc(25vw);
-  margin-top: calc(20vh); margin-left: calc(37.5vw);
-  min-width: 300px">
+    margin-top: calc(20vh); margin-left: calc(37.5vw);
+    min-width: 300px">  
       <h1 style="margin-bottom: 20%">欢迎回来</h1>
       <el-input placeholder="用户名或邮箱" v-model="username" style="margin-bottom: 10%"/>
       <el-input placeholder="密码" v-model="password" show-password style="margin-bottom: 10%"/>
@@ -16,9 +17,13 @@
 </template>
 
 <script>
+import TopBar from "@/components/TopBar";
 export default{
   name:"login",
   props :{
+  },
+  components: {
+    TopBar,
   },
   data() {
     return{

@@ -1,5 +1,7 @@
 <template>
+    
     <el-container class="root">
+        <TopBar/>
        <el-main class="left">
         <div class="author">
             <el-card>
@@ -85,11 +87,12 @@ let PDFJS = require('pdfjs-dist');
 PDFJS.GlobalWorkerOptions.workerSrc = require("pdfjs-dist/build/pdf.worker.entry.js");
 import remark from "../../components/remark.vue"
 import CreateComment from "../../components/CreateComment.vue"
+import TopBar from "@/components/TopBar";
 export default {
     components:{
         remark,
         CreateComment,
-
+        TopBar,
     },
     data(){
         return{
