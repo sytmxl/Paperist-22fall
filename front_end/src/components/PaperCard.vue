@@ -7,25 +7,25 @@
     <el-row>
       <el-col :span="16">
         <span style="margin-top: 2%; float: left">
-          <p style=" text-align: left;color: #B3C0D1;display: inline;">作者:</p>
-          <p style=" text-align: left;display: inline;">{{getAuthorsList()}}</p>
+          <p style=" text-align: left;color: #B3C0D1;display: inline;">作者: </p>
+          <p style=" text-align: left;display: inline;">{{getAuthorsList()}}&nbsp;&nbsp; </p>
         </span>
         <span style="margin-top: 2%; float: left">
-          <p style=" text-align: left;color: #B3C0D1;display: inline;">来源:</p>
-          <p style=" text-align: left;display: inline;">{{source}}</p>
+          <p style=" text-align: left;color: #B3C0D1;display: inline;">来源: </p>
+          <p style=" text-align: left;display: inline;">{{source}}&nbsp;&nbsp; </p>
         </span>
         <span style="margin-top: 2%; float: left">
-          <p style=" text-align: left;color: #B3C0D1;display: inline;">{{""}}被引:</p>
-          <p style=" text-align: left;display: inline;">{{cite}}</p>
+          <p style=" text-align: left;color: #B3C0D1;display: inline;">{{""}}被引: </p>
+          <p style=" text-align: left;display: inline;">{{cite}} </p>
         </span>
       </el-col>
       <el-col :span="8">
         <el-button-group style="float: right; margin-bottom: 2%">
-          <el-button @click = clickFavourite>
+          <el-button type="default" @click = clickFavourite >
             <i v-if="isFavourite === false" class="el-icon-star-off"></i>
             <i v-else class="el-icon-star-on"></i>
           </el-button>
-          <el-button @click = clickFavourite>
+          <el-button type="primary" @click = clickFavourite>
             <i class="el-icon-paperclip"></i>
           </el-button>
         </el-button-group>
@@ -74,6 +74,13 @@ export default {
 }
 </script>
 
-<style scoped>
-
+<style lang="scss" scoped>
+.el-card {
+  margin-bottom: 15px;
+}
+.el-button {
+  // border-radius: 10px !important;
+  margin-left: 10px !important;
+  // margin-top: 10px;
+}
 </style>

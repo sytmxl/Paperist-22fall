@@ -1,10 +1,10 @@
 <template>
-  <el-container id="SearchInformation" class="light-mode">
+  <el-container>
 <!--    顶栏-->
     <top-bar/>
-    <el-container style="width: calc(80vw);align-self: center">
+    <el-container id="SearchInformation">
 <!--      左侧栏-->
-      <el-aside style="max-width: calc(20vw); margin-top: calc(5vh)">
+      <el-aside class="left">
         <div>
           <el-card style="margin-bottom: 10px" class="display_zone" shadow="never">
             <!--        复选框组1-->
@@ -45,20 +45,19 @@
             <i style="display: inline-block; margin-left: 10%" class="el-icon-sort" @click="sortReserve"></i>
           </el-col>
         </el-row>
-
         <div>
-          <el-card style="min-height: calc(75vh)" class="display_zone" shadow="never">
+          <!-- <el-card style="min-height: calc(75vh)" class="display_zone" shadow="never"> -->
             <paper-card v-for="searchResult in searchResults"
-                        style="margin-top: calc(1vh)"
+                        
             />
-          </el-card>
+          <!-- </el-card> -->
         </div>
       </el-main>
 <!--右侧栏-->
-      <el-aside style="max-width: calc(20vw); margin-top: calc(5vh)">
-        <el-card class="display_zone" shadow="never">
+      <el-aside class="right">
+        <el-card  class="display_zone" shadow="never">
           <h3 style="text-align: left; margin-left: 5%; margin-bottom: calc(2vh)">推荐</h3>
-          <el-card v-for="recommend in recommends" :key="recommend" v-loading = "true" shadow="never"
+          <el-card class="recommend" v-for="recommend in recommends" :key="recommend" v-loading = "true" shadow="never"
                    style = "height: 75px;margin-bottom: 10px">
             <h5 style="margin-left: 10%; text-align: left;">{{recommend}}</h5>
           </el-card>
@@ -115,3 +114,48 @@ export default {
   }
 }
 </script>
+<style lang="scss" scoped>
+#SearchInformation {
+  // margin-top: 60px;
+  width: calc(80vw);
+  align-self: center;
+}
+.el-aside{
+  background: none;
+  .display_zone {
+    border-radius: 20px !important;
+    // box-shadow: 0 0 7px rgba(204, 204, 204, 0.713);
+    background-color: rgba(255, 255, 255, 0.5);
+    backdrop-filter: blur(40px) brightness(95%);
+    border: none;
+    padding: 10px;
+  }
+  .recommend {
+    border-radius: 10px !important;
+    background: none;
+    width: 100%;
+  }
+}
+.left {
+  .el-card {
+    margin: 15px 0px 15px 15px;
+  }
+}
+.right {
+  .el-card {
+    margin: 15px 15px 15px 0px;
+  }
+}
+.el-main {
+  background:none;
+  // border-radius: 20px !important;
+
+  .el-card {
+    border-radius: 20px !important;
+    border: none;
+    // box-shadow: 0 0 7px rgba(204, 204, 204, 0.713);
+    background-color: rgba(255, 255, 255, 0.5);
+    backdrop-filter: blur(40px) brightness(95%);
+  }
+}
+</style>

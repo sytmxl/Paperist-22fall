@@ -34,6 +34,8 @@ $theme: #003B55;
 
 #app.dark-mode {
   background-image: url('./assets/bg_dark.svg');
+  background-attachment: fixed;
+  background-size: 100%;
   color: $light-color;
   .header_show {
     height: 45px;
@@ -62,6 +64,8 @@ $theme: #003B55;
 
 #app.light-mode {
   background-image: url('./assets/bg.svg');
+  background-attachment: fixed;
+  background-size: 100%;
   color: $dark-color;
   .header_show {
     height: 45px;
@@ -187,10 +191,10 @@ el-icon:hover, el-icon-close:hover {
   /* -n-bezier-ease-out: cubic-bezier(0, 0, 0.2, 1); */
   font-family: 微软雅黑;
 }
-.el-dialog__wrapper, .el-message-box__wrapper {
-  /* backdrop-filter: blur(15px) brightness(150%) !important;   */
-  /* transition: 1s !important; */
-}
+// .el-dialog__wrapper, .el-message-box__wrapper {
+//   /* backdrop-filter: blur(15px) brightness(150%) !important;   */
+//   /* transition: 1s !important; */
+// }
 
 .el-popper, .el-dropdown-menu__item {
   color: #35424e !important;

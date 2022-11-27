@@ -716,9 +716,9 @@ export default {
   float: left;
   width: 100%;
   height: 100%;
-  border-radius: 20px !important;
   padding: 3px 15px 15px 15px;
   margin-bottom: 20px;
+  border-radius: 20px !important;
   box-shadow: 0 0 7px rgba(204, 204, 204, 0.713);
   background-color: rgba(255, 255, 255, 0.5);
   backdrop-filter: blur(40px) brightness(105%);
