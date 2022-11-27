@@ -4,7 +4,7 @@
         <div class="author">
             <el-card>
               <div class="author_img">
-                  <img :src="imgUrl" alt="">
+                  <img src:{{imgUrl}} alt="">
                   <span>胡博轩</span>
               </div>
               <div class="author_info">

@@ -4,7 +4,7 @@
         <div class="author">
             <el-card>
               <div class="author_img">
-                  <img :src="imgUrl" alt="">
+                  <img src:{{img_url}} alt="">
                   <span>胡博轩</span>
               </div>
               <div class="author_info">
@@ -98,7 +98,7 @@ export default {
             3:{name:"论杰哥",intro:"介绍奇人杰哥",likes:8,collections:10,remarks:9},
             4:{name:"论杰哥",intro:"介绍奇人杰哥",likes:8,collections:10,remarks:9},
             5:{name:"论杰哥",intro:"介绍奇人杰哥",likes:8,collections:10,remarks:9}},
-            imgUrl:"https://obs-0dcd.obs.cn-north-4.myhuaweicloud.com/1.png",
+            imgUrl:"",
             author:{},
             pdf_scale:1.0,//pdf放大系数
   	 	    pdf_pages:[],
