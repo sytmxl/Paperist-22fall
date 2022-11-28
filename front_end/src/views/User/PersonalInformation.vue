@@ -38,7 +38,7 @@
             </el-upload>
           </el-col>
 
-          <el-col :span="11" style="margin-top: 1.5%">
+          <el-col class="des" :span="11" style="margin-top: 1.5%">
             <!--column2表示每行两个-->
             <el-descriptions
               :title="realname"
@@ -686,11 +686,14 @@ export default {
   min-height: calc(100vh);
   margin-left: 15%;
   transform: translate(0, 30px);//不知道为什么用margin顶栏也会受影响，用移动替代
+  .el-card {
+    background-color: rgba(255, 255, 255, 0.277) !important;
+    border-radius: 20px !important;
+
+  }
 }
 
-  /deep/.el-descriptions {
-    background-color: none !important;
-  }
+  
 
 .text {
   font-size: 14px;

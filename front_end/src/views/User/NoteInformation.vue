@@ -1,10 +1,9 @@
 <template>
-    
     <el-container class="root">
         <TopBar/>
        <el-main class="left">
         <div class="author">
-            <el-card>
+            <el-card class="base">
               <div class="author_img">
                   <img :src="imgUrl" alt="">
                   <span>胡博轩</span>
@@ -20,7 +19,7 @@
             </el-card>
         </div>
         <div class="notes">
-            <el-card>
+            <el-card class="base">
                 <div class="notes_title">
                     <span>作者其他笔记</span>
                 </div>
@@ -42,7 +41,7 @@
        </el-main>
         <el-main class="right">
             <div class="content">
-                <el-card>
+                <el-card class="base">
                     <!-- <iframe :src="url"></iframe> -->
                      <div class="home_wrap">
                           <div class="pdf_down" >
@@ -58,7 +57,7 @@
                 </el-card>
             </div>
             <div class="remark">
-                <el-card>
+                <el-card class="base">
                      <div class="creat_comment">
                                 <el-button @click="CreatCommentVisible =true">我要评论</el-button>
                     </div>
@@ -275,10 +274,10 @@ export default {
     height: auto;
 }
 .left .notes{
-    margin-top:50px;
-    height: 550px;
-    overflow-y:scroll;
-    overflow-x:hidden;
+    margin-top:30px;
+    // height: 550px;
+    // overflow-y:scroll;
+    // overflow-x:hidden;
 }
 .right{
     width: 70%;
@@ -291,15 +290,15 @@ export default {
 
 .right .content .el-card{
     height: 100%;
-    overflow-y: scroll;
+    // overflow-y: scroll;
 }
 .right .remark{
-    height: 600px;
+    // height: 600px;
     margin-top: 50px;
 
 }
 .right .remark .el-card{
-      overflow-y: scroll;
+      // overflow-y: scroll;
     overflow-x:hidden;
 }
 .creat_comment{
@@ -342,5 +341,16 @@ export default {
       margin-right: 5px;
       cursor: pointer;
  }
-
+.base {
+  border-radius: 20px !important;
+	border: none !important;
+  box-shadow: 0 0 7px rgba(204, 204, 204, 0.713);
+  background-color: rgba(255, 255, 255, 0.5);
+  backdrop-filter: blur(40px) brightness(105%);
+	.el-card {
+		background-color: rgba(255, 255, 255, 0.231) !important;
+		border-radius: 20px !important;
+		border: none !important;
+	}
+}
 </style>

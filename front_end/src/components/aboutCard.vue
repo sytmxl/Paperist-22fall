@@ -48,7 +48,6 @@ export default {
   width: auto !important;
   border-radius: 10px !important;
   background: none;
-  
   margin-bottom: 15px !important;
 }
 .dark-mode {
