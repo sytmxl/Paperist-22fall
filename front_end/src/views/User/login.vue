@@ -122,6 +122,7 @@ export default {
             type: 'success'
           });
           this.$router.push("/FirstPage")
+          sessionStorage.setItem("token",res.data.token);
         }
       })
     }
