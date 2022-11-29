@@ -52,11 +52,11 @@
           <el-input prefix-icon="el-icon-lock" placeholder="请确认密码" show-password type="password" clearable
             v-model="form.password2" autocomplete="off" @keyup.enter.native="register"></el-input>
         </el-form-item>
-        <el-form-item id="code" prop="code" :rules="[{ required: true, message: '请输入验证码' }]">
-          <el-input placeholder="请输入验证码" type="text" clearable v-model="form.code" autocomplete="off"
-            prefix-icon="el-icon-s-check" @keyup.enter.native="register" style="width: 60%; float: left"></el-input>
-          <el-button class="send" type="primary" style="float: right" @click="submit">发送</el-button>
-        </el-form-item>
+<!--        <el-form-item id="code" prop="code" :rules="[{ required: true, message: '请输入验证码' }]">-->
+<!--          <el-input placeholder="请输入验证码" type="text" clearable v-model="form.code" autocomplete="off"-->
+<!--            prefix-icon="el-icon-s-check" @keyup.enter.native="register" style="width: 60%; float: left"></el-input>-->
+<!--          <el-button class="send" type="primary" style="float: right" @click="submit">发送</el-button>-->
+<!--        </el-form-item>-->
         <el-form-item>
           <el-button class="btn_register" type="primary" @click="register" round>注&nbsp;册</el-button>
           <el-button class="btn_reset" @click="resetForm('form')" round>重&nbsp;置</el-button>
@@ -70,7 +70,8 @@
 
 <script>
 import qs from "qs";
-// import team_projectsVue from './teams/team_projects.vue';
+import axios from "axios";
+import CryptoJS from 'crypto-js'
 export default {
   name: "Register",
   data() {
@@ -81,50 +82,10 @@ export default {
         realname: "",
         password1: "",
         password2: "",
-        code: "",
-        validcode: "",
       },
     };
   },
   methods: {
-    submit() {
-      // 
-      if (
-        this.form.email === ""
-      ) {
-        this.$message.warning("注册邮箱不能为空！");
-        return;
-      }
-      if (
-        !/^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/.exec(
-          this.form.email
-        )
-      ) {
-        this.$message.warning("请检查您的邮箱格式！");
-        return;
-      }
-      this.$axios({
-        method: "post" /* 指明请求方式，可以是 get 或 post */,
-        url: "app/send_code" /* 指明后端 api 路径，由于在 main.js 已指定根路径，因此在此处只需写相对路由 */,
-        data: qs.stringify({
-          /* 需要向后端传输的数据，此处使用 qs.stringify 将 json 数据序列化以发送后端 */
-          email: this.form.email,
-          send_type: 0,
-        }),
-      })
-        .then((res) => {
-          
-          if (res.data.errno == 0) {
-            this.$message.success("验证码发送成功，请查收");
-          }
-          else {
-            this.$message.error("此邮箱已经被注册！");
-          }
-        })
-        .catch((err) => {
-          
-        });
-    },
     register() {
       if (
         this.form.username === "" ||
@@ -170,23 +131,15 @@ export default {
         this.$message.warning("请输入验证码");
         return;
       }
-      // if(this.form.code!=this.validcode){
-      //   this.$message.warning("验证码错误！");
-      //   return;
-      // }
-      // 
-      // window.alert("用户名是："+this.username +" 密码是：" +this.password);
-      this.$axios({
-        method: "post" /* 指明请求方式，可以是 get 或 post */,
-        url: "app/register" /* 指明后端 api 路径，由于在 main.js 已指定根路径，因此在此处只需写相对路由 */,
-        data: qs.stringify({
-          /* 需要向后端传输的数据，此处使用 qs.stringify 将 json 数据序列化以发送后端 */
+      axios({
+        method: "post",
+        url: "user/register/",
+        data: {
           email: this.form.email,
-          user_name: this.form.username,
-          pass_word: this.form.password1,
-          real_name: this.form.realname,
-          code: this.form.code,
-        }),
+          username: this.form.username,
+          encrypted_pwd: CryptoJS.MD5(this.form.password1).toString(),
+          realname: this.form.realname,
+        },
       })
         .then((res) => {
           /* res 是 response 的缩写 */

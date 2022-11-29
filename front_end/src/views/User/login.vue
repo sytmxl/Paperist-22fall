@@ -41,7 +41,7 @@
           <el-form ref="forget" :model="forget" class="forget" :hide-required-asterisk="true">
             <el-form-item prop="forget_email" :rules="[
               { required: true, message: '请输入邮箱地址', trigger: 'blur' },
-              { type: 'email', message: '请输入正确的邮箱地址', trigger: ['blur', 'change'] }
+              { type: 'email', message: '请输入正确的邮箱 地址', trigger: ['blur', 'change'] }
             ]">
               <el-input id='forget' v-model="forget.forget_email" placeholder="请输入注册时所用邮箱，用于找回密码" type="email" autocomplete="off"
                 clearable prefix-icon="el-icon-postcard"></el-input>
@@ -62,9 +62,8 @@
 </template>
 
 <script>
-// import qs from "qs";
-// import axios from "axios";
-// import async from "async";
+import axios from "axios";
+import CryptoJS from 'crypto-js'
 export default {
   name: "Login",
   data() {
@@ -82,214 +81,51 @@ export default {
       forgetDialogVisible: false,
     };
   },
-  methods: {
-    resetForm(formName) {
-      this.$refs[formName].resetFields();
+  methods:{
+    forgetPass(){
+      // TODO
     },
-    async login() {
-      if (this.activeName == "first") {
-        if (this.form.email === "" && this.form.password === "") {
-          this.$message.warning("请输入邮箱和密码！");
-          return;
-        } else if (this.form.email === "") {
-          this.$message.warning("邮箱不能为空!");
-          return;
-        } else if (this.form.password === "") {
-          this.$message.warning("密码不能为空！");
-          return;
-        }
-        await this.$axios({
-          method: "post" /* 指明请求方式，可以是 get 或 post */,
-          url: "app/login" /* 指明后端 api 路径，由于在 main.js 已指定根路径，因此在此处只需写相对路由 */,
-          data: qs.stringify({
-            /* 需要向后端传输的数据，此处使用 qs.stringify 将 json 数据序列化以发送后端 */
-            identity: this.form.email,
-            loginmethod: "email",
-            password: this.form.password,
-          }),
-        })
-          .then(async (res) => {
-            
-            /* res 是 response 的缩写 */
-            // var usericon = {userId:  res.data.User_id,picurl:res.data.avatar_url};
-            // this.$store.dispatch("saveusericon", usericon);
-            if (res.data.errno == 0) {
-              this.$message.success("登录成功！");
-              var user = {
-                userId: res.data.data.user_id,
-                username: res.data.data.user_name,
-              };
-              var token = {
-                token_num: res.data.data.token
-              };
-              var usericon = {userId: res.data.data.user_id,picurl: res.data.data.profile};
-              await this.$store.dispatch("saveusericon", usericon);
-              await this.$store.dispatch("saveuser", user);
-              await this.$store.dispatch("savetoken", token);
-              localStorage.setItem("saveuser", qs.stringify(user));
-              localStorage.setItem("savetoken", qs.stringify(token));
-              
-              
-              
-              window.location.href = "team_outline";
-              /* 从 localStorage 中读取 preRoute 键对应的值 */
-              // const history_pth = localStorage.getItem("FirstPage");
-              /* 若保存的路由为空或为注册路由，则跳转首页；否则跳转前路由（setTimeout表示1000ms后执行） */
-              // setTimeout(() => {
-              //   if (history_pth == null || history_pth === "/register") {
-              //     this.$router.push("/");
-              //   } else {
-              //     this.$router.push({path: history_pth});
-              //   }
-              // }, 1000);
-              axios.interceptors.request.use(
-                config => {
-                  config.headers['Authorization'] = token
-                  return config;
-                },
-                error => {
-                  return Promise.reject(error);
-                }
-              );
-            } else {
-              await this.$message({
-                message: res.data.msg,
-                center: true,
-                type: "error",
-              });
-            }
-          })
-          .catch((err) => {
-            
+    toRegister(){
+      this.$router.push("/register")
+    },
+    resetForm(){
+      this.form = {
+        email: "",
+        username: "",
+        password: "",
+      }
+    },
+    login(){
+      axios(
+          {
+            url:'user/login/',method:"post",
+            data:{'email':this.form.email,encrypted_pwd:CryptoJS.MD5(this.form.password).toString()}
+          }
+      ).then(res=>{
+        if(res.data.errornumber < 0){
+          switch (res.data.errornumber){
+            case -1:
+              this.$message({
+                message: '邮箱不存在',
+                type: 'warning'
+              }); break;
+            case -2:
+              this.$message({
+                message: '密码不正确',
+                type: 'warning'
+              }); break;
+          }
+        }else {
+          axios.defaults.headers.common['Authorization'] = `JWT ${res.data.token}`;
+          this.$message({
+            message: '登陆成功',
+            type: 'success'
           });
-      } else {
-        if (this.form.username === "" && this.form.password === "") {
-          this.$message.warning("请输入用户名和密码！");
-          return;
-        } else if (this.form.username === "") {
-          this.$message.warning("用户名不能为空!");
-          return;
-        } else if (this.form.password === "") {
-          this.$message.warning("密码不能为空！");
-          return;
+          this.$router.push("/FirstPage")
         }
-        await this.$axios({
-          method: "post" /* 指明请求方式，可以是 get 或 post */,
-          url: "app/login" /* 指明后端 api 路径，由于在 main.js 已指定根路径，因此在此处只需写相对路由 */,
-          data: qs.stringify({
-            /* 需要向后端传输的数据，此处使用 qs.stringify 将 json 数据序列化以发送后端 */
-            identity: this.form.username,
-            loginmethod: "user_name",
-            password: this.form.password,
-          }),
-        })
-          .then(async (res) => {
-            /* res 是 response 的缩写 */
-            // var usericon = {userId:  res.data.User_id,picurl:res.data.avatar_url};
-            // this.$store.dispatch("saveusericon", usericon);
-            
-            if (res.data.errno == 0) {
-              this.$message.success("登录成功！");
-              var user = {
-                userId: res.data.data.user_id,
-                username: res.data.data.user_name,
-              };
-              var token = {
-                token_num: res.data.data.token
-              };
-              var usericon = {userId: res.data.data.user_id,picurl: res.data.data.profile};
-              await this.$store.dispatch("saveusericon", usericon);
-              await this.$store.dispatch("saveuser", user);
-              await this.$store.dispatch("savetoken", token);
-              localStorage.setItem("saveuser", qs.stringify(user));
-              localStorage.setItem("savetoken", qs.stringify(token));
-              
-              
-              
-              window.location.href = "team_outline";
-              /* 从 localStorage 中读取 preRoute 键对应的值 */
-              // const history_pth = localStorage.getItem("FirstPage");
-              /* 若保存的路由为空或为注册路由，则跳转首页；否则跳转前路由（setTimeout表示1000ms后执行） */
-              // setTimeout(() => {
-              //   if (history_pth == null || history_pth === "/register") {
-              //     this.$router.push("/");
-              //   } else {
-              //     this.$router.push({ path: history_pth });
-              //   }
-              // }, 1000);
-              axios.interceptors.request.use(
-                config => {
-                  config.headers['Authorization'] = token
-                  return config;
-                },
-                error => {
-                  return Promise.reject(error);
-                }
-              );
-            }
-            else {
-              await this.$message({
-                message: res.data.msg,
-                center: true,
-                type: "error",
-              });
-            }
-          })
-          .catch((err) => {
-            
-          });
-      }
-    },
-    toRegister() {
-      this.$router.push("/register");
-    },
-    forgetPass() {
-      this.forgetDialogVisible = true;
-    },
-    toReset(i) {
-      if (
-        this.forget.forget_email === ""
-      ) {
-        this.$message.warning("注册邮箱不能为空！");
-        return;
-      }
-      if (
-        !/^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/.exec(
-          this.forget.forget_email
-        )
-      ) {
-        this.$message.warning("请检查您的邮箱格式！");
-        return;
-      }
-      this.$axios({
-        method: "post",
-        url: "app/generate_forget_link",
-        data: qs.stringify({
-          email: i
-        }),
       })
-        .then((res) => {
-          
-          
-          if (res.data.errno == 0) {
-            this.$message.success("邮件已发送,请前往您的邮箱查看信息")
-          }
-          else {
-            this.$message({
-              message: res.data.msg,
-              center: true,
-              type: "error",
-            });
-          }
-        },
-        this.forgetDialogVisible=false,
-        this.resetForm('forget')
-        )
-        .catch((err) => {
-          
-        });
     }
-  },
+  }
 };
 </script>
 
