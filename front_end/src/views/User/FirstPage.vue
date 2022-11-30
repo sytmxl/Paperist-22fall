@@ -528,9 +528,9 @@ export default {
   // overflow: hidden;
 }
 .home_logo {
-  width: 200px;
-  height: 120px;
-  margin: 0 auto;
+  width: 300px;
+  height: 200px;
+  margin: 50px auto 0px;
 }
 .logo_area {
   width: 100%;
@@ -545,15 +545,6 @@ export default {
   // padding-top: calc(5vh);
   clear: both;
 }
-// .header_show {
-//   height: 45px;
-//   background-color: #409eff;
-//   color: #fff;
-//   font-size: 20px;
-//   line-height: 45px;
-//   text-align: center;
-// }
-
 .display_zone {
   width: 100%;
   min-height: 400px;
@@ -732,5 +723,8 @@ export default {
   height: 4px;
   border-radius: 2px;
   background: #003b55;
+}
+/deep/.el-input-group {
+
 }
 </style>

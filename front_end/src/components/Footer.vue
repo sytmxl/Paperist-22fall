@@ -117,6 +117,7 @@
   <style lang="scss" scoped>
   .footer {
     // background-color: #ffffff; 
+    margin-top: 30px;
     padding-bottom: 12px;
     min-height: 20vh;
     color: #a4acb7;
