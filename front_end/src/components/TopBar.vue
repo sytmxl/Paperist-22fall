@@ -127,6 +127,15 @@ export default {
   transition: 0.3s;
   padding: auto;
   // overflow: hidden;
+  &:hover {
+    width: 800px;
+    /deep/.el-input-group__prepend {
+      display: table-cell;
+    }
+    /deep/.advsearch {
+      display: block;
+    }
+  }
 }
 /deep/.el-input-group__prepend {
   display: none;
@@ -147,15 +156,6 @@ export default {
 //     }
 //   }
 // }
-.search_input:hover {
-    width: 800px;
-    /deep/.el-input-group__prepend {
-      display: table-cell;
-    }
-    /deep/.advsearch {
-      display: block;
-    }
-  }
 #switch {
   width: 100px;
   height: 40px;
