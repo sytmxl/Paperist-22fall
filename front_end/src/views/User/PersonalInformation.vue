@@ -55,7 +55,7 @@
                 <el-button
                   type="info"
                   size="small"
-                  @click="isEditPersonalInformation = false"
+                  @click="savePersonalInformation"
                   >保存</el-button
                 >
               </template>
@@ -75,8 +75,8 @@
                     :placeholder="gender"
                     size="small"
                   >
-                    <el-option label="男" value="man"></el-option>
-                    <el-option label="女" value="woman"></el-option>
+                    <el-option label="男" value="男"></el-option>
+                    <el-option label="女" value="女"></el-option>
                   </el-select>
                 </div>
               </el-descriptions-item>
@@ -96,12 +96,20 @@
                     :placeholder="region"
                     size="small"
                   >
-                    <el-option label="中国大陆" value="region1"></el-option>
-                    <el-option label="中国香港" value="region2"></el-option>
-                    <el-option label="中国台湾" value="region3"></el-option>
-                    <el-option label="美国" value="region4"></el-option>
-                    <el-option label="英国" value="region5"></el-option>
-                    <el-option label="德国" value="region6"></el-option>
+                    <el-option label="中国大陆" value="中国大陆"></el-option>
+                    <el-option label="中国香港" value="中国香港"></el-option>
+                    <el-option label="中国台湾" value="中国台湾"></el-option>
+                    <el-option label="美国" value="美国"></el-option>
+                    <el-option label="英国" value="英国"></el-option>
+                    <el-option label="德国" value="德国"></el-option>
+                    <el-option label="日本" value="日本"></el-option>
+                    <el-option label="法国" value="法国"></el-option>
+                    <el-option label="意大利" value="意大利"></el-option>
+                    <el-option label="加拿大" value="加拿大"></el-option>
+                    <el-option label="韩国" value="韩国"></el-option>
+                    <el-option label="以色列" value="以色列"></el-option>
+                    <el-option label="西班牙" value="西班牙"></el-option>
+                    <el-option label="波兰" value="波兰"></el-option>
                   </el-select>
                 </div>
               </el-descriptions-item>
@@ -173,31 +181,35 @@
           title="更改您的密码"
           :visible.sync="isChangePassword"
           width="30%"
-          :before-close="handleClose"
         >
           <el-form>
             <el-form-item prop="" label="请输入旧密码：">
               <el-input
                 prefix-icon="el-icon-lock"
                 placeholder="在此输入旧密码"
+                v-model="oldPassword"
               ></el-input>
             </el-form-item>
             <el-form-item prop="" label="请输入新密码：">
               <el-input
                 prefix-icon="el-icon-lock"
                 placeholder="在此输入新密码"
+                v-model="newPassword"
+                @keyup.enter.native="changePassword"
               ></el-input>
             </el-form-item>
             <el-form-item prop="" label="请再输入一遍新密码：">
               <el-input
                 prefix-icon="el-icon-lock"
                 placeholder="再次输入新密码"
+                v-model="confirmNewPassword"
+                @keyup.enter.native="changePassword"
               ></el-input>
             </el-form-item>
           </el-form>
           <span slot="footer" class="dialog-footer">
             <el-button @click="isChangePassword = false">取 消</el-button>
-            <el-button type="primary" @click="isChangePassword = false"
+            <el-button type="primary" @click="changePassword"
               >确 定</el-button
             >
           </span>
@@ -565,6 +577,8 @@
 import RelationShip from "@/components/RelationShip.vue";
 import ScholarLine from "@/components/ScholarLine.vue";
 import TopBar from "@/components/TopBar";
+import axios from "axios";
+import CryptoJS from "_crypto-js@4.1.1@crypto-js";
 export default {
   name: "PersonalInformation",
   components: {
@@ -584,13 +598,13 @@ export default {
       selectComment: "",
       selectSubscribe: "",
       selectNote: "",
-      username: "高远",
-      realname: "高远",
-      gender: "男",
-      region: "中国大陆",
-      email: "3394045013@qq.com",
+      username: "",
+      realname: "",
+      gender: "",
+      region: "",
+      email: "",
       personalProfile:
-        "你好你好你好你好，我是猪我是猪我是猪我是猪我是猪我是猪我是猪我是猪我是猪我是猪",
+        "",
       isEditPersonalInformation: false,
       new_username: "",
       new_realname: "",
@@ -604,6 +618,9 @@ export default {
       researchField: "打篮球",
       isOthers: false,
       showRelation: true,
+      oldPassword:"",
+      newPassword:"",
+      confirmNewPassword:"",
       RelationsData: [
         {
           name: "皮蓬",
@@ -650,9 +667,10 @@ export default {
     };
   },
   created() {
+    //个人信息
+    this.getPersonalInformation()
     if (this.isScholar) this.DefaultLocation = "zero";
     else this.DefaultLocation = "first";
-    console.log(this.DefaultLocation);
     this.noteLabel = this.isOthers ? "他的笔记" : "我的笔记";
   },
   mounted() {
@@ -663,7 +681,83 @@ export default {
       this.noteLabel = this.isOthers ? "他的笔记" : "我的笔记";
     },
   },
-  methods: {},
+  methods: {
+    //获取个人信息
+    getPersonalInformation() {
+      this.$axios(
+          {
+            url: '/user/getPersonalInformation/', method: "post",
+            data: {'token':sessionStorage.getItem('token')}
+          }
+      ).then(res => {
+        console.log(res.data.data)
+        this.realname=res.data.data[0].realname;
+        this.email=res.data.data[0].email;
+        this.gender=res.data.data[0].sex;
+        this.username=res.data.data[0].username;
+        this.personalProfile=res.data.data[0].sign;
+        this.region=res.data.data[0].country;
+      })
+    },
+    //编辑个人信息
+    editPersonalInformation(){
+      this.$axios(
+          {
+            url: '/user/editPersonalInformation/', method: "post",
+            data: { 'token':sessionStorage.getItem('token'),
+                    'realname':this.new_realname,
+                    'sex':this.new_gender,
+                    'email':this.new_email,
+                    'sign':this.new_personalProfile,
+                    'country':this.new_region }
+          }
+      ).then(res => {
+        if(res.data.isSuccess){
+          this.$message.success("修改成功")
+        } else {
+          this.$message.success(res.data.errormsg)
+        }
+        this.getPersonalInformation()
+        this.new_email="";
+        this.new_realname="";
+        this.new_gender="";
+        this.new_region="";
+        this.new_personalProfile="";
+      })
+    },
+
+
+
+
+    //保存个人信息按钮
+    savePersonalInformation(){
+      this.isEditPersonalInformation = false;
+      this.editPersonalInformation();
+    },
+    //修改密码
+    changePassword(){
+      if (!/^\w+$/.exec(this.newPassword) || this.newPassword.length > 16 || this.newPassword.length < 8) {
+        console.log(1)
+        this.$message.warning("密码仅能由数字、26个英文字母或者下划线组成，长度为8-16位，请检查您的密码");
+        return;
+      } else if(this.newPassword!=this.confirmNewPassword){
+        this.$message.warning("两次输入密码不一致，请检查");
+        return;
+      }
+      this.isChangePassword = false;
+      this.$axios(
+          {
+            url: '/user/editPassword', method: "post",
+            data: {'token':sessionStorage.getItem('token'),
+                   'oldPassword':this.oldPassword,
+                   'newPassword':this.newPassword }
+          }
+      ).then(res => {
+        console.log(res.data)
+      })
+    },
+
+  }
 };
 </script>
 
