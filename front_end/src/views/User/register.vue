@@ -144,69 +144,24 @@ export default {
         .then((res) => {
           /* res 是 response 的缩写 */
           
-          if (res.data.errno == 0) {
+          if (res.data.errornumber == 0) {
             this.$message({
-              message: "注册成功，将自动为您登陆",
+              message: "注册成功",
               center: true,
               type: "success",
               duration: 900
             });
-            var user = {
-              userId: res.data.data.user_id,
-              username: this.form.username,
-            };
-            this.$store.dispatch("saveuser", user);
-
-            this.$axios({
-              method: "post" /* 指明请求方式，可以是 get 或 post */,
-              url: "app/login" /* 指明后端 api 路径，由于在 main.js 已指定根路径，因此在此处只需写相对路由 */,
-              data: qs.stringify({
-                /* 需要向后端传输的数据，此处使用 qs.stringify 将 json 数据序列化以发送后端 */
-                identity: this.form.username,
-                loginmethod: "user_name",
-                password: this.form.password1,
-              }),
+            axios(
+                {
+                  url:'user/login/',method:"post",
+                  data:{'email':this.form.email,encrypted_pwd:CryptoJS.MD5(this.form.password1).toString()}
+                }
+            ).then(res=>{
+              if(res.data.errornumber == 0){
+                this.$router.push("/FirstPage")
+                sessionStorage.setItem("token",res.data.token);
+              }
             })
-              .then((res) => {
-                /* res 是 response 的缩写 */
-                // var usericon = {userId:  res.data.User_id,picurl:res.data.avatar_url};
-                // this.$store.dispatch("saveusericon", usericon);
-                
-                if (res.data.errno == 0) {
-                  this.$message.success("登录成功！");
-                  var token = {
-                    token_num: res.data.data.token
-                  }
-                  this.$store.dispatch("savetoken", token);
-                  localStorage.setItem("saveuser", qs.stringify(user));
-                  localStorage.setItem("savetoken", qs.stringify(token));
-                  
-                  
-                  
-                  axios.interceptors.request.use(
-                    config => {
-                      config.headers['Authorization'] = token
-                      return config;
-                    },
-                    error => {
-                      return Promise.reject(error);
-                    }
-                  );
-                }
-                else {
-                  this.$message({
-                    message: res.data.msg,
-                    center: true,
-                    type: "error",
-                  });
-                }
-              })
-              .catch((err) => {
-                
-              });
-            setTimeout(() => {
-              this.$router.push({ path: 'team_outline' });
-            }, 1000);
           }
           else {
             this.$message({
