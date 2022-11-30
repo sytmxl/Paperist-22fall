@@ -11,8 +11,15 @@ module.exports = defineConfig({
           '^/user' : ''
         }
       },
-    }
+      '/pdf': {
+        target: 'https://obs-0dcd.obs.cn-north-4.myhuaweicloud.com',
+        changOrigin: true,  
+        pathRewrite: {
+            '^/pdf': ''  
+        } 
+    },
   }
+}
 })
 
 
