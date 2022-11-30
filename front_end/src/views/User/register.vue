@@ -155,7 +155,7 @@ export default {
               type: "success",
               duration: 900
             });
-            axios(
+            this.$axios(
                 {
                   url:'user/login/',method:"post",
                   data:{'email':this.form.email,encrypted_pwd:CryptoJS.MD5(this.form.password1).toString()}
