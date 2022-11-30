@@ -48,6 +48,75 @@ const routes = [
         name: 'NoteInformation',
         component: () => import( '../views/User/NoteInformation.vue')
       },
+      {
+        path: '/manage',
+        name: 'Manage',
+        component: () => import('../views/Manager/index'),
+        children: [
+          //  Cards
+          {
+            path: '/literature',
+            name: 'literatureCard',
+            component: () => import('../views/Manager/Cards/LiteratureCard.vue'),
+          },
+          {
+            path: '/note',
+            name: 'noteCard',
+            component: () => import('../views/Manager/Cards/NoteCard.vue'),
+          },
+          {
+            path: '/repre',
+            name: 'repreCard',
+            component: () => import('../views/Manager/Cards/RepreCard.vue'),
+          },
+          {
+            path: '/identity',
+            name: 'identyCard',
+            component: () => import('../views/Manager/Cards/IdentityCard.vue'),
+          },
+          //  Views
+          {
+            path: '/manageScholar',
+            name: 'manageScholar',
+            component: () => import('../views/Manager/ManageScholar'),
+          },
+          {
+            path: '/auditRepresentation',
+            name: 'auditRepresentation',
+            component: () => import('../views/Manager/AuditRepresentation'),
+          },
+          {
+            path: '/auditIdentity',
+            name: 'auditIdentity',
+            component: () => import('../views/Manager/AuditIdentity'),
+          },
+          {
+            path: '/auditLack',
+            name: 'auditLack',
+            component: () => import('../views/Manager/AuditLack'),
+          },
+          {
+            path: '/auditComments',
+            name: 'auditComments',
+            component: () => import('../views/Manager/AuditComments'),
+          },
+          {
+            path: '/auditNote',
+            name: 'auditNote',
+            component: () => import('../views/Manager/AuditNote'),
+          },
+          {
+            path: '/auditLiterature',
+            name: 'auditLiterature',
+            component: () => import('../views/Manager/AuditLiterature'),
+          },
+          {
+            path: '/importLiterature',
+            name: 'importLiterature',
+            component: () => import('../views/Manager/ImportLiterature'),
+          },
+        ]
+      },
 
     ]
   },
