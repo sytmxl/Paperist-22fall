@@ -1,9 +1,23 @@
 <template>
   <div>
-    <div style="margin-top: calc(10vh)">
-      <p>{{es_request_body_json}}</p>
-      <p>{{es_respond}}</p>
+    <div>
+      <paper-card/>
       <el-button @click="post_common_search">DEBUG</el-button>
+      <paper-card v-for="paper in papers"
+                  :title="paper._source.title"
+                  :authors="paper._source.authors"
+                  :cite="paper._source.n_citation"
+                  :content="paper._source.abstract"
+                  :source="paper._source.venue.raw"
+                  :year="paper._source.year"
+                  :keywords="paper._source.keywords"
+                  :issue="paper._source.issue"
+      />
+
+      <p>{{es_request_body_json}}</p>
+      <el-divider></el-divider>
+      <p>{{es_respond}}</p>
+
     </div>
   </div>
 </template>
@@ -11,14 +25,17 @@
 <script>
 import axios from "axios";
 import CryptoJS from "crypto-js";
+import PaperCard from "@/components/PaperCard";
 
 export default {
   name: "debug",
+  components: {PaperCard},
   data(){
     return{
       common_search_query :"of",
       es_request_body_json : "",
-      es_respond : ""
+      es_respond : "",
+      papers : []
     }
   },
   methods:{
@@ -44,7 +61,8 @@ export default {
         data: JSON.stringify(es_request_body)
         }
       ).then(res=>{
-        this.es_respond = res.data
+        this.es_respond = res.data.hits.hits
+        this.papers = this.es_respond
       })
     },
     post_advanced_search(){

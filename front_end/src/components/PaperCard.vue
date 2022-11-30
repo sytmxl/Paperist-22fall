@@ -18,6 +18,18 @@
           <p style=" text-align: left;color: #B3C0D1;display: inline;">{{""}}被引: </p>
           <p style=" text-align: left;display: inline;">{{cite}} </p>
         </span>
+        <span style="margin-top: 2%; float: left">
+          <p style=" text-align: left;color: #B3C0D1;display: inline;">{{""}}年份: </p>
+          <p style=" text-align: left;display: inline;">{{year}} </p>
+        </span>
+        <span style="margin-top: 2%; float: left">
+          <p style=" text-align: left;color: #B3C0D1;display: inline;">{{""}}issue: </p>
+          <p style=" text-align: left;display: inline;">{{issue}} </p>
+        </span>
+        <span style="margin-top: 2%; float: left">
+          <p style=" text-align: left;color: #B3C0D1;display: inline;">{{""}}关键词: </p>
+          <p v-for="keyword in keywords" style=" text-align: left;display: inline;">{{keyword}} </p>
+        </span>
       </el-col>
       <el-col :span="8">
         <el-button-group style="float: right; margin-bottom: 2%">
@@ -41,10 +53,19 @@ export default {
   name: "PaperCard",
   props: {
     title: {default :"关于ZCH费了半天劲也不知道该在这填点啥的研究"},
-    authors: {default:["ZCH233","ZCH234","ZCH235"]},
-    content: {default: " 这可真是太迷惑了，你说是不是呢。今天跟着小编一起看看为什么德国和阿根廷会在世界杯上输给沙特和日本吧。这可真是太迷惑了，你说是不是呢。今天跟着小编一起看看为什么德国和阿根廷会在世界杯上输给沙特和日本吧。这可真是太迷惑了，你说是不是呢。今天跟着小编一起看看为什么德国和阿根廷会在世界杯上输给沙特和日本吧。这可真是太迷惑了，你说是不是呢。今天跟着小编一起看看为什么德国和阿根廷会在世界杯上输给沙特和日本吧。这可真是太迷惑了，你说是不是呢。今天跟着小编一起看看为什么德国和阿根廷会在世界杯上输给沙特和日本吧。"},
+    authors: {default:[{
+        "name": "Carmen Sandoval C",
+        "id": "53f31f52dabfae9a8444c921"
+      },{
+        "name": "ZCH233",
+        "id": "666666666666666"
+      }]},
+    content: {default: ""},
     source:{default:"自动废话集"},
-    cite:{default:233}
+    cite:{default:"N/A"},
+    year:{default:null},
+    keywords:[],
+    issue:""
   },
   data(){
     return{
@@ -54,8 +75,8 @@ export default {
   methods:{
     limitWords(txt){
       let str = txt;
-      if(str.length > 100)
-        str = str.substr(0,100) + '...';
+      if(str.length > 500)
+        str = str.substr(0,500) + '...';
       return str;
     },
     clickFavourite(){
@@ -65,9 +86,9 @@ export default {
       let str = "";
       let len = this.authors.length-1
       for(let i = 0;i < len; i++){
-        str = str + this.authors[i] + ",";
+        str = str + this.authors[i].name + ",";
       }
-      str = this.limitWords(str + this.authors[this.authors.length-1])
+      str = this.limitWords(str + this.authors[this.authors.length-1].name)
       return str
     }
   }
