@@ -195,6 +195,7 @@ import RelationShip from "@/components/RelationShip.vue";
 import ScholarLine from "@/components/ScholarLine.vue";
 import TopBar from "@/components/TopBar";
 import noteCard from "../../components/noteCard.vue";
+import $ from 'jquery';
 export default {
   inject: ["reload"],
   components: {
@@ -367,9 +368,7 @@ export default {
     // this.getSubscribeList();
     // this.getFollowTextList();
     // this.getHot();
-    
-    var body = document.getElementById("topbar");
-    body.style.display="none";
+    $('#topbar').css('display', 'none');
     window.addEventListener("scroll", this.scroll,true);
   },
   destroyed() {
@@ -516,19 +515,12 @@ export default {
     },
     scroll() {
       var windowTop = $(window).scrollTop();
-      windowTop > 300 ?
-      $('topbar').css('display', 'block'):
-      $('topbar').css('display', 'none')
-			// let that = this;
-			// let scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop;
-			// that.scrollTop = scrollTop;
-			// console.log(scrollTop)
-      // var body = document.getElementById("topbar");
-			// if (that.scrollTop > 300) {
-      //   body.style.display="block";
-			// } else {
-      //   body.style.display="none";
-			// }
+      // windowTop > 300 ?
+      if (windowTop > 300) {
+        $('#topbar').css('display', 'block');
+      } else {
+        $('#topbar').css('display', 'none');
+      }
 		},
     toggleDarkLight() {
       var body = document.getElementById("app");
