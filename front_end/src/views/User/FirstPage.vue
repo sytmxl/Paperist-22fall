@@ -1,11 +1,5 @@
 <template >
   <div class="light-mode" style="height:calc(100vh) width:calc(100vh)">
-    <!-- <el-row class="header_show"> 
-      这里是Header组件区 
-      <button id="switch" name="dark_light" @click="toggleDarkLight" title="Toggle dark/light mode">日/夜</button>
-    </el-row> -->
-    <!-- <TopBar/> -->
-    <!-- 比较特殊 顶栏等定制 -->
     <el-row class="logo_area">
       <div id="logo1" class="home_logo"></div>
     </el-row>
@@ -343,11 +337,14 @@ export default {
     //获取信息
     // this.getRecommendList();
     // this.getSubscribeList();
+
   },
   mounted() {
     // 获取一些信息
     // this.getRecommendList();
     // this.getSubscribeList();
+    var body = document.getElementById("topbar");
+    body.style.display="none";
   },
   methods: {
     // 获取推荐文章
@@ -674,9 +671,9 @@ export default {
   // overflow: hidden;
 }
 .home_logo {
-  width: 200px;
-  height: 120px;
-  margin: 0 auto;
+  width: 300px;
+  height: 200px;
+  margin: 50px auto 0px;
 }
 .logo_area {
   width: 100%;
@@ -686,7 +683,7 @@ export default {
 }
 .search_area {
   width: 100%;
-  min-height: calc(10vh) ;
+  min-height: calc(15vh) ;
   margin: 0 auto;
   // padding-top: calc(5vh);
   clear: both;
@@ -867,5 +864,8 @@ export default {
   height: 4px;
   border-radius: 2px;
   background: #003B55;
+}
+/deep/.el-input-group {
+
 }
 </style>
