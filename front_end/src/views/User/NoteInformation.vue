@@ -44,10 +44,10 @@
                 <el-card>
                     <!-- <iframe :src="url"></iframe> -->
                      <div class="home_wrap">
-                          <div class="pdf_down" >
+                          <!-- <div class="pdf_down" >
                               <div class="pdf_set_left"  @click="scaleD()">放大</div>
                               <div class="pdf_set_middle" @click="scaleX()">缩小</div>
-                          </div>
+                          </div> -->
 
 
                           <div :style="{width:pdf_div_width,margin:'0 auto'}" >
@@ -104,7 +104,7 @@ export default {
             5:{name:"论杰哥",intro:"介绍奇人杰哥",likes:8,collections:10,remarks:9}},
             imgUrl:"https://obs-0dcd.obs.cn-north-4.myhuaweicloud.com/1.png",
             author:{},
-            pdf_scale:1.0,//pdf放大系数
+            pdf_scale:1.2,//pdf放大系数
   	 	    pdf_pages:[],
   	 	    pdf_div_width:'',
   	 	    pdf_src:null,
