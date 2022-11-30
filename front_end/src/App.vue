@@ -119,7 +119,9 @@ $theme: #003B55;
   // background-size: cover;
   // margin-bottom: 20px;
 }
-
+.el-message {
+  margin-top: 60px;
+}
 /* 动画库 */
 @keyframes enter_label {
   0% {

@@ -131,8 +131,11 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+#topbar {
+  display:none !important;
+}
 .home_logo {
-
+  // display:none !important;
   width: 300px;
   height: 200px;
   margin: 0 auto;
