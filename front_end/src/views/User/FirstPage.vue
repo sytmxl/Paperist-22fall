@@ -530,7 +530,7 @@ export default {
 .home_logo {
   width: 300px;
   height: 200px;
-  margin: 50px auto 0px;
+  margin: 50px auto -70px;
 }
 .logo_area {
   width: 100%;
