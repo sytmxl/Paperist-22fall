@@ -56,6 +56,28 @@ const routes = [
         name: 'Manage',
         component: () => import('../views/Manager/index'),
         children: [
+          //  Cards
+          {
+            path: '/literature',
+            name: 'literatureCard',
+            component: () => import('../views/Manager/Cards/LiteratureCard.vue'),
+          },
+          {
+            path: '/note',
+            name: 'noteCard',
+            component: () => import('../views/Manager/Cards/NoteCard.vue'),
+          },
+          {
+            path: '/repre',
+            name: 'repreCard',
+            component: () => import('../views/Manager/Cards/RepreCard.vue'),
+          },
+          {
+            path: '/identity',
+            name: 'identyCard',
+            component: () => import('../views/Manager/Cards/IdentityCard.vue'),
+          },
+          //  Views
           {
             path: '/manageScholar',
             name: 'manageScholar',
