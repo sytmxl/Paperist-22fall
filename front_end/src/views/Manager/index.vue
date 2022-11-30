@@ -1,6 +1,5 @@
 <template>
   <el-row class="tac">
-    <TopBar/>
     <el-col :span="12">
       <h5>嘎嘎</h5>
       <el-menu

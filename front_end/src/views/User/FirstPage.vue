@@ -691,15 +691,6 @@ export default {
   // padding-top: calc(5vh);
   clear: both;
 }
-// .header_show {
-//   height: 45px;
-//   background-color: #409eff;
-//   color: #fff;
-//   font-size: 20px;
-//   line-height: 45px;
-//   text-align: center;
-// }
-
 .display_zone {
   width: 100%;
   min-height: 400px;
@@ -718,10 +709,12 @@ export default {
   height: 100%;
   padding: 3px 15px 15px 15px;
   margin-bottom: 20px;
+
   border-radius: 20px !important;
   box-shadow: 0 0 7px rgba(204, 204, 204, 0.713);
   background-color: rgba(255, 255, 255, 0.5);
   backdrop-filter: blur(40px) brightness(105%);
+
   overflow: hidden;
 }
 .hot {

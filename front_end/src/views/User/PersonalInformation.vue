@@ -1,16 +1,14 @@
 <template>
-  <!-- <TopBar/> -->
   <el-card class="mainCard">
-    
-    <el-button @click="isScholar = !isScholar"
+    <!-- <el-button @click="isScholar = !isScholar"
       >学者转换,去掉该按钮样式即恢复正常</el-button
     >
     <el-button @click="isOthers = !isOthers"
       >视角转换,去掉该按钮样式即恢复正常</el-button
-    >
+    > -->
     <el-container>
       <el-main>
-        <el-row style="margin-top: 1%; margin-bottom: 5.5%">
+        <el-row id="info" style="margin-top: 20px; margin-bottom: 20px;">
           <el-col :span="10">
             <!--:span占据行数-->
             <!--头像-->
@@ -40,7 +38,7 @@
             </el-upload>
           </el-col>
 
-          <el-col :span="11" style="margin-top: 1.5%">
+          <el-col class="des" :span="11" style="margin-top: 1.5%">
             <!--column2表示每行两个-->
             <el-descriptions
               :title="realname"
@@ -165,6 +163,12 @@
             </el-descriptions>
           </el-col>
         </el-row>
+        <el-button @click="isScholar = !isScholar"
+          >学者转换,去掉该按钮样式即恢复正常</el-button
+        >
+        <el-button @click="isOthers = !isOthers"
+          >视角转换,去掉该按钮样式即恢复正常</el-button
+        >
         <el-dialog
           title="更改您的密码"
           :visible.sync="isChangePassword"
@@ -402,7 +406,6 @@
                 </el-card>
               </div>
             </el-tab-pane>
-
             <el-tab-pane
               label="评论管理"
               name="fourth"
@@ -491,7 +494,6 @@
                 </el-tab-pane>
               </el-tabs>
             </el-tab-pane>
-
             <el-tab-pane label="个人设置" name="fifth" v-if="!isOthers">
               <div style="margin-left: 1%">
                 <el-card class="box-card1">
@@ -673,11 +675,25 @@ export default {
   border-radius: 50%;
 }
 .mainCard {
+  border-radius: 20px !important;
+  box-shadow: 0 0 7px rgba(204, 204, 204, 0.713);
+  background-color: rgba(255, 255, 255, 0.5);
+  backdrop-filter: blur(40px) brightness(105%);
   // height: 90%;
   width: 70%;
-  // margin-top: 5%;
+  // margin-top: 20px;
+  margin-bottom: 60px;
+  min-height: calc(100vh);
   margin-left: 15%;
+  transform: translate(0, 30px);//不知道为什么用margin顶栏也会受影响，用移动替代
+  .el-card {
+    background-color: rgba(255, 255, 255, 0.277) !important;
+    border-radius: 20px !important;
+
+  }
 }
+
+  
 
 .text {
   font-size: 14px;
@@ -714,5 +730,37 @@ export default {
 }
 .input-with-select .el-input-group__prepend {
   background-color: #fff;
+}
+/deep/.el-input-group__append {
+  border-radius: 0 10px 10px 0;
+  // color: #fff;
+  border: 0px;
+  background-color: #40a0ff00;
+}
+//tabs
+.el-tabs--left {
+  color: rgb(164, 170, 183) !important;
+  /* background: #000; */
+  border: rgba(164, 170, 183, 0.403) solid 1px;
+  border-radius: 28px !important;
+  // background-color: #ffffff7a;
+  padding: 10px 0px;
+}
+/* 这里的样式应该只能用/deep/改 */
+/deep/ .el-tabs__item.is-active {
+  color: rgb(2, 2, 2);
+}
+/deep/ .el-tabs__item:hover {
+  color: #75889c;
+}
+/deep/ .el-tabs__item {
+  color: #909399;
+  font-size: 14px;
+  font-weight: 500;
+}
+/deep/ .el-tabs__active-bar {
+  height: 4px;
+  border-radius: 2px;
+  background: #003B55;
 }
 </style>

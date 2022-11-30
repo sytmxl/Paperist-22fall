@@ -10,6 +10,9 @@ Vue.prototype.axios = axios
 Vue.config.productionTip = false
 Vue.use(ElementUI);
 
+axios.defaults.baseURL = ""
+axios.defaults.headers ["Content-Type"] = "application/x-www-form-urlencoded; charset=UTF-8"
+
 new Vue({
   router,
   store,
