@@ -64,15 +64,10 @@
                 </el-empty>
               </div>
               <div v-else>
-                <aboutCard
+                <noteCard
                   v-for="(item, index) in showSubscribeNoteList"
                   :key="index"
-                  :name="item.name"
-                  :author="item.author"
-                  :cite="item.cite"
-                  :origin="item.origin"
-                  :intro="item.intro"
-                  :date="item.date"
+                  :note="item"
                 />
                 <div id="load">
                   <el-button
@@ -198,8 +193,9 @@ import UploadText from "@/components/UploadText.vue";
 import MissTextComplain from "@/components/MissTextComplain.vue";
 import RelationShip from "@/components/RelationShip.vue";
 import ScholarLine from "@/components/ScholarLine.vue";
-import toggleDarkLight from "../../App.vue";
 import TopBar from "@/components/TopBar";
+import noteCard from "../../components/noteCard.vue";
+import $ from 'jquery';
 export default {
   inject: ["reload"],
   components: {
@@ -210,6 +206,7 @@ export default {
     RelationShip,
     ScholarLine,
     TopBar,
+    noteCard,
   },
   data() {
     return {
@@ -254,27 +251,38 @@ export default {
       showSubscribeNoteList: [
         {
           name: "论杰哥",
-          author: "马哥",
-          cite: "100",
-          origin: "中国科学院",
-          intro: "杰哥是个大帅哥",
-          date: "2020-10-10",
+          intro: "介绍奇人杰哥",
+          likes: 8,
+          collections: 10,
+          remarks: 9,
         },
         {
           name: "论杰哥",
-          author: "马哥",
-          cite: "100",
-          origin: "中国科学院",
-          intro: "杰哥是个大帅哥",
-          date: "2020-10-10",
+          intro: "介绍奇人杰哥",
+          likes: 8,
+          collections: 10,
+          remarks: 9,
         },
         {
           name: "论杰哥",
-          author: "马哥",
-          cite: "100",
-          origin: "中国科学院",
-          intro: "杰哥是个大帅哥",
-          date: "2020-10-10",
+          intro: "介绍奇人杰哥",
+          likes: 8,
+          collections: 10,
+          remarks: 9,
+        },
+        {
+          name: "论杰哥",
+          intro: "介绍奇人杰哥",
+          likes: 8,
+          collections: 10,
+          remarks: 9,
+        },
+        {
+          name: "论杰哥",
+          intro: "介绍奇人杰哥",
+          likes: 8,
+          collections: 10,
+          remarks: 9,
         },
       ],
       SubscribeTextList: [{}],
@@ -360,7 +368,12 @@ export default {
     // this.getSubscribeList();
     // this.getFollowTextList();
     // this.getHot();
+    $('#topbar').css('display', 'none');
+    window.addEventListener("scroll", this.scroll,true);
   },
+  destroyed() {
+		window.removeEventListener("scroll", this.scroll,true);
+	},
   methods: {
     // 获取推荐文章
     // getRecommendList() {
@@ -500,6 +513,15 @@ export default {
     uploadTextMiss() {
       this.$refs.MissTextComplain.uploadTextMiss();
     },
+    scroll() {
+      var windowTop = $(window).scrollTop();
+      // windowTop > 300 ?
+      if (windowTop > 300) {
+        $('#topbar').css('display', 'block');
+      } else {
+        $('#topbar').css('display', 'none');
+      }
+		},
     toggleDarkLight() {
       var body = document.getElementById("app");
       var currentClass = body.className;
@@ -530,7 +552,7 @@ export default {
 .home_logo {
   width: 300px;
   height: 200px;
-  margin: 50px auto 0px;
+  margin: 50px auto -70px;
 }
 .logo_area {
   width: 100%;

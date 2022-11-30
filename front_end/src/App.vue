@@ -11,7 +11,9 @@ export default {
   components: {
     Footer: footer,
   },
+
   methods: {
+    
     toggleDarkLight() {
       var body = document.getElementById("app");
       var currentClass = body.className;
@@ -112,6 +114,7 @@ $theme: #003B55;
   animation-name: enter_blur;
   animation-iteration-count: 1;
   animation-duration: 0.4s;
+  // animation: enter_blur 0.4s cubic-bezier(.23,1.38,.65,.99);
 }
 .main {
   background-repeat: no-repeat;
@@ -155,6 +158,16 @@ $theme: #003B55;
   100% {
     filter: blur(0px);
     opacity: 100%;
+  }
+}
+@keyframes exit_blur {
+  0% {
+    filter: blur(0px);
+    opacity: 100%;
+  }
+  100% {
+    filter: blur(20px);
+    opacity: 0%;
   }
 }
 

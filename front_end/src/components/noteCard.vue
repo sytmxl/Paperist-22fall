@@ -1,8 +1,8 @@
 <template>
 <div class="other_note">
        <el-card>
-        <span>论文名称：{{note.name}}</span>
-        <span>笔记简介：{{note.intro}}</span>
+        <span>论文名称：{{note.paper_name}}</span>
+        <span>笔记简介：{{note.introduction}}</span>
         <i class="el-icon-thumb">{{note.likes}}</i>
         <i class="el-icon-star-off">{{note.collections}}</i>
         <i class="el-icon-chat-round">{{note.remarks}}</i>
@@ -18,8 +18,8 @@ export default {
  
   props: {
     note:{
-        name:{},
-        intro:{},
+        paper_name:{},
+        introduction:{},
         likes:{},
         collections:{},
         remarks:{}

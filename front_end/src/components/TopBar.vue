@@ -1,7 +1,8 @@
 <template>
   <el-header id="topbar">
-    <div class="content">
+    <div id="bar-content">
       <img class="logo" src="../assets/logo/cube_logo.svg" @click="gotoFirstPage">
+
       <search-box/>
       <el-button  type="default" id="switch" name="dark_light" @click="toggleDarkLight" title="Toggle dark/light mode">日/夜</el-button>
       <div @click="get_avatar">test</div>
@@ -93,12 +94,27 @@ export default {
 
 <style lang="scss" scoped>
 #topbar {
-  z-index: 10000;
+  
+  z-index: 100;
   width: 100%;
   height:60px;
   position: fixed; 
+  transition: 0.3s;
+  // animation-name: exit_blur;
+  // animation-iteration-count: 1;
+  // animation-duration: 0.4s;
+  animation: test 0.3s cubic-bezier(.23,1.38,.65,.99);
 }
-.content {
+
+@keyframes test {
+  0% {
+    top:-60px;
+  }
+  100% {
+    top:0px;
+  }
+}
+#bar-content {
   width: max-content;
   margin: 0px auto;
   height: 60px;
@@ -115,12 +131,22 @@ export default {
   cursor: pointer;
   // margin: 200px;
 }
+
 .search_input {
-  margin: 10px auto 0px 20px;
+  margin: 10px auto 0px auto;
   width: 300px;
   transition: 0.3s;
   padding: auto;
   // overflow: hidden;
+  &:hover {
+    width: 800px;
+    /deep/.el-input-group__prepend {
+      display: table-cell;
+    }
+    /deep/.advsearch {
+      display: block;
+    }
+  }
 }
 /deep/.el-input-group__prepend {
   display: none;
@@ -141,15 +167,6 @@ export default {
 //     }
 //   }
 // }
-.search_input:hover {
-    width: 800px;
-    /deep/.el-input-group__prepend {
-      display: table-cell;
-    }
-    /deep/.advsearch {
-      display: block;
-    }
-  }
 #switch {
   width: 100px;
   height: 40px;
@@ -162,5 +179,15 @@ export default {
 }
 .el-avatar:hover {
   cursor: pointer;
+}
+@keyframes exit_blur {
+  0% {
+    filter: blur(0px);
+    opacity: 100%;
+  }
+  100% {
+    filter: blur(20px);
+    opacity: 0%;
+  }
 }
 </style>

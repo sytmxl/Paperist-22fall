@@ -129,18 +129,15 @@ export default {
             type: 'success'
           });
           sessionStorage.setItem("token", res.data.token);
+          await this.$router.push("/FirstPage")
         }
-      })
-      await this.$router.push("/FirstPage")
+      }) 
     }
   }
 };
 </script>
 
 <style lang="scss" scoped>
-#topbar {
-  display:none !important;
-}
 .home_logo {
   // display:none !important;
   width: 300px;
