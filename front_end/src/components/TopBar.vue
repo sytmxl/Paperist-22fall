@@ -94,6 +94,7 @@ export default {
 
 <style lang="scss" scoped>
 #topbar {
+  
   z-index: 100;
   width: 100%;
   height:60px;
@@ -102,6 +103,16 @@ export default {
   // animation-name: exit_blur;
   // animation-iteration-count: 1;
   // animation-duration: 0.4s;
+  animation: test 0.3s cubic-bezier(.23,1.38,.65,.99);
+}
+
+@keyframes test {
+  0% {
+    top:-60px;
+  }
+  100% {
+    top:0px;
+  }
 }
 #bar-content {
   width: max-content;
