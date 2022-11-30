@@ -214,12 +214,13 @@ export default {
         }
       }
       if(flag){
+        sessionStorage.setItem("AdvancedSearchInput", JSON.stringify(this.AdvancedSearchInput));
         this.$router.push({
           path: "/result",
-          query: {
-            input: this.AdvancedSearchInput.AdAuthor,
-            type: 7,
-          },
+          // query: {
+          //   input: this.AdvancedSearchInput.AdAuthor,
+          //   type: 7,
+          // },
         });
       }
       else{

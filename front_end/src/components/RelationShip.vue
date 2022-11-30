@@ -62,6 +62,7 @@ export default {
         //console.log(this.myChart);
       },
     },
+    // 学者名字变化
     Mname: {
       handler(newValue, oldValue) {
         this.myChart.clear();
