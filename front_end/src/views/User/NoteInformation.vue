@@ -1,7 +1,6 @@
 <template>
     
     <el-container class="root">
-        
         <TopBar/> 
        <el-main class="left base">
         <div class="author">
@@ -40,43 +39,42 @@
 
        </el-main>
         <el-main class="right base">
-            <div class="content">
-                <el-card>
-                    <!-- <iframe :src="url"></iframe> -->
-                     <div class="home_wrap">
-                          <div class="pdf_down" >
-                              <div class="pdf_set_left"  @click="scaleD()">放大</div>
-                              <div class="pdf_set_middle" @click="scaleX()">缩小</div>
-                          </div>
+					<div class="content">
+						<el-card>
+								<!-- <iframe :src="url"></iframe> -->
+							<div class="home_wrap">
+							<div class="pdf_down" >
+									<div class="pdf_set_left"  @click="scaleD()">放大</div>
+									<div class="pdf_set_middle" @click="scaleX()">缩小</div>
+							</div>
 
 
-                          <div :style="{width:pdf_div_width,margin:'0 auto'}" >
-                              <canvas v-for="page in pdf_pages" :id="'the_canvas'+page" :key="page"></canvas>
-                          </div>
-                     </div>
-                </el-card>
-            </div>
-            <div class="remark">
-							<el-card>
-                  <div class="creat_comment">
-                                <el-button @click="CreatCommentVisible =true">我要评论</el-button>
-                    </div>
-                                <div v-if="Object.keys(remark_list).length!=0">
-                              <div class="comment" v-for="i in remark_list" :key="i">
-                                <remark :list="i"/>
-                            </div>
-                            </div>
-                            <div v-else><el-empty description="还没有评论，发表第一个评论吧"></el-empty></div>
-                            <el-dialog
-                                title="留下你的评论吧~"
-                                :visible.sync="CreatCommentVisible"
-                                width="30%"
-                                :before-close="handleClose">
-                                <CreateComment/>
-                              </el-dialog>
-                </el-card>
-            </div>
-
+							<div :style="{width:pdf_div_width,margin:'0 auto'}" >
+									<canvas v-for="page in pdf_pages" :id="'the_canvas'+page" :key="page"></canvas>
+							</div>
+							</div>
+						</el-card>
+					</div>
+					<div class="remark">
+						<el-card>
+							<div class="creat_comment">
+								<el-button @click="CreatCommentVisible =true">我要评论</el-button>
+							</div>
+							<div v-if="Object.keys(remark_list).length!=0">
+								<div class="comment" v-for="i in remark_list" :key="i">
+									<remark :list="i"/>
+								</div>
+							</div>
+							<div v-else><el-empty description="还没有评论，发表第一个评论吧"></el-empty></div>
+							<el-dialog
+								title="留下你的评论吧~"
+								:visible.sync="CreatCommentVisible"
+								width="30%"
+								:before-close="handleClose">
+								<CreateComment/>
+							</el-dialog>
+						</el-card>
+					</div>
        </el-main>
     </el-container>
 </template>
@@ -273,7 +271,7 @@ export default {
 	width: 70%;
 	margin-right: 100px;
 		margin-top: 30px;
-	//  overflow: hidden;
+	 overflow: hidden;
 	.content{
     height: calc(100vh);
 		.el-card{
@@ -283,16 +281,19 @@ export default {
 	}
 	.remark{
     // height: 600px;
-    margin-top: 50px;
+    margin-top: 30px;
 	}
+
 }
 .creat_comment{
   width:100%;
 	.el-button{
 		width:100%;
 		// opacity: 0.6;
-
 	}
+	position: sticky;
+	position: -webkit-sticky;
+	top: 0;
 }
 .home_wrap{
    width: 100%;
@@ -305,16 +306,16 @@ export default {
  right:26px;
  bottom:7%;
 }
- .pdf_set_left{
-      width: 30px;
-      height: 40px;
-      color: #408FFF;
-      font-size: 11px;
-      padding-top:25px;
-      text-align: center;
-      margin-right: 5px;
-      cursor: pointer;
- }
+.pdf_set_left{
+		width: 30px;
+		height: 40px;
+		color: #408FFF;
+		font-size: 11px;
+		padding-top:25px;
+		text-align: center;
+		margin-right: 5px;
+		cursor: pointer;
+}
  .pdf_set_middle{
       width: 30px;
       height: 40px;
