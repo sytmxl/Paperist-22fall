@@ -193,7 +193,6 @@ import UploadText from "@/components/UploadText.vue";
 import MissTextComplain from "@/components/MissTextComplain.vue";
 import RelationShip from "@/components/RelationShip.vue";
 import ScholarLine from "@/components/ScholarLine.vue";
-import toggleDarkLight from "../../App.vue";
 import TopBar from "@/components/TopBar";
 import noteCard from "../../components/noteCard.vue";
 export default {
@@ -368,7 +367,13 @@ export default {
     // this.getSubscribeList();
     // this.getFollowTextList();
     // this.getHot();
+    var body = document.getElementById("topbar");
+    body.style.display="none";
+    window.addEventListener("scroll", this.scroll,true);
   },
+  destroyed() {
+		window.removeEventListener("scroll", this.scroll,true);
+	},
   methods: {
     // 获取推荐文章
     // getRecommendList() {
@@ -508,6 +513,18 @@ export default {
     uploadTextMiss() {
       this.$refs.MissTextComplain.uploadTextMiss();
     },
+    scroll() {
+			let that = this;
+			let scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop;
+			that.scrollTop = scrollTop;
+			// console.log(scrollTop)
+      var body = document.getElementById("topbar");
+			if (that.scrollTop > 300) {
+        body.style.display="block";
+			} else {
+        body.style.display="none";
+			}
+		},
     toggleDarkLight() {
       var body = document.getElementById("app");
       var currentClass = body.className;
@@ -733,5 +750,6 @@ export default {
   background: #003b55;
 }
 /deep/.el-input-group {
+
 }
 </style>
