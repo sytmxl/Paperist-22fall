@@ -94,7 +94,7 @@ export default {
 
 <style lang="scss" scoped>
 #topbar {
-  z-index: 10000;
+  z-index: 100;
   width: 100%;
   height:60px;
   position: fixed; 

@@ -367,6 +367,7 @@ export default {
     // this.getSubscribeList();
     // this.getFollowTextList();
     // this.getHot();
+    
     var body = document.getElementById("topbar");
     body.style.display="none";
     window.addEventListener("scroll", this.scroll,true);
@@ -514,16 +515,20 @@ export default {
       this.$refs.MissTextComplain.uploadTextMiss();
     },
     scroll() {
-			let that = this;
-			let scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop;
-			that.scrollTop = scrollTop;
+      var windowTop = $(window).scrollTop();
+      windowTop > 300 ?
+      $('topbar').css('display', 'block'):
+      $('topbar').css('display', 'none')
+			// let that = this;
+			// let scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop;
+			// that.scrollTop = scrollTop;
 			// console.log(scrollTop)
-      var body = document.getElementById("topbar");
-			if (that.scrollTop > 300) {
-        body.style.display="block";
-			} else {
-        body.style.display="none";
-			}
+      // var body = document.getElementById("topbar");
+			// if (that.scrollTop > 300) {
+      //   body.style.display="block";
+			// } else {
+      //   body.style.display="none";
+			// }
 		},
     toggleDarkLight() {
       var body = document.getElementById("app");
