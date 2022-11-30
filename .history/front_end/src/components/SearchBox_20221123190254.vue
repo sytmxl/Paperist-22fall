@@ -1,8 +1,8 @@
 <template>
   <div class="search_input">
     <el-row :gutter="10">
-      <el-col :span="20">
-        <el-input
+      <el-col :span="20"
+        ><el-input
           placeholder="请输入内容"
           v-model="input"
           class="input-with-select"
@@ -17,21 +17,23 @@
             ></el-option>
           </el-select>
           <el-button
-            id="search-button"
-            type="default"
+            type="primary"
             slot="append"
             icon="el-icon-search"
             @click="SimpletoResult"
+            >开始搜索</el-button
           >
-            <!-- 开始搜索 -->
-          </el-button>
-        </el-input>
-      </el-col>
-      <el-col class="advsearch" :span="4">
-        <el-button type="primary" round @click="AdvancedSearch()"
-          >高级搜索
-        </el-button>
-      </el-col>
+        </el-input></el-col
+      >
+      <el-col :span="4"
+        ><el-button
+          type="primary"
+          icon="el-icon-search"
+          round
+          @click="AdvancedSearch()"
+          >高级搜索</el-button
+        ></el-col
+      >
     </el-row>
     <el-row
       v-if="this.isAdvanced"
@@ -52,7 +54,7 @@
             size="mini"
           >
             <el-form-item label="包含全部检索词" prop="Allselect">
-              <el-input v-model="AdvancedSearchInput.Allselect"></el-input>
+              <el-input v-model="AdvancedSearchInput.allselect"></el-input>
             </el-form-item>
             <el-form-item label="包含精确检索词" prop="Exectselect">
               <el-input
@@ -83,7 +85,7 @@
             </el-form-item>
             <el-form-item label="出现检索词的位置" prop="Position">
               <el-select
-                v-model="option.PositionValue"
+                v-model="PositionValue"
                 placeholder="请选择"
                 style="width: 150px; margin-left: -58%"
               >
@@ -111,7 +113,7 @@
                 placeholder="请输入名称"
               >
                 <el-select
-                  v-model="option.PublishSelect"
+                  v-model="PublishSelect"
                   slot="prepend"
                   placeholder="请选择"
                 >
@@ -122,30 +124,22 @@
             </el-form-item>
             <el-form-item label="发表时间" prop="AdTime">
               <el-date-picker
-                class="date-picker"
                 v-model="AdvancedSearchInput.date1"
-                type="year"
-                placeholder="起始年份"
-              >
-              </el-date-picker>
-              <div style="float: left">&nbsp;-&nbsp;</div>
-              <el-date-picker
-                class="date-picker"
-                v-model="AdvancedSearchInput.date2"
-                type="year"
-                placeholder="终止年份"
+                type="daterange"
+                range-separator="至"
+                start-placeholder="开始日期"
+                end-placeholder="结束日期"
               >
               </el-date-picker>
             </el-form-item>
             <el-form-item label="语言检索范围" prop="AdLang">
               <el-select
-                v-model="option.LangValue"
+                v-model="LangValue"
                 placeholder="请选择"
                 style="width: 150px; margin-left: -58%"
               >
-                <el-option label="不限" value="1"></el-option>
-                <el-option label="中文" value="2"></el-option>
-                <el-option label="英语" value="3"></el-option>
+                <el-option label="中文" value="1"></el-option>
+                <el-option label="英语" value="2"></el-option>
               </el-select>
             </el-form-item>
           </el-form>
@@ -172,6 +166,7 @@ export default {
     return {
       input: "",
       PublishSelect: "1",
+      PositionValue: 1,
       LangValue: "1",
       select: 1,
       isAdvanced: false,
@@ -183,14 +178,6 @@ export default {
         { label: "摘要", value: 5 },
         { label: "DOI", value: 6 },
       ],
-      option: {
-        // 1：摘要 2：标题
-        PositionValue: 1,
-        // 1：不限 2：中文 3：英语
-        LangValue: "1",
-        // 1：期刊 2：会议
-        PublishSelect: "1",
-      },
       AdvancedSearchInput: {
         Allselect: "",
         Exectselect: "",
@@ -199,12 +186,12 @@ export default {
         AdAuthor: "",
         AdOrganization: "",
         AdPublish: "",
-        date1: "",
-        date2: "",
+        AdTime: "",
+        AdLang: "",
       },
       Positions: [
         {
-          label: "文章摘要",
+          label: "文章任何位置",
           value: 1,
         },
         {
@@ -223,29 +210,22 @@ export default {
     GoAdvancedSearch() {
       console.log("GoAdvancedSearch");
       let obj = this.AdvancedSearchInput;
-      let flag = false;
+      let flag=false;
       for (let key in obj) {
         if (obj[key] != "") {
-          flag = true;
+          flag=true;
         }
       }
-      if (flag) {
-        sessionStorage.setItem(
-          "AdvancedSearchInput",
-          JSON.stringify(this.AdvancedSearchInput)
-        );
-        sessionStorage.setItem(
-          "AdvancedSearchOptions",
-          JSON.stringify(this.option)
-        );
+      if(flag){
         this.$router.push({
           path: "/result",
-          // query: {
-          //   input: this.AdvancedSearchInput.AdAuthor,
-          //   type: 7,
-          // },
+          query: {
+            input: this.AdvancedSearchInput.AdAuthor,
+            type: 7,
+          },
         });
-      } else {
+      }
+      else{
         this.$message({
           message: "请输入有效信息",
           type: "error",
@@ -278,45 +258,23 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.date-picker {
-  float: left;
-
-  width: 48% !important;
-}
 .search_input {
-  // width: 55%;
-  // margin: 20px auto;
-  // padding: auto;
+  width: 55%;
+  margin: 20px auto;
 }
 
 .el-select {
-  // width: 100px;
+  width: 110px;
 }
 .input-with-select .el-input-group__prepend {
-  // background-color: #fff;
+  background-color: #fff;
 }
-
-/deep/.el-input-group__prepend {
-  border-radius: 10px;
-  // border: 1px solid #647c90 ;
-  width: 50px;
-  border: 0px;
-  color: white;
-  background-color: #647c90;
+.el-input-group__prepend {
+  border-radius: 18px 0 0 18px;
 }
-/deep/.el-input-group__append {
-  border-radius: 0 10px 10px 0;
-  // color: #fff;
-  border: 0px;
-  background-color: #40a0ff00;
-}
-#search-button {
-  border: 1px solid white;
-}
-/deep/.el-select-dropdown__list {
-  border: 10px !important;
-}
-.el-select-dropdown__item.selected {
-  color: #003b55;
+.el-input-group__append {
+  border-radius: 0 18px 18px 0;
+  color: #fff;
+  background-color: #409eff;
 }
 </style>

@@ -1,10 +1,13 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
+import HomeView from '../views/HomeView.vue'
+import UserRoot from "@/views/UserRoot";
+
 Vue.use(VueRouter)
 
 const routes = [
   {
-    path: '/',
+    path: '/FirstPage',
     name: 'home',
     component: () => import( '../views/UserRoot.vue'),
     children:[
@@ -53,28 +56,6 @@ const routes = [
         name: 'Manage',
         component: () => import('../views/Manager/index'),
         children: [
-          //  Cards
-          {
-            path: '/literature',
-            name: 'literatureCard',
-            component: () => import('../views/Manager/Cards/LiteratureCard.vue'),
-          },
-          {
-            path: '/note',
-            name: 'noteCard',
-            component: () => import('../views/Manager/Cards/NoteCard.vue'),
-          },
-          {
-            path: '/repre',
-            name: 'repreCard',
-            component: () => import('../views/Manager/Cards/RepreCard.vue'),
-          },
-          {
-            path: '/identity',
-            name: 'identyCard',
-            component: () => import('../views/Manager/Cards/IdentityCard.vue'),
-          },
-          //  Views
           {
             path: '/manageScholar',
             name: 'manageScholar',
@@ -117,7 +98,6 @@ const routes = [
           },
         ]
       },
-
     ]
   },
   {
@@ -127,54 +107,7 @@ const routes = [
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
     component: () => import( '../views/AboutView.vue')
-  },
-  {
-    path: '/manage',
-    name: 'Manage',
-    component: () => import('../views/Manager/index'),
-    children: [
-      {
-        path: '/manageScholar',
-        name: 'manageScholar',
-        component: () => import('../views/Manager/ManageScholar'),
-      },
-      {
-        path: '/auditRepresentation',
-        name: 'auditRepresentation',
-        component: () => import('../views/Manager/AuditRepresentation'),
-      },
-      {
-        path: '/auditIdentity',
-        name: 'auditIdentity',
-        component: () => import('../views/Manager/AuditIdentity'),
-      },
-      {
-        path: '/auditLack',
-        name: 'auditLack',
-        component: () => import('../views/Manager/AuditLack'),
-      },
-      {
-        path: '/auditComments',
-        name: 'auditComments',
-        component: () => import('../views/Manager/AuditComments'),
-      },
-      {
-        path: '/auditNote',
-        name: 'auditNote',
-        component: () => import('../views/Manager/AuditNote'),
-      },
-      {
-        path: '/auditLiterature',
-        name: 'auditLiterature',
-        component: () => import('../views/Manager/AuditLiterature'),
-      },
-      {
-        path: '/importLiterature',
-        name: 'importLiterature',
-        component: () => import('../views/Manager/ImportLiterature'),
-      },
-    ]
-  },
+  }
 ]
 
 const router = new VueRouter({

@@ -48,15 +48,15 @@ export default {
   width: auto !important;
   border-radius: 10px !important;
   background: none;
-  
   margin-bottom: 15px !important;
 }
 .dark-mode {
   .el-card {
-    background-color: rgba(255, 255, 255, 0.2);
-    border: none !important;
-    color: rgb(0, 0, 0) !important;
-    backdrop-filter: blur(20px) brightness(100%);
+    background-color: rgba(255, 255, 255, 0);
+    // border: none !important;
+    border-color: rgba(215, 215, 215, 0.691);
+    color: rgb(245, 245, 245) !important;
+    // backdrop-filter: blur(20px) brightness(100%);
   }
 }
 </style>

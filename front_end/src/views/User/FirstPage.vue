@@ -1,9 +1,5 @@
-<template >
+<template>
   <div class="light-mode" style="height:calc(100vh) width:calc(100vh)">
-    <el-row class="header_show"> 
-      这里是Header组件区 
-      <button id="switch" name="dark_light" @click="toggleDarkLight" title="Toggle dark/light mode">日/夜</button>
-    </el-row>
     <el-row class="logo_area">
       <div id="logo1" class="home_logo"></div>
     </el-row>
@@ -34,32 +30,107 @@
                 >
               </div>
             </el-tab-pane>
-            <el-tab-pane label="订阅推送" name="second"
-              ><div
-                class="SubscribePlaceInfo"
-                v-if="isEmptyObject(showSubscribeList)"
-              >
-                <span>你还没有订阅期刊&nbsp;\&nbsp;会议，快去</span>
-                <a href="www.baidu.com">订阅</a>吧！
-              </div>
-              <aboutCard
-                v-else
-                v-for="(item, index) in showSubscribeList"
-                :key="index"
-                :name="item.name"
-                :author="item.author"
-                :cite="item.cite"
-                :origin="item.origin"
-                :intro="item.intro"
-                :date="item.date"
-              />
-              <div id="load">
-                <el-button
-                  style="width: 100%"
-                  @click="loadSub()"
-                  v-loading="start2"
-                  >加载更多</el-button
+            <el-tab-pane label="关注笔记" name="second">
+              <div v-if="!isLogin()" class="SubscribeNotePlaceInfo">
+                <el-empty
+                  description="你还没有登录，快去登录吧！"
+                  :image-size="120"
                 >
+                  <el-button type="primary" @click="tologin()"
+                    >立即登录</el-button
+                  >
+                </el-empty>
+              </div>
+              <div
+                class="SubscribeNotePlaceInfo"
+                v-else-if="isEmptyObject(showSubscribePeopleList)"
+              >
+                <el-empty
+                  description="你还没有关注别人，快去逛逛吧！"
+                  :image="require('@/assets/followuser.svg')"
+                  :image-size="100"
+                >
+                </el-empty>
+              </div>
+              <div
+                class="SubscribeNotePlaceInfo"
+                v-else-if="isEmptyObject(showSubscribeNoteList)"
+              >
+                <el-empty
+                  description="你关注的人，并没有笔记更新，快去逛逛吧！"
+                  :image="require('@/assets/followNote.svg')"
+                  :image-size="100"
+                >
+                </el-empty>
+              </div>
+              <div v-else>
+                <noteCard
+                  v-for="(item, index) in showSubscribeNoteList"
+                  :key="index"
+                  :note="item"
+                />
+                <div id="load">
+                  <el-button
+                    style="width: 100%"
+                    @click="loadSub()"
+                    v-loading="start2"
+                    >加载更多</el-button
+                  >
+                </div>
+              </div></el-tab-pane
+            >
+            <el-tab-pane label="订阅文章" name="third">
+              <div v-if="!isLogin()" class="SubscribeNotePlaceInfo">
+                <el-empty
+                  description="你还没有登录，快去登录吧！"
+                  :image-size="120"
+                >
+                  <el-button type="primary" @click="tologin()"
+                    >立即登录</el-button
+                  >
+                </el-empty>
+              </div>
+              <div
+                class="SubscribeNotePlaceInfo"
+                v-else-if="isEmptyObject(showSubscribePeopleList)"
+              >
+                <el-empty
+                  description="你还没有关注别人，快去逛逛吧！"
+                  :image="require('@/assets/followuser.svg')"
+                  :image-size="100"
+                >
+                </el-empty>
+              </div>
+              <div
+                class="SubscribeNotePlaceInfo"
+                v-else-if="isEmptyObject(showSubscribeTextList)"
+              >
+                <el-empty
+                  description="你关注的人，并没有文章更新，快去逛逛吧！"
+                  :image="require('@/assets/followText.svg')"
+                  :image-size="100"
+                >
+                </el-empty>
+              </div>
+              <div v-else>
+                <aboutCard
+                  v-for="(item, index) in showSubscribeTextList"
+                  :key="index"
+                  :name="item.name"
+                  :author="item.author"
+                  :cite="item.cite"
+                  :origin="item.origin"
+                  :intro="item.intro"
+                  :date="item.date"
+                />
+                <div id="load">
+                  <el-button
+                    style="width: 100%"
+                    @click="loadSub2()"
+                    v-loading="start3"
+                    >加载更多</el-button
+                  >
+                </div>
               </div></el-tab-pane
             >
           </el-tabs>
@@ -72,8 +143,10 @@
             <div class="meau_params">热度</div>
           </div>
           <div class="index_new_paper_rank_content">
-            <div v-for="(value, index) in hot" :key="value">
-              <div v-for="(val, key) in value" :key="key">
+            <!-- 遍历列表 -->
+            <div v-for="(item, index) in hot" :key="item">
+              <!-- 遍历对象属性 -->
+              <div v-for="(value, key) in item" :key="key">
                 <li style="list-style: none">
                   <a>
                     <div class="content_item_id">
@@ -93,227 +166,23 @@
                     <div class="content_item_title" @click="search_field(key)">
                       {{ key }}
                     </div>
-                    <div class="content_item_cite">{{ parseInt(val) }}</div>
+                    <div class="content_item_cite">{{ parseInt(value) }}</div>
                   </a>
                 </li>
               </div>
             </div>
           </div></el-card
         >
-        <el-button type="primary" style="width: 45%" @click="uploadText()"
+        <!-- <el-button type="primary" style="width: 45%" @click="uploadText()"
           >上传特定文献</el-button
-        >
-        <el-button type="danger" style="width: 45%" @click="uploadTextMiss()"
+        > -->
+        <el-button type="danger" style="width: 70%" @click="uploadTextMiss()"
           >反馈文献缺失</el-button
         >
       </el-col>
     </el-row>
-    <UploadText ref="UploadText"> </UploadText>
+    <!-- <UploadText ref="UploadText"> </UploadText> -->
     <MissTextComplain ref="MissTextComplain"> </MissTextComplain>
-    <!-- <el-dialog
-      v-if="UploadDialogVisible"
-      :modal="false"
-      title="上传文献"
-      :visible.sync="UploadDialogVisible"
-      width="50%"
-      :close-on-click-modal="false"
-      :close-on-press-escape="false"
-      :append-to-body="true"
-      top="10vh"
-      center
-    >
-      <el-steps :active="active" align-center finish-status="success">
-        <el-step title="文献基本信息"> </el-step>
-        <el-step title="输入文献链接"> </el-step>
-      </el-steps>
-      <el-form
-        v-show="active === 0"
-        :model="Text"
-        :rules="rules"
-        ref="Text"
-        label-width="110px"
-        class="demo-Text"
-        style="margin-top: 30px; padding-bottom: -20px"
-        size="mini"
-      >
-        <el-form-item label="文献名称" prop="name">
-          <el-input v-model="Text.name"></el-input>
-        </el-form-item>
-        <el-form-item label="文献作者" prop="author">
-          <el-input v-model="Text.author">
-            <el-dropdown slot="suffix" size="mini" placement="top-start">
-              <i class="el-icon-warning-outline el-input__icon"> </i>
-              <el-dropdown-menu slot="dropdown">
-                <el-dropdown-item disabled
-                  >文章作者按顺序用顿号隔开</el-dropdown-item
-                >
-              </el-dropdown-menu>
-            </el-dropdown></el-input
-          >
-        </el-form-item>
-        <el-form-item label="文献关键词" prop="keyword">
-          <el-input v-model="Text.keyword"></el-input>
-        </el-form-item>
-        <el-form-item label="文献发表日期" prop="date">
-          <el-date-picker
-            type="date"
-            placeholder="选择日期"
-            v-model="Text.date"
-            style="width: 100%"
-          ></el-date-picker>
-        </el-form-item>
-        <el-form-item label="文献DOI" prop="doi">
-          <el-input v-model="Text.doi"></el-input>
-        </el-form-item>
-        <el-form-item label="文献摘要" prop="summary">
-          <el-input type="textarea" v-model="Text.summary"></el-input>
-        </el-form-item>
-      </el-form>
-      <el-form
-        v-show="active === 1"
-        :model="Domains"
-        ref="Domains"
-        label-width="110px"
-        class="demo-Text"
-        style="margin-top: 30px; padding-bottom: -20px"
-        size="mini"
-        :inline="true"
-      >
-        <el-form-item
-          v-for="(url, index) in Domains.urls"
-          :label="'域名' + index"
-          :key="url.key"
-          :prop="'urls.' + index + '.value'"
-          :rules="{
-            required: true,
-            message: '域名不能为空',
-            trigger: 'blur',
-          }"
-          size="mini"
-          ><el-col :span="21">
-            <el-input v-model="url.value" style="width: 100%"></el-input
-            ><el-button @click="addDomain">新增域名</el-button
-            ><el-button @click.prevent="removeDomain(url)">删除</el-button>
-          </el-col>
-        </el-form-item>
-      </el-form>
-      <span v-if="active <= 0" slot="footer" class="dialog-footer">
-        <el-button class="forget" @click="CancelUp()">取 消</el-button>
-        <el-button @click="submitForm1('Text')">下一步</el-button>
-      </span>
-      <span v-else slot="footer" class="dialog-footer">
-        <el-button class="forget" @click="CancelUp()">取 消</el-button>
-        <el-button class="forget" @click="active = 0">上一步</el-button>
-        <el-button
-          class="forget"
-          type="primary"
-          @click="ConfirmUploadText('Domains')"
-          >上 传
-        </el-button>
-      </span>
-    </el-dialog> -->
-    <!-- <el-dialog
-      v-if="MissTextDialogVisible"
-      :modal="false"
-      title="反馈文献缺失"
-      :visible.sync="MissTextDialogVisible"
-      width="50%"
-      :close-on-click-modal="false"
-      :close-on-press-escape="false"
-      :append-to-body="true"
-      top="10vh"
-      center
-    >
-      <el-steps :active="Miss_Active" align-center finish-status="success">
-        <el-step title="缺失文献基本信息"> </el-step>
-        <el-step title="输入缺失文献链接"> </el-step>
-      </el-steps>
-      <el-form
-        v-show="Miss_Active === 0"
-        :model="MissText"
-        :rules="rules"
-        ref="MissText"
-        label-width="110px"
-        class="demo-MissText"
-        style="margin-top: 30px; padding-bottom: -20px"
-        size="mini"
-      >
-        <el-form-item label="文献名称" prop="name">
-          <el-input v-model="MissText.name"></el-input>
-        </el-form-item>
-        <el-form-item label="文献作者" prop="author">
-          <el-input v-model="MissText.author">
-            <el-dropdown slot="suffix" size="mini" placement="top-start">
-              <i class="el-icon-warning-outline el-input__icon"> </i>
-              <el-dropdown-menu slot="dropdown">
-                <el-dropdown-item disabled
-                  >文章作者按顺序用顿号隔开</el-dropdown-item
-                >
-              </el-dropdown-menu>
-            </el-dropdown></el-input
-          >
-        </el-form-item>
-        <el-form-item label="文献关键词" prop="keyword">
-          <el-input v-model="MissText.keyword"></el-input>
-        </el-form-item>
-        <el-form-item label="文献发表日期" prop="date">
-          <el-date-picker
-            type="date"
-            placeholder="选择日期"
-            v-model="MissText.date"
-            style="width: 100%"
-          ></el-date-picker>
-        </el-form-item>
-        <el-form-item label="文献DOI" prop="doi">
-          <el-input v-model="MissText.doi"></el-input>
-        </el-form-item>
-        <el-form-item label="文献摘要" prop="summary">
-          <el-input type="textarea" v-model="MissText.summary"></el-input>
-        </el-form-item>
-      </el-form>
-      <el-form
-        v-show="Miss_Active === 1"
-        :model="MissDomains"
-        ref="MissDomains"
-        label-width="110px"
-        class="demo-MissText"
-        style="margin-top: 30px; padding-bottom: -20px"
-        size="mini"
-        :inline="true"
-      >
-        <el-form-item
-          v-for="(url, index) in MissDomains.urls"
-          :label="'域名' + index"
-          :key="url.key"
-          :prop="'urls.' + index + '.value'"
-          :rules="{
-            required: true,
-            message: '域名不能为空',
-            trigger: 'blur',
-          }"
-          size="mini"
-          ><el-col :span="21">
-            <el-input v-model="url.value" style="width: 100%"></el-input
-            ><el-button @click="addMissDomain">新增域名</el-button
-            ><el-button @click.prevent="removeMissDomain(url)">删除</el-button>
-          </el-col>
-        </el-form-item>
-      </el-form>
-      <span v-if="Miss_Active <= 0" slot="footer" class="dialog-footer">
-        <el-button class="forget" @click="CancelUpMiss()">取 消</el-button>
-        <el-button @click="submitForm1_Miss('MissText')">下一步</el-button>
-      </span>
-      <span v-else slot="footer" class="dialog-footer">
-        <el-button class="forget" @click="CancelUpMiss()">取 消</el-button>
-        <el-button class="forget" @click="Miss_Active = 0">上一步</el-button>
-        <el-button
-          class="forget"
-          type="primary"
-          @click="ConfirmUploadMissText('MissDomains')"
-          >上 传
-        </el-button>
-      </span>
-    </el-dialog> -->
   </div>
 </template>
 
@@ -324,7 +193,9 @@ import UploadText from "@/components/UploadText.vue";
 import MissTextComplain from "@/components/MissTextComplain.vue";
 import RelationShip from "@/components/RelationShip.vue";
 import ScholarLine from "@/components/ScholarLine.vue";
-import toggleDarkLight from "../../App.vue";
+import TopBar from "@/components/TopBar";
+import noteCard from "../../components/noteCard.vue";
+import $ from 'jquery';
 export default {
   inject: ["reload"],
   components: {
@@ -334,230 +205,22 @@ export default {
     MissTextComplain,
     RelationShip,
     ScholarLine,
-  },
-  created() {
-    //获取信息
-    // this.getRecommendList();
-    // this.getSubscribeList();
-  },
-  mounted() {
-    // 获取一些信息
-    // this.getRecommendList();
-    // this.getSubscribeList();
-  },
-  methods: {
-    // 获取推荐文章
-    // getRecommendList() {
-    //   this.$http
-    //     .get("/api/recommend")
-    //     .then((res) => {
-    //       this.recommendList = res.data;
-    //       this.showRecommendList = this.recommendList.slice(0, 10);
-    //     })
-    //     .catch((err) => {
-    //       console.log(err);
-    //     });
-    // },
-    // 获取订阅文章
-    // getSubscribeList()
-    // 搜索热门领域
-    // search_field(arg) {
-    //   this.$router.push({
-    //     path: "/result",
-    //     query: {
-    //       input: arg,
-    //       type: 2
-    //     }
-    //   });
-    // },
-    submitForm1(formName) {
-      this.$refs[formName].validate((valid) => {
-        if (valid) {
-          this.next();
-          // alert('submit!');
-        } else {
-          console.log("error submit!!");
-          return false;
-        }
-      });
-    },
-    submitForm1_Miss(formName) {
-      this.$refs[formName].validate((valid) => {
-        if (valid) {
-          this.next_Miss();
-          // alert('submit!');
-        } else {
-          console.log("error submit!!");
-          return false;
-        }
-      });
-    },
-    next() {
-      if (this.active++ > 1) this.active = 0;
-    },
-    next_Miss() {
-      if (this.Miss_Active++ > 1) this.Miss_Active = 0;
-    },
-    search_field(arg) {},
-    resetForm(formName) {
-      this.$nextTick(() => {
-        this.$refs[formName].resetFields();
-      });
-    },
-    uploadText() {
-      this.$refs.UploadText.uploadText();
-      // this.UploadDialogVisible = true;
-    },
-    uploadTextMiss() {
-      this.$refs.MissTextComplain.uploadTextMiss();
-    },
-    CancelUp() {
-      this.resetForm("Text"),
-        this.resetForm("Domains"),
-        (this.UploadDialogVisible = false),
-        (this.active = 0);
-    },
-    CancelUpMiss() {
-      this.resetForm("MissText"),
-        this.resetForm("MissDomains"),
-        (this.MissTextDialogVisible = false),
-        (this.Miss_active = 0);
-    },
-    ConfirmUploadText(formName) {
-      this.$refs[formName].validate((valid) => {
-        if (valid) {
-          // 发包
-          alert("submit!");
-          this.resetForm("Text");
-          this.resetForm("Domains");
-          this.active = 0;
-          this.$nextTick(() => {
-            this.UploadDialogVisible = false;
-          });
-          //
-        } else {
-          console.log("error submit!!");
-        }
-      });
-    },
-    ConfirmUploadMissText(formName) {
-      this.$refs[formName].validate((valid) => {
-        if (valid) {
-          // 发包
-          alert("submit!");
-          this.resetForm("MissText");
-          this.resetForm("MissDomains");
-          this.Miss_Active = 0;
-          this.$nextTick(() => {
-            this.MissTextDialogVisible = false;
-          });
-          //
-        } else {
-          console.log("error submit!!");
-        }
-      });
-    },
-    loadRec() {
-      this.start = true;
-      setTimeout(() => {
-        this.start = false;
-        // 获取到全部数据，分布给用户展示
-        this.showRecommendList = this.showRecommendList.concat(
-          this.RecommendList
-        );
-      }, 2000);
-    },
-    loadSub() {
-      this.start2 = true;
-      setTimeout(() => {
-        this.start2 = false;
-        // 获取到全部数据，分布给用户展示
-        this.showSubscribeList = this.showSubscribeList.concat(
-          this.SubscribeList
-        );
-      }, 2000);
-    },
-    isEmptyObject(obj) {
-      for (var key in obj) {
-        return false;
-      }
-      return true;
-    },
-    removeDomain(item) {
-      var index = this.Domains.urls.indexOf(item);
-      if (index !== -1) {
-        this.Domains.urls.splice(index, 1);
-      }
-    },
-    addDomain() {
-      this.Domains.urls.push({
-        value: "",
-        key: Date.now(),
-      });
-    },
-    removeMissDomain(item) {
-      var index = this.MissDomains.urls.indexOf(item);
-      if (index !== -1) {
-        this.MissDomains.urls.splice(index, 1);
-      }
-    },
-    addMissDomain() {
-      this.MissDomains.urls.push({
-        value: "",
-        key: Date.now(),
-      });
-    },
-    toggleDarkLight() {
-      var body = document.getElementById("app");
-      var currentClass = body.className;
-      body.className = currentClass == "dark-mode" ? "light-mode" : "dark-mode";
-    },
+    TopBar,
+    noteCard,
   },
   data() {
     return {
       username: "乔丹",
-      active: 0,
-      Miss_Active: 0,
       input3: "",
       select: "",
       activeName: "first",
       start: false,
       start2: false,
-      UploadDialogVisible: false,
-      MissTextDialogVisible: false,
+      start3: false,
+      recPage: 3,
+      followNotePage: 3,
+      followTextPage: 3,
       RecommendList: [{}],
-      Text: {
-        name: "",
-        author: "",
-        keyword: "",
-        date: "",
-        doi: "",
-        summary: "",
-        href: "",
-      },
-      Domains: {
-        urls: [
-          {
-            value: "",
-          },
-        ],
-      },
-      MissText: {
-        name: "",
-        author: "",
-        keyword: "",
-        date: "",
-        doi: "",
-        summary: "",
-        href: "",
-      },
-      MissDomains: {
-        urls: [
-          {
-            value: "",
-          },
-        ],
-      },
       showRecommendList: [
         {
           name: "论杰哥",
@@ -584,8 +247,46 @@ export default {
           date: "2020-10-10",
         },
       ],
-      SubscribeList: [{}],
-      showSubscribeList: [
+      SubscribeNoteList: [{}],
+      showSubscribeNoteList: [
+        {
+          name: "论杰哥",
+          intro: "介绍奇人杰哥",
+          likes: 8,
+          collections: 10,
+          remarks: 9,
+        },
+        {
+          name: "论杰哥",
+          intro: "介绍奇人杰哥",
+          likes: 8,
+          collections: 10,
+          remarks: 9,
+        },
+        {
+          name: "论杰哥",
+          intro: "介绍奇人杰哥",
+          likes: 8,
+          collections: 10,
+          remarks: 9,
+        },
+        {
+          name: "论杰哥",
+          intro: "介绍奇人杰哥",
+          likes: 8,
+          collections: 10,
+          remarks: 9,
+        },
+        {
+          name: "论杰哥",
+          intro: "介绍奇人杰哥",
+          likes: 8,
+          collections: 10,
+          remarks: 9,
+        },
+      ],
+      SubscribeTextList: [{}],
+      showSubscribeTextList: [
         {
           name: "论杰哥",
           author: "马哥",
@@ -609,6 +310,12 @@ export default {
           origin: "中国科学院",
           intro: "杰哥是个大帅哥",
           date: "2020-10-10",
+        },
+      ],
+      showSubscribePeopleList: [
+        {
+          name: "马哥",
+          id: "32",
         },
       ],
       hot: [
@@ -648,6 +355,179 @@ export default {
       },
     };
   },
+  created() {
+    //获取信息
+    // this.getRecommendList();
+    // this.getSubscribeList();
+    // this.getFollowTextList();
+    // this.getHot();
+  },
+  mounted() {
+    // 获取一些信息
+    // this.getRecommendList();
+    // this.getSubscribeList();
+    // this.getFollowTextList();
+    // this.getHot();
+    $('#topbar').css('display', 'none');
+    window.addEventListener("scroll", this.scroll,true);
+  },
+  destroyed() {
+		window.removeEventListener("scroll", this.scroll,true);
+	},
+  methods: {
+    // 获取推荐文章
+    // getRecommendList() {
+    //   this.$axios({
+    //     method: "get",
+    //     url: "/api/recommend",
+    //     params: {
+    //       token:sessionStorage.getItem("token")===null?"":sessionStorage.getItem("token")
+    //     },
+    //   })
+    //     .then((res) => {
+    //       this.recommendList = res.data.data;
+    //       this.showRecommendList = this.recommendList.slice(0, 3);
+    //     })
+    //     .catch((err) => {
+    //       console.log(err);
+    //     });
+    // },
+    // 获取关注用户的笔记
+    // getFollowNoteList() {
+    //   this.$axios({
+    //     method: "get",
+    //     url: "/api/recommend",
+    //     params: {
+    //       token:sessionStorage.getItem("token")===null?"":sessionStorage.getItem("token")
+    //     },
+    //   })
+    //     .then((res) => {
+    //       this.showSubscribePeopleList=res.data.data;
+    //       this.SubscribeNoteList= res.data.data;
+    //       this.showSubscribeNoteList = this.SubscribeNoteList.slice(0, 3);
+    //     })
+    //     .catch((err) => {
+    //       console.log(err);
+    //     });
+    // },
+    // 获取关注用户的文献
+    // getFollowTextList() {
+    //   this.$axios({
+    //     method: "get",
+    //     url: "/api/recommend",
+    //     params: {
+    //       token:sessionStorage.getItem("token")===null?"":sessionStorage.getItem("token")  //     },
+    //   })
+    //     .then((res) => {
+    //       this.SubscribeTextList = res.data.data;
+    //       this.showSubscribeTextList = this.SubscribeTextList.slice(0, 3);
+    //     })
+    //     .catch((err) => {
+    //       console.log(err);
+    //     });
+    // },
+    // 获取热门领域
+    // getHot() {
+    //   this.$axios({
+    //     method: "get",
+    //     url: "/api/recommend",
+    //     params: {}
+    //   })
+    //     .then((res) => {
+    //       this.hot = res.data.data;
+    //     })
+    //     .catch((err) => {
+    //       console.log(err);
+    //     });
+    // },
+    // 搜索热门领域
+    // search_field(arg) {
+    //   this.$router.push({
+    //     path: "/result",
+    //     query: {
+    //       input: arg,
+    //       type: 2,
+    //     },
+    //   });
+    // },
+    isLogin() {
+      if (sessionStorage.getItem("token")) {
+        return true;
+      } else {
+        return false;
+      }
+    },
+    tologin() {
+      this.$router.push({
+        path: "/login",
+      });
+    },
+    resetForm(formName) {
+      this.$nextTick(() => {
+        this.$refs[formName].resetFields();
+      });
+    },
+    loadRec() {
+      this.start = true;
+      setTimeout(() => {
+        this.start = false;
+        // 获取到全部数据，分布给用户展示
+        this.showRecommendList = this.showRecommendList.concat(
+          this.RecommendList.slice(this.recPage, this.recPage + 3)
+        );
+      }, 2000);
+      this.recPage += 3;
+    },
+    loadSub() {
+      this.start2 = true;
+      setTimeout(() => {
+        this.start2 = false;
+        // 获取到全部数据，分布给用户展示
+        this.showSubscribeNoteList = this.showSubscribeNoteList.concat(
+          this.SubscribeNoteList.slice(
+            this.followNotePage,
+            this.followNotePage + 3
+          )
+        );
+      }, 2000);
+    },
+    loadSub2() {
+      this.start3 = true;
+      setTimeout(() => {
+        this.start3 = false;
+        // 获取到全部数据，分布给用户展示
+        this.showSubscribeTextList = this.showSubscribeTextList.concat(
+          this.SubscribeTextList.slice(
+            this.followTextPage,
+            this.followTextPage + 3
+          )
+        );
+      }, 2000);
+    },
+    isEmptyObject(obj) {
+      for (var key in obj) {
+        return false;
+      }
+      return true;
+    },
+    uploadTextMiss() {
+      this.$refs.MissTextComplain.uploadTextMiss();
+    },
+    scroll() {
+      var windowTop = $(window).scrollTop();
+      // windowTop > 300 ?
+      if (windowTop > 300) {
+        $('#topbar').css('display', 'block');
+      } else {
+        $('#topbar').css('display', 'none');
+      }
+		},
+    toggleDarkLight() {
+      var body = document.getElementById("app");
+      var currentClass = body.className;
+      body.className = currentClass == "dark-mode" ? "light-mode" : "dark-mode";
+    },
+  },
 };
 </script>
 
@@ -662,10 +542,17 @@ export default {
     text-align: center;
   }
 }
+.search_input {
+  margin: 10px auto;
+  width: 800px;
+  transition: 0.3s;
+  // padding: auto;
+  // overflow: hidden;
+}
 .home_logo {
-  width: 200px;
-  height: 120px;
-  margin: 0 auto;
+  width: 300px;
+  height: 200px;
+  margin: 50px auto -70px;
 }
 .logo_area {
   width: 100%;
@@ -675,20 +562,11 @@ export default {
 }
 .search_area {
   width: 100%;
-  min-height: calc(10vh) ;
+  min-height: calc(10vh);
   margin: 0 auto;
   // padding-top: calc(5vh);
   clear: both;
 }
-// .header_show {
-//   height: 45px;
-//   background-color: #409eff;
-//   color: #fff;
-//   font-size: 20px;
-//   line-height: 45px;
-//   text-align: center;
-// }
-
 .display_zone {
   width: 100%;
   min-height: 400px;
@@ -701,18 +579,18 @@ export default {
   font-size: 20px;
   clear: both;
 }
-/* 给leftone添加阴影 */
 .leftone {
   float: left;
   width: 100%;
   height: 100%;
-  border-radius: 20px !important;
   padding: 3px 15px 15px 15px;
   margin-bottom: 20px;
-  box-shadow: 0 0 10px #ccc;
-  border-radius: 5px;
+
+  border-radius: 20px !important;
+  box-shadow: 0 0 7px rgba(204, 204, 204, 0.713);
   background-color: rgba(255, 255, 255, 0.5);
   backdrop-filter: blur(40px) brightness(105%);
+
   overflow: hidden;
 }
 .hot {
@@ -730,6 +608,12 @@ export default {
   .hot {
     background-color: rgba(143, 155, 167, 0.49);
     box-shadow: 0 0 0px #ccc;
+    color: rgb(245, 245, 245) !important;
+    .content_item_title,
+    .content_item_cite,
+    .meau_params {
+      color: rgb(245, 245, 245) !important;
+    }
   }
 }
 
@@ -800,8 +684,8 @@ export default {
   height: 21px;
   text-align: right;
 }
-.SubscribePlaceInfo {
-  line-height: calc(100vh);
+.SubscribeNotePlaceInfo {
+  line-height: calc(10vh);
   font-size: 20px;
   font-weight: bold;
 }
@@ -833,8 +717,8 @@ export default {
 #switch {
   padding: 5px;
   background-color: #fff !important;
-  color: #003B55 !important;
-  border: 2px solid #003B55 !important;
+  color: #003b55 !important;
+  border: 2px solid #003b55 !important;
 }
 //tabs
 .el-tabs--left {
@@ -860,6 +744,9 @@ export default {
 /deep/ .el-tabs__active-bar {
   height: 4px;
   border-radius: 2px;
-  background: #003B55;
+  background: #003b55;
+}
+/deep/.el-input-group {
+
 }
 </style>

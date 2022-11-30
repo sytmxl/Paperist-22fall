@@ -1,12 +1,10 @@
 <template>
-    
     <el-container class="root">
-        <TopBar/> 
-       <el-main class="left base">
+       <el-main class="left">
         <div class="author">
             <el-card>
               <div class="author_img">
-                  <img :src="imgUrl" alt="">
+                  <img src:{{img_url}} alt="">
                   <span>胡博轩</span>
               </div>
               <div class="author_info">
@@ -16,65 +14,68 @@
                 <span>获赞：99</span>
                 <span>评论：15</span>
                 <span>收藏：20</span>
-                
-              </div>
-              <div class="response">
-                <el-button type="primary">点赞</el-button>
-                <el-button type="primary">收藏</el-button>
-                <el-button>订阅</el-button>
               </div>
             </el-card>
         </div>
         <div class="notes">
-            <!-- <el-card> -->
+            <el-card>
                 <div class="notes_title">
                     <span>作者其他笔记</span>
                 </div>
                 <div v-for="i in list" :key="i">
-                    <noteCard :note="i"/>
+                    <div class="other_note">
+                        <el-card>
+                            <span>论文名称：{{i.name}}</span>
+                            <span>笔记简介：{{i.intro}}</span>
+                            <i class="el-icon-thumb">{{i.likes}}</i>
+                            <i class="el-icon-star-off">{{i.collections}}</i>
+                            <i class="el-icon-chat-round">{{i.remarks}}</i>
+                        </el-card>
+                    </div>
                 </div>
 
-            <!-- </el-card> -->
+            </el-card>
         </div>
 
        </el-main>
-        <el-main class="right base">
+        <el-main class="right">
             <div class="content">
                 <el-card>
                     <!-- <iframe :src="url"></iframe> -->
                      <div class="home_wrap">
-                          <!-- <div class="pdf_down" >
+                          <div class="pdf_down" >
                               <div class="pdf_set_left"  @click="scaleD()">放大</div>
                               <div class="pdf_set_middle" @click="scaleX()">缩小</div>
-                          </div> -->
+                          </div>
 
 
-							<div :style="{width:pdf_div_width,margin:'0 auto'}" >
-									<canvas v-for="page in pdf_pages" :id="'the_canvas'+page" :key="page"></canvas>
-							</div>
-							</div>
-						</el-card>
-					</div>
-					<div class="remark">
-						<el-card>
-							<div class="creat_comment">
-								<el-button @click="CreatCommentVisible =true">我要评论</el-button>
-							</div>
-							<div v-if="Object.keys(remark_list).length!=0">
-								<div class="comment" v-for="i in remark_list" :key="i">
-									<remark :list="i"/>
-								</div>
-							</div>
-							<div v-else><el-empty description="还没有评论，发表第一个评论吧"></el-empty></div>
-							<el-dialog
-								title="留下你的评论吧~"
-								:visible.sync="CreatCommentVisible"
-								width="30%"
-								:before-close="handleClose">
-								<CreateComment/>
-							</el-dialog>
-						</el-card>
-					</div>
+                          <div :style="{width:pdf_div_width,margin:'0 auto'}" >
+                              <canvas v-for="page in pdf_pages" :id="'the_canvas'+page" :key="page"></canvas>
+                          </div>
+                     </div>
+                </el-card>
+            </div>
+            <div class="remark">
+                <el-card>
+                     <div class="creat_comment">
+                                <el-button @click="CreatCommentVisible =true">我要评论</el-button>
+                    </div>
+                                <div v-if="Object.keys(remark_list).length!=0">
+                              <div class="comment" v-for="i in remark_list" :key="i">
+                                <remark :list="i"/>
+                            </div>
+                            </div>
+                            <div v-else><el-empty description="还没有评论，发表第一个评论吧"></el-empty></div>
+                            <el-dialog
+                                title="留下你的评论吧~"
+                                :visible.sync="CreatCommentVisible"
+                                width="30%"
+                                :before-close="handleClose">
+                                <CreateComment/>
+                              </el-dialog>
+                </el-card>
+            </div>
+
        </el-main>
     </el-container>
 </template>
@@ -84,14 +85,11 @@ let PDFJS = require('pdfjs-dist');
 PDFJS.GlobalWorkerOptions.workerSrc = require("pdfjs-dist/build/pdf.worker.entry.js");
 import remark from "../../components/remark.vue"
 import CreateComment from "../../components/CreateComment.vue"
-import TopBar from "@/components/TopBar";
-import noteCard from "../../components/noteCard.vue";
 export default {
     components:{
         remark,
         CreateComment,
-        TopBar,
-        noteCard
+
     },
     data(){
         return{
@@ -102,7 +100,7 @@ export default {
             5:{name:"论杰哥",intro:"介绍奇人杰哥",likes:8,collections:10,remarks:9}},
             imgUrl:"https://obs-0dcd.obs.cn-north-4.myhuaweicloud.com/1.png",
             author:{},
-            pdf_scale:1.2,//pdf放大系数
+            pdf_scale:1.0,//pdf放大系数
   	 	    pdf_pages:[],
   	 	    pdf_div_width:'',
   	 	    pdf_src:null,
@@ -216,12 +214,13 @@ export default {
 <style lang="scss" scoped>
 .left{
     width: 25%;
-		margin: 30px 30px 0px 100px;
+    margin-left: 100px;
+    margin-top: 50px;
     height: auto;
 }
 .left .author{
     height: 400px;
-    margin-bottom: 80px;
+    margin-bottom: 50px;
 }
 .author img{
     width: 100px;
@@ -244,6 +243,20 @@ export default {
     margin-top: 15px;
     text-align: left;
 }
+.other_note{
+    margin-top: 15px;
+}
+.other_note span{
+    display: block;
+    text-align: left;
+    margin-bottom: 15px;
+}
+.other_note i{
+    display: block;
+    float: left;
+    margin-bottom: 15px;
+    margin-right: 40px;
+}
 .notes_title span{
     display: block;
     text-align: left;
@@ -255,45 +268,45 @@ export default {
     height: 100%;
     /* border: 1px solid grey; */
 }
-.left {
-	height: fit-content;
-	.el-card{
+.left .el-card{
     height: auto;
-	}
-	.notes{
+}
+.left .notes{
     margin-top:50px;
-    // height: 550px;
-    // overflow-y:scroll;
-    // overflow-x:hidden;
-	}
+    height: 550px;
+    overflow-y:scroll;
+    overflow-x:hidden;
 }
 .right{
-	width: 70%;
-	margin-right: 100px;
-		margin-top: 30px;
-	 overflow: hidden;
-	.content{
-    height: calc(100vh);
-		.el-card{
-			height: 100%;
-			overflow-y: scroll;
-		}
-	}
-	.remark{
-    // height: 600px;
-    margin-top: 30px;
-	}
+    width: 70%;
+    margin-right: 100px;
+     margin-top: 50px;
+}
+.right .content{
+    height: 1000px;
+}
 
+.right .content .el-card{
+    height: 100%;
+    overflow-y: scroll;
+}
+.right .remark{
+    height: 600px;
+    margin-top: 50px;
+
+}
+.right .remark .el-card{
+      overflow-y: scroll;
+    overflow-x:hidden;
 }
 .creat_comment{
   width:100%;
-	.el-button{
-		width:100%;
-		// opacity: 0.6;
-	}
-	position: sticky;
-	position: -webkit-sticky;
-	top: 0;
+
+}
+.creat_comment .el-button{
+  width:100%;
+  opacity: 0.6;
+
 }
 .home_wrap{
    width: 100%;
@@ -306,16 +319,16 @@ export default {
  right:26px;
  bottom:7%;
 }
-.pdf_set_left{
-		width: 30px;
-		height: 40px;
-		color: #408FFF;
-		font-size: 11px;
-		padding-top:25px;
-		text-align: center;
-		margin-right: 5px;
-		cursor: pointer;
-}
+ .pdf_set_left{
+      width: 30px;
+      height: 40px;
+      color: #408FFF;
+      font-size: 11px;
+      padding-top:25px;
+      text-align: center;
+      margin-right: 5px;
+      cursor: pointer;
+ }
  .pdf_set_middle{
       width: 30px;
       height: 40px;
@@ -326,24 +339,5 @@ export default {
       margin-right: 5px;
       cursor: pointer;
  }
-.response{
-    margin-top:20px;
-    
-}
-.response .el-button{
-    width: 30%;
-    text-align: center;
-}
-.base {
-  border-radius: 20px !important;
-	border: none !important;
-  box-shadow: 0 0 7px rgba(204, 204, 204, 0.713);
-  background-color: rgba(255, 255, 255, 0.5);
-  backdrop-filter: blur(40px) brightness(100%);
-	.el-card {
-		background-color: rgba(255, 255, 255, 0.101) !important;
-		border-radius: 15px !important;
-		border: none !important;
-	}
-}
+
 </style>

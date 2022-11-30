@@ -1,74 +1,63 @@
 <template>
-  <el-container id="SearchInformation">
+  <el-container>
 <!--    顶栏-->
-    <el-header height="calc(10vh)">
-      <el-input placeholder="请输入内容" prefix-icon="el-icon-search" v-model="searchInput"
-                style="width: 40%">
-        <template slot="prepend">
-          <el-select v-model="searchMethodNo" size = "mini" style="width: 125px">
-            <el-option
-                v-for="item in searchMethods"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"/>
-          </el-select>
-        </template>
-      </el-input>
-      <div style="float: right;">
-        <el-avatar src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"></el-avatar>
-      </div>
-    </el-header>
-    <el-container>
+    <top-bar/>
+    <el-container id="SearchInformation">
 <!--      左侧栏-->
-      <el-aside >
-        <h3 style="text-align: left; margin-left: 10%;">二次搜索筛选</h3>
-        <div style="height:calc(80vh); overflow-y: scroll">
-          <el-card style="background: #B3C0D1; margin-bottom: 10px">
+      <el-aside class="left">
+        <div>
+          <el-card style="margin-bottom: 10px" class="display_zone" shadow="never">
             <!--        复选框组1-->
+            <p style="text-align: left; color: #B3C0D1">来源</p>
             <el-checkbox-group  v-model="secondarySearchFilters01" size="mini">
               <el-checkbox border v-for="filter in filterGroup01" :label="filter" :key="filter"
                            style="background: white; margin: 1% ;float: left"/>
             </el-checkbox-group>
           </el-card>
-          <el-card style="background: #B3C0D1; margin-bottom: 10px">
+          <el-card style="margin-bottom: 10px" class="display_zone">
             <!--        复选框组2-->
+            <p style="text-align: left; color: #B3C0D1">领域</p>
             <el-checkbox-group v-model="secondarySearchFilters02" size="mini">
               <el-checkbox border v-for="filter in filterGroup02" :label="filter" :key="filter"
                            style="background: white; margin: 1% ;float: left"/>
             </el-checkbox-group>
           </el-card>
-
-          <div v-for="i in 10" :key="i">
-            <el-card style="background: #B3C0D1; margin-bottom: 10px">
-              <!--        复选框组2-->
-              <el-checkbox-group v-model="secondarySearchFilters02" size="mini">
-                <el-checkbox border v-for="filter in filterGroup02" :label="filter" :key="filter"
-                             style="background: white; margin: 1% ;float: left"/>
-              </el-checkbox-group>
-            </el-card>
-          </div>
         </div>
 
       </el-aside>
 <!--      搜索结果-->
-      <el-main style="max-height: calc(90vh)">
-        <h3 >搜索结果</h3>
-        <div style="overflow-y: scroll; height: calc(75vh)">
-          <el-card style="background: #B3C0D1; min-height: calc(75vh)">
-            <el-card v-for="searchResult in searchResults" :key="searchResult" v-loading = "true"
-                     style = "height: 150px;margin-bottom: 10px">
-              <!-- TODO 之后需要复用搜索结果的卡片-->
-              <h5 style="margin-left: 10%; text-align: left;">{{searchResult}}</h5>
-              <search-item></search-item>
-            </el-card>
-          </el-card>
+      <el-main>
+        <el-row :gutter="20">
+          <el-col :span="16" style="text-align: left; margin-left: 6%; margin-bottom: 3%; color: #B3C0D1">找到约{{toThousands(resultNum)}}条相关结果</el-col>
+          <el-col :span="4" style="text-align: left; margin-left: 6%; margin-bottom: 3%; color: #B3C0D1">
+            <el-dropdown style="display: inline-block">
+              <span>
+                <span style="cursor: pointer;color: #B3C0D1">
+                  {{sortMethod}}
+                </span>
+                <el-dropdown-menu slot="dropdown">
+                  <el-dropdown-item>默认</el-dropdown-item>
+                  <el-dropdown-item>引用量</el-dropdown-item>
+                  <el-dropdown-item>日期</el-dropdown-item>
+                </el-dropdown-menu>
+              </span>
+            </el-dropdown>
+            <i style="display: inline-block; margin-left: 10%" class="el-icon-sort" @click="sortReserve"></i>
+          </el-col>
+        </el-row>
+        <div>
+          <!-- <el-card style="min-height: calc(75vh)" class="display_zone" shadow="never"> -->
+            <paper-card v-for="searchResult in searchResults"
+                        
+            />
+          <!-- </el-card> -->
         </div>
       </el-main>
 <!--右侧栏-->
-      <el-aside>
-        <h3 style="text-align: right; margin-left: 10%">推荐</h3>
-        <el-card style="background: #B3C0D1;height:calc(80vh); overflow-y: scroll">
-          <el-card v-for="recommend in recommends" :key="recommend" v-loading = "true"
+      <el-aside class="right">
+        <el-card  class="display_zone" shadow="never">
+          <h3 style="text-align: left; margin-left: 5%; margin-bottom: calc(2vh)">推荐</h3>
+          <el-card class="recommend" v-for="recommend in recommends" :key="recommend" v-loading = "true" shadow="never"
                    style = "height: 75px;margin-bottom: 10px">
             <h5 style="margin-left: 10%; text-align: left;">{{recommend}}</h5>
           </el-card>
@@ -82,23 +71,17 @@
 
 <script>
 
+import TopBar from "@/components/TopBar";
+import PaperCard from "@/components/PaperCard";
+import PaperInformation from "@/views/User/PaperInformation";
+import {$data} from "../../../static/pdf/build/pdf.worker";
 export default {
   name:"SearchInformation",
+  components: {PaperInformation, PaperCard, TopBar},
   props :{
   },
   data() {
     return{
-      searchInput : "",
-      //二次搜索模式
-      searchMethods: [{
-          value: 0,
-          label: '普通检索',
-        }, {
-          value: 1,
-          label: '高级检索',
-        }
-      ],
-      searchMethodNo : 0,
       //二次搜索标签
       filterGroup01 : ['阿巴阿巴', '随便什么', '长度', '不一样','的字符串们', '交错的效果', '嗯'
         , '其实这样','看起来还是挺乱的', '真的', '我懒得改样式', '因为', '这实在', '太麻烦了'],
@@ -109,11 +92,70 @@ export default {
       //搜索结果，暂时留白
       searchResults : ['结果A','结果B','结果A','结果B','结果A','结果B','结果A','结果B','结果A','结果B','结果A','结果B',],
       //推荐栏，暂时留白
-      recommends : ['随便','在这里','推荐点什么','a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p']
+      recommends : ['随便','在这里','推荐点什么','a','b',],
+      resultNum : 2333333,
+      sortMethod : "默认",
+      sortReserve : false
     }
   },
   methods :{
+    toThousands(num) {
+      var result = [ ], counter = 0;
+      num = (num || 0).toString().split('');
+      for (var i = num.length - 1; i >= 0; i--) {
+        counter++;
+        result.unshift(num[i]);
+        if (!(counter % 3) && i != 0) { result.unshift(','); }
+      }
+      return result.join('');
+    },
+    reserveSort(){$data.sortReserve = !$data.sortReserve;}
 
   }
 }
 </script>
+<style lang="scss" scoped>
+#SearchInformation {
+  // margin-top: 60px;
+  width: calc(80vw);
+  align-self: center;
+}
+.el-aside{
+  background: none;
+  .display_zone {
+    border-radius: 20px !important;
+    // box-shadow: 0 0 7px rgba(204, 204, 204, 0.713);
+    background-color: rgba(255, 255, 255, 0.5);
+    backdrop-filter: blur(40px) brightness(95%);
+    border: none;
+    padding: 10px;
+  }
+  .recommend {
+    border-radius: 10px !important;
+    background: none;
+    width: 100%;
+  }
+}
+.left {
+  .el-card {
+    margin: 15px 0px 15px 15px;
+  }
+}
+.right {
+  .el-card {
+    margin: 15px 15px 15px 0px;
+  }
+}
+.el-main {
+  background:none;
+  // border-radius: 20px !important;
+
+  .el-card {
+    border-radius: 20px !important;
+    border: none;
+    // box-shadow: 0 0 7px rgba(204, 204, 204, 0.713);
+    background-color: rgba(255, 255, 255, 0.5);
+    backdrop-filter: blur(40px) brightness(95%);
+  }
+}
+</style>

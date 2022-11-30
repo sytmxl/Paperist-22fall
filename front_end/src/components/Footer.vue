@@ -88,7 +88,7 @@
             class="copyright"
           >
             <el-col :span="12">
-              <h6> CopyRight © 2022 北京航空航天大学软件学院 - 软工八小组作业</h6>
+              <h6> CopyRight © 2022 北京航空航天大学软件学院 - 软工九组作业</h6>
             </el-col>
           </el-row>
         </el-col>
@@ -116,10 +116,18 @@
   
   <style lang="scss" scoped>
   .footer {
-    background-color: #ffffff; 
+    // background-color: #ffffff; 
+    margin-top: 30px;
     padding-bottom: 12px;
     min-height: 20vh;
     color: #a4acb7;
+    background-color: rgba(255, 255, 255, 0.5);
+    backdrop-filter: blur(40px) brightness(105%);
+  }
+  .dark-mode {
+    * {
+      color: rgba(245, 245, 245, 0.775) !important;
+    }
   }
   
   .footer-left {

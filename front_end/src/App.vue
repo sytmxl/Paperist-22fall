@@ -11,7 +11,9 @@ export default {
   components: {
     Footer: footer,
   },
+
   methods: {
+    
     toggleDarkLight() {
       var body = document.getElementById("app");
       var currentClass = body.className;
@@ -34,6 +36,8 @@ $theme: #003B55;
 
 #app.dark-mode {
   background-image: url('./assets/bg_dark.svg');
+  background-attachment: fixed;
+  background-size: 100%;
   color: $light-color;
   .header_show {
     height: 45px;
@@ -62,6 +66,8 @@ $theme: #003B55;
 
 #app.light-mode {
   background-image: url('./assets/bg.svg');
+  background-attachment: fixed;
+  background-size: 100%;
   color: $dark-color;
   .header_show {
     height: 45px;
@@ -84,7 +90,7 @@ $theme: #003B55;
     color: $dark-theme;
   }
   .el-button--primary {
-    background-color: #385872cb ;
+    background-color: #647c90 ;
   }
 }
 #app {
@@ -108,6 +114,7 @@ $theme: #003B55;
   animation-name: enter_blur;
   animation-iteration-count: 1;
   animation-duration: 0.4s;
+  // animation: enter_blur 0.4s cubic-bezier(.23,1.38,.65,.99);
 }
 .main {
   background-repeat: no-repeat;
@@ -115,7 +122,9 @@ $theme: #003B55;
   // background-size: cover;
   // margin-bottom: 20px;
 }
-
+.el-message {
+  margin-top: 60px;
+}
 /* 动画库 */
 @keyframes enter_label {
   0% {
@@ -151,8 +160,30 @@ $theme: #003B55;
     opacity: 100%;
   }
 }
+@keyframes exit_blur {
+  0% {
+    filter: blur(0px);
+    opacity: 100%;
+  }
+  100% {
+    filter: blur(20px);
+    opacity: 0%;
+  }
+}
 
 //custom
+// .el-card {
+//   border-radius: 10px !important;
+//   box-shadow: 0 0 7px rgba(204, 204, 204, 0.713);
+//   background-color: rgba(255, 255, 255, 0.5);
+//   backdrop-filter: blur(40px) brightness(105%);
+// }
+// .dark-mode {
+//   .el-card {
+//     background-color: rgba(143, 155, 167, 0.49);
+//     box-shadow: 0 0 0px #ccc;
+//   }
+// }
 el-icon:hover, el-icon-close:hover {
     color:  #748391 !important;
 }
@@ -175,18 +206,20 @@ el-icon:hover, el-icon-close:hover {
   /* -n-bezier-ease-out: cubic-bezier(0, 0, 0.2, 1); */
   font-family: 微软雅黑;
 }
-.el-dialog__wrapper, .el-message-box__wrapper {
-  /* backdrop-filter: blur(15px) brightness(150%) !important;   */
-  /* transition: 1s !important; */
-}
+// .el-dialog__wrapper, .el-message-box__wrapper {
+//   /* backdrop-filter: blur(15px) brightness(150%) !important;   */
+//   /* transition: 1s !important; */
+// }
 
 .el-popper, .el-dropdown-menu__item {
   color: #35424e !important;
   font-family: 微软雅黑 !important;
+  border-radius: 10px !important;
 }
 .el-dropdown-menu__item:hover {
   color: #35424e !important;
   background: rgba(191, 202, 217, 0.495) !important;
+  border-radius: 10px !important;
 }
 
 ::-webkit-scrollbar {

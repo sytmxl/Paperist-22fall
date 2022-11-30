@@ -5,8 +5,8 @@ import store from './store'
 import ElementUI from 'element-ui'
 import '../src/assets/icon/iconfont.css'
 import 'element-ui/lib/theme-chalk/index.css';
-import axios from 'axios'
-Vue.prototype.axios = axios
+import instance from "@/http";
+Vue.prototype.$axios = instance
 Vue.config.productionTip = false
 Vue.use(ElementUI);
 
