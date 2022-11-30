@@ -19,7 +19,14 @@ module.exports = defineConfig({
         pathRewrite: {
           '^/app' : ''
         },
-
+      },
+      '/es/': {
+        target: 'https://123.249.72.97:9200/',
+        changeOrigin: true,
+        ws: true,
+        pathRewrite: {
+          '^/es' : ''
+        },
       }
     }
   }
