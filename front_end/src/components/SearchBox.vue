@@ -122,10 +122,15 @@
             <el-form-item label="发表时间" prop="AdTime">
               <el-date-picker
                 v-model="AdvancedSearchInput.date1"
-                type="daterange"
-                range-separator="至"
-                start-placeholder="开始日期"
-                end-placeholder="结束日期"
+                type="year"
+                placeholder="起始年份"
+              >
+              </el-date-picker>
+              &nbsp;-&nbsp;
+              <el-date-picker
+                v-model="AdvancedSearchInput.date2"
+                type="year"
+                placeholder="终止年份"
               >
               </el-date-picker>
             </el-form-item>
@@ -183,7 +188,8 @@ export default {
         AdAuthor: "",
         AdOrganization: "",
         AdPublish: "",
-        AdTime: "",
+        date1: "",
+        date2: "",
         AdLang: "",
       },
       Positions: [
