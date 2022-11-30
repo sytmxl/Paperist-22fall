@@ -121,13 +121,17 @@
             </el-form-item>
             <el-form-item label="发表时间" prop="AdTime">
               <el-date-picker
+                class="date-picker"
                 v-model="AdvancedSearchInput.date1"
                 type="year"
                 placeholder="起始年份"
               >
               </el-date-picker>
-              &nbsp;-&nbsp;
+              <div style="float:left">
+                &nbsp;-&nbsp;
+              </div>
               <el-date-picker
+                class="date-picker"
                 v-model="AdvancedSearchInput.date2"
                 type="year"
                 placeholder="终止年份"
@@ -262,6 +266,12 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.date-picker {
+  float: left;
+
+    width: 48% !important;
+  
+}
 .search_input {
   // width: 55%;
   // margin: 20px auto;
