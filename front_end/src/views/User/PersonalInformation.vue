@@ -8,7 +8,7 @@
     > -->
     <el-container>
       <el-main>
-        <el-row id="info" style="margin-top: 20px; margin-bottom: 20px;">
+        <el-row id="info" style="margin-top: 20px; margin-bottom: 20px">
           <el-col :span="10">
             <!--:span占据行数-->
             <!--头像-->
@@ -209,9 +209,7 @@
           </el-form>
           <span slot="footer" class="dialog-footer">
             <el-button @click="isChangePassword = false">取 消</el-button>
-            <el-button type="primary" @click="changePassword"
-              >确 定</el-button
-            >
+            <el-button type="primary" @click="changePassword">确 定</el-button>
           </span>
         </el-dialog>
 
@@ -603,8 +601,7 @@ export default {
       gender: "",
       region: "",
       email: "",
-      personalProfile:
-        "",
+      personalProfile: "",
       isEditPersonalInformation: false,
       new_username: "",
       new_realname: "",
@@ -618,25 +615,25 @@ export default {
       researchField: "打篮球",
       isOthers: false,
       showRelation: true,
-      oldPassword:"",
-      newPassword:"",
-      confirmNewPassword:"",
+      oldPassword: "",
+      newPassword: "",
+      confirmNewPassword: "",
       RelationsData: [
-        {
-          name: "皮蓬",
-          value: 3,
-          id: 1,
-        },
-        {
-          name: "ss",
-          value: 4,
-          id: 2,
-        },
-        {
-          name: "ssaw",
-          value: 40,
-          id: 3,
-        },
+        // {
+        //   name: "皮蓬",
+        //   value: 3,
+        //   id: 1,
+        // },
+        // {
+        //   name: "ss",
+        //   value: 4,
+        //   id: 2,
+        // },
+        // {
+        //   name: "ssaw",
+        //   value: 40,
+        //   id: 3,
+        // },
       ],
       Linedata: [
         {
@@ -668,13 +665,15 @@ export default {
   },
   created() {
     //个人信息
-    this.getPersonalInformation()
+    this.getPersonalInformation();
     if (this.isScholar) this.DefaultLocation = "zero";
     else this.DefaultLocation = "first";
     this.noteLabel = this.isOthers ? "他的笔记" : "我的笔记";
+    this.initSelfRelations();
   },
   mounted() {
     this.noteLabel = this.isOthers ? "他的笔记" : "我的笔记";
+    this.initSelfRelations();
   },
   watch: {
     isOthers: function (newVal, oldVal) {
@@ -684,80 +683,105 @@ export default {
   methods: {
     //获取个人信息
     getPersonalInformation() {
-      this.$axios(
-          {
-            url: '/user/getPersonalInformation/', method: "post",
-            data: {'token':sessionStorage.getItem('token')}
-          }
-      ).then(res => {
-        console.log(res.data.data)
-        this.realname=res.data.data[0].realname;
-        this.email=res.data.data[0].email;
-        this.gender=res.data.data[0].sex;
-        this.username=res.data.data[0].username;
-        this.personalProfile=res.data.data[0].sign;
-        this.region=res.data.data[0].country;
-      })
+      this.$axios({
+        url: "/user/getPersonalInformation/",
+        method: "post",
+        data: { token: sessionStorage.getItem("token") },
+      }).then((res) => {
+        console.log(res.data.data);
+        this.realname = res.data.data[0].realname;
+        this.email = res.data.data[0].email;
+        this.gender = res.data.data[0].sex;
+        this.username = res.data.data[0].username;
+        this.personalProfile = res.data.data[0].sign;
+        this.region = res.data.data[0].country;
+      });
     },
     //编辑个人信息
-    editPersonalInformation(){
-      this.$axios(
-          {
-            url: '/user/editPersonalInformation/', method: "post",
-            data: { 'token':sessionStorage.getItem('token'),
-                    'realname':this.new_realname,
-                    'sex':this.new_gender,
-                    'email':this.new_email,
-                    'sign':this.new_personalProfile,
-                    'country':this.new_region }
-          }
-      ).then(res => {
-        if(res.data.isSuccess){
-          this.$message.success("修改成功")
+    editPersonalInformation() {
+      this.$axios({
+        url: "/user/editPersonalInformation/",
+        method: "post",
+        data: {
+          token: sessionStorage.getItem("token"),
+          realname: this.new_realname,
+          sex: this.new_gender,
+          email: this.new_email,
+          sign: this.new_personalProfile,
+          country: this.new_region,
+        },
+      }).then((res) => {
+        if (res.data.isSuccess) {
+          this.$message.success("修改成功");
         } else {
-          this.$message.success(res.data.errormsg)
+          this.$message.success(res.data.errormsg);
         }
-        this.getPersonalInformation()
-        this.new_email="";
-        this.new_realname="";
-        this.new_gender="";
-        this.new_region="";
-        this.new_personalProfile="";
-      })
+        this.getPersonalInformation();
+        this.new_email = "";
+        this.new_realname = "";
+        this.new_gender = "";
+        this.new_region = "";
+        this.new_personalProfile = "";
+      });
     },
 
-
-
-
     //保存个人信息按钮
-    savePersonalInformation(){
+    savePersonalInformation() {
       this.isEditPersonalInformation = false;
       this.editPersonalInformation();
     },
     //修改密码
-    changePassword(){
-      if (!/^\w+$/.exec(this.newPassword) || this.newPassword.length > 16 || this.newPassword.length < 8) {
-        console.log(1)
-        this.$message.warning("密码仅能由数字、26个英文字母或者下划线组成，长度为8-16位，请检查您的密码");
+    changePassword() {
+      if (
+        !/^\w+$/.exec(this.newPassword) ||
+        this.newPassword.length > 16 ||
+        this.newPassword.length < 8
+      ) {
+        console.log(1);
+        this.$message.warning(
+          "密码仅能由数字、26个英文字母或者下划线组成，长度为8-16位，请检查您的密码"
+        );
         return;
-      } else if(this.newPassword!=this.confirmNewPassword){
+      } else if (this.newPassword != this.confirmNewPassword) {
         this.$message.warning("两次输入密码不一致，请检查");
         return;
       }
       this.isChangePassword = false;
-      this.$axios(
-          {
-            url: '/user/editPassword', method: "post",
-            data: {'token':sessionStorage.getItem('token'),
-                   'oldPassword':this.oldPassword,
-                   'newPassword':this.newPassword }
-          }
-      ).then(res => {
-        console.log(res.data)
-      })
+      this.$axios({
+        url: "/user/editPassword",
+        method: "post",
+        data: {
+          token: sessionStorage.getItem("token"),
+          oldPassword: this.oldPassword,
+          newPassword: this.newPassword,
+        },
+      }).then((res) => {
+        console.log(res.data);
+      });
     },
-
-  }
+    initSelfRelations() {
+      this.$axios({
+        url: "app/get_scholar_relation/",
+        method: "get",
+        data: {
+          token: sessionStorage.getItem("token"),
+        },
+      }).then((res) => {
+        console.log(res.data);
+      });
+    },
+    // initOtherRelations() {
+    //   this.$axios({
+    //     url: "/user/getRelations",
+    //     method: "post",
+    //     data: {
+    //       token: sessionStorage.getItem("token"),
+    //     },
+    //   }).then((res) => {
+    //     console.log(res.data);
+    //   });
+    // },
+  },
 };
 </script>
 
@@ -779,15 +803,15 @@ export default {
   margin-bottom: 60px;
   min-height: calc(100vh);
   margin-left: 15%;
-  transform: translate(0, 30px);//不知道为什么用margin顶栏也会受影响，用移动替代
+  transform: translate(
+    0,
+    30px
+  ); //不知道为什么用margin顶栏也会受影响，用移动替代
   .el-card {
     background-color: rgba(255, 255, 255, 0.277) !important;
     border-radius: 20px !important;
-
   }
 }
-
-  
 
 .text {
   font-size: 14px;
@@ -855,6 +879,6 @@ export default {
 /deep/ .el-tabs__active-bar {
   height: 4px;
   border-radius: 2px;
-  background: #003B55;
+  background: #003b55;
 }
 </style>
