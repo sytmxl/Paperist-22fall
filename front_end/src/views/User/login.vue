@@ -67,6 +67,10 @@ import CryptoJS from 'crypto-js'
 import instance from "@/http";
 export default {
   name: "Login",
+  mounted(){
+    var body = document.getElementById("topbar");
+    body.style.display="none";
+  },
   data() {
     return {
       form: {
@@ -82,6 +86,7 @@ export default {
       forgetDialogVisible: false,
     };
   },
+  
   methods:{
     forgetPass(){
       // TODO
@@ -133,8 +138,11 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+#topbar {
+  display:none !important;
+}
 .home_logo {
-
+  // display:none !important;
   width: 300px;
   height: 200px;
   margin: 0 auto;

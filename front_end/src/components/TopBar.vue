@@ -1,5 +1,5 @@
 <template>
-  <el-header>
+  <el-header id="topbar">
     <div class="content">
       <img class="logo" src="../assets/logo/cube_logo.svg" @click="gotoFirstPage">
       <search-box/>
@@ -92,22 +92,11 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.el-header {
-  // background-color: #003b55 !important;
-  // backdrop-filter: blur(25px) brightness(110%);
+#topbar {
   z-index: 10000;
-  // padding: auto;
   width: 100%;
-  // display: flex;
   height:60px;
-  // position: fixed;
-  
-  position: fixed;  /* 设置为绝对定位，使下方的top和left生效  */
-  // top: 50%;
-  // left: 50%;
-  // transform: translate(-50%,0);  /* 作用见后方描述  */
-  
-  
+  position: fixed; 
 }
 .content {
   width: max-content;

@@ -74,6 +74,10 @@ import axios from "axios";
 import CryptoJS from 'crypto-js'
 export default {
   name: "Register",
+  mounted(){
+    var body = document.getElementById("topbar");
+    body.style.display="none";
+  },
   data() {
     return {
       form: {
