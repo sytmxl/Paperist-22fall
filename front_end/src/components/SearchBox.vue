@@ -268,9 +268,7 @@ export default {
 <style lang="scss" scoped>
 .date-picker {
   float: left;
-
-    width: 48% !important;
-  
+  width: 48% !important;
 }
 .search_input {
   // width: 55%;

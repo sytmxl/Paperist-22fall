@@ -515,9 +515,12 @@ export default {
     },
     scroll() {
       var windowTop = $(window).scrollTop();
-      windowTop > 300 ?
-      $('#topbar').css('display', 'block'):
-      $('#topbar').css('display', 'none');
+      // windowTop > 300 ?
+      if (windowTop > 300) {
+        $('#topbar').css('display', 'block');
+      } else {
+        $('#topbar').css('display', 'none');
+      }
 		},
     toggleDarkLight() {
       var body = document.getElementById("app");
