@@ -198,7 +198,6 @@ import UploadText from "@/components/UploadText.vue";
 import MissTextComplain from "@/components/MissTextComplain.vue";
 import RelationShip from "@/components/RelationShip.vue";
 import ScholarLine from "@/components/ScholarLine.vue";
-import toggleDarkLight from "../../App.vue";
 import TopBar from "@/components/TopBar";
 export default {
   inject: ["reload"],
@@ -210,6 +209,203 @@ export default {
     RelationShip,
     ScholarLine,
     TopBar,
+  },
+  created() {
+    //获取信息
+    // this.getRecommendList();
+    // this.getSubscribeList();
+
+  },
+  mounted() {
+    // 获取一些信息
+    // this.getRecommendList();
+    // this.getSubscribeList();
+    var body = document.getElementById("topbar");
+    body.style.display="none";
+    window.addEventListener("scroll", this.scroll,true);
+  },
+	destroyed() {
+		window.removeEventListener("scroll", this.scroll,true);
+	},
+  methods: {
+    // 获取推荐文章
+    // getRecommendList() {
+    //   this.$http
+    //     .get("/api/recommend")
+    //     .then((res) => {
+    //       this.recommendList = res.data;
+    //       this.showRecommendList = this.recommendList.slice(0, 10);
+    //     })
+    //     .catch((err) => {
+    //       console.log(err);
+    //     });
+    // },
+    // 获取订阅文章
+    // getSubscribeList()
+    // 搜索热门领域
+    // search_field(arg) {
+    //   this.$router.push({
+    //     path: "/result",
+    //     query: {
+    //       input: arg,
+    //       type: 2
+    //     }
+    //   });
+    // },
+    scroll() {
+			let that = this;
+			let scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop;
+			that.scrollTop = scrollTop;
+			// console.log(scrollTop)
+      var body = document.getElementById("topbar");
+			if (that.scrollTop > 300) {
+        body.style.display="block";
+			} else {
+        body.style.display="none";
+			}
+		},
+    submitForm1(formName) {
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          this.next();
+          // alert('submit!');
+        } else {
+          console.log("error submit!!");
+          return false;
+        }
+      });
+    },
+    submitForm1_Miss(formName) {
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          this.next_Miss();
+          // alert('submit!');
+        } else {
+          console.log("error submit!!");
+          return false;
+        }
+      });
+    },
+    next() {
+      if (this.active++ > 1) this.active = 0;
+    },
+    next_Miss() {
+      if (this.Miss_Active++ > 1) this.Miss_Active = 0;
+    },
+    search_field(arg) {},
+    resetForm(formName) {
+      this.$nextTick(() => {
+        this.$refs[formName].resetFields();
+      });
+    },
+    uploadText() {
+      this.$refs.UploadText.uploadText();
+      // this.UploadDialogVisible = true;
+    },
+    uploadTextMiss() {
+      this.$refs.MissTextComplain.uploadTextMiss();
+    },
+    CancelUp() {
+      this.resetForm("Text"),
+        this.resetForm("Domains"),
+        (this.UploadDialogVisible = false),
+        (this.active = 0);
+    },
+    CancelUpMiss() {
+      this.resetForm("MissText"),
+        this.resetForm("MissDomains"),
+        (this.MissTextDialogVisible = false),
+        (this.Miss_active = 0);
+    },
+    ConfirmUploadText(formName) {
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          // 发包
+          alert("submit!");
+          this.resetForm("Text");
+          this.resetForm("Domains");
+          this.active = 0;
+          this.$nextTick(() => {
+            this.UploadDialogVisible = false;
+          });
+          //
+        } else {
+          console.log("error submit!!");
+        }
+      });
+    },
+    ConfirmUploadMissText(formName) {
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          // 发包
+          alert("submit!");
+          this.resetForm("MissText");
+          this.resetForm("MissDomains");
+          this.Miss_Active = 0;
+          this.$nextTick(() => {
+            this.MissTextDialogVisible = false;
+          });
+          //
+        } else {
+          console.log("error submit!!");
+        }
+      });
+    },
+    loadRec() {
+      this.start = true;
+      setTimeout(() => {
+        this.start = false;
+        // 获取到全部数据，分布给用户展示
+        this.showRecommendList = this.showRecommendList.concat(
+          this.RecommendList
+        );
+      }, 2000);
+    },
+    loadSub() {
+      this.start2 = true;
+      setTimeout(() => {
+        this.start2 = false;
+        // 获取到全部数据，分布给用户展示
+        this.showSubscribeList = this.showSubscribeList.concat(
+          this.SubscribeList
+        );
+      }, 2000);
+    },
+    isEmptyObject(obj) {
+      for (var key in obj) {
+        return false;
+      }
+      return true;
+    },
+    removeDomain(item) {
+      var index = this.Domains.urls.indexOf(item);
+      if (index !== -1) {
+        this.Domains.urls.splice(index, 1);
+      }
+    },
+    addDomain() {
+      this.Domains.urls.push({
+        value: "",
+        key: Date.now(),
+      });
+    },
+    removeMissDomain(item) {
+      var index = this.MissDomains.urls.indexOf(item);
+      if (index !== -1) {
+        this.MissDomains.urls.splice(index, 1);
+      }
+    },
+    addMissDomain() {
+      this.MissDomains.urls.push({
+        value: "",
+        key: Date.now(),
+      });
+    },
+    toggleDarkLight() {
+      var body = document.getElementById("app");
+      var currentClass = body.className;
+      body.className = currentClass == "dark-mode" ? "light-mode" : "dark-mode";
+    },
   },
   data() {
     return {
@@ -724,7 +920,6 @@ export default {
   border-radius: 2px;
   background: #003b55;
 }
-/deep/.el-input-group {
 
-}
+
 </style>
