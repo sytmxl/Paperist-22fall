@@ -64,15 +64,10 @@
                 </el-empty>
               </div>
               <div v-else>
-                <aboutCard
+                <noteCard
                   v-for="(item, index) in showSubscribeNoteList"
                   :key="index"
-                  :name="item.name"
-                  :author="item.author"
-                  :cite="item.cite"
-                  :origin="item.origin"
-                  :intro="item.intro"
-                  :date="item.date"
+                  :note="item"
                 />
                 <div id="load">
                   <el-button
@@ -200,6 +195,7 @@ import RelationShip from "@/components/RelationShip.vue";
 import ScholarLine from "@/components/ScholarLine.vue";
 import toggleDarkLight from "../../App.vue";
 import TopBar from "@/components/TopBar";
+import noteCard from "../../components/noteCard.vue";
 export default {
   inject: ["reload"],
   components: {
@@ -210,6 +206,7 @@ export default {
     RelationShip,
     ScholarLine,
     TopBar,
+    noteCard,
   },
   data() {
     return {
@@ -254,27 +251,38 @@ export default {
       showSubscribeNoteList: [
         {
           name: "论杰哥",
-          author: "马哥",
-          cite: "100",
-          origin: "中国科学院",
-          intro: "杰哥是个大帅哥",
-          date: "2020-10-10",
+          intro: "介绍奇人杰哥",
+          likes: 8,
+          collections: 10,
+          remarks: 9,
         },
         {
           name: "论杰哥",
-          author: "马哥",
-          cite: "100",
-          origin: "中国科学院",
-          intro: "杰哥是个大帅哥",
-          date: "2020-10-10",
+          intro: "介绍奇人杰哥",
+          likes: 8,
+          collections: 10,
+          remarks: 9,
         },
         {
           name: "论杰哥",
-          author: "马哥",
-          cite: "100",
-          origin: "中国科学院",
-          intro: "杰哥是个大帅哥",
-          date: "2020-10-10",
+          intro: "介绍奇人杰哥",
+          likes: 8,
+          collections: 10,
+          remarks: 9,
+        },
+        {
+          name: "论杰哥",
+          intro: "介绍奇人杰哥",
+          likes: 8,
+          collections: 10,
+          remarks: 9,
+        },
+        {
+          name: "论杰哥",
+          intro: "介绍奇人杰哥",
+          likes: 8,
+          collections: 10,
+          remarks: 9,
         },
       ],
       SubscribeTextList: [{}],
@@ -725,6 +733,5 @@ export default {
   background: #003b55;
 }
 /deep/.el-input-group {
-
 }
 </style>
