@@ -1,8 +1,7 @@
 <template>
     <el-container class="root">
-      <TopBar/>
         <el-header>
-            顶部导航栏组件
+            <TopBar/>
         </el-header>
         <el-container class="content">
                 <el-main>
@@ -280,7 +279,7 @@ export default {
           {
             name: '引用量',
             type: 'line',
-            data: [5, 20, 36, 10, 10, 20]
+            data: [5, 8, 15, 22, 25, 30]
           }
         ]
         });

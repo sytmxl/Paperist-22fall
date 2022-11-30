@@ -1,7 +1,8 @@
 <template>
     
     <el-container class="root">
-        <TopBar/>
+        
+        <TopBar/> 
        <el-main class="left">
         <div class="author">
             <el-card>
@@ -16,6 +17,12 @@
                 <span>获赞：99</span>
                 <span>评论：15</span>
                 <span>收藏：20</span>
+                
+              </div>
+              <div class="response">
+                <el-button>点赞</el-button>
+                <el-button>收藏</el-button>
+                <el-button>订阅</el-button>
               </div>
             </el-card>
         </div>
@@ -25,15 +32,7 @@
                     <span>作者其他笔记</span>
                 </div>
                 <div v-for="i in list" :key="i">
-                    <div class="other_note">
-                        <el-card>
-                            <span>论文名称：{{i.name}}</span>
-                            <span>笔记简介：{{i.intro}}</span>
-                            <i class="el-icon-thumb">{{i.likes}}</i>
-                            <i class="el-icon-star-off">{{i.collections}}</i>
-                            <i class="el-icon-chat-round">{{i.remarks}}</i>
-                        </el-card>
-                    </div>
+                    <noteCard :note="i"/>
                 </div>
 
             </el-card>
@@ -58,10 +57,10 @@
                 </el-card>
             </div>
             <div class="remark">
-                <el-card>
-                     <div class="creat_comment">
+                  <div class="creat_comment">
                                 <el-button @click="CreatCommentVisible =true">我要评论</el-button>
                     </div>
+                <el-card>
                                 <div v-if="Object.keys(remark_list).length!=0">
                               <div class="comment" v-for="i in remark_list" :key="i">
                                 <remark :list="i"/>
@@ -88,11 +87,13 @@ PDFJS.GlobalWorkerOptions.workerSrc = require("pdfjs-dist/build/pdf.worker.entry
 import remark from "../../components/remark.vue"
 import CreateComment from "../../components/CreateComment.vue"
 import TopBar from "@/components/TopBar";
+import noteCard from "../../components/noteCard.vue";
 export default {
     components:{
         remark,
         CreateComment,
         TopBar,
+        noteCard
     },
     data(){
         return{
@@ -246,20 +247,6 @@ export default {
     margin-top: 15px;
     text-align: left;
 }
-.other_note{
-    margin-top: 15px;
-}
-.other_note span{
-    display: block;
-    text-align: left;
-    margin-bottom: 15px;
-}
-.other_note i{
-    display: block;
-    float: left;
-    margin-bottom: 15px;
-    margin-right: 40px;
-}
 .notes_title span{
     display: block;
     text-align: left;
@@ -284,6 +271,7 @@ export default {
     width: 70%;
     margin-right: 100px;
      margin-top: 50px;
+     overflow: hidden;
 }
 .right .content{
     height: 1000px;
@@ -299,7 +287,10 @@ export default {
 
 }
 .right .remark .el-card{
-      overflow-y: scroll;
+    height: 550px;
+}
+.right .remark .el-card{
+    overflow-y: scroll;
     overflow-x:hidden;
 }
 .creat_comment{
@@ -342,5 +333,12 @@ export default {
       margin-right: 5px;
       cursor: pointer;
  }
-
+.response{
+    margin-top:20px;
+    
+}
+.response .el-button{
+    width: 30%;
+    text-align: center;
+}
 </style>
