@@ -131,7 +131,7 @@ export default {
         this.$message.warning("请输入验证码");
         return;
       }
-      axios({
+      this.$axios({
         method: "post",
         url: "user/register/",
         data: {
@@ -156,10 +156,10 @@ export default {
                   url:'user/login/',method:"post",
                   data:{'email':this.form.email,encrypted_pwd:CryptoJS.MD5(this.form.password1).toString()}
                 }
-            ).then(res=>{
-              if(res.data.errornumber == 0){
-                this.$router.push("/FirstPage")
-                sessionStorage.setItem("token",res.data.token);
+            ).then(async res => {
+              if (res.data.errornumber == 0) {
+                sessionStorage.setItem("token", res.data.token);
+                await this.$router.push("/FirstPage")
               }
             })
           }

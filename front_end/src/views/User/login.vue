@@ -64,6 +64,7 @@
 <script>
 import axios from "axios";
 import CryptoJS from 'crypto-js'
+import instance from "@/http";
 export default {
   name: "Login",
   data() {
@@ -95,36 +96,37 @@ export default {
         password: "",
       }
     },
-    login(){
-      axios(
+    async login() {
+      this.$axios(
           {
-            url:'user/login/',method:"post",
-            data:{'email':this.form.email,encrypted_pwd:CryptoJS.MD5(this.form.password).toString()}
+            url: 'user/login/', method: "post",
+            data: {'email': this.form.email, encrypted_pwd: CryptoJS.MD5(this.form.password).toString()}
           }
-      ).then(res=>{
-        if(res.data.errornumber < 0){
-          switch (res.data.errornumber){
+      ).then(async res => {
+        if (res.data.errornumber < 0) {
+          switch (res.data.errornumber) {
             case -1:
               this.$message({
                 message: '邮箱不存在',
                 type: 'warning'
-              }); break;
+              });
+              break;
             case -2:
               this.$message({
                 message: '密码不正确',
                 type: 'warning'
-              }); break;
+              });
+              break;
           }
-        }else {
-          axios.defaults.headers.common['Authorization'] = `JWT ${res.data.token}`;
+        } else {
           this.$message({
             message: '登陆成功',
             type: 'success'
           });
-          this.$router.push("/FirstPage")
-          sessionStorage.setItem("token",res.data.token);
+          sessionStorage.setItem("token", res.data.token);
         }
       })
+      await this.$router.push("/FirstPage")
     }
   }
 };

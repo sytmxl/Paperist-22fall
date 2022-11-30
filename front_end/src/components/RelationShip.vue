@@ -57,9 +57,9 @@ export default {
       handler(newValue, oldValue) {
         this.myChart.clear();
         this.getData();
-        console.log("Relation Changes", newValue);
-        console.log(this.chartDom);
-        console.log(this.myChart);
+        //console.log("Relation Changes", newValue);
+        //console.log(this.chartDom);
+        //console.log(this.myChart);
       },
     },
     Mname: {
@@ -93,11 +93,11 @@ export default {
 
   created() {},
   mounted() {
-    console.log("6666666");
-    console.log("Relations", this.relations);
-    console.log(this.Mname);
+    //console.log("6666666");
+    //console.log("Relations", this.relations);
+    //console.log(this.Mname);
     this.chartDom = document.getElementById("chart2");
-    console.log(this.chartDom);
+    //console.log(this.chartDom);
     this.myChart = echarts.init(this.chartDom);
     this.getData();
   },
@@ -192,8 +192,8 @@ export default {
         // 鼠标悬停在node或者edge上显示相应信息
         tooltip: {
           formatter: function (param) {
-            console.log("参数是");
-            console.log(arguments);
+            //console.log("参数是");
+            //console.log(arguments);
             if (param.dataType === "edge") {
               return (
                 param.data.target +
@@ -259,7 +259,7 @@ export default {
       myChart.on("click", function (params) {
         // 如果是当前学者的话，就不跳转
         if (params.data.name === that.Mname) {
-          console.log(that.Mname);
+          //console.log(that.Mname);
         } else {
           for (var i = 0; i < that.relations.length; i++) {
             if (that.relations[i].name === params.data.name) {
