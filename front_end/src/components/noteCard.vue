@@ -40,6 +40,11 @@ export default {
 <style lang="scss" scoped>
 .other_note{
     margin-top: 15px;
+    .el-card {
+      background-color: rgba(255, 255, 255, 0.231) !important;
+      border-radius: 15px !important;
+      border: none !important;
+    }
 }
 .other_note span{
     display: block;

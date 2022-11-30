@@ -9,19 +9,19 @@
                 <span style="font-size:25px;font-weight:bolder">杰尾油</span>
                 <h5>来源：小马文学 &#12288; 引用次数：19156</h5>
               </div>
-                <div  class="text item">
+              <div  class="text item">
                 作者：马哥
               </div>
-                <div  class="text item">
+              <div  class="text item">
                 摘要：主要讲述了杰哥的故事
               </div>
-                <div  class="text item">
+              <div  class="text item">
                 关键词：卡戴珊、羊尾油、杰哥
               </div>
-                <div  class="text item">
+              <div  class="text item">
                 年份：2022/11/11
               </div>
-                <div  class="text item">
+              <div  class="text item">
                 doi：swmrw7
               </div>
               <div class="button">
@@ -30,83 +30,82 @@
                   <el-button round icon="el-icon-warning-outline" @click="ComplainVisible = true">申诉</el-button>
                   <el-button round icon="el-icon-share">分享</el-button>
               </div>
-                                <el-dialog
-                                    title="文章申诉"
-                                    :visible.sync="ComplainVisible"
-                                    width="60%"
-                                    :before-close="handleClose" class="complain">
-                                    <div class="describe">
-                                        问题描述：
-                                      <el-input
-                                        type="textarea"
-                                        :autosize="{ minRows: 2, maxRows: 4}"
-                                        placeholder="请输入需要申诉的内容"
-                                        v-model="describe"
-                                        maxlength="200"
-                                        show-word-limit
-                                        >
-                                      </el-input>
-                                    </div>
-                                    <div class="picture">
-                                      相关图片：
-                                      <el-upload
-                                          action="#"
-                                          list-type="picture-card"
-                                          :auto-upload="false"
-                                          :accept="jpg"
-                                          :limit="4"
-                                          :on-exceed="handleExceed">
-                                            <i slot="default" class="el-icon-plus"></i>
-                                            <div slot="file" slot-scope="{file}">
-                                              <img
-                                                class="el-upload-list__item-thumbnail"
-                                                :src="file.url" alt=""
-                                              >
-                                              <span class="el-upload-list__item-actions">
-                                                <span
-                                                  class="el-upload-list__item-preview"
-                                                  @click="handlePictureCardPreview(file)"
-                                                >
-                                                  <i class="el-icon-zoom-in"></i>
-                                                </span>
-                                                <span
-                                                  v-if="!disabled"
-                                                  class="el-upload-list__item-delete"
-                                                  @click="handleDownload(file)"
-                                                >
-                                                  <i class="el-icon-download"></i>
-                                                </span>
-                                                <span
-                                                  v-if="!disabled"
-                                                  class="el-upload-list__item-delete"
-                                                  @click="handleRemove(file)"
-                                                >
-                                                  <i class="el-icon-delete"></i>
-                                                </span>
-                                              </span>
-                                            </div>
-                                        </el-upload>
-                                        <el-dialog :visible.sync="dialogVisible">
-                                          <img width="100%" :src="dialogImageUrl" alt="">
-                                        </el-dialog>
-                                    </div>
-                                    <div class="contact">
-                                      联系方式：
-                                      <el-input
-                                        type="text"
-                                        placeholder="请输入你的联系方式，手机号、微信号、邮箱均可"
-                                        v-model="contact"
-                                        maxlength="25"
-                                        show-word-limit
-                                      >
-                                      </el-input>
-                                    </div>
-                                    <span slot="footer" class="dialog-footer">
-                                      <!-- <el-button @click="dialogVisible = false">取 消</el-button> -->
-                                      <el-button type="primary" @click="dialogVisible = false">提交申诉</el-button>
-                                    </span>
-                                </el-dialog>
-
+              <el-dialog
+                  title="文章申诉"
+                  :visible.sync="ComplainVisible"
+                  width="60%"
+                  :before-close="handleClose" class="complain">
+                  <div class="describe">
+                      问题描述：
+                    <el-input
+                      type="textarea"
+                      :autosize="{ minRows: 2, maxRows: 4}"
+                      placeholder="请输入需要申诉的内容"
+                      v-model="describe"
+                      maxlength="200"
+                      show-word-limit
+                      >
+                    </el-input>
+                  </div>
+                  <div class="picture">
+                    相关图片：
+                    <el-upload
+                        action="#"
+                        list-type="picture-card"
+                        :auto-upload="false"
+                        :accept="jpg"
+                        :limit="4"
+                        :on-exceed="handleExceed">
+                          <i slot="default" class="el-icon-plus"></i>
+                          <div slot="file" slot-scope="{file}">
+                            <img
+                              class="el-upload-list__item-thumbnail"
+                              :src="file.url" alt=""
+                            >
+                            <span class="el-upload-list__item-actions">
+                              <span
+                                class="el-upload-list__item-preview"
+                                @click="handlePictureCardPreview(file)"
+                              >
+                                <i class="el-icon-zoom-in"></i>
+                              </span>
+                              <span
+                                v-if="!disabled"
+                                class="el-upload-list__item-delete"
+                                @click="handleDownload(file)"
+                              >
+                                <i class="el-icon-download"></i>
+                              </span>
+                              <span
+                                v-if="!disabled"
+                                class="el-upload-list__item-delete"
+                                @click="handleRemove(file)"
+                              >
+                                <i class="el-icon-delete"></i>
+                              </span>
+                            </span>
+                          </div>
+                      </el-upload>
+                      <el-dialog :visible.sync="dialogVisible">
+                        <img width="100%" :src="dialogImageUrl" alt="">
+                      </el-dialog>
+                  </div>
+                  <div class="contact">
+                    联系方式：
+                    <el-input
+                      type="text"
+                      placeholder="请输入你的联系方式，手机号、微信号、邮箱均可"
+                      v-model="contact"
+                      maxlength="25"
+                      show-word-limit
+                    >
+                    </el-input>
+                  </div>
+                  <span slot="footer" class="dialog-footer">
+                    <!-- <el-button @click="dialogVisible = false">取 消</el-button> -->
+                    <el-button type="primary" @click="dialogVisible = false">提交申诉</el-button>
+                  </span>
+              </el-dialog>
             </el-card>
             <el-card class="box-card2">
                 <span style="font-size:25px;font-weight:bolder">全部来源</span>
@@ -458,7 +457,7 @@ overflow-y: scroll;
 	border: none !important;
   box-shadow: 0 0 7px rgba(204, 204, 204, 0.713);
   background-color: rgba(255, 255, 255, 0.5);
-  backdrop-filter: blur(40px) brightness(105%);
+  backdrop-filter: blur(40px) brightness(100%);
 }
 //tabs
 .el-tabs--left {
