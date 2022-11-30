@@ -1,7 +1,8 @@
 <template>
   <el-header id="topbar">
-    <div class="content">
+    <div id="bar-content">
       <img class="logo" src="../assets/logo/cube_logo.svg" @click="gotoFirstPage">
+
       <search-box/>
       <el-button  type="default" id="switch" name="dark_light" @click="toggleDarkLight" title="Toggle dark/light mode">日/夜</el-button>
       <div @click="get_avatar">test</div>
@@ -97,8 +98,12 @@ export default {
   width: 100%;
   height:60px;
   position: fixed; 
+  transition: 0.3s;
+  // animation-name: exit_blur;
+  // animation-iteration-count: 1;
+  // animation-duration: 0.4s;
 }
-.content {
+#bar-content {
   width: max-content;
   margin: 0px auto;
   height: 60px;
@@ -115,8 +120,9 @@ export default {
   cursor: pointer;
   // margin: 200px;
 }
+
 .search_input {
-  margin: 10px auto 0px 20px;
+  margin: 10px auto 0px auto;
   width: 300px;
   transition: 0.3s;
   padding: auto;
@@ -162,5 +168,15 @@ export default {
 }
 .el-avatar:hover {
   cursor: pointer;
+}
+@keyframes exit_blur {
+  0% {
+    filter: blur(0px);
+    opacity: 100%;
+  }
+  100% {
+    filter: blur(20px);
+    opacity: 0%;
+  }
 }
 </style>

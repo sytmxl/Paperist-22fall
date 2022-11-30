@@ -11,7 +11,9 @@ export default {
   components: {
     Footer: footer,
   },
+
   methods: {
+    
     toggleDarkLight() {
       var body = document.getElementById("app");
       var currentClass = body.className;
@@ -155,6 +157,16 @@ $theme: #003B55;
   100% {
     filter: blur(0px);
     opacity: 100%;
+  }
+}
+@keyframes exit_blur {
+  0% {
+    filter: blur(0px);
+    opacity: 100%;
+  }
+  100% {
+    filter: blur(20px);
+    opacity: 0%;
   }
 }
 
