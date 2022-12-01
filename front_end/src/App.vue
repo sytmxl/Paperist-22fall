@@ -111,9 +111,9 @@ $theme: #003B55;
 * {
   margin: 0;
   padding: 0;
-  animation-name: enter_blur;
-  animation-iteration-count: 1;
-  animation-duration: 0.4s;
+  // animation-name: enter_blur;
+  // animation-iteration-count: 1;
+  // animation-duration: 0.4s;
   // animation: enter_blur 0.4s cubic-bezier(.23,1.38,.65,.99);
 }
 .main {
@@ -211,7 +211,8 @@ el-icon:hover, el-icon-close:hover {
 //   /* transition: 1s !important; */
 // }
 
-.el-popper, .el-dropdown-menu__item {
+.el-popper, 
+.el-dropdown-menu__item {
   color: #35424e !important;
   font-family: 微软雅黑 !important;
   border-radius: 10px !important;
@@ -305,5 +306,10 @@ iframe {
 .material-theme .menu_item_expand {
   background: rgba(0, 0, 0, 0.04) !important;
 }
-
+.v-modal {
+  display: none;
+}
+/deep/.el-dialog {
+  animation: none !important;
+}
 </style>

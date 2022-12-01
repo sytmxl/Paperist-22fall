@@ -291,7 +291,7 @@
                     </el-input>
                   </div>
                 </div>
-                <div v-for="item in this.paperCollection">
+                <div v-for="(item,index) in this.paperCollection" :key="index">
                   <el-card class="box-card">
                     <el-button
                         style="float: right; margin-left: 5px"
@@ -338,7 +338,7 @@
                         </el-input>
                       </div>
                     </div>
-                    <div v-for="item in this.noteCollection">
+                    <div v-for="(item,index) in this.noteCollection" :key="index">
                       <el-card class="box-card">
                         <el-button
                             style="float: right; margin-left: 5px"
@@ -418,7 +418,7 @@
                     <el-button slot="append" icon="el-icon-search" @click="searchNote"></el-button>
                   </el-input>
                 </div>
-                <div v-for="item in this.notes">
+                <div v-for="(item,index) in this.notes" :key="index">
                   <el-card class="box-card">
                     <el-button
                         style="float: right; margin-left: 5px"
@@ -461,7 +461,7 @@
                     <el-button slot="append" icon="el-icon-search" @click="searchPaperComment"></el-button>
                   </el-input>
                 </div>
-                <div v-for="item in this.myComment">
+                <div v-for="(item,index) in this.myComment" :key="index">
                   <el-card class="box-card">
                     <el-button
                         style="float: right; margin-left: 5px"
@@ -768,6 +768,15 @@ export default {
     },
   },
   methods: {
+    initSelfRelations(){
+      console.log("initSelfRelations");
+      this.$axios({
+        method: "get",
+        url: "app/get_scholar_relation/",
+      }).then((res) => {
+        this.RelationsData = res.data;
+      });
+    },
     //获取个人信息
     getPersonalInformation() {
       this.$axios(
