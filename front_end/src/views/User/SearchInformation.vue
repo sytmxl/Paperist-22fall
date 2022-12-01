@@ -27,6 +27,14 @@
       </el-aside>
 <!--      搜索结果-->
       <el-main>
+        <el-pagination style="margin-top: calc(5vh)"
+            @current-change="post_common_search"
+            :current-page="currentPage"
+            :page-sizes="[10, 25, 50, 100]"
+            :page-size= "page_size"
+            layout="total, sizes, prev, pager, next, jumper"
+            :total="resultNum">
+        </el-pagination>
         <el-row :gutter="20">
           <el-col :span="16" style="text-align: left; margin-left: 6%; margin-bottom: 3%; color: #B3C0D1">找到约{{toThousands(resultNum)}}条相关结果</el-col>
           <el-col :span="4" style="text-align: left; margin-left: 6%; margin-bottom: 3%; color: #B3C0D1">
@@ -45,18 +53,18 @@
             <i style="display: inline-block; margin-left: 10%" class="el-icon-sort" @click="sortReserve"></i>
           </el-col>
         </el-row>
-        <div>
+        <div id="paperCards">
           <!-- <el-card style="min-height: calc(75vh)" class="display_zone" shadow="never"> -->
-            <paper-card v-for="searchResult in searchResults"
-                        
-            />
+          <paper-card v-for="paper in papers"
+                      :paper_data = "paper._source"
+          />
           <!-- </el-card> -->
         </div>
       </el-main>
 <!--右侧栏-->
       <el-aside class="right">
         <el-card  class="display_zone" shadow="never">
-          <h3 style="text-align: left; margin-left: 5%; margin-bottom: calc(2vh)">推荐</h3>
+          <h3 style="text-align: left; margin-left: 5%; margin-bottom: calc(2vh)" @click="post_common_search(1)">推荐</h3>
           <el-card class="recommend" v-for="recommend in recommends" :key="recommend" v-loading = "true" shadow="never"
                    style = "height: 75px;margin-bottom: 10px">
             <h5 style="margin-left: 10%; text-align: left;">{{recommend}}</h5>
@@ -75,6 +83,7 @@ import TopBar from "@/components/TopBar";
 import PaperCard from "@/components/PaperCard";
 import PaperInformation from "@/views/User/PaperInformation";
 import {$data} from "../../../static/pdf/build/pdf.worker";
+import axios from "axios";
 export default {
   name:"SearchInformation",
   components: {PaperInformation, PaperCard, TopBar},
@@ -90,12 +99,17 @@ export default {
       secondarySearchFilters01 : ['阿巴阿巴'],
       secondarySearchFilters02 : ['前端'],
       //搜索结果，暂时留白
-      searchResults : ['结果A','结果B','结果A','结果B','结果A','结果B','结果A','结果B','结果A','结果B','结果A','结果B',],
+      papers : [],
       //推荐栏，暂时留白
-      recommends : ['随便','在这里','推荐点什么','a','b',],
-      resultNum : 2333333,
+      recommends : [],
+      resultNum : 0,
       sortMethod : "默认",
-      sortReserve : false
+      sortReserve : false,
+      common_search_query :"of",
+      es_request_body_json : "",
+      es_respond : "",
+      page_size : 10,
+      currentPage:1,
     }
   },
   methods :{
@@ -109,8 +123,37 @@ export default {
       }
       return result.join('');
     },
-    reserveSort(){$data.sortReserve = !$data.sortReserve;}
+    reserveSort(){$data.sortReserve = !$data.sortReserve;},
+    post_common_search(page){
+      let es_request_body_common = {
+        "query":{
+          "query_string":{
+            "query": this.common_search_query
+          }
 
+        },
+        "from" : (page-1)*this.page_size,
+        "size" : this.page_size
+      }
+      console.log(es_request_body_common)
+     // this.es_request_body_json = JSON.stringify(es_request_body_common)
+      axios({
+            headers: {
+              'content-type': 'application/json',
+            },
+            auth: {
+              username: 'elastic',
+              password: 'BZYvLA-d*pS0EpI7utmJ'
+            },
+            url: 'es/paper/_search', method: "post",
+            data: JSON.stringify(es_request_body_common)
+          }
+      ).then(res=>{
+        this.resultNum = res.data.hits.total.value
+        this.papers = res.data.hits.hits
+        this.$forceUpdate()
+      })
+    },
   }
 }
 </script>
