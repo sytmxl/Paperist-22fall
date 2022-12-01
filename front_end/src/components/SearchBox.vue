@@ -196,15 +196,15 @@ export default {
         PublishSelect: "1",
       },
       AdvancedSearchInput: {
-        Allselect: "",
-        Exectselect: "",
-        LeastOneSelect: "",
-        NoSelect: "",
-        AdAuthor: "",
-        AdOrganization: "",
-        AdPublish: "",
-        date1: "",
-        date2: "",
+        Allselect: "",//默认搜索
+        Exectselect: "",//包含检索词
+        LeastOneSelect: "",//至少一个
+        NoSelect: "",//不包含
+        AdAuthor: "",//包含作者
+        AdOrganization: "",//包含机构
+        AdPublish: "",//所在出版物
+        date1: "",//起始年份
+        date2: "",//终止年份
       },
       Positions: [
         {

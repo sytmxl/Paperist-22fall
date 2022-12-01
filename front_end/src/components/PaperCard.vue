@@ -1,6 +1,6 @@
 <template>
   <el-card shadow="hover">
-    <h3 style="text-align: left">{{$props.title}}</h3>
+    <h3 style="text-align: left">{{title}}</h3>
     <p style="text-align: left; margin-top: 1%; margin-right: 1%">{{limitWords(content)}}</p>
 
 
@@ -28,7 +28,7 @@
         </span>
         <span style="margin-top: 2%; float: left">
           <p style=" text-align: left;color: #B3C0D1;display: inline;">{{""}}关键词: </p>
-          <p v-for="keyword in keywords" style=" text-align: left;display: inline;">{{keyword}} </p>
+          <p style=" text-align: left;display: inline;">{{getKeywordsList()}} </p>
         </span>
       </el-col>
       <el-col :span="8">
@@ -52,24 +52,37 @@ import {$data} from "../../static/pdf/build/pdf.worker";
 export default {
   name: "PaperCard",
   props: {
-    title: {default :"关于ZCH费了半天劲也不知道该在这填点啥的研究"},
-    authors: {default:[{
-        "name": "Carmen Sandoval C",
-        "id": "53f31f52dabfae9a8444c921"
-      },{
-        "name": "ZCH233",
-        "id": "666666666666666"
-      }]},
-    content: {default: ""},
-    source:{default:"自动废话集"},
-    cite:{default:"N/A"},
-    year:{default:null},
-    keywords:[],
-    issue:""
+    paper_data:{default:{}}
+  },
+  //                      :title=".title"
+// :authors="paper._source.authors"
+// :cite="paper._source.n_citation"
+// :content="paper._source.abstract"
+// :source="paper._source.venue.raw"
+// :year="paper._source.year"
+// :keywords="paper._source.keywords"
+// :issue="paper._source.issue"
+  mounted() {
+    if(this.$props.paper_data.title) this.title = this.$props.paper_data.title
+    if(this.$props.paper_data.authors) this.authors = this.$props.paper_data.authors
+    if(this.$props.paper_data.n_citation) this.cite = this.$props.paper_data.n_citation
+    if(this.$props.paper_data.abstract) this.content = this.$props.paper_data.abstract
+    if(this.$props.paper_data.venue.raw) this.source = this.$props.paper_data.venue.raw
+    if(this.$props.paper_data.year) this.year = this.$props.paper_data.year
+    if(this.$props.paper_data.keywords) this.keywords = this.$props.paper_data.keywords
+    if(this.$props.paper_data.issue) this.issue = this.$props.paper_data.issue
   },
   data(){
     return{
-      isFavourite : false
+      isFavourite : false,
+      title: "",
+      authors: [],
+      content: "未收录摘要",
+      source:"未知",
+      cite:"未知",
+      year:"未知",
+      keywords:[],
+      issue:"未知"
     }
   },
   methods:{
@@ -90,7 +103,16 @@ export default {
       }
       str = this.limitWords(str + this.authors[this.authors.length-1].name)
       return str
-    }
+    },
+    getKeywordsList(){
+      let str = "";
+      let len = this.keywords.length-1
+      for(let i = 0;i < len; i++){
+        str = str + this.keywords[i] + ",";
+      }
+      str = this.limitWords(str + this.keywords[this.keywords.length-1])
+      return str
+    },
   }
 }
 </script>
