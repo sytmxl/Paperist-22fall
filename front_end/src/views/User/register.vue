@@ -130,6 +130,7 @@ export default {
       }
       if (this.form.password1 != this.form.password2) {
         this.$message.warning("两次输入密码不一致，请检查");
+        return;
       }
       if (this.code == '') {
         this.$message.warning("请输入验证码");

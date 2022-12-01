@@ -766,6 +766,15 @@ export default {
     },
   },
   methods: {
+    initSelfRelations(){
+      console.log("initSelfRelations");
+      this.$axios({
+        method: "get",
+        url: "app/get_scholar_relation/",
+      }).then((res) => {
+        this.RelationsData = res.data;
+      });
+    },
     //获取个人信息
     getPersonalInformation() {
       this.$axios(
