@@ -1,7 +1,169 @@
 <template>
   <el-container>
 <!--    顶栏-->
-    <top-bar/>
+    <el-header>
+      <div class="search_input">
+        <el-row :gutter="10">
+          <el-col class="advsearch" :span="4">
+            <el-button type="primary" round @click="AdvancedSearch()"
+            >高级搜索
+            </el-button>
+          </el-col>
+          <el-col :span="20" v-if="!isAdvanced">
+            <el-input
+                placeholder="请输入内容"
+                v-model="common_search_query"
+                class="input-with-select"
+                clearable
+            >
+              <el-select v-model="common_search_type" slot="prepend" placeholder="请选择">
+                <el-option
+                    v-for="(item, index) in searchMods"
+                    :key="index"
+                    :label="item.label"
+                    :value="item.value"
+                ></el-option>
+              </el-select>
+              <el-button
+                  id="search-button"
+                  type="default"
+                  slot="append"
+                  icon="el-icon-search"
+                  @click="post_common_search(1)"
+              >
+              </el-button>
+            </el-input>
+          </el-col>
+        </el-row>
+        <el-row
+            v-if="this.isAdvanced"
+            style="z-index: 999"
+            type="flex"
+            justify="left"
+        >
+          <el-col :span="16">
+            <el-card>
+              <el-form
+                  :model="advanced_search_query"
+                  :rules="rules"
+                  ref="AdvancedSearchInput"
+                  label-width="150px"
+                  label-position="left"
+                  class="demo-AdvancedSearchInput"
+                  style="margin-top: 10px; padding-bottom: -20px"
+                  size="mini"
+              >
+                <el-form-item label="包含全部检索词" prop="Allselect">
+                  <el-input v-model="advanced_search_query.fuzzy_search"></el-input>
+                </el-form-item>
+                <el-form-item label="包含精确检索词" prop="Exectselect">
+                  <el-input
+                      v-model="advanced_search_query.must_contain"
+                      placeholder="多个检索词以逗号,分隔"
+                  >
+                    <el-dropdown slot="suffix" size="mini" placement="top-start">
+                      <i class="el-icon-warning-outline el-input__icon"> </i>
+                      <el-dropdown-menu slot="dropdown">
+                        <el-dropdown-item disabled
+                        >多个检索词以逗号,分隔</el-dropdown-item
+                        >
+                      </el-dropdown-menu>
+                    </el-dropdown></el-input
+                  >
+                </el-form-item>
+                <el-form-item label="包含至少一个检索词" prop="LeastOneSelect">
+                  <el-input
+                      v-model="advanced_search_query.at_least_one"
+                      placeholder="多个检索词以逗号,分隔"
+                  ></el-input>
+                </el-form-item>
+                <el-form-item label="不包含检索词" prop="NoSelect">
+                  <el-input
+                      v-model="advanced_search_query.contains_none"
+                      placeholder="多个检索词以逗号,分隔"
+                  ></el-input>
+                </el-form-item>
+                <el-form-item label="出现检索词的位置" prop="Position">
+                  <el-select
+                      v-model="option.PositionValue"
+                      placeholder="请选择"
+                      style="width: 150px; margin-left: -58%"
+                  >
+                    <el-option
+                        v-for="item in Positions"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value"
+                    >
+                    </el-option>
+                  </el-select>
+                </el-form-item>
+                <el-form-item label="作者" prop="AdAuthor">
+                  <el-input
+                      v-model="advanced_search_query.authors"
+                      placeholder="多个作者间以顿号、分隔"
+                  ></el-input>
+                </el-form-item>
+                <el-form-item label="机构" prop="AdOrganization">
+                  <el-input v-model="advanced_search_query.AdOrganization"></el-input>
+                </el-form-item>
+                <el-form-item label="出版物" prop="AdPublish">
+                  <el-input
+                      v-model="advanced_search_query.venue"
+                      placeholder="请输入名称"
+                  >
+                    <el-select
+                        v-model="option.PublishSelect"
+                        slot="prepend"
+                        placeholder="请选择"
+                    >
+                      <el-option label="期刊" value="1"></el-option>
+                      <el-option label="会议" value="2"></el-option>
+                    </el-select>
+                  </el-input>
+                </el-form-item>
+                <el-form-item label="发表时间" prop="AdTime">
+                  <el-date-picker
+                      class="date-picker"
+                      v-model="advanced_search_query.year_begin"
+                      type="year"
+                      placeholder="起始年份"
+                      format="yyyy 年"
+                      value-format="yyyy"
+                  >
+                  </el-date-picker>
+                  <div style="float: left">&nbsp;-&nbsp;</div>
+                  <el-date-picker
+                      class="date-picker"
+                      v-model="advanced_search_query.year_end"
+                      type="year"
+                      placeholder="终止年份"
+                      format="yyyy 年"
+                      value-format="yyyy"
+                  >
+                  </el-date-picker>
+                </el-form-item>
+                <el-form-item label="语言检索范围" prop="AdLang">
+                  <el-select
+                      v-model="option.LangValue"
+                      placeholder="请选择"
+                      style="width: 150px; margin-left: -58%"
+                  >
+                    <el-option label="不限" value="1"></el-option>
+                    <el-option label="中文" value="2"></el-option>
+                    <el-option label="英语" value="3"></el-option>
+                  </el-select>
+                </el-form-item>
+              </el-form>
+              <el-button type="primary" size="mini" @click="post_advanced_search"
+              >立即搜索</el-button
+              >
+              <el-button size="mini" @click="CancelAd()">取消搜索</el-button>
+            </el-card>
+          </el-col>
+        </el-row>
+      </div>
+    </el-header>
     <el-container id="SearchInformation">
 <!--      左侧栏-->
       <el-aside class="left">
@@ -89,6 +251,11 @@ export default {
   components: {PaperInformation, PaperCard, TopBar},
   props :{
   },
+  mounted() {
+    var body = document.getElementById("topbar");
+    body.style.display="none";
+    if(this.$route.query.input)  alert(this.$route.query.input)
+  },
   data() {
     return{
       //二次搜索标签
@@ -105,15 +272,59 @@ export default {
       resultNum : 0,
       sortMethod : "默认",
       sortReserve : false,
-      common_search_query :"of",
+      common_search_query :"",
       es_request_body_json : "",
       es_respond : "",
       page_size : 10,
       currentPage:1,
       card_index:[],
+      // 用于搜索框
+      PublishSelect: "1",
+      LangValue: "1",
+      common_search_type: 1,
+      isAdvanced: false,
+      searchMods: [
+        { label: "篇名", value: 1 },
+        { label: "关键词", value: 2 },
+        { label: "作者", value: 3 },
+        { label: "摘要", value: 4 },
+        { label: "机构", value: 5 },
+      ],
+      option: {
+        // 1：摘要 2：标题
+        PositionValue: 1,
+        // 1：不限 2：中文 3：英语
+        LangValue: "1",
+        // 1：期刊 2：会议
+        PublishSelect: "1",
+      },
+      advanced_search_query: {
+        fuzzy_search: "",//默认搜索
+        must_contain: "",//包含检索词
+        at_least_one: "",//至少一个
+        contains_none: "",//不包含
+        authors: "",//包含作者
+        AdOrganization: "",//包含机构
+        venue: "",//所在出版物
+        year_begin: "",//起始年份
+        year_end: "",//终止年份
+      },
+      Positions: [
+        {
+          label: "文章摘要",
+          value: 1,
+        },
+        {
+          label: "文章标题",
+          value: 2,
+        },
+      ],
     }
   },
   methods :{
+    test(){
+      alert("???")
+    },
     toThousands(num) {
       var result = [ ], counter = 0;
       num = (num || 0).toString().split('');
@@ -126,18 +337,31 @@ export default {
     },
     reserveSort(){$data.sortReserve = !$data.sortReserve;},
     post_common_search(page){
-      let es_request_body_common = {
+      let es_request_body = {
         "query":{
-          "query_string":{
-            "query": this.common_search_query
-          }
-
+          "multi_match":{"query":this.common_search_query,"fields":[]}
         },
         "from" : (page-1)*this.page_size,
         "size" : this.page_size
       }
-      console.log(es_request_body_common)
-     // this.es_request_body_json = JSON.stringify(es_request_body_common)
+      switch (this.common_search_type){
+        case 1:
+          es_request_body.query.multi_match.fields.push("title")
+          break;
+        case 2:
+          es_request_body.query.multi_match.fields.push("keywords")
+          break;
+        case 3:
+            es_request_body.query.multi_match.fields.push("authors.name")
+          break;
+        case 4:
+          es_request_body.query.multi_match.fields.push("abstract")
+          break;
+        case 5:
+          es_request_body.query.multi_match.fields.push("venue.raw")
+          es_request_body.query.multi_match.fields.push("authors.org")
+          break;
+      }
       axios({
             headers: {
               'content-type': 'application/json',
@@ -147,7 +371,7 @@ export default {
               password: 'BZYvLA-d*pS0EpI7utmJ'
             },
             url: 'es/paper/_search', method: "post",
-            data: JSON.stringify(es_request_body_common)
+            data: JSON.stringify(es_request_body)
           }
       ).then(res=>{
         this.resultNum = res.data.hits.total.value
@@ -156,8 +380,35 @@ export default {
         for(let i = 0; i < res.data.hits.hits.length; i++){
           this.card_index.push(i+this.currentPage*this.page_size)
         }
-        this.papers.reverse().reverse()
       })
+    },
+    post_advanced_search(page){
+      let es_request_body = {
+        "query":{},
+        "from" : (page-1)*this.page_size,
+        "size" : this.page_size
+      }
+      if(this.advanced_search_query.fuzzy_search) es_request_body.query.fuzzy_search = this.advanced_search_query.fuzzy_search
+      if(this.advanced_search_query.fuzzy_search) es_request_body.query.fuzzy_search = this.advanced_search_query.fuzzy_search
+      if(this.advanced_search_query.fuzzy_search) es_request_body.query.fuzzy_search = this.advanced_search_query.fuzzy_search
+      if(this.advanced_search_query.fuzzy_search) es_request_body.query.fuzzy_search = this.advanced_search_query.fuzzy_search
+      if(this.advanced_search_query.fuzzy_search) es_request_body.query.fuzzy_search = this.advanced_search_query.fuzzy_search
+      if(this.advanced_search_query.fuzzy_search) es_request_body.query.fuzzy_search = this.advanced_search_query.fuzzy_search
+      if(this.advanced_search_query.fuzzy_search) es_request_body.query.fuzzy_search = this.advanced_search_query.fuzzy_search
+
+    },
+    //用于搜索框
+    resetForm(formName) {
+      this.$nextTick(() => {
+        this.$refs[formName].resetFields();
+      });
+    },
+    CancelAd() {
+      this.isAdvanced = false;
+      this.resetForm("AdvancedSearchInput");
+    },
+    AdvancedSearch() {
+      this.isAdvanced = this.isAdvanced ? false : true;
     },
   }
 }

@@ -1,5 +1,6 @@
 <template>
   <div>
+    <search-box/>
     <div>
       <paper-card/>
       <el-button @click="post_common_search">DEBUG</el-button>
@@ -26,10 +27,11 @@
 import axios from "axios";
 import CryptoJS from "crypto-js";
 import PaperCard from "@/components/PaperCard";
+import SearchBox from "@/components/SearchBox";
 
 export default {
   name: "debug",
-  components: {PaperCard},
+  components: {SearchBox, PaperCard},
   data(){
     return{
       common_search_query :"of",
