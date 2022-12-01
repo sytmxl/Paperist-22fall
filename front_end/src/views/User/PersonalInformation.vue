@@ -592,9 +592,9 @@
                         style="margin-left: 100px"
                     >
                       <div style="width: 40%">
-                        <el-select placeholder="天蓝">
-                          <el-option label="天蓝" value="blue"></el-option>
-                          <el-option label="灰色" value="grey"></el-option>
+                        <el-select :placeholder="color" v-model="color" @change="geteditSet">
+                          <el-option label="天蓝" value="天蓝"></el-option>
+                          <el-option label="灰色" value="灰色"></el-option>
                         </el-select>
                       </div>
                     </el-form-item>
@@ -612,9 +612,9 @@
                         style="margin-left: 100px"
                     >
                       <div style="width: 40%">
-                        <el-select placeholder="中文">
-                          <el-option label="中文" value="blue"></el-option>
-                          <el-option label="英文" value="grey"></el-option>
+                        <el-select :placeholder="language" v-model="language" @change="geteditSet">
+                          <el-option label="中文" value="中文"></el-option>
+                          <el-option label="英文" value="英文"></el-option>
                         </el-select>
                       </div>
                     </el-form-item>
@@ -696,6 +696,8 @@ export default {
       oldPassword:"",
       newPassword:"",
       confirmNewPassword:"",
+      color:"",
+      language:"",
 
       paperCollection:[],
       noteCollection:[],
@@ -913,7 +915,6 @@ export default {
             data: { 'token':sessionStorage.getItem('token')}
           }
       ).then(res => {
-        console.log(res.data)
         this.isNoteCommentable=res.data.isNoteCommentable;
         this.isNoteVisible=res.data.isNoteVisible;
         this.isLiteratureCommentable=res.data.isLiteratureCommentable;
@@ -936,7 +937,6 @@ export default {
                     'language':this.language}
           }
       ).then(res => {
-        console.log(this.isNoteVisible)
         this.$message.success("修改成功")
       })
     },
