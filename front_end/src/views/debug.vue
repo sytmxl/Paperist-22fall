@@ -40,14 +40,17 @@ export default {
   },
   methods:{
     post_common_search(){
-      let es_request_body = {
+      let es_request_body_common = {
         "query":{
           "query_string":{
             "query": this.common_search_query
           }
         }
       }
-      this.es_request_body_json = JSON.stringify(es_request_body)
+      let es_request_body_advanced = {
+
+      }
+      this.es_request_body_json = JSON.stringify(es_request_body_common)
       axios({
         headers: {
           'content-type': 'application/json',
@@ -58,7 +61,7 @@ export default {
           password: 'BZYvLA-d*pS0EpI7utmJ'
         },
         url: 'es/paper_test/_search', method: "post",
-        data: JSON.stringify(es_request_body)
+        data: JSON.stringify(es_request_body_common)
         }
       ).then(res=>{
         this.es_respond = res.data.hits.hits
