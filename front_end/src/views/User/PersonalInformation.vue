@@ -226,8 +226,7 @@
 
         <div style="margin-top: 50px">
           <!--vmodel为打开时默认位置-->
-          <el-tabs v-model="DefaultLocation" @tab-click="handleClick"
-          ><!--stretch="true"表示平分空间-->
+          <el-tabs v-model="DefaultLocation" @tab-click="handleClickAll"><!--stretch="true"表示平分空间-->
             <el-tab-pane label="作者文献" name="zero" v-if="isScholar">
               <h2 style="text-align: left">
                 论文发表情况
@@ -271,6 +270,11 @@
                 name="first"
                 v-if="!isOthers || (isOthers && isCollectionVisible)"
             >
+              <el-tabs v-model="collectionDefaultLocation" tab-position="left" @tab-click="handleClickCollection">
+                <el-tab-pane name="collectionFirst">
+                  <span slot="label"
+                  ><i class="el-icon-message-solid"></i>论文收藏</span
+                  >
               <div style="margin-left: 1%">
                 <div style="margin-top: 15px; width: 30%">
                   <div style="margin-top: 15px">
@@ -282,34 +286,85 @@
                       <el-button
                           slot="append"
                           icon="el-icon-search"
+                          @click="searchPaperCollection"
                       ></el-button>
                     </el-input>
                   </div>
                 </div>
-                <el-card class="box-card">
-                  <el-button
-                      style="float: right; margin-left: 5px"
-                      icon="el-icon-delete"
-                      circle
-                      size="small"
-                  ></el-button>
-                  <el-button
-                      style="float: right"
-                      icon="el-icon-more-outline"
-                      circle
-                      size="small"
-                  ></el-button>
-                  <div style="margin-bottom: 10px; text-align: left">
-                    <a href="">文献名：你好你好</a>
-                    <br />
-                    <p>sssssssssssssssssssssssssssssssss</p>
-                    <br />
-                    <br />
-                    <br />
-                    <p>2022 Ma hu</p>
-                  </div>
-                </el-card>
+                <div v-for="(item,index) in this.paperCollection" :key="index">
+                  <el-card class="box-card">
+                    <el-button
+                        style="float: right; margin-left: 5px"
+                        icon="el-icon-delete"
+                        circle
+                        size="small"
+                    ></el-button>
+                    <el-button
+                        style="float: right"
+                        icon="el-icon-more-outline"
+                        circle
+                        size="small"
+                    ></el-button>
+                    <div style="margin-bottom: 10px; text-align: left">
+                      <a href="">{{item.name}}</a>
+                      <br />
+                      <p>{{item.abstract}}</p>
+                      <br />
+                      <br />
+                      <br />
+                      <p>{{item.time}}</p>
+                    </div>
+                  </el-card>
+                </div>
+
               </div>
+                </el-tab-pane>
+                <el-tab-pane name="collectionSecond">
+                  <span slot="label">
+                    <i class="el-icon-message-solid"></i>笔记收藏</span>
+                  <div style="margin-left: 1%">
+                    <div style="margin-top: 15px; width: 30%">
+                      <div style="margin-top: 15px">
+                        <el-input
+                            placeholder="请输入你需要搜索的笔记"
+                            v-model="selectCollectionNote"
+                            class="input-with-select"
+                        >
+                          <el-button
+                              slot="append"
+                              icon="el-icon-search"
+                          ></el-button>
+                        </el-input>
+                      </div>
+                    </div>
+                    <div v-for="(item,index) in this.noteCollection" :key="index">
+                      <el-card class="box-card">
+                        <el-button
+                            style="float: right; margin-left: 5px"
+                            icon="el-icon-delete"
+                            circle
+                            size="small"
+                        ></el-button>
+                        <el-button
+                            style="float: right"
+                            icon="el-icon-more-outline"
+                            circle
+                            size="small"
+                        ></el-button>
+                        <div style="margin-bottom: 10px; text-align: left">
+                          <a href="">{{item.id}}</a>
+                          <br />
+                          <p>{{ item.introduction }}</p>
+                          <br />
+                          <br />
+                          <br />
+                          <p>{{item.time}}</p>
+                        </div>
+                      </el-card>
+                    </div>
+                  </div>
+                </el-tab-pane>
+              </el-tabs>
             </el-tab-pane>
             <el-tab-pane label="个人订阅" name="second">
               <div style="margin-left: 1%">
@@ -362,29 +417,32 @@
                     <el-button slot="append" icon="el-icon-search"></el-button>
                   </el-input>
                 </div>
-                <el-card class="box-card">
-                  <el-button
-                      style="float: right; margin-left: 5px"
-                      icon="el-icon-delete"
-                      circle
-                      size="small"
-                  ></el-button>
-                  <el-button
-                      style="float: right"
-                      icon="el-icon-more-outline"
-                      circle
-                      size="small"
-                  ></el-button>
-                  <div style="margin-bottom: 10px; text-align: left">
-                    <a href="">文献名：你好你好</a>
-                    <br />
-                    <p>sssssssssssssssssssssssssssssssss</p>
-                    <br />
-                    <br />
-                    <br />
-                    <p>2022 Ma hu</p>
-                  </div>
-                </el-card>
+                <div v-for="(item,index) in this.notes" :key="index">
+                  <el-card class="box-card">
+                    <el-button
+                        style="float: right; margin-left: 5px"
+                        icon="el-icon-delete"
+                        circle
+                        size="small"
+                    ></el-button>
+                    <el-button
+                        style="float: right"
+                        icon="el-icon-more-outline"
+                        circle
+                        size="small"
+                    ></el-button>
+                    <div style="margin-bottom: 10px; text-align: left">
+                      <a href="">{{item.id}}</a>
+                      <br />
+                      <p>{{item.introduction}}</p>
+                      <br />
+                      <br />
+                      <br />
+                      <p>{{item.time}}</p>
+                    </div>
+                  </el-card>
+                </div>
+
               </div>
             </el-tab-pane>
             <el-tab-pane
@@ -402,29 +460,32 @@
                     <el-button slot="append" icon="el-icon-search"></el-button>
                   </el-input>
                 </div>
-                <el-card class="box-card">
-                  <el-button
-                      style="float: right; margin-left: 5px"
-                      icon="el-icon-delete"
-                      circle
-                      size="small"
-                  ></el-button>
-                  <el-button
-                      style="float: right"
-                      icon="el-icon-more-outline"
-                      circle
-                      size="small"
-                  ></el-button>
-                  <div style="margin-bottom: 10px; text-align: left">
-                    <a href="">文献名：你好你好</a>
-                    <br />
-                    <p>sssssssssssssssssssssssssssssssss</p>
-                    <br />
-                    <br />
-                    <br />
-                    <p>2022 Ma hu</p>
-                  </div>
-                </el-card>
+                <div v-for="(item,index) in this.myComment" :key="index">
+                  <el-card class="box-card">
+                    <el-button
+                        style="float: right; margin-left: 5px"
+                        icon="el-icon-delete"
+                        circle
+                        size="small"
+                    ></el-button>
+                    <el-button
+                        style="float: right"
+                        icon="el-icon-more-outline"
+                        circle
+                        size="small"
+                    ></el-button>
+                    <div style="margin-bottom: 10px; text-align: left">
+                      <a href="">{{item.paper_name}}</a>
+                      <br />
+                      <p>{{item.content}}</p>
+                      <br />
+                      <br />
+                      <br />
+                      <p>{{item.time}}</p>
+                    </div>
+                  </el-card>
+                </div>
+
               </div>
             </el-tab-pane>
             <el-tab-pane
@@ -603,6 +664,7 @@ export default {
       isCollectionVisible: true,
       isChangePassword: false,
       selectLiterature: "",
+      selectCollectionNote:"",
       selectLiteratureYear: "",
       selectComment: "",
       selectSubscribe: "",
@@ -623,8 +685,10 @@ export default {
       new_researchField:"",
       new_personalProfile: "",
       DefaultLocation: "",
+      collectionDefaultLocation:"collectionFirst",
+      commentDefaultLocation:"commentFirst",
       noteLabel: "",
-      isScholar: false,
+      isScholar: true,
       researchField: "打篮球",
       isOthers: false,
       showRelation: true,
@@ -633,6 +697,9 @@ export default {
       confirmNewPassword:"",
 
       paperCollection:[],
+      noteCollection:[],
+      notes:[],
+      myComment:[],
 
       RelationsData: [
         // {
@@ -683,8 +750,9 @@ export default {
     //个人信息
     this.getPersonalInformation();
     this.getPaperCollection();
-    if (this.isScholar) this.DefaultLocation = "zero";
-    else this.DefaultLocation = "first";
+    // if (this.isScholar) this.DefaultLocation = "zero";
+    // else this.DefaultLocation = "first";
+    this.DefaultLocation = "first";
     this.noteLabel = this.isOthers ? "他的笔记" : "我的笔记";
     this.initSelfRelations();
   },
@@ -698,6 +766,15 @@ export default {
     },
   },
   methods: {
+    initSelfRelations(){
+      console.log("initSelfRelations");
+      this.$axios({
+        method: "get",
+        url: "app/get_scholar_relation/",
+      }).then((res) => {
+        this.RelationsData = res.data;
+      });
+    },
     //获取个人信息
     getPersonalInformation() {
       this.$axios(
@@ -715,6 +792,7 @@ export default {
         this.region=res.data.data[0].country;
 
         this.researchField=res.data.data[0].field;
+        //异步访问，created结束还未执行完
         if(res.data.data[0].isScholar!=null){
           this.isScholar=true;
         } else {
@@ -739,7 +817,7 @@ export default {
         if(res.data.isSuccess){
           this.$message.success("修改成功")
         } else {
-          this.$message.success(res.data.errormsg);
+          this.$message.error(res.data.errormsg)
         }
         this.getPersonalInformation()
         this.new_email="";
@@ -750,17 +828,127 @@ export default {
         this.new_researchField="";
       })
     },
+    //个人收藏、个人订阅、我的笔记等初始化栏
+    handleClickAll(tab, event){
+      if(tab.name=='first'){
+        this.getPaperCollection();
+      } else if(tab.name=='third'){
+        this.getNote();
+      } else if(tab.name=='fourth'){
+        this.getPaperComment();
+      } else if(tab.name=='fifth'){
+        this.geteditSet();
+      }
+
+    },
+    //收藏部分初始化栏
+    handleClickCollection(tab, event){
+      if(tab.name=='collectionFirst'){
+        this.getPaperCollection();
+      } else if(tab.name=='collectionSecond'){
+        this.getNoteCollection();
+      }
+
+    },
+    //评论部分初始化栏
+    handleClickComment(tab, event){
+      if(tab.name=='commentFirst'){
+        this.getPaperCollection();
+      } else if(tab.name=='commentSecond'){
+        this.getNoteCollection();
+      }
+
+    },
     //获取个人论文收藏
     getPaperCollection(){
       this.$axios(
           {
-            url: '/user/getPaperCollection', method: "post",
+            url: '/user/getPaperCollection/', method: "post",
             data: { 'token':sessionStorage.getItem('token')}
           }
       ).then(res => {
-        console.log(11111)
-        console.log(res.data.data)
         this.paperCollection=res.data.data;
+      })
+    },
+    //获取笔记论文收藏
+    getNoteCollection(){
+      this.$axios(
+          {
+            url: '/user/getNoteCollection/', method: "post",
+            data: { 'token':sessionStorage.getItem('token')}
+          }
+      ).then(res => {
+        this.notes=res.data.data;
+      })
+    },
+    //获取我的笔记
+    getNote(){
+      this.$axios(
+          {
+            url: '/user/getNote/', method: "post",
+            data: { 'token':sessionStorage.getItem('token')}
+          }
+      ).then(res => {
+        console.log(res.data.data)
+        this.notes=res.data.data;
+      })
+    },
+    //获取我的评论
+    getPaperComment(){
+      this.$axios(
+          {
+            url: '/user/getPaperComment/', method: "post",
+            data: { 'token':sessionStorage.getItem('token')}
+          }
+      ).then(res => {
+        this.myComment=res.data.data;
+      })
+    },
+    //获取个人设置
+    getSet(){
+      this.$axios(
+          {
+            url: '/user/getSet/', method: "post",
+            data: { 'token':sessionStorage.getItem('token')}
+          }
+      ).then(res => {
+        this.isNoteCommentable=res.data.data.isNoteCommentable;
+        this.isNoteVisible=res.data.data.isNoteVisible;
+        this.isLiteratureCommentable=res.data.data.isLiteratureCommentable;
+        this.isCollectionVisible=res.data.data.isCollectionVisible;
+        this.color=res.data.data.color;
+        this.language=res.data.data.language;
+      })
+    },
+    //修改个人设置
+    geteditSet(){
+      this.$axios(
+          {
+            url: '/user/editSet/', method: "post",
+            data: { 'token':sessionStorage.getItem('token'),
+                    'isNoteCommentable':this.isNoteCommentable,
+                    'isNoteVisible':this.isNoteVisible,
+                    'isLiteratureCommentable':this.isLiteratureCommentable,
+                    'isCollectionVisible':this.isCollectionVisible,
+                    'color':this.color,
+                    'language':this.language}
+          }
+      ).then(res => {
+        this.$message.success("修改成功")
+      })
+    },
+    //搜索个人论文收藏
+    searchPaperCollection(){
+      this.$axios(
+          {
+            url: '/user/searchPaperCollection/', method: "post",
+            data: { 'token':sessionStorage.getItem('token'),
+                    'content':this.selectLiterature}
+          }
+      ).then(res => {
+        this.paperCollection=res.data.data;
+
+        this.selectLiterature="";
       })
     },
 
