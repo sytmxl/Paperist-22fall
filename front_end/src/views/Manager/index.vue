@@ -100,7 +100,7 @@ export default {
   height: 100vh;
 }
 .el-menu {
-  width: 12.5vw;
+  width: calc(100vw / 8 - 20px);
   position: fixed;
   margin: 80px 0 0 30px;
   border-radius: 20px 0px 0px 20px;
