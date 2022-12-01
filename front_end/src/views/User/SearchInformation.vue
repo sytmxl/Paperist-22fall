@@ -53,9 +53,9 @@
             <i style="display: inline-block; margin-left: 10%" class="el-icon-sort" @click="sortReserve"></i>
           </el-col>
         </el-row>
-        <div id="paperCards">
+        <div>
           <!-- <el-card style="min-height: calc(75vh)" class="display_zone" shadow="never"> -->
-          <paper-card v-for="paper in papers"
+          <paper-card v-for="paper in papers" :key="card_index"
                       :paper_data = "paper._source"
           />
           <!-- </el-card> -->
@@ -110,6 +110,7 @@ export default {
       es_respond : "",
       page_size : 10,
       currentPage:1,
+      card_index:[],
     }
   },
   methods :{
@@ -151,7 +152,11 @@ export default {
       ).then(res=>{
         this.resultNum = res.data.hits.total.value
         this.papers = res.data.hits.hits
-        this.$forceUpdate()
+        this.card_index = []
+        for(let i = 0; i < res.data.hits.hits.length; i++){
+          this.card_index.push(i+this.currentPage*this.page_size)
+        }
+        this.papers.reverse().reverse()
       })
     },
   }
