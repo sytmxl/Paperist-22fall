@@ -17,10 +17,10 @@
             </el-card>
             <el-card style="margin-top:10px">
                 <div class="note_info">
-                <span>原论文：杰尾油</span>
-                <span>获赞：{{author.likes}}</span>
-                <span>评论：{{author.remarks}}</span>
-                <span>收藏：{{author.collections}}</span>
+                <span @click="goto_paper()">原论文：{{note.paper_name}}</span>
+                <span>获赞：{{note.likes}}</span>
+                <span>评论：{{note.remarks}}</span>
+                <span>收藏：{{note.collections}}</span>
               </div>
               <div class="response">
                 <el-button type="primary">点赞</el-button>
@@ -111,6 +111,7 @@ export default {
             5:{paper_name:"论杰哥",introduction:"介绍奇人杰哥",likes:8,collections:10,remarks:9}},
             imgUrl:"https://obs-0dcd.obs.cn-north-4.myhuaweicloud.com/1.png",
             author:{},
+            note:{},
             pdf_scale:1.2,//pdf放大系数
   	 	    pdf_pages:[],
   	 	    pdf_div_width:'',
@@ -216,17 +217,26 @@ export default {
             }
           })
      },
+     goto_paper(){
+        this.$router.push({
+          name:'PaperInformation',
+          params:{
+           paper_id:this.note.paper_id
+          }
+        })
+     },
      note_init(){
         this.$axios({
             url:"http://127.0.0.1:8000/noteInit/",
             method:"post",
             data:{
-                note_id:1
+                note_id:this.$route.params.note_id
             }
         }).then(res=>{
             this.pdf_src = res.data.note_info[0].note_url
             this.list = res.data.other_note
             this.author = res.data.author_info[0]
+            this.note = res.data.note_info[0]
             // this._loadFile(this.pdf_src)
         })
      }

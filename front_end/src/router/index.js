@@ -19,7 +19,7 @@ const routes = [
         component: () => import( '../views/User/FirstPage.vue')
       },
       {
-        path: '/PaperInformation',
+        path: '/PaperInformation/:paper_id',
         name: 'PaperInformation',
         component: () => import( '../views/User/PaperInformation.vue')
       },
@@ -49,7 +49,7 @@ const routes = [
         component: () => import( '../views/User/register.vue')
       },
       {
-        path: '/NoteInformation',
+        path: '/NoteInformation/:note_id',
         name: 'NoteInformation',
         component: () => import( '../views/User/NoteInformation.vue')
       },
