@@ -126,6 +126,8 @@
                 v-model="AdvancedSearchInput.date1"
                 type="year"
                 placeholder="起始年份"
+                format="yyyy 年"
+                value-format="yyyy"
               >
               </el-date-picker>
               <div style="float: left">&nbsp;-&nbsp;</div>
@@ -134,6 +136,8 @@
                 v-model="AdvancedSearchInput.date2"
                 type="year"
                 placeholder="终止年份"
+                format="yyyy 年"
+                value-format="yyyy"
               >
               </el-date-picker>
             </el-form-item>
@@ -224,12 +228,31 @@ export default {
       console.log("GoAdvancedSearch");
       let obj = this.AdvancedSearchInput;
       let flag = false;
+      let others = false;
+      for (let key in obj) {
+        if (key != "date1" && key != "date2" && obj[key] != "") {
+          others = true;
+        }
+      }
       for (let key in obj) {
         if (obj[key] != "") {
           flag = true;
         }
       }
-      if (flag) {
+      if (!flag) {
+        this.$message({
+          message: "请输入有效信息",
+          type: "error",
+        });
+      } else if (
+        (obj["date1"] != "" || obj["date2"] != "") &&
+        others == false
+      ) {
+        this.$message({
+          message: "不能仅输入日期信息，请至少再填入另一个信息",
+          type: "error",
+        });
+      } else {
         sessionStorage.setItem(
           "AdvancedSearchInput",
           JSON.stringify(this.AdvancedSearchInput)
@@ -244,11 +267,6 @@ export default {
           //   input: this.AdvancedSearchInput.AdAuthor,
           //   type: 7,
           // },
-        });
-      } else {
-        this.$message({
-          message: "请输入有效信息",
-          type: "error",
         });
       }
     },
