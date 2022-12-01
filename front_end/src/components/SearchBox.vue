@@ -154,10 +154,10 @@
               </el-select>
             </el-form-item>
           </el-form>
-          <el-button type="primary" size="mini" @click="GoAdvancedSearch()"
+          <el-button type="primary" class="but"  @click="GoAdvancedSearch()"
             >立即搜索</el-button
           >
-          <el-button size="mini" @click="CancelAd()">取消搜索</el-button>
+          <el-button class="but" @click="CancelAd()">取消搜索</el-button>
         </el-card>
       </el-col>
     </el-row>
@@ -354,11 +354,15 @@ export default {
 @keyframes test {
   0% {
     opacity: 0%;
-    top:-60px;
+    top:20px;
   }
   100% {
     opacity: 100%;
     top:50px;
   }
+}
+.but {
+  width: 48%;
+  border: none;
 }
 </style>
