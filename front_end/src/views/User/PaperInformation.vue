@@ -159,7 +159,7 @@
                     </div>
                     <div v-if="remark_list.length!=0">
                       <div class="comment" v-for="i in remark_list" :key="i">
-                        <remark :list="i.remark"/>
+                        <remark :list="i.remark" :paper_id="paper_id"/>
                     </div>
                     </div>
                     <div v-else><el-empty description="还没有评论，发表第一个评论吧"></el-empty></div>
@@ -168,7 +168,7 @@
                         :visible.sync="CreatCommentVisible"
                         width="30%"
                         >
-                        <CreateComment/>
+                        <CreateComment :paper_id="paper_id" :receiver_id="-1" :remark_id="-1" @introduce="return_msg()"/>
                       </el-dialog>
               </el-tab-pane>
               <el-tab-pane label="笔记">
@@ -186,7 +186,7 @@
                         :visible.sync="CreatMark"
                         width="30%"
                         >
-                        <uploadMark :paper_id="this.$route.params.paper_id"/>
+                        <uploadMark :paper_id="paper_id"/>
                       </el-dialog>
               </el-tab-pane>
                 
@@ -246,6 +246,7 @@ export default {
         CreatMark:false,
         describe:'',
         contact:'',
+        paper_id:this.$route.params.paper_id,
         about_list:[],
         now_list:[],
         info_list:[],
@@ -316,7 +317,7 @@ export default {
             url:"http://127.0.0.1:8000/paperInformation/",
             method:"post",
             data:{
-                Paper_id:this.$route.params.paper_id
+                paper_id:this.$route.params.paper_id
             }
         }).then(res=>{
           console.log(res.data.about_list)
@@ -348,8 +349,8 @@ export default {
             url:"http://127.0.0.1:8000/paperCollection/",
             method:"post",
             data:{
-                Paper_id:this.$route.params.paper_id,
-                Note_id:-1,
+                paper_id:this.$route.params.paper_id,
+                note_id:"",
                 op:0
             }
           }).then(res=>{
@@ -361,13 +362,18 @@ export default {
             url:"http://127.0.0.1:8000/paperCollection/",
             method:"post",
             data:{
-                Paper_id:this.$route.params.paper_id,
-                Note_id:-1,
+                paper_id:this.$route.params.paper_id,
+                note_id:"",
                 op:1
             }
           }).then(res=>{
             this.$message.success("已收藏")
           })
+        }
+      },
+      return_msg(opt){
+        if(opt.msg=="success"){
+          this.CreatCommentVisible = false;
         }
       }
     },
