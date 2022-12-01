@@ -333,6 +333,7 @@
                           <el-button
                               slot="append"
                               icon="el-icon-search"
+                              @click="searchNoteCollection"
                           ></el-button>
                         </el-input>
                       </div>
@@ -414,7 +415,7 @@
                       v-model="selectNote"
                       class="input-with-select"
                   >
-                    <el-button slot="append" icon="el-icon-search"></el-button>
+                    <el-button slot="append" icon="el-icon-search" @click="searchNote"></el-button>
                   </el-input>
                 </div>
                 <div v-for="item in this.notes">
@@ -457,7 +458,7 @@
                       v-model="selectComment"
                       class="input-with-select"
                   >
-                    <el-button slot="append" icon="el-icon-search"></el-button>
+                    <el-button slot="append" icon="el-icon-search" @click="searchPaperComment"></el-button>
                   </el-input>
                 </div>
                 <div v-for="item in this.myComment">
@@ -584,7 +585,7 @@
                         label="笔记是否他人可见"
                         style="margin-left: 10%"
                     >
-                      <el-switch v-model="isNoteVisible"></el-switch>
+                      <el-switch  v-model="isNoteVisible" @change="geteditSet"></el-switch>
                     </el-form-item>
                     <el-form-item
                         label="系统配色方案"
@@ -604,7 +605,7 @@
                         label="笔记下是否可评论"
                         style="margin-left: 10%"
                     >
-                      <el-switch v-model="isNoteCommentable"></el-switch>
+                      <el-switch v-model="isNoteCommentable" @change="geteditSet"></el-switch>
                     </el-form-item>
                     <el-form-item
                         label="系统配置语言"
@@ -624,13 +625,13 @@
                         label="文章下是否可评论"
                         style="margin-left: -15%"
                     >
-                      <el-switch v-model="isLiteratureCommentable"></el-switch>
+                      <el-switch v-model="isLiteratureCommentable" @change="geteditSet"></el-switch>
                     </el-form-item>
                     <el-form-item
                         label="收藏是否可见"
                         style="margin-left: 100px"
                     >
-                      <el-switch v-model="isCollectionVisible"></el-switch>
+                      <el-switch v-model="isCollectionVisible" @change="geteditSet"></el-switch>
                     </el-form-item>
                   </el-form>
                 </el-card>
@@ -658,8 +659,8 @@ export default {
   },
   data() {
     return {
-      isNoteVisible: true,
-      isNoteCommentable: true,
+      isNoteVisible:true,
+      isNoteCommentable:true,
       isLiteratureCommentable: true,
       isCollectionVisible: true,
       isChangePassword: false,
@@ -750,6 +751,7 @@ export default {
     //个人信息
     this.getPersonalInformation();
     this.getPaperCollection();
+    this.getSet();
     // if (this.isScholar) this.DefaultLocation = "zero";
     // else this.DefaultLocation = "first";
     this.DefaultLocation = "first";
@@ -828,7 +830,7 @@ export default {
       } else if(tab.name=='fourth'){
         this.getPaperComment();
       } else if(tab.name=='fifth'){
-        this.geteditSet();
+        this.getSet();
       }
 
     },
@@ -861,7 +863,7 @@ export default {
         this.paperCollection=res.data.data;
       })
     },
-    //获取笔记论文收藏
+    //获取笔记收藏
     getNoteCollection(){
       this.$axios(
           {
@@ -869,7 +871,7 @@ export default {
             data: { 'token':sessionStorage.getItem('token')}
           }
       ).then(res => {
-        this.notes=res.data.data;
+        this.noteCollection=res.data.data;
       })
     },
     //获取我的笔记
@@ -880,7 +882,6 @@ export default {
             data: { 'token':sessionStorage.getItem('token')}
           }
       ).then(res => {
-        console.log(res.data.data)
         this.notes=res.data.data;
       })
     },
@@ -903,12 +904,13 @@ export default {
             data: { 'token':sessionStorage.getItem('token')}
           }
       ).then(res => {
-        this.isNoteCommentable=res.data.data.isNoteCommentable;
-        this.isNoteVisible=res.data.data.isNoteVisible;
-        this.isLiteratureCommentable=res.data.data.isLiteratureCommentable;
-        this.isCollectionVisible=res.data.data.isCollectionVisible;
-        this.color=res.data.data.color;
-        this.language=res.data.data.language;
+        console.log(res.data)
+        this.isNoteCommentable=res.data.isNoteCommentable;
+        this.isNoteVisible=res.data.isNoteVisible;
+        this.isLiteratureCommentable=res.data.isLiteratureCommentable;
+        this.isCollectionVisible=res.data.isCollectionVisible;
+        this.color=res.data.color;
+        this.language=res.data.language;
       })
     },
     //修改个人设置
@@ -925,6 +927,7 @@ export default {
                     'language':this.language}
           }
       ).then(res => {
+        console.log(this.isNoteVisible)
         this.$message.success("修改成功")
       })
     },
@@ -942,6 +945,52 @@ export default {
         this.selectLiterature="";
       })
     },
+    //搜索个人笔记收藏
+    searchNoteCollection(){
+      this.$axios(
+          {
+            url: '/user/searchNoteCollection/', method: "post",
+            data: { 'token':sessionStorage.getItem('token'),
+              'content':this.selectCollectionNote}
+          }
+      ).then(res => {
+        this.noteCollection=res.data.data;
+
+        this.selectCollectionNote="";
+      })
+    },
+    //搜索我的笔记
+    searchNote(){
+      this.$axios(
+          {
+            url: '/user/searchNote/', method: "post",
+            data: { 'token':sessionStorage.getItem('token'),
+              'content':this.selectNote}
+          }
+      ).then(res => {
+        this.notes=res.data.data;
+
+        this.selectNote="";
+      })
+    },
+    //搜索我的评论
+    searchPaperComment(){
+      this.$axios(
+          {
+            url: 'user/searchPaperComment/', method: "post",
+            data: { 'token':sessionStorage.getItem('token'),
+              'content':this.selectComment}
+          }
+      ).then(res => {
+        this.myComment=res.data.data;
+        this.selectComment="";
+      })
+    },
+
+
+
+
+
 
     //保存个人信息按钮
     savePersonalInformation() {
