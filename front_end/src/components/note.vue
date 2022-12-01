@@ -12,9 +12,11 @@
                 </div>
                 <div class="response">
                     <a @click="goto_note()">阅读全文</a>
-                    <i class="el-icon-thumb">{{list.likes}}</i>
-                    <i class="el-icon-star-off"></i>
-                    <i class="el-icon-warning-outline"></i>
+                    <i class="el-icon-thumb" @click="likeit(list.note_id)" v-if="list.like_flag" title="取消">{{list.likes}}</i>
+                    <i class="el-icon-thumb" @click="likeit(list.note_id)" v-else title="赞">{{list.likes}}</i>
+                    <i class="el-icon-star-off" v-if="!list.collect_flag" @click="collect(list.note_id)" title="收藏"></i>
+                    <i class="el-icon-star-on" v-else @click="collect()" title="取消收藏"></i>
+                    <i class="el-icon-warning-outline" @click="tipoff(list.note_id)"></i>
                 </div>
              </div>
     </el-main>
@@ -23,7 +25,7 @@
 <script>
 export default {
   props: {
-    list:{image:{default:"",type:String}}
+    list:[]
   },
   data(){
     return{
@@ -38,7 +40,75 @@ export default {
            note_id:this.list.note_id
           }
         })
-   }
+   },
+   tipoff(id){
+         this.$axios({
+            url:"http://127.0.0.1:8000/tipOff/",
+            method:"post",
+            data:{
+                comment_id:"",
+                note_id:id,
+            }
+        }).then(res=>{
+          this.$message.success("您的举报已发送，敬请等待后台处理");
+        })
+    },
+     likeit(id){
+        if(this.list.like_flag){
+          this.$axios({
+            url:"http://127.0.0.1:8000/likeIt/",
+            method:"post",
+            data:{
+               comment_id:id,
+                note_id:"",
+                op:0
+            }
+          }).then(res=>{
+              
+          })
+        }
+        else{
+          this.$axios({
+            url:"http://127.0.0.1:8000/likeIt/",
+            method:"post",
+            data:{
+               comment_id:id,
+                note_id:"",
+                op:1
+            }
+          }).then(res=>{
+            
+          })
+        }
+    },
+    collect(id){
+        if(this.list.collect_flag){
+          this.$axios({
+            url:"http://127.0.0.1:8000/paperCollection/",
+            method:"post",
+            data:{
+                paper_id:"",
+                note_id:id,
+                op:0
+            }
+          }).then(res=>{
+              this.$message.success("已取消收藏")
+          })
+        }
+        else{
+          this.$axios({
+            url:"http://127.0.0.1:8000/paperCollection/",
+            method:"post",
+            data:{
+                paper_id:"",
+                note_id:id,
+                op:1
+            }
+          }).then(res=>{
+            this.$message.success("已收藏")
+          })
+        }
+      }
   },
   mounted() {
     

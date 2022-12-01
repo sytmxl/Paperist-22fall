@@ -12,7 +12,7 @@
     </el-input>
     <div class="btn" style="height:40px">
         <el-button type="text" size="medium" @click="showDialog = !showDialog" style="margin-top:10px;float:left">🙂</el-button>
-    <el-button style="margin-top:10px;float:right">发布</el-button>
+    <el-button style="margin-top:10px;float:right" @click="submit()">发布</el-button>
     </div>
       
     <el-col>
@@ -29,6 +29,12 @@
   export default {
     components: {
       VEmojiPicker
+    },
+    props:{
+      receiver_id:{default:-1},
+      paper_id:{default:""},
+      remark_id:{default:-1},
+      note_id:{default:""}
     },
     data() {
       return {
@@ -48,6 +54,22 @@
         input.selectionStart = startPos + emoji.data.length
         input.selectionEnd = startPos + emoji.data.length
         this.text = resultText
+      },
+      submit(){
+        this.$axios({
+            url:"http://127.0.0.1:8000/uploadComment/",
+            method:"post",
+            data:{
+                receiver_id:this.receiver_id,
+                comments:this.textarea,
+                paper_id:this.paper_id,
+                remark_id:this.remark_id,
+                note_id:this.note_id
+            }
+        }).then(res=>{
+            this.$message.success("评论发表成功");
+            this.$emit('introduce',{msg:"success"})
+        })
       }
     }
   }

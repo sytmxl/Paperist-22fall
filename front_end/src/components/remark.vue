@@ -13,9 +13,9 @@
                 {{i.comment}}
             </div>
             <div class="response">
-                <i class="el-icon-chat-round" @click="CreatCommentVisible =true"></i>
-                <i class="el-icon-thumb">{{likes}}</i>
-                <i class="el-icon-warning-outline"></i>
+                <i class="el-icon-chat-round" @click="CreatCommentVisible =true,receiver_id=i.res_id,remark_id=i.remark_id"></i>
+                <i class="el-icon-thumb" @click="likeit()">{{i.likes}}</i>
+                <i class="el-icon-warning-outline" @click="tipoff(i.id)"></i>
             </div>
         </div>
     </div>
@@ -33,9 +33,10 @@
                 {{i.comment}}
             </div>
               <div class="response">
-                <i class="el-icon-chat-round" @click="CreatCommentVisible =true"></i>
-                <i class="el-icon-thumb">{{likes}}</i>
-                <i class="el-icon-warning-outline"></i>
+                <i class="el-icon-chat-round" @click="CreatCommentVisible =true ,receiver_id=i.res_id,remark_id=i.remark_id"></i>
+                <i class="el-icon-thumb" @click="likeit(i.id)" v-if="i.like_flag" title="取消">{{i.likes}}</i>
+                <i class="el-icon-thumb" @click="likeit(i.id)" v-else title="赞">{{i.likes}}</i>
+                <i class="el-icon-warning-outline" @click="tipoff(i.id)"></i>
             </div>
         </div>
     </div>
@@ -44,7 +45,7 @@
         :visible.sync="CreatCommentVisible"
         width="30%"
         :before-close="handleClose">
-        <CreateComment/>
+        <CreateComment :receiver_id="receiver_id" :note_id="note_id" :paper_id="paper_id" :remark_id="remark_id"/>
       </el-dialog>
     </div>
 
@@ -59,18 +60,62 @@ export default {
         CreateComment
     },
   props: {
-    list:{image:{required: true,type:String}},
-    imglist:{}
+    list:[],
+    note_id:"",
+    remark_id:"",
+    paper_id:"",
+
   },
   data(){
     return{
-        CreatCommentVisible:false
+        CreatCommentVisible:false,
+        receiver_id:-1,
+        remark_id:-1
     }
   },
   methods:{
+    likeit(id){
+        if(this.i.like_flag){
+          this.$axios({
+            url:"http://127.0.0.1:8000/likeIt/",
+            method:"post",
+            data:{
+               comment_id:id,
+                note_id:"",
+                op:0
+            }
+          }).then(res=>{
+              
+          })
+        }
+        else{
+          this.$axios({
+            url:"http://127.0.0.1:8000/likeIt/",
+            method:"post",
+            data:{
+               comment_id:id,
+                note_id:"",
+                op:1
+            }
+          }).then(res=>{
+            
+          })
+        }
+    },
+    tipoff(id){
+         this.$axios({
+            url:"http://127.0.0.1:8000/tipOff/",
+            method:"post",
+            data:{
+                comment_id:id,
+                note_id:"",
+            }
+        }).then(res=>{
+          this.$message.success("您的举报已发送，敬请等待后台处理");
+        })
+    }
   },
   mounted() {
-
     }
 }
 

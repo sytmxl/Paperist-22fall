@@ -34,8 +34,9 @@
       </el-col>
     </el-row>
     <el-row
+      id="advance"
       v-if="this.isAdvanced"
-      style="z-index: 999"
+      style="z-index: 99"
       type="flex"
       justify="left"
     >
@@ -153,10 +154,10 @@
               </el-select>
             </el-form-item>
           </el-form>
-          <el-button type="primary" size="mini" @click="GoAdvancedSearch()"
+          <el-button type="primary" class="but"  @click="GoAdvancedSearch()"
             >立即搜索</el-button
           >
-          <el-button size="mini" @click="CancelAd()">取消搜索</el-button>
+          <el-button class="but" @click="CancelAd()">取消搜索</el-button>
         </el-card>
       </el-col>
     </el-row>
@@ -233,7 +234,7 @@ export default {
 .date-picker {
   float: left;
 
-  width: 48% !important;
+  width: 47% !important;
 }
 .search_input {
   // width: 55%;
@@ -270,5 +271,32 @@ export default {
 }
 .el-select-dropdown__item.selected {
   color: #003b55;
+}
+#advance {
+  position: absolute;
+  // width: 800px;
+  margin-top: 20px;
+  .el-card {
+    border-radius: 20px !important;
+    border: none !important;
+    box-shadow: 0 0 7px rgba(204, 204, 204, 0.713);
+    background-color: rgba(255, 255, 255, 0.5);
+    backdrop-filter: blur(40px) brightness(100%);
+  }
+  animation: test 0.3s cubic-bezier(.23,1.38,.65,.99);
+}
+@keyframes test {
+  0% {
+    opacity: 0%;
+    top:20px;
+  }
+  100% {
+    opacity: 100%;
+    top:50px;
+  }
+}
+.but {
+  width: 48%;
+  border: none;
 }
 </style>

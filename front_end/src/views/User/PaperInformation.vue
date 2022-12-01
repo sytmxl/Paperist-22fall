@@ -25,16 +25,26 @@
                 DOI：{{info_list.DOI}}
               </div>
               <div class="button">
-                  <el-button round icon="el-icon-star-off">收藏</el-button>
-                  <el-button round icon="el-icon-link">引用</el-button>
+                  <el-button round icon="el-icon-star-off" v-if="!info_list.collect_flag" @click="collect()" title="收藏">收藏</el-button>
+                  <el-button round icon="el-icon-star-on" v-else @click="collect()" title="取消收藏">已收藏</el-button>
+                  <el-button round icon="el-icon-link" @click="quote()">引用</el-button>
                   <el-button round icon="el-icon-warning-outline" @click="ComplainVisible = true">申诉</el-button>
-                  <el-button round icon="el-icon-share">分享</el-button>
+                  <el-button round icon="el-icon-share" @click="ShareVisible = true">分享</el-button>
               </div>
+              <el-dialog
+                title="引用"
+                :visible.sync="QuoteVisible"
+                width="30%"
+                >
+                <div v-for="i in quote_list" :key="i" style="margin-top:15px">
+                  <span>{{i.type}}</span>: <span>{{i.content}}</span> 
+                </div>
+              </el-dialog>
               <el-dialog
                   title="文章申诉"
                   :visible.sync="ComplainVisible"
                   width="60%"
-                  :before-close="handleClose" class="complain">
+                   class="complain">
                   <div class="describe">
                       问题描述：
                     <el-input
@@ -106,6 +116,17 @@
                     <el-button type="primary" @click="dialogVisible = false">提交申诉</el-button>
                   </span>
               </el-dialog>
+              <el-dialog
+                title="分享"
+                :visible.sync="ShareVisible"
+                width="30%"
+                >
+                <div>
+                  <span>localhost:8080{{this.$route.path}}</span>
+                  <el-button round icon="el-icon-document-copy">复制链接</el-button>
+                </div>
+                
+              </el-dialog>
             </el-card>
             <el-card class="box-card2">
                 <span style="font-size:25px;font-weight:bolder">全部来源</span>
@@ -121,7 +142,7 @@
           </div>
         <div class="remark">
           <el-card>
-            <el-tabs v-model="activeName" >
+            <el-tabs >
               <el-tab-pane label="相关文献">
                   <div class="about" v-if="about_list!=[]">
                     <div class="relative" v-for="i in about_list" :key="i">
@@ -136,9 +157,9 @@
                   <div class="creat_comment">
                         <el-button @click="CreatCommentVisible =true">我要评论</el-button>
                     </div>
-                    <div v-if="Object.keys(remark_list).length!=0">
+                    <div v-if="remark_list.length!=0">
                       <div class="comment" v-for="i in remark_list" :key="i">
-                        <remark :list="i"/>
+                        <remark :list="i.remark" :paper_id="paper_id"/>
                     </div>
                     </div>
                     <div v-else><el-empty description="还没有评论，发表第一个评论吧"></el-empty></div>
@@ -146,8 +167,8 @@
                         title="留下你的评论吧~"
                         :visible.sync="CreatCommentVisible"
                         width="30%"
-                        :before-close="handleClose">
-                        <CreateComment/>
+                        >
+                        <CreateComment :paper_id="paper_id" :receiver_id="-1" :remark_id="-1" @introduce="return_msg()"/>
                       </el-dialog>
               </el-tab-pane>
               <el-tab-pane label="笔记">
@@ -164,8 +185,8 @@
                         title="上传笔记"
                         :visible.sync="CreatMark"
                         width="30%"
-                        :before-close="handleClose">
-                        <uploadMark :paper_id="this.$route.params.paper_id"/>
+                        >
+                        <uploadMark :paper_id="paper_id"/>
                       </el-dialog>
               </el-tab-pane>
                 
@@ -217,23 +238,29 @@ export default {
         number:4,//后期要改成session
         start:false,
         ComplainVisible:false,
+        QuoteVisible:false,
+        ShareVisible:false,
         dialogImageUrl: '',
         dialogVisible: false,
         CreatCommentVisible:false,
         CreatMark:false,
         describe:'',
         contact:'',
+        paper_id:this.$route.params.paper_id,
         about_list:[],
         now_list:[],
         info_list:[],
-       remark_list:{1:{1:{flag:0,name:'胡博轩',image:require("../../assets/Cooper.jpg"),comment:"马哥太尴尬了哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈"},2:{flag:1,name:'李阳',image:require("../../assets/mosy.jpg"),res_name:'胡博轩',comment:"确实，怎么可以这么尬"},3:{flag:1,name:'朱康乐',image:require("../../assets/le.jpg"),res_name:'李阳',comment:"你是懂尴尬的"},4:{flag:1,name:'马泽远',image:require("../../assets/ma.jpg"),res_name:'胡博轩',comment:"基操勿6"}},
-        2:{1:{flag:0,name:'马泽远',image:require("../../assets/ma.jpg"),comment:"感谢大家支持"}},
-        3:{1:{flag:0,name:'王域杰',image:require("../../assets/jie.jpg"),comment:"苏珊，小心我告你"},2:{flag:1,name:'王域杰',image:require("../../assets/jie.jpg"),res_name:'王域杰',comment:"别来沾边"},3:{flag:1,name:'朱康乐',image:require("../../assets/le.jpg"),res_name:'王域杰',comment:"支持杰哥维权"},4:{flag:1,name:'马泽远',image:require("../../assets/ma.jpg"),res_name:'王域杰',comment:"我错了杰哥，我苏珊"}},
-        4:{1:{flag:0,name:'马泽远',image:require("../../assets/ma.jpg"),comment:"感谢大家支持"}},
-        5:{1:{flag:0,name:'王域杰',image:require("../../assets/jie.jpg"),comment:"苏珊，小心我告你"},2:{flag:1,name:'王域杰',image:require("../../assets/jie.jpg"),res_name:'王域杰',comment:"别来沾边"},3:{flag:1,name:'朱康乐',image:require("../../assets/le.jpg"),res_name:'王域杰',comment:"支持杰哥维权"},4:{flag:1,name:'马泽远',image:require("../../assets/ma.jpg"),res_name:'王域杰',comment:"我错了杰哥，我苏珊"}},},
-        mark_list:{1:{name:'胡博轩',image:require("../../assets/Cooper.jpg"),intro:"这篇笔记记录了第一章杰哥出世",likes:8},
-        2:{name:'李阳',image:require("../../assets/mosy.jpg"),intro:"这篇笔记非常精彩，不看后悔",likes:5},
-        3:{name:'朱康乐',image:require("../../assets/le.jpg"),intro:"第一篇笔记，请大家多多支持",likes:10}}
+        quote_list:[],
+      //  remark_list:{1:{1:{flag:0,name:'胡博轩',image:require("../../assets/Cooper.jpg"),comment:"马哥太尴尬了哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈"},2:{flag:1,name:'李阳',image:require("../../assets/mosy.jpg"),res_name:'胡博轩',comment:"确实，怎么可以这么尬"},3:{flag:1,name:'朱康乐',image:require("../../assets/le.jpg"),res_name:'李阳',comment:"你是懂尴尬的"},4:{flag:1,name:'马泽远',image:require("../../assets/ma.jpg"),res_name:'胡博轩',comment:"基操勿6"}},
+      //   2:{1:{flag:0,name:'马泽远',image:require("../../assets/ma.jpg"),comment:"感谢大家支持"}},
+      //   3:{1:{flag:0,name:'王域杰',image:require("../../assets/jie.jpg"),comment:"苏珊，小心我告你"},2:{flag:1,name:'王域杰',image:require("../../assets/jie.jpg"),res_name:'王域杰',comment:"别来沾边"},3:{flag:1,name:'朱康乐',image:require("../../assets/le.jpg"),res_name:'王域杰',comment:"支持杰哥维权"},4:{flag:1,name:'马泽远',image:require("../../assets/ma.jpg"),res_name:'王域杰',comment:"我错了杰哥，我苏珊"}},
+      //   4:{1:{flag:0,name:'马泽远',image:require("../../assets/ma.jpg"),comment:"感谢大家支持"}},
+      //   5:{1:{flag:0,name:'王域杰',image:require("../../assets/jie.jpg"),comment:"苏珊，小心我告你"},2:{flag:1,name:'王域杰',image:require("../../assets/jie.jpg"),res_name:'王域杰',comment:"别来沾边"},3:{flag:1,name:'朱康乐',image:require("../../assets/le.jpg"),res_name:'王域杰',comment:"支持杰哥维权"},4:{flag:1,name:'马泽远',image:require("../../assets/ma.jpg"),res_name:'王域杰',comment:"我错了杰哥，我苏珊"}},},
+      //   mark_list:{1:{name:'胡博轩',image:require("../../assets/Cooper.jpg"),intro:"这篇笔记记录了第一章杰哥出世",likes:8},
+      //   2:{name:'李阳',image:require("../../assets/mosy.jpg"),intro:"这篇笔记非常精彩，不看后悔",likes:5},
+      //   3:{name:'朱康乐',image:require("../../assets/le.jpg"),intro:"第一篇笔记，请大家多多支持",likes:10}}
+        remark_list:[],
+        mark_list:[]
       }
     },
     methods:{
@@ -272,16 +299,6 @@ export default {
         console.log(a);
         return a;
       },
-      // load(){
-      //   let now = now_list.length;
-      //   for(var i=now;i<about_list.length;i++){
-      //       now_list.push(about_list[i])
-      //       if(i-now>=4){
-      //         break;
-      //       }
-      //   }
-      //   // setTimeout(this.reload(), 1500 )
-      // },
       handleRemove(file) {
         console.log(file);
       },
@@ -295,12 +312,12 @@ export default {
       handleExceed(files, fileList) {
         this.$message.warning(`当前限制选择 4 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`);
       },
-      async paper_init(){
+      paper_init(){
            this.$axios({
             url:"http://127.0.0.1:8000/paperInformation/",
             method:"post",
             data:{
-                Paper_id:this.$route.params.paper_id
+                paper_id:this.$route.params.paper_id
             }
         }).then(res=>{
           console.log(res.data.about_list)
@@ -308,11 +325,56 @@ export default {
             this.mark_list = res.data.note_list
             this.about_list = res.data.about_list
             this.info_list = res.data.info_list[0]
-            console.log(res.data.info_list)
+            console.log(res.data.remark_list)
             this.chart_init(res.data.info_list[0].cite_number)
             // this._loadFile(this.pdf_src)
         })
         
+      },
+      quote(){
+        this.QuoteVisible = true
+         this.$axios({
+            url:"http://127.0.0.1:8000/paperQuote/",
+            method:"post",
+            data:{
+                paper_id:this.$route.params.paper_id
+            }
+        }).then(res=>{
+            this.quote_list = res.data.quote
+        })
+      },
+      collect(){
+        if(this.info_list.collect_flag){
+          this.$axios({
+            url:"http://127.0.0.1:8000/paperCollection/",
+            method:"post",
+            data:{
+                paper_id:this.$route.params.paper_id,
+                note_id:"",
+                op:0
+            }
+          }).then(res=>{
+              this.$message.success("已取消收藏")
+          })
+        }
+        else{
+          this.$axios({
+            url:"http://127.0.0.1:8000/paperCollection/",
+            method:"post",
+            data:{
+                paper_id:this.$route.params.paper_id,
+                note_id:"",
+                op:1
+            }
+          }).then(res=>{
+            this.$message.success("已收藏")
+          })
+        }
+      },
+      return_msg(opt){
+        if(opt.msg=="success"){
+          this.CreatCommentVisible = false;
+        }
       }
     },
     components:{
