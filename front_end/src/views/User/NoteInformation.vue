@@ -7,16 +7,20 @@
             <el-card>
               <div class="author_img">
                   <img :src="imgUrl" alt="">
-                  <span>胡博轩</span>
+                  <span>{{author.name}}</span>
               </div>
               <div class="author_info">
-                <span>所属机构：北京航空航天大学</span>
-                <span>发表论文数：0</span>
-                <span>发表笔记数：10</span>
-                <span>获赞：99</span>
-                <span>评论：15</span>
-                <span>收藏：20</span>
-                
+                <span>所属机构：{{author.institution}}</span>
+                <span>发表论文数：{{author.paper_num}}</span>
+                <span>发表笔记数：{{author.note_num}}</span>
+              </div>
+            </el-card>
+            <el-card style="margin-top:10px">
+                <div class="note_info">
+                <span @click="goto_paper()">原论文：{{note.paper_name}}</span>
+                <span>获赞：{{note.likes}}</span>
+                <span>评论：{{note.remarks}}</span>
+                <span>收藏：{{note.collections}}</span>
               </div>
               <div class="response">
                 <el-button type="primary">点赞</el-button>
@@ -48,7 +52,10 @@
                               <div class="pdf_set_middle" @click="scaleX()">缩小</div>
                           </div> -->
 
-
+                            <!-- <pdf 
+                              ref="pdf"
+                              :src="pdf_src">
+                            </pdf> -->
 							<div :style="{width:pdf_div_width,margin:'0 auto'}" >
 									<canvas v-for="page in pdf_pages" :id="'the_canvas'+page" :key="page"></canvas>
 							</div>
@@ -80,6 +87,7 @@
 </template>
 
 <script>
+import pdf from 'vue-pdf'
 let PDFJS = require('pdfjs-dist');
 PDFJS.GlobalWorkerOptions.workerSrc = require("pdfjs-dist/build/pdf.worker.entry.js");
 import remark from "../../components/remark.vue"
@@ -91,17 +99,19 @@ export default {
         remark,
         CreateComment,
         TopBar,
-        noteCard
+        noteCard,
+        pdf
     },
     data(){
         return{
-            list:{1:{name:"论杰哥",intro:"介绍奇人杰哥",likes:8,collections:10,remarks:9},
-            2:{name:"论杰哥",intro:"介绍奇人杰哥",likes:8,collections:10,remarks:9},
-            3:{name:"论杰哥",intro:"介绍奇人杰哥",likes:8,collections:10,remarks:9},
-            4:{name:"论杰哥",intro:"介绍奇人杰哥",likes:8,collections:10,remarks:9},
-            5:{name:"论杰哥",intro:"介绍奇人杰哥",likes:8,collections:10,remarks:9}},
+            list:{1:{paper_name:"论杰哥",introduction:"介绍奇人杰哥",likes:8,collections:10,remarks:9},
+            2:{paper_name:"论杰哥",introduction:"介绍奇人杰哥",likes:8,collections:10,remarks:9},
+            3:{paper_name:"论杰哥",introduction:"介绍奇人杰哥",likes:8,collections:10,remarks:9},
+            4:{paper_name:"论杰哥",introduction:"介绍奇人杰哥",likes:8,collections:10,remarks:9},
+            5:{paper_name:"论杰哥",introduction:"介绍奇人杰哥",likes:8,collections:10,remarks:9}},
             imgUrl:"https://obs-0dcd.obs.cn-north-4.myhuaweicloud.com/1.png",
             author:{},
+            note:{},
             pdf_scale:1.2,//pdf放大系数
   	 	    pdf_pages:[],
   	 	    pdf_div_width:'',
@@ -143,12 +153,12 @@ export default {
      get_pdfurl(){  //获得pdf教案
 
      	   //加载本地
-         this.pdf_src = 'https://mozilla.github.io/pdf.js/web/compressed.tracemonkey-pldi-09.pdf'
+        //  this.pdf_src = 'https://mozilla.github.io/pdf.js/web/compressed.tracemonkey-pldi-09.pdf'
      
         // this.pdf_src = 'adminapi/blogs/%E5%89%8D%E7%AB%AF%E9%9D%A2%E8%AF%95/4%E3%80%81%E7%AC%AC%E5%9B%9B%E9%83%A8%E5%88%86%EF%BC%9A%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80%2814%E9%A2%98%29.pdf'
         // this.pdf_src = encodeURIComponent('../../../assets/test.pdf');
-         this._loadFile(this.pdf_src)
-     	   return
+        //  this._loadFile(this.pdf_src)
+     	//    return
 
 
      	   //线上请求
@@ -161,6 +171,7 @@ export default {
      _loadFile (url) {  //初始化pdf
      console.log(url);
         let loadingTask = PDFJS.getDocument(url)
+        console.log(loadingTask)
         loadingTask.promise
         .then((pdf) => {
           this.pdfDoc = pdf
@@ -206,9 +217,33 @@ export default {
             }
           })
      },
+     goto_paper(){
+        this.$router.push({
+          name:'PaperInformation',
+          params:{
+           paper_id:this.note.paper_id
+          }
+        })
+     },
+     note_init(){
+        this.$axios({
+            url:"http://127.0.0.1:8000/noteInit/",
+            method:"post",
+            data:{
+                note_id:this.$route.params.note_id
+            }
+        }).then(res=>{
+            this.pdf_src = res.data.note_info[0].note_url
+            this.list = res.data.other_note
+            this.author = res.data.author_info[0]
+            this.note = res.data.note_info[0]
+            // this._loadFile(this.pdf_src)
+        })
+     }
   },
      mounted () {
-          this.get_pdfurl()
+        //   this.get_pdfurl()
+        this.note_init();
     }
 }
 </script>
@@ -220,7 +255,7 @@ export default {
     height: auto;
 }
 .left .author{
-    height: 400px;
+    height: 500px;
     margin-bottom: 80px;
 }
 .author img{
@@ -240,6 +275,11 @@ export default {
     margin-right: 100px;
 }
 .author_info span{
+    display: block;
+    margin-top: 15px;
+    text-align: left;
+}
+.note_info span{
     display: block;
     margin-top: 15px;
     text-align: left;

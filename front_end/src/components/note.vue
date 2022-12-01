@@ -8,10 +8,10 @@
                     <span>{{list.name}}</span>
                 </div>
                 <div class="intro">
-                    {{list.intro}}
+                    {{list.introduction}}
                 </div>
                 <div class="response">
-                    <a href="../NoteInformation">阅读全文</a>
+                    <a @click="goto_note()">阅读全文</a>
                     <i class="el-icon-thumb">{{list.likes}}</i>
                     <i class="el-icon-star-off"></i>
                     <i class="el-icon-warning-outline"></i>
@@ -31,7 +31,14 @@ export default {
     }
   },
   methods:{
-   
+   goto_note(){
+     this.$router.push({
+          name:'NoteInformation',
+          params:{
+           note_id:this.list.note_id
+          }
+        })
+   }
   },
   mounted() {
     

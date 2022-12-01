@@ -6,23 +6,23 @@
           <div class="main">
             <el-card class="box-card">
               <div>
-                <span style="font-size:25px;font-weight:bolder">杰尾油</span>
-                <h5>来源：小马文学 &#12288; 引用次数：19156</h5>
+                <span style="font-size:25px;font-weight:bolder">{{info_list.paper_name}}</span>
+                <h5>来源：{{info_list.origin}} &#12288; 引用次数：{{info_list.cite_number}}</h5>
               </div>
               <div  class="text item">
-                作者：马哥
+                作者：<span v-for="i in info_list.author_name" :key="i"> {{i}}</span>
               </div>
               <div  class="text item">
-                摘要：主要讲述了杰哥的故事
+                摘要：{{info_list.abstract}}
               </div>
               <div  class="text item">
-                关键词：卡戴珊、羊尾油、杰哥
+                关键词：<span v-for="i in info_list.keyword" :key="i"> {{i}}</span>
               </div>
               <div  class="text item">
-                年份：2022/11/11
+                年份：{{info_list.date}}
               </div>
               <div  class="text item">
-                doi：swmrw7
+                DOI：{{info_list.DOI}}
               </div>
               <div class="button">
                   <el-button round icon="el-icon-star-off">收藏</el-button>
@@ -110,23 +110,11 @@
             <el-card class="box-card2">
                 <span style="font-size:25px;font-weight:bolder">全部来源</span>
                 <div class="origion">
-                    <div class="org">
+                    <div class="org" v-for="i in info_list.readlist" :key="i">
                         <div class="logo">
-                            <img src="../../assets/Aminer.png" alt="" width="20px" height="20px">
+                            <img :src="i.icon" alt="" width="20px" height="20px">
                         </div>
-                          Aminer
-                    </div>
-                    <div class="org">
-                        <div class="logo">
-                            <img src="../../assets/Aminer.png" alt="" width="20px" height="20px">
-                        </div>
-                          Aminer
-                    </div>
-                    <div class="org">
-                      <div class="logo">
-                          <img src="../../assets/Aminer.png" alt="" width="20px" height="20px">
-                      </div>
-                        Aminer
+                          {{i.name}}
                     </div>
                 </div>
             </el-card>
@@ -134,26 +122,17 @@
         <div class="remark">
           <el-card>
             <el-tabs v-model="activeName" >
-              <el-tab-pane label="相关文献" @click="refresh()">
-                  <div class="about">
-                        <div class="relative">
-                            <aboutCard name="论杰哥" author="马哥" cite="12345" origin="小马文学" intro="这是一本介绍传奇男子swmrw7的故事，全文毫无尿点" date="2018"/>
-                        </div>
-                          <div class="relative">
-                            <aboutCard name="论杰哥" author="马哥" cite="12345" origin="小马文学" intro="这是一本介绍传奇男子swmrw7的故事，全文毫无尿点" date="2018"/>
-                        </div>
-                          <div class="relative">
-                            <aboutCard name="论杰哥" author="马哥" cite="12345" origin="小马文学" intro="这是一本介绍传奇男子swmrw7的故事，全文毫无尿点" date="2018"/>
-                        </div>
-                          <div class="relative">
-                            <aboutCard name="论杰哥" author="马哥" cite="12345" origin="小马文学" intro="这是一本介绍传奇男子swmrw7的故事，全文毫无尿点" date="2018"/>
-                        </div>
+              <el-tab-pane label="相关文献">
+                  <div class="about" v-if="about_list!=[]">
+                    <div class="relative" v-for="i in about_list" :key="i">
+                        <aboutCard :name="i.paper_name" :author="i.author_name" :cite="i.cite_number" :origin="i.magazine" :intro="i.abstarct" :date="i.date"/>
+                    </div>
                 </div>
                   <div id="load">
                   <el-button style="width:100%" @click="load()" v-loading = "start">加载更多</el-button>
                 </div>
               </el-tab-pane>
-              <el-tab-pane label="评论" @click="refresh()">
+              <el-tab-pane label="评论">
                   <div class="creat_comment">
                         <el-button @click="CreatCommentVisible =true">我要评论</el-button>
                     </div>
@@ -171,7 +150,7 @@
                         <CreateComment/>
                       </el-dialog>
               </el-tab-pane>
-              <el-tab-pane label="笔记" @click="refresh()">
+              <el-tab-pane label="笔记">
                     <div class="creat_mark">
                         <el-button @click="CreatMark =true">上传笔记</el-button>
                     </div>
@@ -186,7 +165,7 @@
                         :visible.sync="CreatMark"
                         width="30%"
                         :before-close="handleClose">
-                        <uploadMark/>
+                        <uploadMark :paper_id="this.$route.params.paper_id"/>
                       </el-dialog>
               </el-tab-pane>
                 
@@ -200,16 +179,13 @@
               <div class="about_content" style="width:100%;height:80px">
                 来源期刊
                 <div class="ogjournal">
-                    <a href="https://book.qq.com/book-detail/34129913" style="text-decoration:none" class="journal_content">山海经</a>
+                    <a href="https://book.qq.com/book-detail/34129913" style="text-decoration:none" class="journal_content">{{info_list.origin}}</a>
                 </div> 
               </div>
               <div class="about_content" style="width:100%;height:200px">
                 研究领域
                 <div class="domain">
-                  <el-tag class="domain_content">人类学</el-tag>
-                  <el-tag class="domain_content">兽医</el-tag>
-                  <el-tag class="domain_content">抽象派文学</el-tag>
-                  <el-tag class="domain_content">后现代艺术</el-tag>
+                  <el-tag class="domain_content" v-for="i in info_list.domain" :key="i">{{i}}</el-tag>
                 </div>
               </div>
               <div class="about_content">
@@ -247,6 +223,9 @@ export default {
         CreatMark:false,
         describe:'',
         contact:'',
+        about_list:[],
+        now_list:[],
+        info_list:[],
        remark_list:{1:{1:{flag:0,name:'胡博轩',image:require("../../assets/Cooper.jpg"),comment:"马哥太尴尬了哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈"},2:{flag:1,name:'李阳',image:require("../../assets/mosy.jpg"),res_name:'胡博轩',comment:"确实，怎么可以这么尬"},3:{flag:1,name:'朱康乐',image:require("../../assets/le.jpg"),res_name:'李阳',comment:"你是懂尴尬的"},4:{flag:1,name:'马泽远',image:require("../../assets/ma.jpg"),res_name:'胡博轩',comment:"基操勿6"}},
         2:{1:{flag:0,name:'马泽远',image:require("../../assets/ma.jpg"),comment:"感谢大家支持"}},
         3:{1:{flag:0,name:'王域杰',image:require("../../assets/jie.jpg"),comment:"苏珊，小心我告你"},2:{flag:1,name:'王域杰',image:require("../../assets/jie.jpg"),res_name:'王域杰',comment:"别来沾边"},3:{flag:1,name:'朱康乐',image:require("../../assets/le.jpg"),res_name:'王域杰',comment:"支持杰哥维权"},4:{flag:1,name:'马泽远',image:require("../../assets/ma.jpg"),res_name:'王域杰',comment:"我错了杰哥，我苏珊"}},
@@ -258,7 +237,7 @@ export default {
       }
     },
     methods:{
-      chart_init(){
+      chart_init(cite_number){
         var myChart = echarts.init(document.getElementById('echarts_box'))
         myChart.setOption({
         title: {
@@ -276,19 +255,33 @@ export default {
           {
             name: '引用量',
             type: 'line',
-            data: [5, 8, 15, 22, 25, 30]
+            data: this.calculate(cite_number)
           }
         ]
         });
       },
-      refresh(){
-        this.number = 4;
+      calculate(cite_number){
+        var a=[];
+        var y6 = cite_number;
+        var y5 = parseInt(0.8*y6);
+        var y4 = y5 - parseInt(Math.random()*(0.1*y5-1)+0.1*y5+1);
+        var y3 = y4 - parseInt(Math.random()*(0.1*y4-1)+0.1*y4+1);
+        var y2 = parseInt(0.6*y3);
+        var y1 = parseInt(0.4*y2);
+        a.push(y1,y2,y3,y4,y5,y6)
+        console.log(a);
+        return a;
       },
-      load(){
-        this.number = this.number + 6;
-        this.start = true;
-        setTimeout(this.reload(), 1500 )
-      },
+      // load(){
+      //   let now = now_list.length;
+      //   for(var i=now;i<about_list.length;i++){
+      //       now_list.push(about_list[i])
+      //       if(i-now>=4){
+      //         break;
+      //       }
+      //   }
+      //   // setTimeout(this.reload(), 1500 )
+      // },
       handleRemove(file) {
         console.log(file);
       },
@@ -302,6 +295,25 @@ export default {
       handleExceed(files, fileList) {
         this.$message.warning(`当前限制选择 4 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`);
       },
+      async paper_init(){
+           this.$axios({
+            url:"http://127.0.0.1:8000/paperInformation/",
+            method:"post",
+            data:{
+                Paper_id:this.$route.params.paper_id
+            }
+        }).then(res=>{
+          console.log(res.data.about_list)
+            this.remark_list = res.data.remark_list
+            this.mark_list = res.data.note_list
+            this.about_list = res.data.about_list
+            this.info_list = res.data.info_list[0]
+            console.log(res.data.info_list)
+            this.chart_init(res.data.info_list[0].cite_number)
+            // this._loadFile(this.pdf_src)
+        })
+        
+      }
     },
     components:{
         aboutCard,
@@ -313,8 +325,8 @@ export default {
     },
     created() {},
     mounted() {
-      this.chart_init();
-  
+      this.paper_init();
+      // this.chart_init();
     }
 }
 </script>

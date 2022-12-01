@@ -8,7 +8,7 @@
     > -->
     <el-container>
       <el-main>
-        <el-row id="info" style="margin-top: 20px; margin-bottom: 20px;">
+        <el-row id="info" style="margin-top: 20px; margin-bottom: 20px">
           <el-col :span="10">
             <!--:span占据行数-->
             <!--头像-->
@@ -702,21 +702,21 @@ export default {
       myComment:[],
 
       RelationsData: [
-        {
-          name: "皮蓬",
-          value: 3,
-          id: 1,
-        },
-        {
-          name: "ss",
-          value: 4,
-          id: 2,
-        },
-        {
-          name: "ssaw",
-          value: 40,
-          id: 3,
-        },
+        // {
+        //   name: "皮蓬",
+        //   value: 3,
+        //   id: 1,
+        // },
+        // {
+        //   name: "ss",
+        //   value: 4,
+        //   id: 2,
+        // },
+        // {
+        //   name: "ssaw",
+        //   value: 40,
+        //   id: 3,
+        // },
       ],
       Linedata: [
         {
@@ -754,9 +754,11 @@ export default {
     // else this.DefaultLocation = "first";
     this.DefaultLocation = "first";
     this.noteLabel = this.isOthers ? "他的笔记" : "我的笔记";
+    this.initSelfRelations();
   },
   mounted() {
     this.noteLabel = this.isOthers ? "他的笔记" : "我的笔记";
+    this.initSelfRelations();
   },
   watch: {
     isOthers: function (newVal, oldVal) {
@@ -941,21 +943,24 @@ export default {
       })
     },
 
-
-
-
     //保存个人信息按钮
-    savePersonalInformation(){
+    savePersonalInformation() {
       this.isEditPersonalInformation = false;
       this.editPersonalInformation();
     },
     //修改密码
-    changePassword(){
-      if (!/^\w+$/.exec(this.newPassword) || this.newPassword.length > 16 || this.newPassword.length < 8) {
-        console.log(1)
-        this.$message.warning("密码仅能由数字、26个英文字母或者下划线组成，长度为8-16位，请检查您的密码");
+    changePassword() {
+      if (
+        !/^\w+$/.exec(this.newPassword) ||
+        this.newPassword.length > 16 ||
+        this.newPassword.length < 8
+      ) {
+        console.log(1);
+        this.$message.warning(
+          "密码仅能由数字、26个英文字母或者下划线组成，长度为8-16位，请检查您的密码"
+        );
         return;
-      } else if(this.newPassword!=this.confirmNewPassword){
+      } else if (this.newPassword != this.confirmNewPassword) {
         this.$message.warning("两次输入密码不一致，请检查");
         return;
       }
@@ -994,11 +999,13 @@ export default {
   margin-bottom: 60px;
   min-height: calc(100vh);
   margin-left: 15%;
-  transform: translate(0, 30px);//不知道为什么用margin顶栏也会受影响，用移动替代
+  transform: translate(
+    0,
+    30px
+  ); //不知道为什么用margin顶栏也会受影响，用移动替代
   .el-card {
     background-color: rgba(255, 255, 255, 0.277) !important;
     border-radius: 20px !important;
-
   }
 }
 
@@ -1070,6 +1077,6 @@ export default {
 /deep/ .el-tabs__active-bar {
   height: 4px;
   border-radius: 2px;
-  background: #003B55;
+  background: #003b55;
 }
 </style>
