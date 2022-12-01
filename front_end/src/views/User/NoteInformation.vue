@@ -10,7 +10,7 @@
                   <span>{{author.name}}</span>
               </div>
               <div class="author_info">
-                <span>所属机构：{{author.institution}}</span>
+                <span>所属机构：<div v-for="i in author.institution" :key="i">{{i}}</div></span>
                 <span>发表论文数：{{author.paper_num}}</span>
                 <span>发表笔记数：{{author.note_num}}</span>
               </div>
@@ -20,7 +20,8 @@
                 <span @click="goto_paper()">原论文：{{note.paper_name}}</span>
                 <span>获赞：{{note.likes}}</span>
                 <span>评论：{{note.remarks}}</span>
-                <span>收藏：{{note.collections}}</span>
+                <span v-if="note.collect_flag" title="取消收藏" @click="collect()">已收藏：{{note.collections}}</span>
+                <span v-else title="收藏" @click="collect()">收藏：{{note.collections}}</span>
               </div>
               <div class="response">
                 <el-button type="primary">点赞</el-button>
@@ -67,9 +68,9 @@
 							<div class="creat_comment">
 								<el-button @click="CreatCommentVisible =true">我要评论</el-button>
 							</div>
-							<div v-if="Object.keys(remark_list).length!=0">
+							<div v-if="remark_list.length!=0">
 								<div class="comment" v-for="i in remark_list" :key="i">
-									<remark :list="i"/>
+									<remark :list="i.remark"/>
 								</div>
 							</div>
 							<div v-else><el-empty description="还没有评论，发表第一个评论吧"></el-empty></div>
@@ -77,7 +78,7 @@
 								title="留下你的评论吧~"
 								:visible.sync="CreatCommentVisible"
 								width="30%"
-								:before-close="handleClose">
+								>
 								<CreateComment/>
 							</el-dialog>
 						</el-card>
@@ -117,11 +118,12 @@ export default {
   	 	    pdf_div_width:'',
   	 	    pdf_src:null,
             CreatCommentVisible:false,
-            remark_list:{1:{1:{flag:0,name:'胡博轩',image:require("../../assets/Cooper.jpg"),comment:"马哥太尴尬了哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈"},2:{flag:1,name:'李阳',image:require("../../assets/mosy.jpg"),res_name:'胡博轩',comment:"确实，怎么可以这么尬"},3:{flag:1,name:'朱康乐',image:require("../../assets/le.jpg"),res_name:'李阳',comment:"你是懂尴尬的"},4:{flag:1,name:'马泽远',image:require("../../assets/ma.jpg"),res_name:'胡博轩',comment:"基操勿6"}},
-        2:{1:{flag:0,name:'马泽远',image:require("../../assets/ma.jpg"),comment:"感谢大家支持"}},
-        3:{1:{flag:0,name:'王域杰',image:require("../../assets/jie.jpg"),comment:"苏珊，小心我告你"},2:{flag:1,name:'王域杰',image:require("../../assets/jie.jpg"),res_name:'王域杰',comment:"别来沾边"},3:{flag:1,name:'朱康乐',image:require("../../assets/le.jpg"),res_name:'王域杰',comment:"支持杰哥维权"},4:{flag:1,name:'马泽远',image:require("../../assets/ma.jpg"),res_name:'王域杰',comment:"我错了杰哥，我苏珊"}},
-        4:{1:{flag:0,name:'马泽远',image:require("../../assets/ma.jpg"),comment:"感谢大家支持"}},
-        5:{1:{flag:0,name:'王域杰',image:require("../../assets/jie.jpg"),comment:"苏珊，小心我告你"},2:{flag:1,name:'王域杰',image:require("../../assets/jie.jpg"),res_name:'王域杰',comment:"别来沾边"},3:{flag:1,name:'朱康乐',image:require("../../assets/le.jpg"),res_name:'王域杰',comment:"支持杰哥维权"},4:{flag:1,name:'马泽远',image:require("../../assets/ma.jpg"),res_name:'王域杰',comment:"我错了杰哥，我苏珊"}},},
+        // remark_list:{1:{1:{flag:0,name:'胡博轩',image:require("../../assets/Cooper.jpg"),comment:"马哥太尴尬了哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈"},2:{flag:1,name:'李阳',image:require("../../assets/mosy.jpg"),res_name:'胡博轩',comment:"确实，怎么可以这么尬"},3:{flag:1,name:'朱康乐',image:require("../../assets/le.jpg"),res_name:'李阳',comment:"你是懂尴尬的"},4:{flag:1,name:'马泽远',image:require("../../assets/ma.jpg"),res_name:'胡博轩',comment:"基操勿6"}},
+        // 2:{1:{flag:0,name:'马泽远',image:require("../../assets/ma.jpg"),comment:"感谢大家支持"}},
+        // 3:{1:{flag:0,name:'王域杰',image:require("../../assets/jie.jpg"),comment:"苏珊，小心我告你"},2:{flag:1,name:'王域杰',image:require("../../assets/jie.jpg"),res_name:'王域杰',comment:"别来沾边"},3:{flag:1,name:'朱康乐',image:require("../../assets/le.jpg"),res_name:'王域杰',comment:"支持杰哥维权"},4:{flag:1,name:'马泽远',image:require("../../assets/ma.jpg"),res_name:'王域杰',comment:"我错了杰哥，我苏珊"}},
+        // 4:{1:{flag:0,name:'马泽远',image:require("../../assets/ma.jpg"),comment:"感谢大家支持"}},
+        // 5:{1:{flag:0,name:'王域杰',image:require("../../assets/jie.jpg"),comment:"苏珊，小心我告你"},2:{flag:1,name:'王域杰',image:require("../../assets/jie.jpg"),res_name:'王域杰',comment:"别来沾边"},3:{flag:1,name:'朱康乐',image:require("../../assets/le.jpg"),res_name:'王域杰',comment:"支持杰哥维权"},4:{flag:1,name:'马泽远',image:require("../../assets/ma.jpg"),res_name:'王域杰',comment:"我错了杰哥，我苏珊"}},},
+        remark_list:[],
         textarea:''
         }
     },
@@ -225,6 +227,34 @@ export default {
           }
         })
      },
+     collect(){
+        if(this.info_list.collect_flag){
+          this.$axios({
+            url:"http://127.0.0.1:8000/paperCollection/",
+            method:"post",
+            data:{
+                Paper_id:-1,
+                Note_id:this.note.note_id,
+                op:0
+            }
+          }).then(res=>{
+              this.$message.success("已取消收藏")
+          })
+        }
+        else{
+          this.$axios({
+            url:"http://127.0.0.1:8000/paperCollection/",
+            method:"post",
+            data:{
+                Paper_id:-1,
+                Note_id:this.note.note_id,
+                op:1
+            }
+          }).then(res=>{
+            this.$message.success("已收藏")
+          })
+        }
+     },
      note_init(){
         this.$axios({
             url:"http://127.0.0.1:8000/noteInit/",
@@ -237,6 +267,7 @@ export default {
             this.list = res.data.other_note
             this.author = res.data.author_info[0]
             this.note = res.data.note_info[0]
+            this.remark_list = res.data.note_info[0].remark_list
             // this._loadFile(this.pdf_src)
         })
      }

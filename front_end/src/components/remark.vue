@@ -14,7 +14,7 @@
             </div>
             <div class="response">
                 <i class="el-icon-chat-round" @click="CreatCommentVisible =true"></i>
-                <i class="el-icon-thumb">{{likes}}</i>
+                <i class="el-icon-thumb" @click="likeit()">{{i.likes}}</i>
                 <i class="el-icon-warning-outline"></i>
             </div>
         </div>
@@ -34,7 +34,7 @@
             </div>
               <div class="response">
                 <i class="el-icon-chat-round" @click="CreatCommentVisible =true"></i>
-                <i class="el-icon-thumb">{{likes}}</i>
+                <i class="el-icon-thumb">{{i.likes}}</i>
                 <i class="el-icon-warning-outline"></i>
             </div>
         </div>
@@ -59,8 +59,7 @@ export default {
         CreateComment
     },
   props: {
-    list:{image:{required: true,type:String}},
-    imglist:{}
+    list:[],
   },
   data(){
     return{
@@ -68,9 +67,9 @@ export default {
     }
   },
   methods:{
+
   },
   mounted() {
-
     }
 }
 
