@@ -113,7 +113,7 @@ $theme: #003B55;
   padding: 0;
   // animation-name: enter_blur;
   // animation-iteration-count: 1;
-  // animation-duration: 0.4s;
+  // animation-duration: 0.3s;
   // animation: enter_blur 0.4s cubic-bezier(.23,1.38,.65,.99);
 }
 .main {
