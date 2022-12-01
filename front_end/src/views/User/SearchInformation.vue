@@ -105,7 +105,7 @@
                   ></el-input>
                 </el-form-item>
                 <el-form-item label="机构" prop="AdOrganization">
-                  <el-input v-model="advanced_search_query.AdOrganization"></el-input>
+                  <el-input v-model="advanced_search_query.organization"></el-input>
                 </el-form-item>
                 <el-form-item label="出版物" prop="AdPublish">
                   <el-input
@@ -299,15 +299,15 @@ export default {
         PublishSelect: "1",
       },
       advanced_search_query: {
-        fuzzy_search: "",//默认搜索
-        must_contain: "",//包含检索词
-        at_least_one: "",//至少一个
-        contains_none: "",//不包含
-        authors: "",//包含作者
-        AdOrganization: "",//包含机构
-        venue: "",//所在出版物
-        year_begin: "",//起始年份
-        year_end: "",//终止年份
+        fuzzy_search: null,//默认搜索
+        must_contain: null,//包含检索词
+        at_least_one: null,//至少一个
+        contains_none: null,//不包含
+        authors: null,//包含作者
+        organization: null,//包含机构
+        venue: null,//所在出版物
+        year_begin: null,//起始年份
+        year_end: null,//终止年份
       },
       Positions: [
         {
@@ -322,9 +322,6 @@ export default {
     }
   },
   methods :{
-    test(){
-      alert("???")
-    },
     toThousands(num) {
       var result = [ ], counter = 0;
       num = (num || 0).toString().split('');
@@ -389,12 +386,12 @@ export default {
         "size" : this.page_size
       }
       if(this.advanced_search_query.fuzzy_search) es_request_body.query.fuzzy_search = this.advanced_search_query.fuzzy_search
-      if(this.advanced_search_query.fuzzy_search) es_request_body.query.fuzzy_search = this.advanced_search_query.fuzzy_search
-      if(this.advanced_search_query.fuzzy_search) es_request_body.query.fuzzy_search = this.advanced_search_query.fuzzy_search
-      if(this.advanced_search_query.fuzzy_search) es_request_body.query.fuzzy_search = this.advanced_search_query.fuzzy_search
-      if(this.advanced_search_query.fuzzy_search) es_request_body.query.fuzzy_search = this.advanced_search_query.fuzzy_search
-      if(this.advanced_search_query.fuzzy_search) es_request_body.query.fuzzy_search = this.advanced_search_query.fuzzy_search
-      if(this.advanced_search_query.fuzzy_search) es_request_body.query.fuzzy_search = this.advanced_search_query.fuzzy_search
+      if(this.advanced_search_query.must_contain) es_request_body.query.fuzzy_search = this.advanced_search_query.fuzzy_search
+      if(this.advanced_search_query.at_least_one) es_request_body.query.fuzzy_search = this.advanced_search_query.fuzzy_search
+      if(this.advanced_search_query.contains_none) es_request_body.query.fuzzy_search = this.advanced_search_query.fuzzy_search
+      if(this.advanced_search_query.authors) es_request_body.query.fuzzy_search = this.advanced_search_query.fuzzy_search
+      if(this.advanced_search_query.venue) es_request_body.query.fuzzy_search = this.advanced_search_query.fuzzy_search
+      if(this.advanced_search_query.organization) es_request_body.query.fuzzy_search = this.advanced_search_query.fuzzy_search
 
     },
     //用于搜索框
