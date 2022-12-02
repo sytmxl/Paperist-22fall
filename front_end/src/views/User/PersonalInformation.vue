@@ -1077,8 +1077,10 @@ export default {
     30px
   ); //不知道为什么用margin顶栏也会受影响，用移动替代
   .el-card {
-    background-color: rgba(255, 255, 255, 0.277) !important;
+    background-color: rgba(255, 255, 255, 0.587) !important;
     border-radius: 20px !important;
+    box-shadow: none !important;
+
   }
 }
 
@@ -1149,5 +1151,16 @@ export default {
   height: 4px;
   border-radius: 2px;
   background: #003b55;
+}
+.el-switch__label {
+  // background-color: #003b55 !important;
+}
+.el-tab-pane {
+  padding-bottom: 10px;
+
+}
+//似乎必须要用deep、选择全部子标签、颜色用全透明才行
+/deep/.el-descriptions *:not(button){
+  background-color: #003b5500 !important;
 }
 </style>
