@@ -13,18 +13,13 @@
             <!--:span占据行数-->
             <!--头像-->
             <img v-if="!profile" class="picture" src="../../assets/mosy.jpg" alt="" />
-            <img v-else class="pic" :src="profile" alt="" />
+            <img v-else class="picture" :src="profile" alt="" />
             <el-upload
               ref="upload"
               class="avatar-uploader"
               accept="JPG, .PNG, .JPEG,.jpg, .png, .jpeg"
-
-              action=""
-              :multiple="false"
-              :show-file-list="false"
-              :http-request="uploadImg"
-              :before-upload="beforeAvatarUpload"
-              :on-change="handleChange"
+              :http-request="uploadProfile"
+              :headers="headers"
             >
               <el-button
                 size="mini"
@@ -144,7 +139,7 @@
                   type="primary"
                   size="small"
                   v-if="!isOthers"
-                  @click="isChangePassword = true"
+                  @click="isChangePassword = true;newPassword='';oldPassword='';confirmNewPassword=''"
                   >修改密码</el-button
                 >
                 <el-button
@@ -198,6 +193,7 @@
                 prefix-icon="el-icon-lock"
                 placeholder="在此输入旧密码"
                 v-model="oldPassword"
+                show-password type="password" clearable
               ></el-input>
             </el-form-item>
             <el-form-item prop="" label="请输入新密码：">
@@ -205,6 +201,7 @@
                 prefix-icon="el-icon-lock"
                 placeholder="在此输入新密码"
                 v-model="newPassword"
+                show-password type="password" clearable
               ></el-input>
             </el-form-item>
             <el-form-item prop="" label="请再输入一遍新密码：">
@@ -212,6 +209,7 @@
                 prefix-icon="el-icon-lock"
                 placeholder="再次输入新密码"
                 v-model="confirmNewPassword"
+                show-password type="password" clearable
               ></el-input>
             </el-form-item>
           </el-form>
@@ -655,10 +653,12 @@
 </template>
 
 <script>
+import qs from "qs";
 import RelationShip from "@/components/RelationShip.vue";
 import ScholarLine from "@/components/ScholarLine.vue";
 import TopBar from "@/components/TopBar";
 import axios from "axios";
+import CryptoJS from "_crypto-js@4.1.1@crypto-js";
 // import CryptoJS from "_crypto-js@4.1.1@crypto-js";
 export default {
   name: "PersonalInformation",
@@ -712,7 +712,11 @@ export default {
       noteCollection: [],
       notes: [],
       myComment: [],
+      //图片
       profile:"",
+      headers:{
+        "Authorization":"JWT " + sessionStorage.getItem("token"),
+      },
 
       RelationsData: [
         // {
@@ -803,6 +807,7 @@ export default {
         this.username = res.data.data[0].username;
         this.personalProfile = res.data.data[0].sign;
         this.region = res.data.data[0].country;
+        this.profile=res.data.data[0].profile;
 
         this.researchField = res.data.data[0].field;
         //异步访问，created结束还未执行完
@@ -1130,9 +1135,15 @@ export default {
         this.$message.warning(
           "密码仅能由数字、26个英文字母或者下划线组成，长度为8-16位，请检查您的密码"
         );
+        this.newPassword='';
+        this.oldPassword='';
+        yhis.confirmNewPassword='';
         return;
       } else if (this.newPassword != this.confirmNewPassword) {
         this.$message.warning("两次输入密码不一致，请检查");
+        this.newPassword='';
+        this.oldPassword='';
+        yhis.confirmNewPassword='';
         return;
       }
       this.isChangePassword = false;
@@ -1141,17 +1152,30 @@ export default {
         method: "post",
         data: {
           token: sessionStorage.getItem("token"),
-          oldPassword: this.oldPassword,
-          newPassword: this.newPassword,
+          oldPassword: CryptoJS.MD5(this.oldPassword).toString(),
+          newPassword: CryptoJS.MD5(this.newPassword).toString(),
         },
       }).then((res) => {
-        if(res.data.isSuccess===-1){
+        if(res.data.isSuccess==-1){
           this.$message.error("旧密码错误")
         } else{
           this.$message.success("修改密码成功")
         }
       });
     },
+    //修改头像
+    uploadProfile(file){
+      let formData = new FormData();
+      formData.append('profile',file.file)
+      this.$axios.post('/user/upload_profile/', formData).then(res => {
+        this.$message.success('上传成功')
+        window.location.reload();
+      }).catch(err=>{
+        this.$message.error('上传失败')
+      });
+
+    },
+
 
 
   },
