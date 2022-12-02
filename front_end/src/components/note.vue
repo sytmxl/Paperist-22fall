@@ -1,25 +1,27 @@
 <template>
     <el-main>
-             <div class="image">
-            <img :src="list.image" alt="">
-            </div>
-             <div class="content">
-                <div class="name">
-                    <span>{{list.name}}</span>
-                </div>
-                <div class="intro">
-                    {{list.introduction}}
-                </div>
-                <div class="response">
-                    <a @click="goto_note()">阅读全文</a>
-                    <i class="el-icon-thumb" @click="likeit(list.note_id)" v-if="list.like_flag" title="取消">{{list.likes}}</i>
-                    <i class="el-icon-thumb" @click="likeit(list.note_id)" v-else title="赞">{{list.likes}}</i>
-                    <i class="el-icon-star-off" v-if="!list.collect_flag" @click="collect(list.note_id)" title="收藏"></i>
-                    <i class="el-icon-star-on" v-else @click="collect(list.note_id)" title="取消收藏"></i>
-                    <i class="el-icon-warning-outline" @click="tipoff(list.note_id)"></i>
-                </div>
-             </div>
+
+      <div class="image">
+        <img :src="list.image" alt="">
+      </div>
+      <div class="content">
+        <div class="name">
+            <span>{{list.name}}</span>
+        </div>
+        <div class="intro">
+            {{list.introduction}}
+        </div>
+        <div class="response">
+            <a @click="goto_note()">阅读全文</a>
+            <i class="el-icon-thumb" @click="likeit(list.note_id)" v-if="list.like_flag" title="取消">{{list.likes}}</i>
+            <i class="el-icon-thumb" @click="likeit(list.note_id)" v-else title="赞">{{list.likes}}</i>
+            <i class="el-icon-star-off" v-if="!list.collect_flag" @click="collect(list.note_id)" title="收藏"></i>
+            <i class="el-icon-star-on" v-else @click="collect(list.note_id)" title="取消收藏"></i>
+            <i class="el-icon-warning-outline" @click="tipoff(list.note_id)"></i>
+        </div>
+      </div>
     </el-main>
+    
 </template>
 
 <script>
@@ -117,6 +119,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+
 .image{
     float: left;
     width: 40px;
@@ -153,11 +156,11 @@ export default {
 .el-icon-thumb:hover{
     cursor:pointer
 }
-.el-icon-star-off{
+.el-icon-star-off, .el-icon-star-on{
     margin-left:30px;
 }
-.el-icon-star-off:hover{
-     cursor:pointer
+.el-icon-star-off:hover,.el-icon-star-on:hover{
+  cursor:pointer
 }
 .el-icon-warning-outline{
     margin-left:30px;
@@ -170,5 +173,13 @@ export default {
 }
 .content{
     text-align: left;
+}
+a {
+  padding: 3px;
+  border-radius: 5px;
+}
+a:hover {
+  background-color: #003b558e !important;
+  color: white;
 }
 </style>

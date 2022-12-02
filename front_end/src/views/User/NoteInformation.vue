@@ -17,7 +17,7 @@
             </el-card>
             <el-card style="margin-top:10px">
                 <div class="note_info">
-                <span @click="goto_paper()">原论文：{{note.paper_name}}</span>
+                <span @click="goto_paper()" title="了解此论文" style="cursor:pointer; ">原论文：{{note.paper_name}}</span>
                 <span>获赞：{{note.likes}}</span>
                 <span>评论：{{note.remarks}}</span>
                 <span>收藏：{{note.collections}}</span>
@@ -71,20 +71,23 @@
 							</div>
 							<div v-if="remark_list.length!=0">
 								<div class="comment" v-for="i in remark_list" :key="i">
-									<remark :list="i.remark" :note_id="note.note_id"/>
+									<remark :list="i.remark" :note_id="note.note_id" @throw_remark="open_comment"/>
 								</div>
 							</div>
 							<div v-else><el-empty description="还没有评论，发表第一个评论吧"></el-empty></div>
-							<el-dialog
+				
+						</el-card>
+            		
+					</div>
+          
+       </el-main>
+       	<el-dialog
 								title="留下你的评论吧~"
 								:visible.sync="CreatCommentVisible"
 								width="30%"
 								>
-								<CreateComment :note_id="note.note_id" :receiver_id="-1" :remark_id="-1"/>
-							</el-dialog>
-						</el-card>
-					</div>
-       </el-main>
+								<CreateComment :note_id="note.note_id" :receiver_id="this.receiver_id" :remark_id="this.remark_id" @finish_remark="close_comment"/>
+				</el-dialog>
     </el-container>
 </template>
 
@@ -120,6 +123,8 @@ export default {
   	 	    pdf_div_width:'',
   	 	    pdf_src:null,
             CreatCommentVisible:false,
+            remark_id:-1,
+            receiver_id:-1,
         // remark_list:{1:{1:{flag:0,name:'胡博轩',image:require("../../assets/Cooper.jpg"),comment:"马哥太尴尬了哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈"},2:{flag:1,name:'李阳',image:require("../../assets/mosy.jpg"),res_name:'胡博轩',comment:"确实，怎么可以这么尬"},3:{flag:1,name:'朱康乐',image:require("../../assets/le.jpg"),res_name:'李阳',comment:"你是懂尴尬的"},4:{flag:1,name:'马泽远',image:require("../../assets/ma.jpg"),res_name:'胡博轩',comment:"基操勿6"}},
         // 2:{1:{flag:0,name:'马泽远',image:require("../../assets/ma.jpg"),comment:"感谢大家支持"}},
         // 3:{1:{flag:0,name:'王域杰',image:require("../../assets/jie.jpg"),comment:"苏珊，小心我告你"},2:{flag:1,name:'王域杰',image:require("../../assets/jie.jpg"),res_name:'王域杰',comment:"别来沾边"},3:{flag:1,name:'朱康乐',image:require("../../assets/le.jpg"),res_name:'王域杰',comment:"支持杰哥维权"},4:{flag:1,name:'马泽远',image:require("../../assets/ma.jpg"),res_name:'王域杰',comment:"我错了杰哥，我苏珊"}},
@@ -224,6 +229,15 @@ export default {
            paper_id:this.note.paper_id
           }
         })
+     },
+     open_comment(data){
+        this.CreatCommentVisible = true;
+        this.remark_id = data.remark_id
+        this.receiver_id = data.sender_id
+     },
+     close_comment(data){
+           this.CreatCommentVisible = false;
+  
      },
      likeit(){
         if(this.note.like_flag){

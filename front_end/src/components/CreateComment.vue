@@ -11,7 +11,7 @@
         show-word-limit>
     </el-input>
     <div class="btn" style="height:40px;margin-top:30px;">
-      <el-button type="text" size="medium" @click="showDialog = !showDialog" style="float:left;width: 2em;">🙂</el-button>
+      <el-button id="emoji" type="text" size="medium" @click="showDialog = !showDialog" style="float:left;width: 40px;">😅</el-button>
       <el-button style="float:right" @click="submit()">发布</el-button>
     </div>
       
@@ -68,7 +68,8 @@
             }
         }).then(res=>{
             this.$message.success("评论发表成功");
-            this.$emit('introduce',{msg:"success"})
+            let msg = "success"
+            this.$emit('finish_remark',msg)
         })
       }
     }
@@ -77,5 +78,8 @@
 
 
 <style lang="scss" scoped>
-
+#emoji {
+  background: #003b552f !important;
+  border: solid 2px #003b552f;
+}
 </style>

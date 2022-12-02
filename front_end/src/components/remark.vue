@@ -13,8 +13,9 @@
                 {{i.comment}}
             </div>
             <div class="response">
-                <i class="el-icon-chat-round" @click="CreatCommentVisible =true,receiver_id=i.res_id,remark_id=i.remark_id"></i>
-                <i class="el-icon-thumb" @click="likeit()">{{i.likes}}</i>
+                <i class="el-icon-chat-round" @click="ready(i)"></i>
+                <i class="el-icon-thumb" @click="likeit(i.id,i.like_flag)" v-if="i.like_flag" title="取消">{{i.likes}}</i>
+                <i class="el-icon-thumb" @click="likeit(i.id,i.like_flag)" v-else title="赞">{{i.likes}}</i>
                 <i class="el-icon-warning-outline" @click="tipoff(i.id)"></i>
             </div>
         </div>
@@ -33,24 +34,27 @@
                 {{i.comment}}
             </div>
               <div class="response">
-                <i class="el-icon-chat-round" @click="CreatCommentVisible =true ,receiver_id=i.res_id,remark_id=i.remark_id"></i>
-                <i class="el-icon-thumb" @click="likeit(i.id)" v-if="i.like_flag" title="取消">{{i.likes}}</i>
-                <i class="el-icon-thumb" @click="likeit(i.id)" v-else title="赞">{{i.likes}}</i>
+                <i class="el-icon-chat-round" @click="ready(i)"></i>
+                <i class="el-icon-thumb" @click="likeit(i.id,i.like_flag,i)" v-if="i.like_flag" title="取消">{{i.likes}}</i>
+                <i class="el-icon-thumb" @click="likeit(i.id,i.like_flag,i)" v-else title="赞">{{i.likes}}</i>
                 <i class="el-icon-warning-outline" @click="tipoff(i.id)"></i>
             </div>
         </div>
     </div>
+ 
+    </div>
     <el-dialog
         title="留下你的评论吧~"
-        :visible.sync="CreatCommentVisible"
+        :visible.sync="CommentVisible"
         width="30%"
         :before-close="handleClose">
-        <CreateComment :receiver_id="receiver_id" :note_id="note_id" :paper_id="paper_id" :remark_id="remark_id"/>
-      </el-dialog>
-    </div>
-
+        <CreateComment :receiver_id="receiver_id" :note_id="note_id" :paper_id="paper_id" :remark_id="remark_id" @finish_remark="close_comment"/>
+    </el-dialog>
 </el-main>
-   
+
+  
+
+
 </template>
 
 <script>
@@ -66,24 +70,24 @@ export default {
   },
   data(){
     return{
-        CreatCommentVisible:false,
+        CommentVisible:false,
         receiver_id:-1,
         remark_id:-1
     }
   },
   methods:{
-    likeit(id){
-        if(this.i.like_flag){
+    likeit(id,like_flag,item){
+        if(like_flag){
           this.$axios({
             url:"http://127.0.0.1:8000/likeIt/",
             method:"post",
             data:{
-               comment_id:id,
+                comment_id:id,
                 note_id:"",
                 op:0
             }
           }).then(res=>{
-              
+              i.likes = i.likes-1;
           })
         }
         else{
@@ -91,12 +95,12 @@ export default {
             url:"http://127.0.0.1:8000/likeIt/",
             method:"post",
             data:{
-               comment_id:id,
+                comment_id:id,
                 note_id:"",
                 op:1
             }
           }).then(res=>{
-            
+            i.likes = i.likes+1;
           })
         }
     },
@@ -111,7 +115,21 @@ export default {
         }).then(res=>{
           this.$message.success("您的举报已发送，敬请等待后台处理");
         })
-    }
+    },
+    ready(item){
+        let data = {
+            sender_id: item.sender_id,
+            remark_id: item.id
+        }
+        this.$emit('throw_remark',data)
+        // this.CommentVisible =true ,
+        // this.receiver_id=item.sender_id,
+        // this.remark_id=item.id
+    },
+    close_comment(data){
+           this.CreatCommentVisible = false;
+  
+     },
   },
   mounted() {
     }

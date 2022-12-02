@@ -335,9 +335,9 @@
                           class="input-with-select"
                         >
                           <el-button
-                              slot="append"
-                              icon="el-icon-search"
-                              @click="searchNoteCollection"
+                            slot="append"
+                            icon="el-icon-search"
+                            @click="searchNoteCollection"
                           ></el-button>
                         </el-input>
                       </div>
@@ -423,7 +423,11 @@
                     v-model="selectNote"
                     class="input-with-select"
                   >
-                    <el-button slot="append" icon="el-icon-search" @click="searchNote"></el-button>
+                    <el-button
+                      slot="append"
+                      icon="el-icon-search"
+                      @click="searchNote"
+                    ></el-button>
                   </el-input>
                 </div>
                 <div v-for="(item, index) in this.notes" :key="index">
@@ -466,7 +470,11 @@
                     v-model="selectComment"
                     class="input-with-select"
                   >
-                    <el-button slot="append" icon="el-icon-search" @click="searchPaperComment"></el-button>
+                    <el-button
+                      slot="append"
+                      icon="el-icon-search"
+                      @click="searchPaperComment"
+                    ></el-button>
                   </el-input>
                 </div>
                 <div v-for="(item, index) in this.myComment" :key="index">
@@ -593,14 +601,21 @@
                       label="笔记是否他人可见"
                       style="margin-left: 10%"
                     >
-                      <el-switch  v-model="isNoteVisible" @change="geteditSet"></el-switch>
+                      <el-switch
+                        v-model="isNoteVisible"
+                        @change="geteditSet"
+                      ></el-switch>
                     </el-form-item>
                     <el-form-item
                       label="系统配色方案"
                       style="margin-left: 100px"
                     >
                       <div style="width: 40%">
-                        <el-select :placeholder="color" v-model="color" @change="geteditSet">
+                        <el-select
+                          :placeholder="color"
+                          v-model="color"
+                          @change="geteditSet"
+                        >
                           <el-option label="天蓝" value="天蓝"></el-option>
                           <el-option label="灰色" value="灰色"></el-option>
                         </el-select>
@@ -613,14 +628,21 @@
                       label="笔记下是否可评论"
                       style="margin-left: 10%"
                     >
-                      <el-switch v-model="isNoteCommentable" @change="geteditSet"></el-switch>
+                      <el-switch
+                        v-model="isNoteCommentable"
+                        @change="geteditSet"
+                      ></el-switch>
                     </el-form-item>
                     <el-form-item
                       label="系统配置语言"
                       style="margin-left: 100px"
                     >
                       <div style="width: 40%">
-                        <el-select :placeholder="language" v-model="language" @change="geteditSet">
+                        <el-select
+                          :placeholder="language"
+                          v-model="language"
+                          @change="geteditSet"
+                        >
                           <el-option label="中文" value="中文"></el-option>
                           <el-option label="英文" value="英文"></el-option>
                         </el-select>
@@ -633,13 +655,19 @@
                       label="文章下是否可评论"
                       style="margin-left: -15%"
                     >
-                      <el-switch v-model="isLiteratureCommentable" @change="geteditSet"></el-switch>
+                      <el-switch
+                        v-model="isLiteratureCommentable"
+                        @change="geteditSet"
+                      ></el-switch>
                     </el-form-item>
                     <el-form-item
                       label="收藏是否可见"
                       style="margin-left: 100px"
                     >
-                      <el-switch v-model="isCollectionVisible" @change="geteditSet"></el-switch>
+                      <el-switch
+                        v-model="isCollectionVisible"
+                        @change="geteditSet"
+                      ></el-switch>
                     </el-form-item>
                   </el-form>
                 </el-card>
@@ -669,8 +697,8 @@ export default {
   },
   data() {
     return {
-      isNoteVisible:true,
-      isNoteCommentable:true,
+      isNoteVisible: true,
+      isNoteCommentable: true,
       isLiteratureCommentable: true,
       isCollectionVisible: true,
       isChangePassword: false,
@@ -702,21 +730,23 @@ export default {
       researchField: "打篮球",
       isOthers: false,
       showRelation: true,
-      oldPassword:"",
-      newPassword:"",
-      confirmNewPassword:"",
-      color:"",
-      language:"",
+      oldPassword: "",
+      newPassword: "",
+      confirmNewPassword: "",
+      color: "",
+      language: "",
 
       paperCollection: [],
       noteCollection: [],
       notes: [],
       myComment: [],
+
       //图片
       profile:"",
       headers:{
         "Authorization":"JWT " + sessionStorage.getItem("token"),
       },
+
 
       RelationsData: [
         // {
@@ -747,26 +777,38 @@ export default {
     // else this.DefaultLocation = "first";
     this.DefaultLocation = "zero";
     this.noteLabel = this.isOthers ? "他的笔记" : "我的笔记";
-    this.initSelfRelations();
   },
   mounted() {
-    this.noteLabel = this.isOthers ? "他的笔记" : "我的笔记";
-    this.initSelfRelations();
+    this.isOthers ? this.initOtherRelations() : this.initSelfRelations();
     this.initSelfLine();
+    this.noteLabel = this.isOthers ? "他的笔记" : "我的笔记";
   },
   watch: {
     isOthers: function (newVal, oldVal) {
       this.noteLabel = this.isOthers ? "他的笔记" : "我的笔记";
+      this.isOthers ? this.initOtherRelations() : this.initSelfRelations();
     },
   },
   methods: {
     initSelfRelations() {
       console.log("initSelfRelations");
       this.$axios({
-        method: "get",
+        method: "post",
         url: "/app/get_scholar_relation/",
       }).then((res) => {
-        console.log(res.data);
+        console.log("initSelfRelations", res.data);
+        this.RelationsData = res.data.data;
+      });
+    },
+    initOtherRelations() {
+      // window.alert("sadasd");
+      console.log("initOtherRelations");
+      this.$axios({
+        method: "post",
+        url: "/app/get_scholar_relation/",
+      }).then((res) => {
+        console.log("initSelfRelations", res.data);
+        this.RelationsData = res.data.data;
       });
     },
     initSelfLine() {
@@ -855,7 +897,7 @@ export default {
         this.getNote();
       } else if (tab.name == "fourth") {
         this.getPaperComment();
-      } else if(tab.name=='fifth'){
+      } else if (tab.name == "fifth") {
         this.getSet();
       }
     },
@@ -886,26 +928,24 @@ export default {
       });
     },
     //获取笔记收藏
-    getNoteCollection(){
-      this.$axios(
-          {
-            url: '/user/getNoteCollection/', method: "post",
-            data: { 'token':sessionStorage.getItem('token')}
-          }
-      ).then(res => {
-        this.noteCollection=res.data.data;
-      })
+    getNoteCollection() {
+      this.$axios({
+        url: "/user/getNoteCollection/",
+        method: "post",
+        data: { token: sessionStorage.getItem("token") },
+      }).then((res) => {
+        this.noteCollection = res.data.data;
+      });
     },
     //获取我的笔记
-    getNote(){
-      this.$axios(
-          {
-            url: '/user/getNote/', method: "post",
-            data: { 'token':sessionStorage.getItem('token')}
-          }
-      ).then(res => {
-        this.notes=res.data.data;
-      })
+    getNote() {
+      this.$axios({
+        url: "/user/getNote/",
+        method: "post",
+        data: { token: sessionStorage.getItem("token") },
+      }).then((res) => {
+        this.notes = res.data.data;
+      });
     },
     //获取我的评论
     getPaperComment() {
@@ -918,37 +958,37 @@ export default {
       });
     },
     //获取个人设置
-    getSet(){
-      this.$axios(
-          {
-            url: '/user/getSet/', method: "post",
-            data: { 'token':sessionStorage.getItem('token')}
-          }
-      ).then(res => {
-        this.isNoteCommentable=res.data.isNoteCommentable;
-        this.isNoteVisible=res.data.isNoteVisible;
-        this.isLiteratureCommentable=res.data.isLiteratureCommentable;
-        this.isCollectionVisible=res.data.isCollectionVisible;
-        this.color=res.data.color;
-        this.language=res.data.language;
-      })
+    getSet() {
+      this.$axios({
+        url: "/user/getSet/",
+        method: "post",
+        data: { token: sessionStorage.getItem("token") },
+      }).then((res) => {
+        this.isNoteCommentable = res.data.isNoteCommentable;
+        this.isNoteVisible = res.data.isNoteVisible;
+        this.isLiteratureCommentable = res.data.isLiteratureCommentable;
+        this.isCollectionVisible = res.data.isCollectionVisible;
+        this.color = res.data.color;
+        this.language = res.data.language;
+      });
     },
     //修改个人设置
-    geteditSet(){
-      this.$axios(
-          {
-            url: '/user/editSet/', method: "post",
-            data: { 'token':sessionStorage.getItem('token'),
-                    'isNoteCommentable':this.isNoteCommentable,
-                    'isNoteVisible':this.isNoteVisible,
-                    'isLiteratureCommentable':this.isLiteratureCommentable,
-                    'isCollectionVisible':this.isCollectionVisible,
-                    'color':this.color,
-                    'language':this.language}
-          }
-      ).then(res => {
-        this.$message.success("修改成功")
-      })
+    geteditSet() {
+      this.$axios({
+        url: "/user/editSet/",
+        method: "post",
+        data: {
+          token: sessionStorage.getItem("token"),
+          isNoteCommentable: this.isNoteCommentable,
+          isNoteVisible: this.isNoteVisible,
+          isLiteratureCommentable: this.isLiteratureCommentable,
+          isCollectionVisible: this.isCollectionVisible,
+          color: this.color,
+          language: this.language,
+        },
+      }).then((res) => {
+        this.$message.success("修改成功");
+      });
     },
     //搜索个人论文收藏
     searchPaperCollection() {
@@ -966,159 +1006,165 @@ export default {
       });
     },
     //搜索个人笔记收藏
-    searchNoteCollection(){
-      this.$axios(
-          {
-            url: '/user/searchNoteCollection/', method: "post",
-            data: { 'token':sessionStorage.getItem('token'),
-              'content':this.selectCollectionNote}
-          }
-      ).then(res => {
-        this.noteCollection=res.data.data;
+    searchNoteCollection() {
+      this.$axios({
+        url: "/user/searchNoteCollection/",
+        method: "post",
+        data: {
+          token: sessionStorage.getItem("token"),
+          content: this.selectCollectionNote,
+        },
+      }).then((res) => {
+        this.noteCollection = res.data.data;
 
-        this.selectCollectionNote="";
-      })
+        this.selectCollectionNote = "";
+      });
     },
     //搜索我的笔记
-    searchNote(){
-      this.$axios(
-          {
-            url: '/user/searchNote/', method: "post",
-            data: { 'token':sessionStorage.getItem('token'),
-              'content':this.selectNote}
-          }
-      ).then(res => {
-        this.notes=res.data.data;
+    searchNote() {
+      this.$axios({
+        url: "/user/searchNote/",
+        method: "post",
+        data: {
+          token: sessionStorage.getItem("token"),
+          content: this.selectNote,
+        },
+      }).then((res) => {
+        this.notes = res.data.data;
 
-        this.selectNote="";
-      })
+        this.selectNote = "";
+      });
     },
     //搜索我的评论
-    searchPaperComment(){
-      this.$axios(
-          {
-            url: 'user/searchPaperComment/', method: "post",
-            data: { 'token':sessionStorage.getItem('token'),
-              'content':this.selectComment}
-          }
-      ).then(res => {
-        this.myComment=res.data.data;
-        this.selectComment="";
-      })
+    searchPaperComment() {
+      this.$axios({
+        url: "user/searchPaperComment/",
+        method: "post",
+        data: {
+          token: sessionStorage.getItem("token"),
+          content: this.selectComment,
+        },
+      }).then((res) => {
+        this.myComment = res.data.data;
+        this.selectComment = "";
+      });
     },
     //删除我的评论
-    async delComment(id){
+    async delComment(id) {
       // 弹框询问用户是否删除数据
-      const confirmResult = await this.$confirm('此操作将永久删除该评论, 是否继续?', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).catch(() => {
+      const confirmResult = await this.$confirm(
+        "此操作将永久删除该评论, 是否继续?",
+        "提示",
+        {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning",
+        }
+      ).catch(() => {
         this.$message({
-          type: 'info',
-          message: '已取消删除'
-        })
-      })
-      if (confirmResult !== 'confirm') {
-        return ;
+          type: "info",
+          message: "已取消删除",
+        });
+      });
+      if (confirmResult !== "confirm") {
+        return;
       }
-      this.$axios(
-          {
-            url: '/user/delComment/', method: "post",
-            data: { 'token':sessionStorage.getItem('token'),
-              'comment_id':id}
-          }
-      ).then(res => {
-        this.$message.success('删除用户成功！');
+      this.$axios({
+        url: "/user/delComment/",
+        method: "post",
+        data: { token: sessionStorage.getItem("token"), comment_id: id },
+      }).then((res) => {
+        this.$message.success("删除用户成功！");
         this.getPaperComment();
-      })
+      });
     },
     //删除我的笔记
-    async delNotes(id){
+    async delNotes(id) {
       // 弹框询问用户是否删除数据
-      const confirmResult = await this.$confirm('此操作将永久删除该评论, 是否继续?', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).catch(() => {
+      const confirmResult = await this.$confirm(
+        "此操作将永久删除该评论, 是否继续?",
+        "提示",
+        {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning",
+        }
+      ).catch(() => {
         this.$message({
-          type: 'info',
-          message: '已取消删除'
-        })
-      })
-      if (confirmResult !== 'confirm') {
-        return ;
+          type: "info",
+          message: "已取消删除",
+        });
+      });
+      if (confirmResult !== "confirm") {
+        return;
       }
-      this.$axios(
-          {
-            url: '/user/delNote/', method: "post",
-            data: { 'token':sessionStorage.getItem('token'),
-              'note_id':id}
-          }
-      ).then(res => {
-        this.$message.success('删除用户成功！');
+      this.$axios({
+        url: "/user/delNote/",
+        method: "post",
+        data: { token: sessionStorage.getItem("token"), note_id: id },
+      }).then((res) => {
+        this.$message.success("删除用户成功！");
         this.getNote();
-      })
+      });
     },
     //删除论文收藏
-    async delPaperCollection(id){
+    async delPaperCollection(id) {
       // 弹框询问用户是否删除数据
-      const confirmResult = await this.$confirm('此操作将永久删除该评论, 是否继续?', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).catch(() => {
+      const confirmResult = await this.$confirm(
+        "此操作将永久删除该评论, 是否继续?",
+        "提示",
+        {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning",
+        }
+      ).catch(() => {
         this.$message({
-          type: 'info',
-          message: '已取消删除'
-        })
-      })
-      if (confirmResult !== 'confirm') {
-        return ;
+          type: "info",
+          message: "已取消删除",
+        });
+      });
+      if (confirmResult !== "confirm") {
+        return;
       }
-      this.$axios(
-          {
-            url: '/user/delPaperCollection/', method: "post",
-            data: { 'token':sessionStorage.getItem('token'),
-              'paper_id':id}
-          }
-      ).then(res => {
-        this.$message.success('删除用户成功！');
+      this.$axios({
+        url: "/user/delPaperCollection/",
+        method: "post",
+        data: { token: sessionStorage.getItem("token"), paper_id: id },
+      }).then((res) => {
+        this.$message.success("删除用户成功！");
         this.getPaperCollection();
-      })
+      });
     },
     //删除笔记收藏
-    async delNoteCollection(id){
+    async delNoteCollection(id) {
       // 弹框询问用户是否删除数据
-      const confirmResult = await this.$confirm('此操作将永久删除该评论, 是否继续?', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).catch(() => {
+      const confirmResult = await this.$confirm(
+        "此操作将永久删除该评论, 是否继续?",
+        "提示",
+        {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning",
+        }
+      ).catch(() => {
         this.$message({
-          type: 'info',
-          message: '已取消删除'
-        })
-      })
-      if (confirmResult !== 'confirm') {
-        return ;
+          type: "info",
+          message: "已取消删除",
+        });
+      });
+      if (confirmResult !== "confirm") {
+        return;
       }
-      this.$axios(
-          {
-            url: '/user/delNoteCollection/', method: "post",
-            data: { 'token':sessionStorage.getItem('token'),
-              'note_id':id}
-          }
-      ).then(res => {
-        this.$message.success('删除用户成功！');
+      this.$axios({
+        url: "/user/delNoteCollection/",
+        method: "post",
+        data: { token: sessionStorage.getItem("token"), note_id: id },
+      }).then((res) => {
+        this.$message.success("删除用户成功！");
         this.getNoteCollection();
-      })
+      });
     },
-
-
-
-
-
 
     //保存个人信息按钮
     savePersonalInformation() {
@@ -1178,8 +1224,8 @@ export default {
 
 
 
-  },
 
+  },
 };
 </script>
 
@@ -1209,7 +1255,6 @@ export default {
     background-color: rgba(255, 255, 255, 0.587) !important;
     border-radius: 20px !important;
     box-shadow: none !important;
-
   }
 }
 
@@ -1286,10 +1331,9 @@ export default {
 }
 .el-tab-pane {
   padding-bottom: 10px;
-
 }
 //似乎必须要用deep、选择全部子标签、颜色用全透明才行
-/deep/.el-descriptions *:not(button){
+/deep/.el-descriptions *:not(button) {
   background-color: #003b5500 !important;
 }
 </style>
