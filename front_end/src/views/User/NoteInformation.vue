@@ -27,7 +27,8 @@
                 <el-button type="primary" @click="likeit()" v-else>点赞</el-button>
                 <el-button type="primary" @click="collect()" v-if="note.collect_flag" title="取消收藏">已收藏</el-button>
                 <el-button type="primary" @click="collect()" v-else title="收藏">收藏</el-button>
-                <el-button>订阅</el-button>
+                <el-button v-if="author.subscribe_flag" title="取消关注" @click="subscribe()">已关注</el-button>
+                <el-button v-else title="关注" @click="subscribe()">关注</el-button>
               </div>
             </el-card>
         </div>
@@ -292,6 +293,32 @@ export default {
             }
           }).then(res=>{
             this.$message.success("已收藏")
+          })
+        }
+     },
+     subcribe(){
+         if(this.author.subscribe_flag){
+          this.$axios({
+            url:"http://127.0.0.1:8000/subScribe/",
+            method:"post",
+            data:{
+                author_id:author.id,
+                op:0
+            }
+          }).then(res=>{
+              this.$message.success("已取消关注")
+          })
+        }
+        else{
+          this.$axios({
+            url:"http://127.0.0.1:8000/subScribe/",
+            method:"post",
+            data:{
+                author_id:author.id,
+                op:1
+            }
+          }).then(res=>{
+            this.$message.success("已关注")
           })
         }
      },
