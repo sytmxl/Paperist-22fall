@@ -66,7 +66,7 @@
 					<div class="remark">
 						<el-card>
 							<div class="creat_comment">
-								<el-button @click="CreatCommentVisible =true">我要评论</el-button>
+								<el-button id="comment" @click="CreatCommentVisible =true">我要评论</el-button>
 							</div>
 							<div v-if="remark_list.length!=0">
 								<div class="comment" v-for="i in remark_list" :key="i">
@@ -414,4 +414,5 @@ export default {
 		border: none !important;
 	}
 }
+
 </style>

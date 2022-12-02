@@ -1,21 +1,21 @@
 
 <template>
   <div class="app-container">
-    <el-input
+    <el-input 
     id="input"
         type="textarea"
-        :autosize="{ minRows: 2, maxRows: 4}"
+        :autosize="{ minRows: 4, maxRows: 4}"
         placeholder="写评论"
         v-model="textarea"
         maxlength="200"
         show-word-limit>
     </el-input>
-    <div class="btn" style="height:40px">
-        <el-button type="text" size="medium" @click="showDialog = !showDialog" style="margin-top:10px;float:left">🙂</el-button>
-    <el-button style="margin-top:10px;float:right" @click="submit()">发布</el-button>
+    <div class="btn" style="height:40px;margin-top:30px;">
+      <el-button type="text" size="medium" @click="showDialog = !showDialog" style="float:left;width: 2em;">🙂</el-button>
+      <el-button style="float:right" @click="submit()">发布</el-button>
     </div>
       
-    <el-col>
+    <el-col wid>
       <VEmojiPicker v-show="showDialog" @select="selectEmoji"/>
     </el-col>
   </div>

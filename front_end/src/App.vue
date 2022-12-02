@@ -51,11 +51,11 @@ export default {
     background-image: url("./assets/logo_for_dark/bar_name_logo.svg");
     background-repeat: no-repeat;
   }
-  button {
+  .el-button {
     background-color: $light-color;
     color: $dark-theme;
   }
-  button:hover {
+  .el-button:hover {
     background-color: $theme;
     color: $light-color;
   }
@@ -81,11 +81,11 @@ export default {
     background-image: url("./assets/logo/bar_name_logo.svg");
     background-repeat: no-repeat;
   }
-  button {
+  .el-button {
     background-color: $theme;
     color: $light-color;
   }
-  button:hover {
+  .el-button:hover {
     background-color: $light-color;
     color: $dark-theme;
   }
@@ -99,7 +99,7 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  button {
+  .el-button {
     border: 0px;
     border-radius: 10px;
     transition: 0.3s;
@@ -215,6 +215,11 @@ el-icon:hover, el-icon-close:hover {
   font-family: 微软雅黑;
   animation: shift_down 0.3s cubic-bezier(.23,1.38,.65,.99);
 
+}
+.el-dialog__close {
+  &:hover {
+    color: $theme !important;
+  }
 }
 // .el-dialog__wrapper, .el-message-box__wrapper {
 //   backdrop-filter: blur(15px) brightness(90%) !important;   
