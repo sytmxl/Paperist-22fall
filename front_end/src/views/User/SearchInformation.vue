@@ -336,27 +336,40 @@ export default {
     post_common_search(page){
       let es_request_body = {
         "query":{
-          "multi_match":{"query":this.common_search_query,"fields":[]}
+          "bool":{
+            "must":[],
+            "should":[],
+            "filter":{}
+          }
         },
         "from" : (page-1)*this.page_size,
         "size" : this.page_size
       }
       switch (this.common_search_type){
         case 1:
-          es_request_body.query.multi_match.fields.push("title")
+          es_request_body.query.bool.should.push({"match":{"title":this.common_search_query}})
+          es_request_body.query.bool.should.push({"match_phrase":{"title":this.common_search_query}})
+          es_request_body.query.bool.filter={"term":{"title": this.common_search_query}}
+          //es_request_body.aggs={"title":{"terms":{"field":"title","execution_hint": "map"}}}
           break;
         case 2:
-          es_request_body.query.multi_match.fields.push("keywords")
+          es_request_body.query.bool.must.push({"match":{"keywords":this.common_search_query}})
+          es_request_body.query.bool.filter={"term":{"keywords": this.common_search_query}}
+          //es_request_body.aggs={"keywords":{"terms":{"field":"keywords","execution_hint": "map"}}}
           break;
         case 3:
-            es_request_body.query.multi_match.fields.push("authors.name")
+          es_request_body.query.bool.must.push({"match_phrase":{"authors.name":this.common_search_query}})
+          es_request_body.query.bool.filter={"match_phrase":{"authors.name": this.common_search_query}}
+          //es_request_body.aggs={"authors.name":{"terms":{"field":"authors.name.raw","execution_hint": "map"}}}
           break;
         case 4:
-          es_request_body.query.multi_match.fields.push("abstract")
+          es_request_body.query.bool.must.push({"match":{"abstract":this.common_search_query}})
+          es_request_body.query.bool.filter={"term":{"abstract": this.common_search_query}}
           break;
         case 5:
-          es_request_body.query.multi_match.fields.push("venue.raw")
-          es_request_body.query.multi_match.fields.push("authors.org")
+          //es_request_body.query.bool.must.push({"match":{"venue.raw":this.common_search_query}})
+          es_request_body.query.bool.filter={"match_phrase":{"venue.raw": this.common_search_query}}
+          //es_request_body.aggs={"venue":{"terms":{"field":"venue.raw","execution_hint": "map"}}}
           break;
       }
       axios({
