@@ -3,6 +3,7 @@
 <div class="intro">
     <span style="float:left">笔记简介</span>
     <el-input
+    style="margin-top:20px"
       type="textarea"
       :autosize="{ minRows: 2, maxRows: 4}"
       placeholder="请输入内容"
@@ -11,9 +12,10 @@
         show-word-limit>
     </el-input>
 </div>
-<div class="file">
-    <span style="float:left">上传笔记</span>
+<div style="margin-top:20px" class="file">
+    <span>上传笔记</span>
 <el-upload
+style="margin-top:20px; width: 100%;"
   class="upload-demo"
   drag
   ref="upload"
@@ -24,7 +26,7 @@
   <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em> ，支持pdf,word,markdown格式</div>
 </el-upload>
 </div>
-<el-button style="margin-top:10px;float:right" @click="submit()">发布</el-button>
+<el-button style="margin-top:40px;float:right;width: 100%;" @click="submit()">发布</el-button>
 </el-main>
 
 </template>
@@ -66,10 +68,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.intro .el-input{
-    margin-top: 20px;
-}
-.file .el-upload{
-    margin-top: 20px;
+
+.file {
+    text-align: left;
 }
 </style>
