@@ -5,9 +5,9 @@
         <el-main>
           <div class="main">
             <el-card class="box-card">
-              <div>
-                <span style="font-size:25px;font-weight:bolder">{{info_list.paper_name}}</span>
-                <h5>来源：{{info_list.origin}} &#12288; 引用次数：{{info_list.cite_number}}</h5>
+              <div style="margin-bottom:20px">
+                <span style="font-size:35px;font-weight:bolder">{{info_list.paper_name}}</span>
+                <h4>来源：{{info_list.origin}} &#12288; 引用次数：{{info_list.cite_number}}</h4>
               </div>
               <div  class="text item">
                 作者：<span v-for="i in info_list.author_name" :key="i"> {{i}}</span>
@@ -45,180 +45,187 @@
                 </div>
             </el-card>
           </div>
-        <div class="remark">
-          <el-card>
-            <el-tabs >
-              <el-tab-pane label="相关文献">
-                  <div class="about" v-if="about_list!=[]">
-                    <div class="relative" v-for="i in about_list" :key="i">
-                        <aboutCard :name="i.paper_name" :author="i.author_name" :cite="i.cite_number" :origin="i.magazine" :intro="i.abstarct" :date="i.date"/>
-                    </div>
-                </div>
-                  <div id="load">
-                  <el-button style="width:100%" @click="load()" v-loading = "start">加载更多</el-button>
-                </div>
-              </el-tab-pane>
-              <el-tab-pane label="评论">
-                  <div class="creat_comment">
-                        <el-button @click="CreatCommentVisible =true">我要评论</el-button>
-                    </div>
-                    <div v-if="Object.keys(remark_list).length!=0">
-                      <div class="comment" v-for="i in remark_list" :key="i">
-                        <remark :list="i.remark" :paper_id="paper_id"/>
-                    </div>
-                    </div>
-                    <div v-else><el-empty description="还没有评论，发表第一个评论吧"></el-empty></div>
-                   
-              </el-tab-pane>
-              <el-tab-pane label="笔记">
-                    <div class="creat_mark">
-                        <el-button @click="CreatMark =true">上传笔记</el-button>
-                    </div>
-                    <div v-if="Object.keys(mark_list).length!=0">
-                      <div class="mark" v-for="i in mark_list" :key="i">
-                        <note :list="i"/>
-                    </div>
-                    </div>
-                    <div v-else><el-empty description="还没有笔记，发表第一篇笔记吧"></el-empty></div>
-                     
-              </el-tab-pane>
+          <div class="remark">
+            <el-card>
+              <el-tabs >
+                <el-tab-pane label="相关文献">
+                    <div class="about" v-if="about_list!=[]">
+                      <div class="relative" v-for="i in about_list" :key="i">
+                          <aboutCard :name="i.paper_name" :author="i.author_name" :cite="i.cite_number" :origin="i.magazine" :intro="i.abstarct" :date="i.date"/>
+                      </div>
+                  </div>
+                    <div id="load">
+                    <el-button style="width:100%" @click="load()" v-loading = "start">加载更多</el-button>
+                  </div>
+                </el-tab-pane>
+                <el-tab-pane label="评论">
+                    <div class="creat_comment">
+                          <el-button @click="CreatCommentVisible =true">我要评论</el-button>
+                      </div>
+                      <div v-if="Object.keys(remark_list).length!=0">
+                        <div class="comment" v-for="i in remark_list" :key="i">
+                          <remark :list="i.remark" :paper_id="paper_id"/>
+                      </div>
+                      </div>
+                      <div v-else><el-empty description="还没有评论，发表第一个评论吧"></el-empty></div>
+                    
+                </el-tab-pane>
+                <el-tab-pane label="笔记">
+                      <div class="creat_mark">
+                          <el-button @click="CreatMark =true">上传笔记</el-button>
+                      </div>
+                      <div v-if="Object.keys(mark_list).length!=0">
+                        <div class="mark" v-for="i in mark_list" :key="i">
+                          <note :list="i"/>
+                        </div>
+                      </div>
+                      <div v-else><el-empty description="还没有笔记，发表第一篇笔记吧"></el-empty></div>
+                      
+                </el-tab-pane>
+                  
+              </el-tabs>
+            </el-card>
+            
+          </div>
+          <el-dialog
+            title="引用"
+            :visible.sync="QuoteVisible"
+            width="30%"
+            >
+            <div v-for="i in quote_list" :key="i" style="margin-top:15px">
+              <span>{{i.type}}</span>: <span>{{i.content}}</span> 
+            </div>
+          </el-dialog>
+          <el-dialog
+              title="文章申诉"
+              :visible.sync="ComplainVisible"
+              width="30%"
+                class="complain">
+              <div class="describe">
+                  问题描述：
+                <el-input
+                style="margin-top:20px"
+                  type="textarea"
+                  :autosize="{ minRows: 2, maxRows: 4}"
+                  placeholder="请输入需要申诉的内容"
+                  v-model="describe"
+                  maxlength="200"
+                  show-word-limit
+                  >
+                </el-input>
+              </div>
+              <div class="picture">
+                相关图片：
+                <el-upload
+                style="margin-top:20px"
+                    action="#"
+                    list-type="picture-card"
+                    :auto-upload="false"
+                    :accept="jpg"
+                    :limit="4"
+                    :on-exceed="handleExceed">
+                      <i slot="default" class="el-icon-plus"></i>
+                      <div slot="file" slot-scope="{file}">
+                        <img
+                          class="el-upload-list__item-thumbnail"
+                          :src="file.url" alt=""
+                        >
+                        <span class="el-upload-list__item-actions">
+                          <span
+                            class="el-upload-list__item-preview"
+                            @click="handlePictureCardPreview(file)"
+                          >
+                            <i class="el-icon-zoom-in"></i>
+                          </span>
+                          <span
+                            v-if="!disabled"
+                            class="el-upload-list__item-delete"
+                            @click="handleDownload(file)"
+                          >
+                            <i class="el-icon-download"></i>
+                          </span>
+                          <span
+                            v-if="!disabled"
+                            class="el-upload-list__item-delete"
+                            @click="handleRemove(file)"
+                          >
+                            <i class="el-icon-delete"></i>
+                          </span>
+                        </span>
+                      </div>
+                  </el-upload>
                 
-            </el-tabs>
-          </el-card>
-          
-        </div>
-             <el-dialog
-                title="引用"
-                :visible.sync="QuoteVisible"
-                width="30%"
+              </div>
+              <div class="contact">
+                联系方式：
+                <el-input
+                style="margin-top:20px"
+                  type="text"
+                  placeholder="请输入你的联系方式，手机号、微信号、邮箱均可"
+                  v-model="contact"
+                  maxlength="25"
+                  show-word-limit
                 >
-                <div v-for="i in quote_list" :key="i" style="margin-top:15px">
-                  <span>{{i.type}}</span>: <span>{{i.content}}</span> 
-                </div>
-              </el-dialog>
-              <el-dialog
-                  title="文章申诉"
-                  :visible.sync="ComplainVisible"
-                  width="60%"
-                   class="complain">
-                  <div class="describe">
-                      问题描述：
-                    <el-input
-                      type="textarea"
-                      :autosize="{ minRows: 2, maxRows: 4}"
-                      placeholder="请输入需要申诉的内容"
-                      v-model="describe"
-                      maxlength="200"
-                      show-word-limit
-                      >
-                    </el-input>
-                  </div>
-                  <div class="picture">
-                    相关图片：
-                    <el-upload
-                        action="#"
-                        list-type="picture-card"
-                        :auto-upload="false"
-                        :accept="jpg"
-                        :limit="4"
-                        :on-exceed="handleExceed">
-                          <i slot="default" class="el-icon-plus"></i>
-                          <div slot="file" slot-scope="{file}">
-                            <img
-                              class="el-upload-list__item-thumbnail"
-                              :src="file.url" alt=""
-                            >
-                            <span class="el-upload-list__item-actions">
-                              <span
-                                class="el-upload-list__item-preview"
-                                @click="handlePictureCardPreview(file)"
-                              >
-                                <i class="el-icon-zoom-in"></i>
-                              </span>
-                              <span
-                                v-if="!disabled"
-                                class="el-upload-list__item-delete"
-                                @click="handleDownload(file)"
-                              >
-                                <i class="el-icon-download"></i>
-                              </span>
-                              <span
-                                v-if="!disabled"
-                                class="el-upload-list__item-delete"
-                                @click="handleRemove(file)"
-                              >
-                                <i class="el-icon-delete"></i>
-                              </span>
-                            </span>
-                          </div>
-                      </el-upload>
-                   
-                  </div>
-                  <div class="contact">
-                    联系方式：
-                    <el-input
-                      type="text"
-                      placeholder="请输入你的联系方式，手机号、微信号、邮箱均可"
-                      v-model="contact"
-                      maxlength="25"
-                      show-word-limit
+                </el-input>
+              </div>
+              <span slot="footer" class="dialog-footer">
+                <!-- <el-button @click="dialogVisible = false">取 消</el-button> -->
+                <el-button type="primary" @click="dialogVisible = false">提交申诉</el-button>
+              </span>
+                  <el-dialog :visible.sync="dialogVisible">
+                    <img width="100%" :src="dialogImageUrl" alt="">
+                  </el-dialog>
+          </el-dialog>
+          <el-dialog
+            title="分享"
+            :visible.sync="ShareVisible"
+            width="30%"
+            >
+            <div style="margin-bottom:40px">
+              <span>localhost:8080{{this.$route.path}}</span>
+            </div>
+            <el-button round icon="el-icon-document-copy">复制链接</el-button>
+            
+          </el-dialog>
+          <el-dialog
+                    title="上传笔记"
+                    :visible.sync="CreatMark"
+                    width="30%"
                     >
-                    </el-input>
-                  </div>
-                  <span slot="footer" class="dialog-footer">
-                    <!-- <el-button @click="dialogVisible = false">取 消</el-button> -->
-                    <el-button type="primary" @click="dialogVisible = false">提交申诉</el-button>
-                  </span>
-                     <el-dialog :visible.sync="dialogVisible">
-                        <img width="100%" :src="dialogImageUrl" alt="">
-                      </el-dialog>
-              </el-dialog>
-              <el-dialog
-                title="分享"
-                :visible.sync="ShareVisible"
+                    <uploadMark :paper_id="paper_id"/>
+          </el-dialog>
+          <el-dialog
+                title="留下你的评论吧~"
+                :visible.sync="CreatCommentVisible"
                 width="30%"
                 >
-                <div>
-                  <span>localhost:8080{{this.$route.path}}</span>
-                  <el-button round icon="el-icon-document-copy">复制链接</el-button>
-                </div>
-                
-              </el-dialog>
-              <el-dialog
-                        title="上传笔记"
-                        :visible.sync="CreatMark"
-                        width="30%"
-                        >
-                        <uploadMark :paper_id="paper_id"/>
-                      </el-dialog>
-                  <el-dialog
-                        title="留下你的评论吧~"
-                        :visible.sync="CreatCommentVisible"
-                        width="30%"
-                        >
-                        <CreateComment :paper_id="paper_id" :receiver_id="-1" :remark_id="-1" @introduce="return_msg()"/>
-                    </el-dialog>
+                <CreateComment :paper_id="paper_id" :receiver_id="-1" :remark_id="-1" @introduce="return_msg()"/>
+          </el-dialog>
         </el-main>
         <el-aside>
-          <el-container>
-            <div class="about">
-              <div class="about_content" style="width:100%;height:80px">
+          <div class="about">
+            <el-card class="gap">
+              <div class="about_content" style="width:100%;">
                 来源期刊
                 <div class="ogjournal">
-                    <a href="https://book.qq.com/book-detail/34129913" style="text-decoration:none" class="journal_content">{{info_list.origin}}</a>
+                  <a href="https://book.qq.com/book-detail/34129913" style="text-decoration:none" class="journal_content">{{info_list.origin}}</a>
                 </div> 
               </div>
-              <div class="about_content" style="width:100%;height:200px">
+            </el-card>
+            <el-card class="gap">
+              <div class="about_content" style="width:100%;">
                 研究领域
                 <div class="domain">
                   <el-tag class="domain_content" v-for="i in info_list.domain" :key="i">{{i}}</el-tag>
                 </div>
               </div>
+            </el-card>
+            <el-card class="gap">
               <div class="about_content">
                 <div id="echarts_box" style="width:100%;height:300px"></div>
               </div>
-            </div>
-          </el-container>
+            </el-card>
+          </div>
         </el-aside>
       </el-container>
     </el-container>
@@ -399,28 +406,29 @@ export default {
 
 <style lang="scss" scoped>
 .root{
-     height: 100%;
+  margin: 0 auto;
+  height: 100%;
+  width: 80%;
 }
 .content{
+  margin-top: 60px;
   // width: 900px;
-    height: auto;
+  height: auto;
   min-height: calc(100vh);
 }
 .el-main{
-   width: 70%;
+  // margin-left: 10vw;
 }
 .about{
-    margin-left:10px;
+  margin-left:10px;
 }
-.el-side{
-  width:600px;
-}
+
 .ogjournal{
   margin-top:25px;
   font-size: 15px;
 }
 .about_content{
-   margin-top: 20px;
+  //  margin-top: 20px;
    width: 280px;
    font-weight: bold;
    text-align: left;
@@ -443,7 +451,7 @@ export default {
   margin-top: 20px;
 }
 .domain{
-  margin-top:20px;
+  // margin-top:20px;
 }
 .domain_content{
   margin-top: 10px;
@@ -468,11 +476,11 @@ export default {
   background-color:#f5f8f9;
 }
 .remark{
-    margin-top:30px;
+  margin-top:30px;
 }
 .el-tabs>>>.el-tabs__content{
-height: 800px;
-overflow-y: scroll;
+  height: 800px;
+  overflow-y: scroll;
 
 }
   .text {
@@ -502,15 +510,18 @@ overflow-y: scroll;
     width:33.4%;
  }
 .describe{
- width: 60%;
+//  width: 60%;
  padding: 20px;
+ text-align: left;
 }
 .picture{
   padding: 20px;
+  text-align: left;
 }
 .contact{
-  width: 60%;
+  // width: 60%;
   padding: 20px;
+  text-align: left;
 }
 .creat_comment{
   width:100%;
@@ -562,5 +573,11 @@ overflow-y: scroll;
   height: 4px;
   border-radius: 2px;
   background: #003B55;
+}
+.gap {
+  margin-top: 20px;
+}
+.el-tag {
+  border-radius: 50px;
 }
 </style>
