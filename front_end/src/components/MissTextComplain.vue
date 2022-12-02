@@ -4,7 +4,7 @@
     :modal="false"
     title="反馈文献缺失"
     :visible.sync="MissTextDialogVisible"
-    width="50%"
+    width="30%"
     :close-on-click-modal="false"
     :close-on-press-escape="false"
     :append-to-body="true"
@@ -81,20 +81,20 @@
         size="mini"
         ><el-col :span="21">
           <el-input v-model="url.value" style="width: 100%"></el-input
-          ><el-button @click="addMissDomain">新增域名</el-button
-          ><el-button @click.prevent="removeMissDomain(url)">删除</el-button>
+          ><el-button type="primary" @click="addMissDomain">新增域名</el-button
+          ><el-button type="primary" @click.prevent="removeMissDomain(url)">删除</el-button>
         </el-col>
       </el-form-item>
     </el-form>
     <span v-if="Miss_Active <= 0" slot="footer" class="dialog-footer">
-      <el-button class="forget" @click="CancelUpMiss()">取 消</el-button>
-      <el-button @click="submitForm1_Miss('MissText')">下一步</el-button>
+      <el-button type="primary"  @click="CancelUpMiss()">取 消</el-button>
+      <el-button type="default" @click="submitForm1_Miss('MissText')">下一步</el-button>
     </span>
     <span v-else slot="footer" class="dialog-footer">
-      <el-button class="forget" @click="CancelUpMiss()">取 消</el-button>
-      <el-button class="forget" @click="Miss_Active = 0">上一步</el-button>
+      <el-button type="primary"  @click="CancelUpMiss()">取 消</el-button>
+      <el-button type="default"  @click="Miss_Active = 0">上一步</el-button>
       <el-button
-        class="forget"
+        
         type="primary"
         @click="ConfirmUploadMissText('MissDomains')"
         >上 传
@@ -237,4 +237,29 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+$dark-color: #111;
+$light-color: #eee;
+$dark-theme: #001C2A;
+$theme: #003B55;
+.el-dialog {
+  border-radius: 20px !important;
+  box-shadow: 0 0 7px rgba(204, 204, 204, 0.713);
+  background-color: rgba(255, 255, 255, 0.5);
+  backdrop-filter: blur(40px) brightness(100%);
+}
+button {
+  border: 0px;
+  border-radius: 10px;
+  transition: 0.3s;
+  background-color: $theme;
+  color: $light-color;
+}
+button:hover {
+  background-color: $light-color;
+  color: $dark-theme;
+}
+.el-button--primary {
+  background-color: #647c90 ;
+}
+</style>

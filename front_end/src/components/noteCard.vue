@@ -1,11 +1,14 @@
 <template>
 <div class="other_note">
        <el-card>
-        <span>论文名称：{{note.paper_name}}</span>
-        <span>笔记简介：{{note.introduction}}</span>
-        <i class="el-icon-thumb">{{note.likes}}</i>
+        <span @click="goto_paper(note.paper_id)" title="了解此论文">对应论文：{{note.paper_name}}</span>
+        <span title="点击阅读笔记" @click="goto_note(note.note_id)">笔记信息：{{note.introduction}}</span>
+        <span>获赞：{{note.likes}}</span>
+        <span>评论：{{note.remarks}}</span>
+        <span>收藏：{{note.collections}}</span>
+        <!-- <i class="el-icon-thumb">{{note.likes}}</i>
         <i class="el-icon-star-off">{{note.collections}}</i>
-        <i class="el-icon-chat-round">{{note.remarks}}</i>
+        <i class="el-icon-chat-round">{{note.remarks}}</i> -->
     </el-card>
 </div>
 
@@ -18,11 +21,13 @@ export default {
  
   props: {
     note:{
-        paper_name:{},
-        introduction:{},
-        likes:{},
-        collections:{},
-        remarks:{}
+        note_id:"",
+        paper_id:"",
+        paper_name:"",
+        introduction:"",
+        likes:"",
+        collections:"",
+        remarks:""
     }
     
   },
@@ -32,7 +37,22 @@ export default {
     }
   },
   methods:{
-    
+    goto_paper(paper_id){
+      this.$router.push({
+          name:'PaperInformation',
+          params:{
+           paper_id:paper_id
+          }
+        })
+    },
+    goto_note(note_id){
+      this.$router.push({
+          name:'NoteInformation',
+          params:{
+           note_id:note_id
+          }
+        })
+    },
   }
 }
 </script>
@@ -50,6 +70,7 @@ export default {
     display: block;
     text-align: left;
     margin-bottom: 15px;
+    cursor:pointer; 
 }
 .other_note i{
     display: block;

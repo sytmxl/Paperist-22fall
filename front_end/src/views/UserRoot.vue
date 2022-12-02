@@ -7,11 +7,15 @@
 
 <script>
 import TopBar from "@/components/TopBar";
-
 export default {
   name: "UserRoot",
   components: {
     TopBar,
+  },
+  provide() {
+        return {
+          reload: this.reload
+        }
   },
   mounted() {
     // window.addEventListener("scroll", this.scroll0,true);

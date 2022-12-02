@@ -13,7 +13,7 @@ export default {
   },
 
   methods: {
-    
+
     toggleDarkLight() {
       var body = document.getElementById("app");
       var currentClass = body.className;
@@ -29,10 +29,10 @@ export default {
 </script>
 
 <style lang="scss">
-$dark-color: #111;
-$light-color: #eee;
-$dark-theme: #001C2A;
-$theme: #003B55;
+  $dark-color: #111;
+  $light-color: #eee;
+  $dark-theme: #001C2A;
+  $theme: #003B55;
 
 #app.dark-mode {
   background-image: url('./assets/bg_dark.svg');
@@ -51,11 +51,11 @@ $theme: #003B55;
     background-image: url("./assets/logo_for_dark/bar_name_logo.svg");
     background-repeat: no-repeat;
   }
-  button {
+  .el-button {
     background-color: $light-color;
     color: $dark-theme;
   }
-  button:hover {
+  .el-button:hover {
     background-color: $theme;
     color: $light-color;
   }
@@ -81,11 +81,11 @@ $theme: #003B55;
     background-image: url("./assets/logo/bar_name_logo.svg");
     background-repeat: no-repeat;
   }
-  button {
+  .el-button {
     background-color: $theme;
     color: $light-color;
   }
-  button:hover {
+  .el-button:hover {
     background-color: $light-color;
     color: $dark-theme;
   }
@@ -99,7 +99,7 @@ $theme: #003B55;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  button {
+  .el-button {
     border: 0px;
     border-radius: 10px;
     transition: 0.3s;
@@ -113,7 +113,7 @@ $theme: #003B55;
   padding: 0;
   // animation-name: enter_blur;
   // animation-iteration-count: 1;
-  // animation-duration: 0.4s;
+  // animation-duration: 0.3s;
   // animation: enter_blur 0.4s cubic-bezier(.23,1.38,.65,.99);
 }
 .main {
@@ -170,7 +170,16 @@ $theme: #003B55;
     opacity: 0%;
   }
 }
-
+@keyframes shift_down {
+  0% {
+    opacity: 0%;
+    top:-60px;
+  }
+  100% {
+    opacity: 100%;
+    top:0;
+  }
+}
 //custom
 // .el-card {
 //   border-radius: 10px !important;
@@ -197,18 +206,24 @@ el-icon:hover, el-icon-close:hover {
 }
 .el-dialog, .el-message-box {
   width: 80%;
-  padding: 10px 10px 25px 10px !important;
-  border-radius: 10px !important;
-  border-color: #9aadbd !important;
-  /* backdrop-filter: blur(25px) brightness(110%); */
-  background-color: #f4f5f6 !important; 
-  /* transition: 1s !important; */
-  /* -n-bezier-ease-out: cubic-bezier(0, 0, 0.2, 1); */
+  // padding: 10px 10px 25px 10px !important;
+
+  border-radius: 20px !important;
+  box-shadow: 0 0 20px rgba(204, 204, 204, 0.768);
+  background-color: rgba(255, 255, 255, 0.649) !important;
+  backdrop-filter: blur(40px) brightness(100%);
   font-family: 微软雅黑;
+  animation: shift_down 0.3s cubic-bezier(.23,1.38,.65,.99);
+
+}
+.el-dialog__close {
+  &:hover {
+    color: $theme !important;
+  }
 }
 // .el-dialog__wrapper, .el-message-box__wrapper {
-//   /* backdrop-filter: blur(15px) brightness(150%) !important;   */
-//   /* transition: 1s !important; */
+//   backdrop-filter: blur(15px) brightness(90%) !important;   
+//   transition: 1s !important; 
 // }
 
 .el-popper, 
