@@ -155,7 +155,7 @@
                   </el-select>
                 </el-form-item>
               </el-form>
-              <el-button type="primary" size="mini" @click="post_advanced_search"
+              <el-button type="primary" size="mini" @click="post_advanced_search(1)"
               >立即搜索</el-button
               >
               <el-button size="mini" @click="CancelAd()">取消搜索</el-button>
@@ -394,11 +394,12 @@ export default {
     },
     post_advanced_search(page){
       let es_request_body = {
-        "bool":{
-          "must":[],
-          "must_not":[],
-          "should":[],
-          "filter":{}
+        "query":{
+          "bool":{
+            "must":[],
+            "must_not":[],
+            "should":[],
+          }
         },
         "from" : (page-1)*this.page_size,
         "size" : this.page_size
@@ -408,31 +409,51 @@ export default {
         let keylist = this.advanced_search_query.fuzzy_search.split(",")
         for(let key in keylist){
           console.log(keylist[key])
-          es_request_body.bool.should.push({"match":{[searchPositionQueue]:keylist[key]}})
+          es_request_body.query.bool.must.push({"match":{[searchPositionQueue]:keylist[key]}})
         }
       }
       if(this.advanced_search_query.must_contain){
         for(let key in this.advanced_search_query.must_contain.split(","))
-          es_request_body.bool.must.push({"match":{[searchPositionQueue]:key}})
+          es_request_body.query.bool.must.push({"match":{[searchPositionQueue]:key}})
       }
       if(this.advanced_search_query.at_least_one){
         for(let key in this.advanced_search_query.at_least_one.split(","))
-          es_request_body.bool.should.push({"match":{[searchPositionQueue]:this.advanced_search_query.at_least_one}})
+          es_request_body.query.bool.should.push({"match":{[searchPositionQueue]:this.advanced_search_query.at_least_one}})
       }
       if(this.advanced_search_query.contains_none){
         for(let key in this.advanced_search_query.contains_none.split(","))
-          es_request_body.bool.must_not.push({"match":{[searchPositionQueue]:key}})
+          es_request_body.query.bool.must_not.push({"match":{[searchPositionQueue]:key}})
       }
       if(this.advanced_search_query.authors){
         for(let key in this.advanced_search_query.authors.split(","))
-          es_request_body.bool.must.push({"match":{"authors.name":key}})
+          es_request_body.query.bool.must.push({"match":{"authors.name":key}})
       }
       if(this.advanced_search_query.venue){
         for(let key in this.advanced_search_query.venue.split(","))
-          es_request_body.bool.must.push({"match":{"venue.raw":this.advanced_search_query.key}})
+          es_request_body.query.bool.must.push({"match":{"venue.raw":this.advanced_search_query.key}})
       }
-      if(this.advanced_search_query.year_begin) es_request_body.bool.must.push({"range":{"year":this.advanced_search_query.year_begin}})
-      if(this.advanced_search_query.year_end) es_request_body.bool.must.push({"range":{"year":this.advanced_search_query.year_end}})
+      if(this.advanced_search_query.year_begin) es_request_body.query.bool.must.push({"range":{"year":{"gte":this.advanced_search_query.year_begin}}})
+      if(this.advanced_search_query.year_end) es_request_body.query.bool.must.push({"range":{"year":{"lte":this.advanced_search_query.year_end}}})
+
+      axios({
+            headers: {
+              'content-type': 'application/json',
+            },
+            auth: {
+              username: 'elastic',
+              password: 'BZYvLA-d*pS0EpI7utmJ'
+            },
+            url: 'es/paper/_search', method: "post",
+            data: JSON.stringify(es_request_body)
+          }
+      ).then(res=>{
+        this.resultNum = res.data.hits.total.value
+        this.papers = res.data.hits.hits
+        this.card_index = []
+        for(let i = 0; i < res.data.hits.hits.length; i++){
+          this.card_index.push(i+this.currentPage*this.page_size)
+        }
+      })
     },
     //用于搜索框
     resetForm(formName) {
