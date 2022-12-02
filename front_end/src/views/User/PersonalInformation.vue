@@ -12,12 +12,13 @@
           <el-col :span="10">
             <!--:span占据行数-->
             <!--头像-->
-            <img class="picture" src="../../assets/mosy.jpg" alt="" />
+            <img v-if="!profile" class="picture" src="../../assets/mosy.jpg" alt="" />
+            <img v-else class="pic" :src="profile" alt="" />
             <el-upload
               ref="upload"
               class="avatar-uploader"
               accept="JPG, .PNG, .JPEG,.jpg, .png, .jpeg"
-              :headers="headers"
+
               action=""
               :multiple="false"
               :show-file-list="false"
@@ -204,7 +205,6 @@
                 prefix-icon="el-icon-lock"
                 placeholder="在此输入新密码"
                 v-model="newPassword"
-                @keyup.enter.native="changePassword"
               ></el-input>
             </el-form-item>
             <el-form-item prop="" label="请再输入一遍新密码：">
@@ -212,7 +212,6 @@
                 prefix-icon="el-icon-lock"
                 placeholder="再次输入新密码"
                 v-model="confirmNewPassword"
-                @keyup.enter.native="changePassword"
               ></el-input>
             </el-form-item>
           </el-form>
@@ -304,6 +303,7 @@
                           icon="el-icon-delete"
                           circle
                           size="small"
+                          @click="delPaperCollection(item.id)"
                         ></el-button>
                         <el-button
                           style="float: right"
@@ -354,6 +354,7 @@
                           icon="el-icon-delete"
                           circle
                           size="small"
+                          @click="delNoteCollection(item.id)"
                         ></el-button>
                         <el-button
                           style="float: right"
@@ -434,6 +435,7 @@
                       icon="el-icon-delete"
                       circle
                       size="small"
+                      @click="delNotes(item.id)"
                     ></el-button>
                     <el-button
                       style="float: right"
@@ -476,6 +478,7 @@
                       icon="el-icon-delete"
                       circle
                       size="small"
+                      @click="delComment(item.comment_id)"
                     ></el-button>
                     <el-button
                       style="float: right"
@@ -709,6 +712,7 @@ export default {
       noteCollection: [],
       notes: [],
       myComment: [],
+      profile:"",
 
       RelationsData: [
         // {
@@ -970,19 +974,6 @@ export default {
         this.selectCollectionNote="";
       })
     },
-    searchNoteCollection(){
-      this.$axios(
-          {
-            url: '/user/searchNoteCollection/', method: "post",
-            data: { 'token':sessionStorage.getItem('token'),
-              'content':this.selectCollectionNote}
-          }
-      ).then(res => {
-        this.noteCollection=res.data.data;
-
-        this.selectCollectionNote="";
-      })
-    },
     //搜索我的笔记
     searchNote(){
       this.$axios(
@@ -1010,6 +1001,114 @@ export default {
         this.selectComment="";
       })
     },
+    //删除我的评论
+    async delComment(id){
+      // 弹框询问用户是否删除数据
+      const confirmResult = await this.$confirm('此操作将永久删除该评论, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        })
+      })
+      if (confirmResult !== 'confirm') {
+        return ;
+      }
+      this.$axios(
+          {
+            url: '/user/delComment/', method: "post",
+            data: { 'token':sessionStorage.getItem('token'),
+              'comment_id':id}
+          }
+      ).then(res => {
+        this.$message.success('删除用户成功！');
+        this.getPaperComment();
+      })
+    },
+    //删除我的笔记
+    async delNotes(id){
+      // 弹框询问用户是否删除数据
+      const confirmResult = await this.$confirm('此操作将永久删除该评论, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        })
+      })
+      if (confirmResult !== 'confirm') {
+        return ;
+      }
+      this.$axios(
+          {
+            url: '/user/delNote/', method: "post",
+            data: { 'token':sessionStorage.getItem('token'),
+              'note_id':id}
+          }
+      ).then(res => {
+        this.$message.success('删除用户成功！');
+        this.getNote();
+      })
+    },
+    //删除论文收藏
+    async delPaperCollection(id){
+      // 弹框询问用户是否删除数据
+      const confirmResult = await this.$confirm('此操作将永久删除该评论, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        })
+      })
+      if (confirmResult !== 'confirm') {
+        return ;
+      }
+      this.$axios(
+          {
+            url: '/user/delPaperCollection/', method: "post",
+            data: { 'token':sessionStorage.getItem('token'),
+              'paper_id':id}
+          }
+      ).then(res => {
+        this.$message.success('删除用户成功！');
+        this.getPaperCollection();
+      })
+    },
+    //删除笔记收藏
+    async delNoteCollection(id){
+      // 弹框询问用户是否删除数据
+      const confirmResult = await this.$confirm('此操作将永久删除该评论, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        })
+      })
+      if (confirmResult !== 'confirm') {
+        return ;
+      }
+      this.$axios(
+          {
+            url: '/user/delNoteCollection/', method: "post",
+            data: { 'token':sessionStorage.getItem('token'),
+              'note_id':id}
+          }
+      ).then(res => {
+        this.$message.success('删除用户成功！');
+        this.getNoteCollection();
+      })
+    },
 
 
 
@@ -1028,7 +1127,6 @@ export default {
         this.newPassword.length > 16 ||
         this.newPassword.length < 8
       ) {
-        console.log(1);
         this.$message.warning(
           "密码仅能由数字、26个英文字母或者下划线组成，长度为8-16位，请检查您的密码"
         );
@@ -1039,7 +1137,7 @@ export default {
       }
       this.isChangePassword = false;
       this.$axios({
-        url: "/user/editPassword",
+        url: "/user/editPassword/",
         method: "post",
         data: {
           token: sessionStorage.getItem("token"),
@@ -1047,10 +1145,17 @@ export default {
           newPassword: this.newPassword,
         },
       }).then((res) => {
-        console.log(res.data);
+        if(res.data.isSuccess===-1){
+          this.$message.error("旧密码错误")
+        } else{
+          this.$message.success("修改密码成功")
+        }
       });
     },
+
+
   },
+
 };
 </script>
 
