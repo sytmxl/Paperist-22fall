@@ -1,7 +1,7 @@
 <template>
     
     <el-container class="root">
-        <TopBar/> 
+        <!-- <TopBar/>  -->
        <el-main class="left base">
         <div class="author">
             <el-card>
@@ -20,12 +20,13 @@
                 <span @click="goto_paper()">原论文：{{note.paper_name}}</span>
                 <span>获赞：{{note.likes}}</span>
                 <span>评论：{{note.remarks}}</span>
-                <span v-if="note.collect_flag" title="取消收藏" @click="collect()">已收藏：{{note.collections}}</span>
-                <span v-else title="收藏" @click="collect()">收藏：{{note.collections}}</span>
+                <span>收藏：{{note.collections}}</span>
               </div>
               <div class="response">
-                <el-button type="primary">点赞</el-button>
-                <el-button type="primary">收藏</el-button>
+                <el-button type="primary" @click="likeit()" v-if="note.like_flag">已赞</el-button>
+                <el-button type="primary" @click="likeit()" v-else>点赞</el-button>
+                <el-button type="primary" @click="collect()" v-if="note.collect_flag" title="取消收藏">已收藏</el-button>
+                <el-button type="primary" @click="collect()" v-else title="收藏">收藏</el-button>
                 <el-button>订阅</el-button>
               </div>
             </el-card>
@@ -224,8 +225,36 @@ export default {
           }
         })
      },
+     likeit(){
+        if(this.note.like_flag){
+          this.$axios({
+            url:"http://127.0.0.1:8000/likeIt/",
+            method:"post",
+            data:{
+               comment_id:"",
+                note_id:this.note.note_id,
+                op:0
+            }
+          }).then(res=>{
+              
+          })
+        }
+        else{
+          this.$axios({
+            url:"http://127.0.0.1:8000/likeIt/",
+            method:"post",
+            data:{
+               comment_id:"",
+                note_id:this.note.note_id,
+                op:1
+            }
+          }).then(res=>{
+            
+          })
+        }
+    },
      collect(){
-        if(this.info_list.collect_flag){
+        if(this.note.collect_flag){
           this.$axios({
             url:"http://127.0.0.1:8000/paperCollection/",
             method:"post",

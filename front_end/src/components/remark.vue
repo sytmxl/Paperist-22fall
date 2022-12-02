@@ -62,9 +62,7 @@ export default {
   props: {
     list:[],
     note_id:"",
-    remark_id:"",
     paper_id:"",
-
   },
   data(){
     return{

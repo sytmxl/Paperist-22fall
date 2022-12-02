@@ -3,9 +3,12 @@
        <el-card>
         <span @click="goto_paper(note.paper_id)" title="了解此论文">对应论文：{{note.paper_name}}</span>
         <span title="点击阅读笔记" @click="goto_note(note.note_id)">笔记信息：{{note.introduction}}</span>
-        <i class="el-icon-thumb">{{note.likes}}</i>
+        <span>获赞：{{note.likes}}</span>
+        <span>评论：{{note.remarks}}</span>
+        <span>收藏：{{note.collections}}</span>
+        <!-- <i class="el-icon-thumb">{{note.likes}}</i>
         <i class="el-icon-star-off">{{note.collections}}</i>
-        <i class="el-icon-chat-round">{{note.remarks}}</i>
+        <i class="el-icon-chat-round">{{note.remarks}}</i> -->
     </el-card>
 </div>
 

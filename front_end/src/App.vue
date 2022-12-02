@@ -13,7 +13,7 @@ export default {
   },
 
   methods: {
-    
+
     toggleDarkLight() {
       var body = document.getElementById("app");
       var currentClass = body.className;

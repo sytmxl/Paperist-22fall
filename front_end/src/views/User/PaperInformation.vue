@@ -1,6 +1,6 @@
 <template>
     <el-container class="root">
-      <TopBar/>
+      <!-- <TopBar/> -->
       <el-container class="content">
         <el-main>
           <div class="main">
@@ -157,7 +157,7 @@
                   <div class="creat_comment">
                         <el-button @click="CreatCommentVisible =true">我要评论</el-button>
                     </div>
-                    <div v-if="remark_list.length!=0">
+                    <div v-if="Object.keys(remark_list).length!=0">
                       <div class="comment" v-for="i in remark_list" :key="i">
                         <remark :list="i.remark" :paper_id="paper_id"/>
                     </div>
@@ -296,18 +296,17 @@ export default {
         var y2 = parseInt(0.6*y3);
         var y1 = parseInt(0.4*y2);
         a.push(y1,y2,y3,y4,y5,y6)
-        console.log(a);
         return a;
       },
       handleRemove(file) {
-        console.log(file);
+        // console.log(file);
       },
       handlePictureCardPreview(file) {
         this.dialogImageUrl = file.url;
         this.dialogVisible = true;
       },
       handleDownload(file) {
-        console.log(file);
+        // console.log(file);
       },
       handleExceed(files, fileList) {
         this.$message.warning(`当前限制选择 4 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`);
@@ -320,7 +319,7 @@ export default {
                 paper_id:this.$route.params.paper_id
             }
         }).then(res=>{
-          console.log(res.data.about_list)
+          // console.log(res.data.about_list)
             this.remark_list = res.data.remark_list
             this.mark_list = res.data.note_list
             this.about_list = res.data.about_list
