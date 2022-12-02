@@ -31,7 +31,63 @@
                   <el-button round icon="el-icon-warning-outline" @click="ComplainVisible = true">申诉</el-button>
                   <el-button round icon="el-icon-share" @click="ShareVisible = true">分享</el-button>
               </div>
-              <el-dialog
+         
+            </el-card>
+            <el-card class="box-card2">
+                <span style="font-size:25px;font-weight:bolder">全部来源</span>
+                <div class="origion">
+                    <div class="org" v-for="i in info_list.readlist" :key="i">
+                        <div class="logo">
+                            <img :src="i.icon" alt="" width="20px" height="20px">
+                        </div>
+                          {{i.name}}
+                    </div>
+                </div>
+            </el-card>
+          </div>
+        <div class="remark">
+          <el-card>
+            <el-tabs >
+              <el-tab-pane label="相关文献">
+                  <div class="about" v-if="about_list!=[]">
+                    <div class="relative" v-for="i in about_list" :key="i">
+                        <aboutCard :name="i.paper_name" :author="i.author_name" :cite="i.cite_number" :origin="i.magazine" :intro="i.abstarct" :date="i.date"/>
+                    </div>
+                </div>
+                  <div id="load">
+                  <el-button style="width:100%" @click="load()" v-loading = "start">加载更多</el-button>
+                </div>
+              </el-tab-pane>
+              <el-tab-pane label="评论">
+                  <div class="creat_comment">
+                        <el-button @click="CreatCommentVisible =true">我要评论</el-button>
+                    </div>
+                    <div v-if="Object.keys(remark_list).length!=0">
+                      <div class="comment" v-for="i in remark_list" :key="i">
+                        <remark :list="i.remark" :paper_id="paper_id"/>
+                    </div>
+                    </div>
+                    <div v-else><el-empty description="还没有评论，发表第一个评论吧"></el-empty></div>
+                   
+              </el-tab-pane>
+              <el-tab-pane label="笔记">
+                    <div class="creat_mark">
+                        <el-button @click="CreatMark =true">上传笔记</el-button>
+                    </div>
+                    <div v-if="Object.keys(mark_list).length!=0">
+                      <div class="mark" v-for="i in mark_list" :key="i">
+                        <note :list="i"/>
+                    </div>
+                    </div>
+                    <div v-else><el-empty description="还没有笔记，发表第一篇笔记吧"></el-empty></div>
+                     
+              </el-tab-pane>
+                
+            </el-tabs>
+          </el-card>
+          
+        </div>
+             <el-dialog
                 title="引用"
                 :visible.sync="QuoteVisible"
                 width="30%"
@@ -96,9 +152,7 @@
                             </span>
                           </div>
                       </el-upload>
-                      <el-dialog :visible.sync="dialogVisible">
-                        <img width="100%" :src="dialogImageUrl" alt="">
-                      </el-dialog>
+                   
                   </div>
                   <div class="contact">
                     联系方式：
@@ -115,6 +169,9 @@
                     <!-- <el-button @click="dialogVisible = false">取 消</el-button> -->
                     <el-button type="primary" @click="dialogVisible = false">提交申诉</el-button>
                   </span>
+                     <el-dialog :visible.sync="dialogVisible">
+                        <img width="100%" :src="dialogImageUrl" alt="">
+                      </el-dialog>
               </el-dialog>
               <el-dialog
                 title="分享"
@@ -127,72 +184,20 @@
                 </div>
                 
               </el-dialog>
-            </el-card>
-            <el-card class="box-card2">
-                <span style="font-size:25px;font-weight:bolder">全部来源</span>
-                <div class="origion">
-                    <div class="org" v-for="i in info_list.readlist" :key="i">
-                        <div class="logo">
-                            <img :src="i.icon" alt="" width="20px" height="20px">
-                        </div>
-                          {{i.name}}
-                    </div>
-                </div>
-            </el-card>
-          </div>
-        <div class="remark">
-          <el-card>
-            <el-tabs >
-              <el-tab-pane label="相关文献">
-                  <div class="about" v-if="about_list!=[]">
-                    <div class="relative" v-for="i in about_list" :key="i">
-                        <aboutCard :name="i.paper_name" :author="i.author_name" :cite="i.cite_number" :origin="i.magazine" :intro="i.abstarct" :date="i.date"/>
-                    </div>
-                </div>
-                  <div id="load">
-                  <el-button style="width:100%" @click="load()" v-loading = "start">加载更多</el-button>
-                </div>
-              </el-tab-pane>
-              <el-tab-pane label="评论">
-                  <div class="creat_comment">
-                        <el-button @click="CreatCommentVisible =true">我要评论</el-button>
-                    </div>
-                    <div v-if="Object.keys(remark_list).length!=0">
-                      <div class="comment" v-for="i in remark_list" :key="i">
-                        <remark :list="i.remark" :paper_id="paper_id"/>
-                    </div>
-                    </div>
-                    <div v-else><el-empty description="还没有评论，发表第一个评论吧"></el-empty></div>
-                    <el-dialog
-                        title="留下你的评论吧~"
-                        :visible.sync="CreatCommentVisible"
-                        width="30%"
-                        >
-                        <CreateComment :paper_id="paper_id" :receiver_id="-1" :remark_id="-1" @introduce="return_msg()"/>
-                      </el-dialog>
-              </el-tab-pane>
-              <el-tab-pane label="笔记">
-                    <div class="creat_mark">
-                        <el-button @click="CreatMark =true">上传笔记</el-button>
-                    </div>
-                    <div v-if="Object.keys(mark_list).length!=0">
-                      <div class="mark" v-for="i in mark_list" :key="i">
-                        <note :list="i"/>
-                    </div>
-                    </div>
-                    <div v-else><el-empty description="还没有笔记，发表第一篇笔记吧"></el-empty></div>
-                      <el-dialog
+              <el-dialog
                         title="上传笔记"
                         :visible.sync="CreatMark"
                         width="30%"
                         >
                         <uploadMark :paper_id="paper_id"/>
                       </el-dialog>
-              </el-tab-pane>
-                
-            </el-tabs>
-          </el-card>
-        </div>
+                  <el-dialog
+                        title="留下你的评论吧~"
+                        :visible.sync="CreatCommentVisible"
+                        width="30%"
+                        >
+                        <CreateComment :paper_id="paper_id" :receiver_id="-1" :remark_id="-1" @introduce="return_msg()"/>
+                    </el-dialog>
         </el-main>
         <el-aside>
           <el-container>

@@ -17,7 +17,7 @@
             </el-card>
             <el-card style="margin-top:10px">
                 <div class="note_info">
-                <span @click="goto_paper()">原论文：{{note.paper_name}}</span>
+                <span @click="goto_paper()" title="了解此论文" style="cursor:pointer; ">原论文：{{note.paper_name}}</span>
                 <span>获赞：{{note.likes}}</span>
                 <span>评论：{{note.remarks}}</span>
                 <span>收藏：{{note.collections}}</span>
@@ -75,16 +75,19 @@
 								</div>
 							</div>
 							<div v-else><el-empty description="还没有评论，发表第一个评论吧"></el-empty></div>
-							<el-dialog
+				
+						</el-card>
+            		
+					</div>
+          
+       </el-main>
+       	<el-dialog
 								title="留下你的评论吧~"
 								:visible.sync="CreatCommentVisible"
 								width="30%"
 								>
 								<CreateComment :note_id="note.note_id" :receiver_id="-1" :remark_id="-1"/>
 							</el-dialog>
-						</el-card>
-					</div>
-       </el-main>
     </el-container>
 </template>
 
