@@ -51,7 +51,7 @@
                 <el-tab-pane label="相关文献">
                     <div class="about" v-if="about_list!=[]">
                       <div class="relative" v-for="i in about_list" :key="i">
-                          <aboutCard :name="i.paper_name" :author="i.author_name" :cite="i.cite_number" :origin="i.magazine" :intro="i.abstarct" :date="i.date"/>
+                          <aboutCard :name="i.paper_name" :author="i.author_name" :cite="i.cite_number" :origin="i.magazine" :intro="i.abstarct" :date="i.date" :paper_id="i.paper_id"/>
                       </div>
                   </div>
                     <div id="load">
@@ -64,7 +64,7 @@
                       </div>
                       <div v-if="Object.keys(remark_list).length!=0">
                         <div class="comment" v-for="i in remark_list" :key="i">
-                          <remark :list="i.remark" :paper_id="paper_id"/>
+                          <remark :list="i.remark" :paper_id="paper_id"  @throw_remark="open_comment"/>
                       </div>
                       </div>
                       <div v-else><el-empty description="还没有评论，发表第一个评论吧"></el-empty></div>
@@ -199,7 +199,7 @@
                 :visible.sync="CreatCommentVisible"
                 width="30%"
                 >
-                <CreateComment :paper_id="paper_id" :receiver_id="-1" :remark_id="-1" @introduce="return_msg()"/>
+                <CreateComment :paper_id="paper_id" :receiver_id="-1" :remark_id="-1" @finish_remark="close_comment"/>
           </el-dialog>
         </el-main>
         <el-aside>
@@ -382,11 +382,15 @@ export default {
           })
         }
       },
-      return_msg(opt){
-        if(opt.msg=="success"){
-          this.CreatCommentVisible = false;
-        }
-      }
+      open_comment(data){
+        this.CreatCommentVisible = true;
+        this.remark_id = data.remark_id
+        this.receiver_id = data.sender_id
+     },
+     close_comment(data){
+           this.CreatCommentVisible = false;
+  
+     },
     },
     components:{
         aboutCard,

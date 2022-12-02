@@ -68,7 +68,8 @@
             }
         }).then(res=>{
             this.$message.success("评论发表成功");
-            this.$emit('introduce',{msg:"success"})
+            let msg = "success"
+            this.$emit('finish_remark',msg)
         })
       }
     }

@@ -1,7 +1,7 @@
 <template>
   <el-card class="box-card">
     <div slot="header" class="clearfix">
-      <span>{{name}}</span>
+      <span @click="goto_paper()" style="cursor:pointer" title="了解此论文">{{name}}</span>
       <!-- <el-button style="float: right; padding: 3px 0" type="text">操作按钮</el-button> -->
     </div>
       <div class="text item">
@@ -31,7 +31,18 @@ export default {
     origin: {default: ""},
     cite:{default: ""},
     date:{default:""},
+    paper_id:""
   },
+  methods:{
+     goto_paper(paper_id){
+      this.$router.push({
+          name:'PaperInformation',
+          params:{
+           paper_id:paper_id
+          }
+        })
+    },
+  }
 }
 </script>
 
