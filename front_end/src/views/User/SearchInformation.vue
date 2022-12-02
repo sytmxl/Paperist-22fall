@@ -85,12 +85,12 @@
                 </el-form-item>
                 <el-form-item label="出现检索词的位置" prop="Position">
                   <el-select
-                      v-model="option.PositionValue"
+                      v-model="option.searchPositionValue"
                       placeholder="请选择"
                       style="width: 150px; margin-left: -58%"
                   >
                     <el-option
-                        v-for="item in Positions"
+                        v-for="item in searchPosition"
                         :key="item.value"
                         :label="item.label"
                         :value="item.value"
@@ -292,7 +292,7 @@ export default {
       ],
       option: {
         // 1：摘要 2：标题
-        PositionValue: 1,
+        searchPositionValue: 1,
         // 1：不限 2：中文 3：英语
         LangValue: "1",
         // 1：期刊 2：会议
@@ -309,7 +309,7 @@ export default {
         year_begin: null,//起始年份
         year_end: null,//终止年份
       },
-      Positions: [
+      searchPosition: [
         {
           label: "文章摘要",
           value: 1,
@@ -339,7 +339,7 @@ export default {
           "bool":{
             "must":[],
             "should":[],
-            "filter":{}
+            //"filter":{}
           }
         },
         "from" : (page-1)*this.page_size,
@@ -394,18 +394,45 @@ export default {
     },
     post_advanced_search(page){
       let es_request_body = {
-        "query":{},
+        "bool":{
+          "must":[],
+          "must_not":[],
+          "should":[],
+          "filter":{}
+        },
         "from" : (page-1)*this.page_size,
         "size" : this.page_size
       }
-      if(this.advanced_search_query.fuzzy_search) es_request_body.query.fuzzy_search = this.advanced_search_query.fuzzy_search
-      if(this.advanced_search_query.must_contain) es_request_body.query.fuzzy_search = this.advanced_search_query.fuzzy_search
-      if(this.advanced_search_query.at_least_one) es_request_body.query.fuzzy_search = this.advanced_search_query.fuzzy_search
-      if(this.advanced_search_query.contains_none) es_request_body.query.fuzzy_search = this.advanced_search_query.fuzzy_search
-      if(this.advanced_search_query.authors) es_request_body.query.fuzzy_search = this.advanced_search_query.fuzzy_search
-      if(this.advanced_search_query.venue) es_request_body.query.fuzzy_search = this.advanced_search_query.fuzzy_search
-      if(this.advanced_search_query.organization) es_request_body.query.fuzzy_search = this.advanced_search_query.fuzzy_search
-
+      let searchPositionQueue = this.option.searchPositionValue == 1 ? "abstract":"title"
+      if(this.advanced_search_query.fuzzy_search) {
+        let keylist = this.advanced_search_query.fuzzy_search.split(",")
+        for(let key in keylist){
+          console.log(keylist[key])
+          es_request_body.bool.should.push({"match":{[searchPositionQueue]:keylist[key]}})
+        }
+      }
+      if(this.advanced_search_query.must_contain){
+        for(let key in this.advanced_search_query.must_contain.split(","))
+          es_request_body.bool.must.push({"match":{[searchPositionQueue]:key}})
+      }
+      if(this.advanced_search_query.at_least_one){
+        for(let key in this.advanced_search_query.at_least_one.split(","))
+          es_request_body.bool.should.push({"match":{[searchPositionQueue]:this.advanced_search_query.at_least_one}})
+      }
+      if(this.advanced_search_query.contains_none){
+        for(let key in this.advanced_search_query.contains_none.split(","))
+          es_request_body.bool.must_not.push({"match":{[searchPositionQueue]:key}})
+      }
+      if(this.advanced_search_query.authors){
+        for(let key in this.advanced_search_query.authors.split(","))
+          es_request_body.bool.must.push({"match":{"authors.name":key}})
+      }
+      if(this.advanced_search_query.venue){
+        for(let key in this.advanced_search_query.venue.split(","))
+          es_request_body.bool.must.push({"match":{"venue.raw":this.advanced_search_query.key}})
+      }
+      if(this.advanced_search_query.year_begin) es_request_body.bool.must.push({"range":{"year":this.advanced_search_query.year_begin}})
+      if(this.advanced_search_query.year_end) es_request_body.bool.must.push({"range":{"year":this.advanced_search_query.year_end}})
     },
     //用于搜索框
     resetForm(formName) {
