@@ -4,7 +4,7 @@
       <el-col :span="20">
         <el-input
           placeholder="请输入内容"
-          v-model="input"
+          v-model="simpleInput"
           class="input-with-select"
           clearable
         >
@@ -154,10 +154,10 @@
               </el-select>
             </el-form-item>
           </el-form>
-          <el-button type="primary" size="mini" @click="GoAdvancedSearch()"
+          <el-button type="primary" class="but"  @click="GoAdvancedSearch()"
             >立即搜索</el-button
           >
-          <el-button size="mini" @click="CancelAd()">取消搜索</el-button>
+          <el-button class="but" @click="CancelAd()">取消搜索</el-button>
         </el-card>
       </el-col>
     </el-row>
@@ -167,15 +167,9 @@
 <script>
 export default {
   name: "SearchBox",
-  created() {
-    if (this.$route.path == "/result") {
-      this.input = this.$route.query.input;
-      this.select = this.$route.query.type;
-    }
-  },
   data() {
     return {
-      input: "",
+      simpleInput: "",
       PublishSelect: "1",
       LangValue: "1",
       select: 1,
@@ -225,72 +219,12 @@ export default {
         this.$refs[formName].resetFields();
       });
     },
-    GoAdvancedSearch() {
-      console.log("GoAdvancedSearch");
-      let obj = this.AdvancedSearchInput;
-      let flag = false;
-      let others = false;
-      for (let key in obj) {
-        if (key != "date1" && key != "date2" && obj[key] != "") {
-          others = true;
-        }
-      }
-      for (let key in obj) {
-        if (obj[key] != "") {
-          flag = true;
-        }
-      }
-      if (!flag) {
-        this.$message({
-          message: "请输入有效信息",
-          type: "error",
-        });
-      } else if (
-        (obj["date1"] != "" || obj["date2"] != "") &&
-        others == false
-      ) {
-        this.$message({
-          message: "不能仅输入日期信息，请至少再填入另一个信息",
-          type: "error",
-        });
-      } else {
-        sessionStorage.setItem(
-          "AdvancedSearchInput",
-          JSON.stringify(this.AdvancedSearchInput)
-        );
-        sessionStorage.setItem(
-          "AdvancedSearchOptions",
-          JSON.stringify(this.option)
-        );
-        this.$router.push({
-          path: "/result",
-          // query: {
-          //   input: this.AdvancedSearchInput.AdAuthor,
-          //   type: 7,
-          // },
-        });
-      }
-    },
     CancelAd() {
       this.isAdvanced = false;
       this.resetForm("AdvancedSearchInput");
     },
     AdvancedSearch() {
       this.isAdvanced = this.isAdvanced ? false : true;
-    },
-    SimpletoResult() {
-      if (this.input.match(/^[ ]*$/)) {
-        this.$message.error("请输入搜索内容");
-        return;
-      }
-      this.$emit("select", this.input, this.select);
-      this.$router.push({
-        path: "/result",
-        query: {
-          input: this.input,
-          type: this.select,
-        },
-      });
     },
   },
 };
@@ -354,11 +288,15 @@ export default {
 @keyframes test {
   0% {
     opacity: 0%;
-    top:-60px;
+    top:20px;
   }
   100% {
     opacity: 100%;
     top:50px;
   }
+}
+.but {
+  width: 48%;
+  border: none;
 }
 </style>

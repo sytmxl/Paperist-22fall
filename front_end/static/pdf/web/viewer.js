@@ -6030,7 +6030,7 @@ class PDFLayerViewer extends _base_tree_viewer.BaseTreeViewer {
           const input = document.createElement("input");
           this._bindLink(element, {
             groupId,
-            input
+            input: simpleInput
           });
           input.type = "checkbox";
           input.checked = group.visible;
