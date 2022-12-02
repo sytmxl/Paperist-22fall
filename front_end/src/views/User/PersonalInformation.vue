@@ -686,7 +686,7 @@ import RelationShip from "@/components/RelationShip.vue";
 import ScholarLine from "@/components/ScholarLine.vue";
 import TopBar from "@/components/TopBar";
 import axios from "axios";
-import CryptoJS from "_crypto-js@4.1.1@crypto-js";
+import CryptoJS from "crypto-js";
 // import CryptoJS from "_crypto-js@4.1.1@crypto-js";
 export default {
   name: "PersonalInformation",
