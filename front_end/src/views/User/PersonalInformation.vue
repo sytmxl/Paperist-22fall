@@ -265,7 +265,11 @@
               ></RelationShip>
               <h2 style="text-align: left">论文列表</h2>
               <el-divider />
-              111111111111
+              <paper-card
+                v-for="(paper, index) in papers"
+                :key="index"
+                :paper_data="paper._source"
+              />
             </el-tab-pane>
             <el-tab-pane
               label="个人收藏"
@@ -690,6 +694,7 @@
 import RelationShip from "@/components/RelationShip.vue";
 import ScholarLine from "@/components/ScholarLine.vue";
 import TopBar from "@/components/TopBar";
+import PaperCard from "@/components/PaperCard.vue";
 import axios from "axios";
 // import CryptoJS from "_crypto-js@4.1.1@crypto-js";
 export default {
@@ -698,6 +703,7 @@ export default {
     RelationShip,
     ScholarLine,
     TopBar,
+    PaperCard
   },
   data() {
     return {
@@ -739,7 +745,24 @@ export default {
       confirmNewPassword: "",
       color: "",
       language: "",
-
+      papers: [
+        {
+          _source: {
+            authors: [{
+              name: "杰哥",
+            }],
+            id: "56d850c8dabfae2eee0100f0",
+            issue: "是多少",
+            lang: "en",
+            n_citation: 12,
+            page_end: "",
+            page_start: "",
+            title: "动态式数学课堂中“交流”艺术的探寻",
+            volume: "",
+            year: 2011,
+          },
+        },
+      ],
       paperCollection: [],
       noteCollection: [],
       notes: [],
@@ -777,39 +800,28 @@ export default {
     this.noteLabel = this.isOthers ? "他的笔记" : "我的笔记";
   },
   mounted() {
-    this.isOthers ? this.initOtherRelations() : this.initSelfRelations();
-    this.initSelfLine();
+    this.initRelations();
+    this.initLine();
+    this.initScholarPaper();
     this.noteLabel = this.isOthers ? "他的笔记" : "我的笔记";
   },
   watch: {
     isOthers: function (newVal, oldVal) {
       this.noteLabel = this.isOthers ? "他的笔记" : "我的笔记";
-      this.isOthers ? this.initOtherRelations() : this.initSelfRelations();
     },
   },
   methods: {
-    initSelfRelations() {
-      console.log("initSelfRelations");
+    initRelations() {
+      console.log("initRelations");
       this.$axios({
         method: "post",
         url: "/app/get_scholar_relation/",
       }).then((res) => {
-        console.log("initSelfRelations", res.data);
+        console.log("initRelations", res.data);
         this.RelationsData = res.data.data;
       });
     },
-    initOtherRelations() {
-      // window.alert("sadasd");
-      console.log("initOtherRelations");
-      this.$axios({
-        method: "post",
-        url: "/app/get_scholar_relation/",
-      }).then((res) => {
-        console.log("initSelfRelations", res.data);
-        this.RelationsData = res.data.data;
-      });
-    },
-    initSelfLine() {
+    initLine() {
       this.$axios({
         method: "get",
         url: "/app/get_scholar_paper_list/",
@@ -833,6 +845,17 @@ export default {
         console.log(this.Linedata);
       });
     },
+    // 获取学者文献
+    // initScholarPaper() {
+    //   this.$axios({
+    //     method: "get",
+    //     url: "/app/get_scholar_paper_list/",
+    //   }).then((res) => {
+    //     this.papers = res.data.data;
+    //     console.log("initScholarPaper");
+    //     console.log(res.data);
+    //   });
+    // },
     //获取个人信息
     getPersonalInformation() {
       this.$axios({
@@ -888,7 +911,10 @@ export default {
     },
     //个人收藏、个人订阅、我的笔记等初始化栏
     handleClickAll(tab, event) {
-      if (tab.name == "first") {
+      if (tab.name == "zero") {
+        this.initRelations();
+        // this.initLine();
+      } else if (tab.name == "first") {
         this.getPaperCollection();
       } else if (tab.name == "third") {
         this.getNote();
