@@ -41,6 +41,7 @@ export default {
            paper_id:paper_id
           }
         })
+        window.location.reload()
     },
   }
 }
