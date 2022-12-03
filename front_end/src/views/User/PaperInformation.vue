@@ -116,44 +116,20 @@
               </div>
               <div class="picture">
                 相关图片：
-                <el-upload
-                style="margin-top:20px"
-                    action="#"
-                    list-type="picture-card"
-                    :auto-upload="false"
-                    :accept="jpg"
-                    :limit="4"
-                    :on-exceed="handleExceed">
-                      <i slot="default" class="el-icon-plus"></i>
-                      <div slot="file" slot-scope="{file}">
-                        <img
-                          class="el-upload-list__item-thumbnail"
-                          :src="file.url" alt=""
-                        >
-                        <span class="el-upload-list__item-actions">
-                          <span
-                            class="el-upload-list__item-preview"
-                            @click="handlePictureCardPreview(file)"
-                          >
-                            <i class="el-icon-zoom-in"></i>
-                          </span>
-                          <span
-                            v-if="!disabled"
-                            class="el-upload-list__item-delete"
-                            @click="handleDownload(file)"
-                          >
-                            <i class="el-icon-download"></i>
-                          </span>
-                          <span
-                            v-if="!disabled"
-                            class="el-upload-list__item-delete"
-                            @click="handleRemove(file)"
-                          >
-                            <i class="el-icon-delete"></i>
-                          </span>
-                        </span>
-                      </div>
-                  </el-upload>
+               <el-upload
+            class="upload-demo"
+            drag
+            action=""
+            :on-change="loadJsonFromFile"
+            :http-request="submitAvatarHttp"
+            :file-list="uploadFiles"
+            limit="1"
+            list-type="picture">
+            <img v-if="imageUrl" :src="imageUrl" class="avatar">
+            <i v-else class="el-icon-upload"></i>
+            <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
+            <div class="el-upload__tip" slot="tip">只能上传jpg/png文件</div>
+        </el-upload>
                 
               </div>
               <div class="contact">
@@ -170,7 +146,7 @@
               </div>
               <span slot="footer" class="dialog-footer">
                 <!-- <el-button @click="dialogVisible = false">取 消</el-button> -->
-                <el-button type="primary" @click="dialogVisible = false">提交申诉</el-button>
+                <el-button type="primary" @click="submit()">提交申诉</el-button>
               </span>
                   <el-dialog :visible.sync="dialogVisible">
                     <img width="100%" :src="dialogImageUrl" alt="">
@@ -242,7 +218,7 @@ import CreateComment from "../../components/CreateComment.vue"
 import uploadMark from "../../components/uploadMark.vue"
 import note from "../../components/note.vue"
 import TopBar from "@/components/TopBar";
-let loading
+let formdata = new FormData();
 export default {
   inject: ['reload'],
     data(){
@@ -263,6 +239,7 @@ export default {
         now_list:[],
         info_list:[],
         quote_list:[],
+        uploadFiles:[],
       //  remark_list:{1:{1:{flag:0,name:'胡博轩',image:require("../../assets/Cooper.jpg"),comment:"马哥太尴尬了哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈"},2:{flag:1,name:'李阳',image:require("../../assets/mosy.jpg"),res_name:'胡博轩',comment:"确实，怎么可以这么尬"},3:{flag:1,name:'朱康乐',image:require("../../assets/le.jpg"),res_name:'李阳',comment:"你是懂尴尬的"},4:{flag:1,name:'马泽远',image:require("../../assets/ma.jpg"),res_name:'胡博轩',comment:"基操勿6"}},
       //   2:{1:{flag:0,name:'马泽远',image:require("../../assets/ma.jpg"),comment:"感谢大家支持"}},
       //   3:{1:{flag:0,name:'王域杰',image:require("../../assets/jie.jpg"),comment:"苏珊，小心我告你"},2:{flag:1,name:'王域杰',image:require("../../assets/jie.jpg"),res_name:'王域杰',comment:"别来沾边"},3:{flag:1,name:'朱康乐',image:require("../../assets/le.jpg"),res_name:'王域杰',comment:"支持杰哥维权"},4:{flag:1,name:'马泽远',image:require("../../assets/ma.jpg"),res_name:'王域杰',comment:"我错了杰哥，我苏珊"}},
@@ -276,6 +253,12 @@ export default {
       }
     },
     methods:{
+      submitAvatarHttp(val){
+       formdata.append('img',val.file)
+      },
+    loadJsonFromFile(file, fileList) {
+      this.uploadFiles = fileList
+    },
       chart_init(cite_number){
         var myChart = echarts.init(document.getElementById('echarts_box'))
         myChart.setOption({
@@ -311,17 +294,21 @@ export default {
         return a;
       },
       handleRemove(file) {
-        // console.log(file);
+        console.log(file);
       },
       handlePictureCardPreview(file) {
         this.dialogImageUrl = file.url;
         this.dialogVisible = true;
       },
       handleDownload(file) {
-        // console.log(file);
+        console.log(file);
+      },
+      handleChange(file) {
+        // this.pictures = fileList;
+        formdata.append('img',file.file)
       },
       handleExceed(files, fileList) {
-        this.$message.warning(`当前限制选择 4 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`);
+        this.$message.warning(`最多上传四张图片`);
       },
       paper_init(){
            this.$axios({
@@ -391,6 +378,24 @@ export default {
            this.CreatCommentVisible = false;
   
      },
+     submit(){
+       this.$axios({
+                method: "post",
+                headers: { "Content-Type": "multipart/form-data" },
+                url: "http://127.0.0.1:8000/paperComplain/" ,
+                data: {
+                  img: formdata.get('img'),
+                  contact:this.contact,
+                  introduction:this.describe,
+                  paper_id:this.$route.params.paper_id
+                },
+
+              })
+                .then((res) => {
+                      this.ComplainVisible = false
+                      
+                });
+     }
     },
     components:{
         aboutCard,
