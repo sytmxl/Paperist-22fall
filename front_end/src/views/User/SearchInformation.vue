@@ -1,168 +1,177 @@
 <template>
   <el-container>
 <!--    顶栏-->
-    <el-header>
-      <div class="search_input">
-        <el-row :gutter="10">
-          <el-col class="advsearch" :span="4">
-            <el-button type="primary" round @click="AdvancedSearch()"
-            >高级搜索
-            </el-button>
-          </el-col>
-          <el-col :span="20" v-if="!isAdvanced">
-            <el-input
-                placeholder="请输入内容"
-                v-model="common_search_query"
-                class="input-with-select"
-                clearable
-            >
-              <el-select v-model="common_search_type" slot="prepend" placeholder="请选择">
-                <el-option
-                    v-for="(item, index) in searchMods"
-                    :key="index"
-                    :label="item.label"
-                    :value="item.value"
-                ></el-option>
-              </el-select>
-              <el-button
-                  id="search-button"
-                  type="default"
-                  slot="append"
-                  icon="el-icon-search"
-                  @click="post_common_search(1)"
+    <el-header id="topbar_new">
+    <div id="bar-content">
+      <img class="logo" src="../../assets/logo/cube_logo.svg" @click="gotoFirstPage">
+        <div class="search_input">
+          <el-row :gutter="10">
+            <el-col :span="20">
+              <el-input
+                  placeholder="请输入内容"
+                  v-model="common_search_query"
+                  class="input-with-select"
+                  clearable
               >
+                <el-select v-model="common_search_type" slot="prepend" placeholder="请选择">
+                  <el-option
+                      v-for="(item, index) in searchMods"
+                      :key="index"
+                      :label="item.label"
+                      :value="item.value"
+                  ></el-option>
+                </el-select>
+                <el-button
+                    id="search-button"
+                    type="default"
+                    slot="append"
+                    icon="el-icon-search"
+                    @click="post_common_search(1)"
+                >
+                </el-button>
+              </el-input>
+            </el-col>
+            <el-col class="advsearch" :span="4">
+              <el-button type="primary" round @click="AdvancedSearch()"
+              >高级搜索
               </el-button>
-            </el-input>
-          </el-col>
-        </el-row>
-        <el-row
-            v-if="this.isAdvanced"
-            style="z-index: 999"
-            type="flex"
-            justify="left"
-        >
-          <el-col :span="16">
-            <el-card>
-              <el-form
-                  :model="advanced_search_query"
-                  :rules="rules"
-                  ref="AdvancedSearchInput"
-                  label-width="150px"
-                  label-position="left"
-                  class="demo-AdvancedSearchInput"
-                  style="margin-top: 10px; padding-bottom: -20px"
-                  size="mini"
-              >
-                <el-form-item label="包含全部检索词" prop="Allselect">
-                  <el-input v-model="advanced_search_query.fuzzy_search"></el-input>
-                </el-form-item>
-                <el-form-item label="包含精确检索词" prop="Exectselect">
-                  <el-input
-                      v-model="advanced_search_query.must_contain"
-                      placeholder="多个检索词以逗号,分隔"
-                  >
-                    <el-dropdown slot="suffix" size="mini" placement="top-start">
-                      <i class="el-icon-warning-outline el-input__icon"> </i>
-                      <el-dropdown-menu slot="dropdown">
-                        <el-dropdown-item disabled
-                        >多个检索词以逗号,分隔</el-dropdown-item
-                        >
-                      </el-dropdown-menu>
-                    </el-dropdown></el-input
-                  >
-                </el-form-item>
-                <el-form-item label="包含至少一个检索词" prop="LeastOneSelect">
-                  <el-input
-                      v-model="advanced_search_query.at_least_one"
-                      placeholder="多个检索词以逗号,分隔"
-                  ></el-input>
-                </el-form-item>
-                <el-form-item label="不包含检索词" prop="NoSelect">
-                  <el-input
-                      v-model="advanced_search_query.contains_none"
-                      placeholder="多个检索词以逗号,分隔"
-                  ></el-input>
-                </el-form-item>
-                <el-form-item label="出现检索词的位置" prop="Position">
-                  <el-select
-                      v-model="option.searchPositionValue"
-                      placeholder="请选择"
-                      style="width: 150px; margin-left: -58%"
-                  >
-                    <el-option
-                        v-for="item in searchPosition"
-                        :key="item.value"
-                        :label="item.label"
-                        :value="item.value"
+            </el-col>
+          </el-row>
+          <el-row
+              id="advance"
+              v-if="this.isAdvanced"
+              style="z-index: 99"
+              type="flex"
+              justify="left"
+          >
+            <el-col :span="16">
+              <el-card>
+                <el-form
+                    :model="advanced_search_query"
+                    :rules="rules"
+                    ref="AdvancedSearchInput"
+                    label-width="150px"
+                    label-position="left"
+                    class="demo-AdvancedSearchInput"
+                    style="margin-top: 10px; padding-bottom: -20px"
+                    size="mini"
+                >
+                  <el-form-item label="包含全部检索词" prop="Allselect">
+                    <el-input v-model="advanced_search_query.fuzzy_search"></el-input>
+                  </el-form-item>
+                  <el-form-item label="包含精确检索词" prop="Exectselect">
+                    <el-input
+                        v-model="advanced_search_query.must_contain"
+                        placeholder="多个检索词以逗号,分隔"
                     >
-                    </el-option>
-                  </el-select>
-                </el-form-item>
-                <el-form-item label="作者" prop="AdAuthor">
-                  <el-input
-                      v-model="advanced_search_query.authors"
-                      placeholder="多个作者间以顿号、分隔"
-                  ></el-input>
-                </el-form-item>
-                <el-form-item label="机构" prop="AdOrganization">
-                  <el-input v-model="advanced_search_query.organization"></el-input>
-                </el-form-item>
-                <el-form-item label="出版物" prop="AdPublish">
-                  <el-input
-                      v-model="advanced_search_query.venue"
-                      placeholder="请输入名称"
-                  >
+                      <el-dropdown slot="suffix" size="mini" placement="top-start">
+                        <i class="el-icon-warning-outline el-input__icon"> </i>
+                        <el-dropdown-menu slot="dropdown">
+                          <el-dropdown-item disabled
+                          >多个检索词以逗号,分隔</el-dropdown-item
+                          >
+                        </el-dropdown-menu>
+                      </el-dropdown></el-input
+                    >
+                  </el-form-item>
+                  <el-form-item label="包含至少一个检索词" prop="LeastOneSelect">
+                    <el-input
+                        v-model="advanced_search_query.at_least_one"
+                        placeholder="多个检索词以逗号,分隔"
+                    ></el-input>
+                  </el-form-item>
+                  <el-form-item label="不包含检索词" prop="NoSelect">
+                    <el-input
+                        v-model="advanced_search_query.contains_none"
+                        placeholder="多个检索词以逗号,分隔"
+                    ></el-input>
+                  </el-form-item>
+                  <el-form-item label="出现检索词的位置" prop="Position">
                     <el-select
-                        v-model="option.PublishSelect"
-                        slot="prepend"
+                        v-model="option.searchPositionValue"
                         placeholder="请选择"
+                        style="width: 150px; margin-left: -58%"
                     >
-                      <el-option label="期刊" value="1"></el-option>
-                      <el-option label="会议" value="2"></el-option>
+                      <el-option
+                          v-for="item in searchPosition"
+                          :key="item.value"
+                          :label="item.label"
+                          :value="item.value"
+                      >
+                      </el-option>
                     </el-select>
-                  </el-input>
-                </el-form-item>
-                <el-form-item label="发表时间" prop="AdTime">
-                  <el-date-picker
-                      class="date-picker"
-                      v-model="advanced_search_query.year_begin"
-                      type="year"
-                      placeholder="起始年份"
-                      format="yyyy 年"
-                      value-format="yyyy"
-                  >
-                  </el-date-picker>
-                  <div style="float: left">&nbsp;-&nbsp;</div>
-                  <el-date-picker
-                      class="date-picker"
-                      v-model="advanced_search_query.year_end"
-                      type="year"
-                      placeholder="终止年份"
-                      format="yyyy 年"
-                      value-format="yyyy"
-                  >
-                  </el-date-picker>
-                </el-form-item>
-                <el-form-item label="语言检索范围" prop="AdLang">
-                  <el-select
-                      v-model="option.LangValue"
-                      placeholder="请选择"
-                      style="width: 150px; margin-left: -58%"
-                  >
-                    <el-option label="不限" value="1"></el-option>
-                    <el-option label="中文" value="2"></el-option>
-                    <el-option label="英语" value="3"></el-option>
-                  </el-select>
-                </el-form-item>
-              </el-form>
-              <el-button type="primary" size="mini" @click="post_advanced_search(1)"
-              >立即搜索</el-button
-              >
-              <el-button size="mini" @click="CancelAd()">取消搜索</el-button>
-            </el-card>
-          </el-col>
-        </el-row>
+                  </el-form-item>
+                  <el-form-item label="作者" prop="AdAuthor">
+                    <el-input
+                        v-model="advanced_search_query.authors"
+                        placeholder="多个作者间以顿号、分隔"
+                    ></el-input>
+                  </el-form-item>
+                  <el-form-item label="机构" prop="AdOrganization">
+                    <el-input v-model="advanced_search_query.organization"></el-input>
+                  </el-form-item>
+                  <el-form-item label="出版物" prop="AdPublish">
+                    <el-input
+                        v-model="advanced_search_query.venue"
+                        placeholder="请输入名称"
+                    >
+                      <el-select
+                          v-model="option.PublishSelect"
+                          slot="prepend"
+                          placeholder="请选择"
+                      >
+                        <el-option label="期刊" value="1"></el-option>
+                        <el-option label="会议" value="2"></el-option>
+                      </el-select>
+                    </el-input>
+                  </el-form-item>
+                  <el-form-item label="发表时间" prop="AdTime">
+                    <el-date-picker
+                        class="date-picker"
+                        v-model="advanced_search_query.year_begin"
+                        type="year"
+                        placeholder="起始年份"
+                        format="yyyy 年"
+                        value-format="yyyy"
+                    >
+                    </el-date-picker>
+                    <div style="float: left">&nbsp;-&nbsp;</div>
+                    <el-date-picker
+                        class="date-picker"
+                        v-model="advanced_search_query.year_end"
+                        type="year"
+                        placeholder="终止年份"
+                        format="yyyy 年"
+                        value-format="yyyy"
+                    >
+                    </el-date-picker>
+                  </el-form-item>
+                  <el-form-item label="语言检索范围" prop="AdLang">
+                    <el-select
+                        v-model="option.LangValue"
+                        placeholder="请选择"
+                        style="width: 150px; margin-left: -58%"
+                    >
+                      <el-option label="不限" value="1"></el-option>
+                      <el-option label="中文" value="2"></el-option>
+                      <el-option label="英语" value="3"></el-option>
+                    </el-select>
+                  </el-form-item>
+                </el-form>
+                <el-button type="primary" size="mini" @click="post_advanced_search(1)"
+                >立即搜索</el-button
+                >
+                <el-button size="mini" @click="CancelAd()">取消搜索</el-button>
+              </el-card>
+            </el-col>
+          </el-row>
+        </div>
+      <el-button  type="default" id="switch" name="dark_light" @click="toggleDarkLight" title="Toggle dark/light mode">日/夜</el-button>
+      <div @click="get_avatar">test</div>
+      <div class="avatar" @click="gotoPersonalInformation">
+        <el-avatar :src=avatar_src ></el-avatar>
       </div>
+    </div>
     </el-header>
     <el-container id="SearchInformation">
 <!--      左侧栏-->
@@ -468,13 +477,44 @@ export default {
     AdvancedSearch() {
       this.isAdvanced = this.isAdvanced ? false : true;
     },
+    //topbar
+    get_avatar(){
+      let tok = sessionStorage.getItem("token")
+      if(tok !== "") {
+        this.loged = true
+        if (this.have_avatar) {
+          //TODO 这里获取头像src，但目前后端似乎没有对应接口
+        } else {
+          this.$axios({
+            method: "post", url: "/user/getPersonalInformation/", data: {}
+          }).then(res => {
+            console.log("res.data");
+            console.log(res.data.data);
+            sessionStorage.setItem("userInfo", res.data.data)
+          })
+        }
+      }
+    },
+    gotoFirstPage(){
+      location.href = "/FirstPage";
+    },
+    gotoPersonalInformation(){
+      location.href = "/PersonalInformation";
+    },
+    toggleDarkLight() {
+      let body = document.getElementById("app");
+      let currentClass = body.className;
+      body.className = currentClass == "dark-mode" ? "light-mode" : "dark-mode";
+    },
   }
 }
 </script>
 <style lang="scss" scoped>
+@import '../../components/topbar.scss';
+@import '../../components/searchbox.scss';
 #SearchInformation {
-  // margin-top: 60px;
-  width: calc(80vw);
+  margin-top: 30px;
+  width: calc(90vw);
   align-self: center;
 }
 .el-aside{
@@ -514,5 +554,20 @@ export default {
     background-color: rgba(255, 255, 255, 0.5);
     backdrop-filter: blur(40px) brightness(95%);
   }
+}
+//topbar_new
+#topbar_new {
+  z-index: 100;
+  width: 100%;
+  height:60px;
+  position: fixed; 
+  transition: 0.3s;
+  animation: test 0.3s cubic-bezier(.23,1.38,.65,.99);
+}
+.search_input {
+  width: 700px !important;
+}
+.el-input {
+  width: 100% !important;
 }
 </style>
