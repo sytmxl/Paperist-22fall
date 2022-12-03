@@ -3,8 +3,8 @@
     <div id="bar-content">
       <img class="logo" src="../assets/logo/cube_logo.svg" @click="gotoFirstPage">
 
+      <el-button size="mini" type="default" id="switch" name="dark_light" @click="toggleDarkLight" title="Toggle dark/light mode">日/夜</el-button>
       <search-box/>
-      <el-button  type="default" id="switch" name="dark_light" @click="toggleDarkLight" title="Toggle dark/light mode">日/夜</el-button>
       <div @click="get_avatar">test</div>
       <div class="avatar" @click="gotoPersonalInformation">
         <el-avatar :src=avatar_src ></el-avatar>

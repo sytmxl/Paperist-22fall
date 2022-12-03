@@ -28,7 +28,7 @@
         </el-input>
       </el-col>
       <el-col class="advsearch" :span="4">
-        <el-button type="primary" round @click="AdvancedSearch()"
+        <el-button type="primary" size="mini" round @click="AdvancedSearch()"
           >高级搜索
         </el-button>
       </el-col>

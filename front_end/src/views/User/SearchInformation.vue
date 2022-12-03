@@ -1,9 +1,10 @@
 <template>
   <el-container>
 <!--    顶栏-->
-    <el-header id="topbar_new">
+    <el-header id="topbar">
     <div id="bar-content">
       <img class="logo" src="../../assets/logo/cube_logo.svg" @click="gotoFirstPage">
+      <el-button  type="default" id="switch" name="dark_light" @click="toggleDarkLight" title="Toggle dark/light mode">日/夜</el-button>
       <div class="search_input">
         <el-row :gutter="10">
           <el-col :span="20">
@@ -32,7 +33,7 @@
             </el-input>
           </el-col>
           <el-col class="advsearch" :span="4">
-            <el-button type="primary" round @click="AdvancedSearch()"
+            <el-button size="mini" type="primary" round @click="AdvancedSearch()"
             >高级搜索
             </el-button>
           </el-col>
@@ -166,7 +167,6 @@
           </el-col>
         </el-row>
       </div>
-      <el-button  type="default" id="switch" name="dark_light" @click="toggleDarkLight" title="Toggle dark/light mode">日/夜</el-button>
       <div @click="get_avatar">test</div>
       <div class="avatar" @click="gotoPersonalInformation">
         <el-avatar :src=avatar_src ></el-avatar>
@@ -558,6 +558,7 @@ export default {
   }
 }
 .el-main {
+  
   background:none;
   // border-radius: 20px !important;
 
@@ -569,15 +570,7 @@ export default {
     backdrop-filter: blur(40px) brightness(95%);
   }
 }
-//topbar_new
-#topbar_new {
-  z-index: 100;
-  width: 100%;
-  height:60px !important;
-  position: fixed; 
-  transition: 0.3s;
-  animation: test 0.3s cubic-bezier(.23,1.38,.65,.99);
-}
+//topbar
 #bar-content {
   height:60px;
   // border-radius: 0 !important;
@@ -606,7 +599,8 @@ export default {
 
   background-color: white !important;
 }
-#in-bar {
-  display: block;
+.advsearch {
+  // width: fit-content;
+  padding: 0 !important;
 }
 </style>
