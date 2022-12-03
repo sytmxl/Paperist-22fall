@@ -4,174 +4,175 @@
     <el-header id="topbar_new">
     <div id="bar-content">
       <img class="logo" src="../../assets/logo/cube_logo.svg" @click="gotoFirstPage">
-        <div class="search_input">
-          <el-row :gutter="10">
-            <el-col :span="20">
-              <el-input
-                  placeholder="请输入内容"
-                  v-model="common_search_query"
-                  class="input-with-select"
-                  clearable
+      <div class="search_input">
+        <el-row :gutter="10">
+          <el-col :span="20">
+            <el-input
+                placeholder="请输入内容"
+                v-model="common_search_query"
+                class="input-with-select"
+                clearable
+            >
+              <el-select v-model="common_search_type" slot="prepend" placeholder="请选择">
+                <el-option
+                    v-for="(item, index) in searchMods"
+                    :key="index"
+                    :label="item.label"
+                    :value="item.value"
+                ></el-option>
+              </el-select>
+              <el-button
+                  id="search-button"
+                  type="default"
+                  slot="append"
+                  icon="el-icon-search"
+                  @click="post_common_search(1)"
               >
-                <el-select v-model="common_search_type" slot="prepend" placeholder="请选择">
-                  <el-option
-                      v-for="(item, index) in searchMods"
-                      :key="index"
-                      :label="item.label"
-                      :value="item.value"
-                  ></el-option>
-                </el-select>
-                <el-button
-                    id="search-button"
-                    type="default"
-                    slot="append"
-                    icon="el-icon-search"
-                    @click="post_common_search(1)"
-                >
-                </el-button>
-              </el-input>
-            </el-col>
-            <el-col class="advsearch" :span="4">
-              <el-button type="primary" round @click="AdvancedSearch()"
-              >高级搜索
               </el-button>
-            </el-col>
-          </el-row>
-          <el-row
-              id="advance"
-              v-if="this.isAdvanced"
-              style="z-index: 99"
-              type="flex"
-              justify="left"
-          >
-            <el-col :span="16">
-              <el-card>
-                <el-form
-                    :model="advanced_search_query"
-                    :rules="rules"
-                    ref="AdvancedSearchInput"
-                    label-width="150px"
-                    label-position="left"
-                    class="demo-AdvancedSearchInput"
-                    style="margin-top: 10px; padding-bottom: -20px"
-                    size="mini"
-                >
-                  <el-form-item label="包含全部检索词" prop="Allselect">
-                    <el-input v-model="advanced_search_query.fuzzy_search"></el-input>
-                  </el-form-item>
-                  <el-form-item label="包含精确检索词" prop="Exectselect">
-                    <el-input
-                        v-model="advanced_search_query.must_contain"
-                        placeholder="多个检索词以逗号,分隔"
+            </el-input>
+          </el-col>
+          <el-col class="advsearch" :span="4">
+            <el-button type="primary" round @click="AdvancedSearch()"
+            >高级搜索
+            </el-button>
+          </el-col>
+        </el-row>
+        <el-row
+            id="advance"
+            v-if="this.isAdvanced"
+            style="z-index: 99"
+            type="flex"
+            justify="left"
+        >
+          <el-col :span="16">
+            <el-card>
+              <el-form
+                  :model="advanced_search_query"
+                  :rules="rules"
+                  ref="AdvancedSearchInput"
+                  label-width="150px"
+                  label-position="left"
+                  class="demo-AdvancedSearchInput"
+                  style="margin-top: 10px; padding-bottom: -20px"
+                  size="mini"
+              >
+                <el-form-item label="包含全部检索词" prop="Allselect">
+                  <el-input v-model="advanced_search_query.fuzzy_search"></el-input>
+                </el-form-item>
+                <el-form-item label="包含精确检索词" prop="Exectselect">
+                  <el-input
+                      v-model="advanced_search_query.must_contain"
+                      placeholder="多个检索词以逗号,分隔"
+                  >
+                    <el-dropdown slot="suffix" size="mini" placement="top-start">
+                      <i class="el-icon-warning-outline el-input__icon"> </i>
+                      <el-dropdown-menu slot="dropdown">
+                        <el-dropdown-item disabled
+                        >多个检索词以逗号,分隔</el-dropdown-item
+                        >
+                      </el-dropdown-menu>
+                    </el-dropdown></el-input
+                  >
+                </el-form-item>
+                <el-form-item label="包含至少一个检索词" prop="LeastOneSelect">
+                  <el-input
+                      v-model="advanced_search_query.at_least_one"
+                      placeholder="多个检索词以逗号,分隔"
+                  ></el-input>
+                </el-form-item>
+                <el-form-item label="不包含检索词" prop="NoSelect">
+                  <el-input
+                      v-model="advanced_search_query.contains_none"
+                      placeholder="多个检索词以逗号,分隔"
+                  ></el-input>
+                </el-form-item>
+                <el-form-item label="出现检索词的位置" prop="Position">
+                  <el-select
+                      v-model="option.searchPositionValue"
+                      placeholder="请选择"
+                      style="width: 150px; margin-left: -58%"
+                  >
+                    <el-option
+                        v-for="item in searchPosition"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value"
                     >
-                      <el-dropdown slot="suffix" size="mini" placement="top-start">
-                        <i class="el-icon-warning-outline el-input__icon"> </i>
-                        <el-dropdown-menu slot="dropdown">
-                          <el-dropdown-item disabled
-                          >多个检索词以逗号,分隔</el-dropdown-item
-                          >
-                        </el-dropdown-menu>
-                      </el-dropdown></el-input
-                    >
-                  </el-form-item>
-                  <el-form-item label="包含至少一个检索词" prop="LeastOneSelect">
-                    <el-input
-                        v-model="advanced_search_query.at_least_one"
-                        placeholder="多个检索词以逗号,分隔"
-                    ></el-input>
-                  </el-form-item>
-                  <el-form-item label="不包含检索词" prop="NoSelect">
-                    <el-input
-                        v-model="advanced_search_query.contains_none"
-                        placeholder="多个检索词以逗号,分隔"
-                    ></el-input>
-                  </el-form-item>
-                  <el-form-item label="出现检索词的位置" prop="Position">
+                    </el-option>
+                  </el-select>
+                </el-form-item>
+                <el-form-item label="作者" prop="AdAuthor">
+                  <el-input
+                      v-model="advanced_search_query.authors"
+                      placeholder="多个作者间以顿号、分隔"
+                  ></el-input>
+                </el-form-item>
+                <el-form-item label="机构" prop="AdOrganization">
+                  <el-input v-model="advanced_search_query.organization"></el-input>
+                </el-form-item>
+                <el-form-item label="出版物" prop="AdPublish">
+                  <el-input
+                      v-model="advanced_search_query.venue"
+                      placeholder="请输入名称"
+                  >
                     <el-select
-                        v-model="option.searchPositionValue"
+                        v-model="option.PublishSelect"
+                        slot="prepend"
                         placeholder="请选择"
-                        style="width: 150px; margin-left: -58%"
                     >
-                      <el-option
-                          v-for="item in searchPosition"
-                          :key="item.value"
-                          :label="item.label"
-                          :value="item.value"
-                      >
-                      </el-option>
+                      <el-option label="期刊" value="1"></el-option>
+                      <el-option label="会议" value="2"></el-option>
                     </el-select>
-                  </el-form-item>
-                  <el-form-item label="作者" prop="AdAuthor">
-                    <el-input
-                        v-model="advanced_search_query.authors"
-                        placeholder="多个作者间以顿号、分隔"
-                    ></el-input>
-                  </el-form-item>
-                  <el-form-item label="机构" prop="AdOrganization">
-                    <el-input v-model="advanced_search_query.organization"></el-input>
-                  </el-form-item>
-                  <el-form-item label="出版物" prop="AdPublish">
-                    <el-input
-                        v-model="advanced_search_query.venue"
-                        placeholder="请输入名称"
-                    >
-                      <el-select
-                          v-model="option.PublishSelect"
-                          slot="prepend"
-                          placeholder="请选择"
-                      >
-                        <el-option label="期刊" value="1"></el-option>
-                        <el-option label="会议" value="2"></el-option>
-                      </el-select>
-                    </el-input>
-                  </el-form-item>
-                  <el-form-item label="发表时间" prop="AdTime">
-                    <el-date-picker
-                        class="date-picker"
-                        v-model="advanced_search_query.year_begin"
-                        type="year"
-                        placeholder="起始年份"
-                        format="yyyy 年"
-                        value-format="yyyy"
-                    >
-                    </el-date-picker>
-                    <div style="float: left">&nbsp;-&nbsp;</div>
-                    <el-date-picker
-                        class="date-picker"
-                        v-model="advanced_search_query.year_end"
-                        type="year"
-                        placeholder="终止年份"
-                        format="yyyy 年"
-                        value-format="yyyy"
-                    >
-                    </el-date-picker>
-                  </el-form-item>
-                  <el-form-item label="语言检索范围" prop="AdLang">
-                    <el-select
-                        v-model="option.LangValue"
-                        placeholder="请选择"
-                        style="width: 150px; margin-left: -58%"
-                    >
-                      <el-option label="不限" value="1"></el-option>
-                      <el-option label="中文" value="2"></el-option>
-                      <el-option label="英语" value="3"></el-option>
-                    </el-select>
-                  </el-form-item>
-                </el-form>
-                <el-button type="primary" size="mini" @click="post_advanced_search(1)"
-                >立即搜索</el-button
-                >
-                <el-button size="mini" @click="CancelAd()">取消搜索</el-button>
-              </el-card>
-            </el-col>
-          </el-row>
-        </div>
+                  </el-input>
+                </el-form-item>
+                <el-form-item label="发表时间" prop="AdTime">
+                  <el-date-picker
+                      class="date-picker"
+                      v-model="advanced_search_query.year_begin"
+                      type="year"
+                      placeholder="起始年份"
+                      format="yyyy 年"
+                      value-format="yyyy"
+                  >
+                  </el-date-picker>
+                  <div style="float: left">&nbsp;-&nbsp;</div>
+                  <el-date-picker
+                      class="date-picker"
+                      v-model="advanced_search_query.year_end"
+                      type="year"
+                      placeholder="终止年份"
+                      format="yyyy 年"
+                      value-format="yyyy"
+                  >
+                  </el-date-picker>
+                </el-form-item>
+                <el-form-item label="语言检索范围" prop="AdLang">
+                  <el-select
+                      v-model="option.LangValue"
+                      placeholder="请选择"
+                      style="width: 150px; margin-left: -58%"
+                  >
+                    <el-option label="不限" value="1"></el-option>
+                    <el-option label="中文" value="2"></el-option>
+                    <el-option label="英语" value="3"></el-option>
+                  </el-select>
+                </el-form-item>
+              </el-form>
+              <el-button type="primary" size="mini" @click="post_advanced_search(1)"
+              >立即搜索</el-button
+              >
+              <el-button size="mini" @click="CancelAd()">取消搜索</el-button>
+            </el-card>
+          </el-col>
+        </el-row>
+      </div>
       <el-button  type="default" id="switch" name="dark_light" @click="toggleDarkLight" title="Toggle dark/light mode">日/夜</el-button>
       <div @click="get_avatar">test</div>
       <div class="avatar" @click="gotoPersonalInformation">
         <el-avatar :src=avatar_src ></el-avatar>
       </div>
     </div>
+    
     </el-header>
     <el-container id="SearchInformation">
 <!--      左侧栏-->
@@ -198,32 +199,35 @@
       </el-aside>
 <!--      搜索结果-->
       <el-main>
-        <el-pagination style="margin-top: calc(5vh)"
-            @current-change="post_common_search"
-            :current-page="currentPage"
-            :page-sizes="[10, 25, 50, 100]"
-            :page-size= "page_size"
-            layout="total, sizes, prev, pager, next, jumper"
-            :total="resultNum">
-        </el-pagination>
-        <el-row :gutter="20">
-          <el-col :span="16" style="text-align: left; margin-left: 6%; margin-bottom: 3%; color: #B3C0D1">找到约{{toThousands(resultNum)}}条相关结果</el-col>
-          <el-col :span="4" style="text-align: left; margin-left: 6%; margin-bottom: 3%; color: #B3C0D1">
-            <el-dropdown style="display: inline-block">
-              <span>
-                <span style="cursor: pointer;color: #B3C0D1">
-                  {{sortMethod}}
+        <el-card class="pagination" style="margin-bottom: 20px;margin-top: 40px">
+          <el-row :gutter="20" style="">
+            <el-col :span="16" style="text-align: left; margin-left: 6%; margin-bottom: 3%; ">找到约{{toThousands(resultNum)}}条相关结果</el-col>
+            <el-col :span="4" style="text-align: left; margin-left: 6%; margin-bottom: 3%; ">
+              <el-dropdown style="display: inline-block">
+                <span>
+                  <span style="cursor: pointer;">
+                    {{sortMethod}}
+                  </span>
+                  <el-dropdown-menu slot="dropdown">
+                    <el-dropdown-item>默认</el-dropdown-item>
+                    <el-dropdown-item>引用量</el-dropdown-item>
+                    <el-dropdown-item>日期</el-dropdown-item>
+                  </el-dropdown-menu>
                 </span>
-                <el-dropdown-menu slot="dropdown">
-                  <el-dropdown-item>默认</el-dropdown-item>
-                  <el-dropdown-item>引用量</el-dropdown-item>
-                  <el-dropdown-item>日期</el-dropdown-item>
-                </el-dropdown-menu>
-              </span>
-            </el-dropdown>
-            <i style="display: inline-block; margin-left: 10%" class="el-icon-sort" @click="sortReserve"></i>
-          </el-col>
-        </el-row>
+              </el-dropdown>
+              <i style="display: inline-block; margin-left: 10%" class="el-icon-sort" @click="sortReserve"></i>
+            </el-col>
+          </el-row>
+          <el-pagination 
+              @current-change="post_common_search"
+              :current-page="currentPage"
+              :page-sizes="[10, 25, 50, 100]"
+              :page-size= "page_size"
+              layout="total, sizes, prev, pager, next, jumper"
+              :total="resultNum">
+          </el-pagination>
+        </el-card>
+        
         <div>
           <!-- <el-card style="min-height: calc(75vh)" class="display_zone" shadow="never"> -->
           <paper-card v-for="paper in papers" :key="card_index"
@@ -231,6 +235,16 @@
           />
           <!-- </el-card> -->
         </div>
+        <el-card class="pagination">
+          <el-pagination 
+              @current-change="post_common_search"
+              :current-page="currentPage"
+              :page-sizes="[10, 25, 50, 100]"
+              :page-size= "page_size"
+              layout="total, sizes, prev, pager, next, jumper"
+              :total="resultNum">
+          </el-pagination>
+        </el-card>
       </el-main>
 <!--右侧栏-->
       <el-aside class="right">
@@ -559,15 +573,40 @@ export default {
 #topbar_new {
   z-index: 100;
   width: 100%;
-  height:60px;
+  height:60px !important;
   position: fixed; 
   transition: 0.3s;
   animation: test 0.3s cubic-bezier(.23,1.38,.65,.99);
+}
+#bar-content {
+  height:60px;
+  // border-radius: 0 !important;
+}
+.logo {
+  height: 60px;
 }
 .search_input {
   width: 700px !important;
 }
 .el-input {
   width: 100% !important;
+}
+.pagination {
+  width: 100%;
+  // border: solid 2px #003b5533 !important;
+  background-color: #ffffff !important;
+  * {
+    background: rgba(0, 0, 0, 0);
+    // color: white;
+  }
+}
+.el-pagination {
+  border-radius: 10px;
+  // border: solid 2px #003b552a !important;
+
+  background-color: white !important;
+}
+#in-bar {
+  display: block;
 }
 </style>
