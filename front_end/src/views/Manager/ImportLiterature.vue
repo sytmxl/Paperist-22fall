@@ -22,7 +22,47 @@
           <el-input type="text" v-model="questionForm.title"></el-input>
         </el-form-item>
         <el-form-item label="作者">
-          <el-input type="text" v-model="questionForm.author"></el-input>
+          <div v-for="(item, index) in questionForm.authors" :key="index">
+            <el-form-item>
+              <el-input
+                  type="text"
+                  v-model.number="item.num"
+                  @input="
+                  (val) => {
+                    handleNumChange(val, index)
+                  }
+                "
+              ></el-input>
+              <span
+                  v-if="index === 0"
+                  :class="
+                  item.num === null || item.author === ''
+                    ? 'change-icon-add'
+                    : 'change-icon'
+                "
+              ><i
+                  :style="{
+                    pointerEvents:
+                      item.num === null ? 'none' : 'auto',
+                  }"
+                  class="el-icon-circle-plus-outline"
+                  @click="addItemOfAuthor()"
+              ></i
+              ></span>
+              <span v-else class="change-icon" @click="deleteItemOfAuthor(index)"
+              ><i class="el-icon-remove-outline"></i
+              ></span>
+            </el-form-item>
+          </div>
+        </el-form-item>
+        <el-form-item label="来源">
+          <el-input type="text" v-model="questionForm.venueraw"></el-input>
+        </el-form-item>
+        <el-form-item label="出版社">
+          <el-input type="text" v-model="questionForm.publisher"></el-input>
+        </el-form-item>
+        <el-form-item label="期号">
+          <el-input type="text" v-model="questionForm.issue"></el-input>
         </el-form-item>
         <el-form-item label="摘要">
           <el-input type="textarea" :rows="8" v-model="questionForm.abstract"></el-input>
@@ -52,10 +92,10 @@
                       item.num === null ? 'none' : 'auto',
                   }"
                   class="el-icon-circle-plus-outline"
-                  @click="addItem()"
+                  @click="addItemOfKeyword()"
               ></i
               ></span>
-              <span v-else class="change-icon" @click="deleteItem(index)"
+              <span v-else class="change-icon" @click="deleteItemOfKeyword(index)"
               ><i class="el-icon-remove-outline"></i
               ></span>
             </el-form-item>
@@ -70,34 +110,6 @@
         <el-form-item label="链接">
           <el-input type="textarea" :rows="3" v-model="questionForm.link"></el-input>
         </el-form-item>
-<!--        <el-form-item label="预计用款时间:">-->
-<!--          <el-date-picker style="width: 180px;"-->
-<!--                          v-model="form.estimateTime"-->
-<!--                          type="datetime"-->
-<!--                          format="yyyy-MM-dd HH:mm:ss"-->
-<!--                          value-format="yyyy-MM-dd HH:mm:ss"-->
-<!--                          placeholder="预计用款时间">-->
-<!--          </el-date-picker>-->
-<!--        </el-form-item>-->
-
-<!--        <el-form-item label="审核结果">-->
-<!--          <el-select-->
-<!--              v-model="questionForm.auditResult"-->
-<!--              class="filter-item"-->
-<!--              placeholder="选择审核结果"-->
-<!--          >-->
-<!--            <el-option-->
-<!--                v-for="item in tabMapOptions"-->
-<!--                :key="item.key"-->
-<!--                :label="item.label"-->
-<!--                :value="item.key"-->
-<!--            />-->
-<!--          </el-select>-->
-<!--        </el-form-item>-->
-<!--        <el-form-item label="附加说明" prop="auditContent">-->
-<!--          <el-input type="textarea" :rows="3" v-model="questionForm.auditContent"></el-input>-->
-<!--        </el-form-item>-->
-
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">取消</el-button>
@@ -116,7 +128,10 @@ export default {
       questionForm: {
         doi: "",
         title: "",
-        author: "",
+        authors: [{author: ""}],
+        venueraw: "",
+        publisher: "",
+        issue: "",
         abstract: "",
         keywords: [{keyword: ""}],
         year: "",
@@ -131,7 +146,10 @@ export default {
       this.questionForm = {
         doi: "",
         title: "",
-        author: "",
+        authors: [{author: ""}],
+        venueraw: "",
+        publisher: "",
+        issue: "",
         abstract: "",
         keywords: [{keyword: ""}],
         year: "",
@@ -141,22 +159,46 @@ export default {
       this.dialogFormVisible = true;
     },
     //add
-    async createData() {
-      const params = this.questionForm;
-      alert(JSON.stringify(params))
-    },
+    // async createData() {
+    //   const params = this.questionForm;
+    //   alert(JSON.stringify(params))
+    //
+    //   const res = await saveSubject(params);
+    //   console.log(res);
+    //   if (res.code === "0000") {
+    //     this.$message({
+    //       type: "info",
+    //       message: "保存成功",
+    //     });
+    //     this.dialogFormVisible = false;
+    //     this.getQuerySubjectList();
+    //     return;
+    //   }
+    //   this.$message({
+    //     type: "error",
+    //     message: "保存失败",
+    //   });
+    // },
     //addKeyword
     handleNumChange(v, i) {
       console.log(v)
       console.log(i)
     },
-    addItem() {
+    addItemOfKeyword() {
       this.questionForm.keywords.push({
         keyword: "",
       })
     },
-    deleteItem(i) {
+    deleteItemOfKeyword(i) {
       this.questionForm.keywords.splice(i, 1)
+    },
+    addItemOfAuthor(){
+      this.questionForm.authors.push({
+        author: "",
+      })
+    },
+    deleteItemOfAuthor(i){
+      this.questionForm.authors.splice(i, 1)
     },
   },
 };
