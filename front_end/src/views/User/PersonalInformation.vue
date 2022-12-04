@@ -159,6 +159,13 @@
                   @click="isEditPersonalInformation = true"
                   >修改信息</el-button
                 >
+                <el-button
+                  type="primary"
+                  size="small"
+                  v-if="!isOthers && !isScholar"
+                  @click="$refs.claimScholar.initclaimScholar();"
+                  >学者认证</el-button
+                >
               </template>
               <el-descriptions-item label="真实姓名">{{
                 realname
@@ -746,6 +753,7 @@
           </el-tabs>
         </div>
       </el-main>
+      <claimScholar ref="claimScholar"></claimScholar>
     </el-container>
   </el-card>
 </template>
@@ -756,6 +764,7 @@ import RelationShip from "@/components/RelationShip.vue";
 import ScholarLine from "@/components/ScholarLine.vue";
 import TopBar from "@/components/TopBar";
 import PaperCard from "@/components/PaperCard.vue";
+import claimScholar from "@/components/claimScholar.vue";
 import axios from "axios";
 import CryptoJS from "crypto-js";
 // import CryptoJS from "_crypto-js@4.1.1@crypto-js";
@@ -766,6 +775,7 @@ export default {
     ScholarLine,
     TopBar,
     PaperCard,
+    claimScholar
   },
   data() {
     return {
@@ -1014,7 +1024,11 @@ export default {
     this.getSet();
     // if (this.isScholar) this.DefaultLocation = "zero";
     // else this.DefaultLocation = "first";
-    this.DefaultLocation = "zero";
+    if (this.isScholar) {
+      this.DefaultLocation = "zero";
+    } else {
+      this.DefaultLocation = "first";
+    }
     this.noteLabel = this.isOthers ? "他的笔记" : "我的笔记";
   },
   mounted() {
@@ -1027,6 +1041,9 @@ export default {
   watch: {
     isOthers: function (newVal, oldVal) {
       this.noteLabel = this.isOthers ? "他的笔记" : "我的笔记";
+    },
+    isScholar: function (newVal, oldVal) {
+      this.DefaultLocation = this.isScholar ? "zero" : "first";
     },
   },
   methods: {
