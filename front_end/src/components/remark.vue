@@ -12,7 +12,7 @@
             <div class="comment">
                 {{i.comment}}
             </div>
-            <div class="response">
+            <div class="response" id="response">
                 <i class="el-icon-chat-round" @click="ready(i)"></i>
                 <i class="el-icon-thumb" @click="likeit(i.id,i.like_flag)" v-if="i.like_flag" title="取消">{{i.likes}}</i>
                 <i class="el-icon-thumb" @click="likeit(i.id,i.like_flag)" v-else title="赞">{{i.likes}}</i>
@@ -20,7 +20,7 @@
             </div>
         </div>
     </div>
-    <div class="responser" v-if="i.flag==1">
+    <div class="prvoker" v-if="i.flag==1">
         <div class="image">
             <img :src="i.image" alt="">
         </div>
@@ -33,10 +33,10 @@
             <div class="comment">
                 {{i.comment}}
             </div>
-              <div class="response">
+              <div class="response" id="response">
                 <i class="el-icon-chat-round" @click="ready(i)"></i>
-                <i class="el-icon-thumb" @click="likeit(i.id,i.like_flag,i)" v-if="i.like_flag" title="取消">{{i.likes}}</i>
-                <i class="el-icon-thumb" @click="likeit(i.id,i.like_flag,i)" v-else title="赞">{{i.likes}}</i>
+                <i class="el-icon-thumb" @click="likeit(i.id,i.like_flag)" v-if="i.like_flag" title="取消">{{i.likes}}</i>
+                <i class="el-icon-thumb" @click="likeit(i.id,i.like_flag)" v-else title="赞">{{i.likes}}</i>
                 <i class="el-icon-warning-outline" @click="tipoff(i.id)"></i>
             </div>
         </div>
@@ -76,7 +76,7 @@ export default {
     }
   },
   methods:{
-    likeit(id,like_flag,item){
+    likeit(id,like_flag){
         if(like_flag){
           this.$axios({
             url:"http://127.0.0.1:8000/likeIt/",
@@ -87,7 +87,8 @@ export default {
                 op:0
             }
           }).then(res=>{
-              i.likes = i.likes-1;
+            //   $("#response").load(location.href + "#response");
+              document.getElementById("#response").load(location.href + "#response");
           })
         }
         else{
@@ -100,9 +101,14 @@ export default {
                 op:1
             }
           }).then(res=>{
-            i.likes = i.likes+1;
+            // $("#response").load(location.href + "#response");
+            document.getElementById("#response").load(location.href + "#response");
           })
         }
+        let data = {
+            op:"like"
+        }
+        this.$emit('throw_remark',data)
     },
     tipoff(id){
          this.$axios({
@@ -118,6 +124,7 @@ export default {
     },
     ready(item){
         let data = {
+            op:"remark",
             sender_id: item.sender_id,
             remark_id: item.id
         }

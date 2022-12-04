@@ -20,10 +20,12 @@ style="margin-top:20px; width: 100%;"
   drag
   ref="upload"
   action=""
+  :on-change="loadJsonFromFile"
+  :http-request="submitAvatarHttp"
   :file-list="fileList"
   multiple>
   <i class="el-icon-upload"></i>
-  <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em> ，支持pdf,word,markdown格式</div>
+  <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em> ，文件请转为pdf格式提交</div>
 </el-upload>
 </div>
 <el-button style="margin-top:40px;float:right;width: 100%;" @click="submit()">发布</el-button>
@@ -32,6 +34,7 @@ style="margin-top:20px; width: 100%;"
 </template>
 
 <script>
+let formdata = new FormData();
 export default {
     props:{
         paper_id:"",
@@ -39,28 +42,29 @@ export default {
     data(){
         return{
              introduction:"",
-             fileList:""
         }
     },
     methods:{
+    submitAvatarHttp(val){
+       formdata.append('pdf',val.file)
+      },
+    loadJsonFromFile(file, fileList) {
+      this.uploadFiles = fileList
+    },
         submit(){
-        var file = this.$refs.upload.files[0];
-        var filedata = new FormData();
-        filedata.append("file",file);
-        console.log(file);
         this.$axios({
-            url:"http://127.0.0.1:8000/noteInit/",
+            url:"http://127.0.0.1:8000/uploadNote/",
+            headers: { "Content-Type": "multipart/form-data" },
             method:"post",
             data:{
-                note_id:this.$route.params.note_id,
-                pdf:filedata
+                paper_id:this.paper_id,
+                introduction:this.introduction,
+                pdf:formdata.get('pdf')
             }
         }).then(res=>{
-            this.pdf_src = res.data.note_info[0].note_url
-            this.list = res.data.other_note
-            this.author = res.data.author_info[0]
-            this.note = res.data.note_info[0]
-            // this._loadFile(this.pdf_src)
+            this.$message.success("上传成功，等待审核")
+            let msg="success"
+            this.$emit('finish_upload',msg)
         })
         }
     }
