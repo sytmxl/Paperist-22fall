@@ -4,7 +4,7 @@
       <el-container class="content">
         <el-main>
           <div class="main">
-            <el-card class="box-card">
+            <el-card class="box-card" v-if="info_list!=[]">
               <div style="margin-bottom:20px">
                 <span style="font-size:35px;font-weight:bolder">{{info_list.paper_name}}</span>
                 <h4>来源：{{info_list.origin}} &#12288; 引用次数：{{info_list.cite_number}}</h4>
@@ -64,7 +64,7 @@
                       </div>
                       <div v-if="Object.keys(remark_list).length!=0">
                         <div class="comment" v-for="i in remark_list" :key="i">
-                          <remark :list="i.remark" :paper_id="paper_id"  @throw_remark="open_comment"/>
+                          <remark :list="i.remark" :paper_id="paper_id"  @throw_remark="react_remark"/>
                       </div>
                       </div>
                       <div v-else><el-empty description="还没有评论，发表第一个评论吧"></el-empty></div>
@@ -76,7 +76,7 @@
                       </div>
                       <div v-if="Object.keys(mark_list).length!=0">
                         <div class="mark" v-for="i in mark_list" :key="i">
-                          <note :list="i"/>
+                          <note :list="i" @reaction_note="aboutNoteInit()"/>
                         </div>
                       </div>
                       <div v-else><el-empty description="还没有笔记，发表第一篇笔记吧"></el-empty></div>
@@ -168,14 +168,14 @@
                     :visible.sync="CreatMark"
                     width="30%"
                     >
-                    <uploadMark :paper_id="paper_id"/>
+                    <uploadMark :paper_id="paper_id" @finish_upload="CreatMark=false"/>
           </el-dialog>
           <el-dialog
                 title="留下你的评论吧~"
                 :visible.sync="CreatCommentVisible"
                 width="30%"
                 >
-                <CreateComment :paper_id="paper_id" :receiver_id="-1" :remark_id="-1" @finish_remark="close_comment"/>
+                <CreateComment :paper_id="paper_id" :receiver_id="receiver_id" :remark_id="remark_id" @finish_remark="close_comment"/>
           </el-dialog>
         </el-main>
         <el-aside>
@@ -303,12 +303,13 @@ export default {
       handleDownload(file) {
         console.log(file);
       },
-      handleChange(file) {
-        // this.pictures = fileList;
-        formdata.append('img',file.file)
-      },
       handleExceed(files, fileList) {
         this.$message.warning(`最多上传四张图片`);
+      },
+      react_note(data){
+        if(data.flag==1){
+          this.aboutNoteInit()
+        }
       },
       paper_init(){
            this.$axios({
@@ -329,6 +330,55 @@ export default {
         })
         
       },
+
+      paperInfoInit(){
+        this.$axios({
+            url:"http://127.0.0.1:8000/paperInfoInit/",
+            method:"post",
+            data:{
+                paper_id:this.$route.params.paper_id
+            }
+        }).then(res=>{
+          // console.log(res.data.about_list)
+            this.info_list = res.data.info_list[0]
+            this.chart_init(res.data.info_list[0].cite_number)
+            // this._loadFile(this.pdf_src)
+        })
+      },
+       aboutListInit(){
+          this.$axios({
+            url:"http://127.0.0.1:8000/aboutListInit/",
+            method:"post",
+            data:{
+                paper_id:this.$route.params.paper_id
+            }
+        }).then(res=>{
+          this.about_list = res.data.about_list
+        })
+       },
+       aboutNoteInit(){
+          this.$axios({
+            url:"http://127.0.0.1:8000/aboutNoteInit/",
+            method:"post",
+            data:{
+                paper_id:this.$route.params.paper_id
+            }
+        }).then(res=>{
+          this.mark_list = res.data.note_list
+        })
+       },
+       paperRemarkInit(){
+          this.$axios({
+            url:"http://127.0.0.1:8000/paperRemarkInit/",
+            method:"post",
+            data:{
+                paper_id:this.$route.params.paper_id
+            }
+        }).then(res=>{
+          this.remark_list = res.data.remark_list
+        })
+       },
+
       quote(){
         this.QuoteVisible = true
          this.$axios({
@@ -353,6 +403,7 @@ export default {
             }
           }).then(res=>{
               this.$message.success("已取消收藏")
+              this.paperInfoInit()
           })
         }
         else{
@@ -366,18 +417,26 @@ export default {
             }
           }).then(res=>{
             this.$message.success("已收藏")
+            this.paperInfoInit()
           })
         }
       },
-      open_comment(data){
-        this.CreatCommentVisible = true;
-        this.remark_id = data.remark_id
-        this.receiver_id = data.sender_id
+      react_remark(data){
+        if(data.op=="remark"){
+             this.CreatCommentVisible = true;
+            this.remark_id = data.remark_id
+            this.receiver_id = data.sender_id
+            console.log(data)
+        }
+        else if(data.op=="like"){
+           this.paperRemarkInit()
+        }
      },
      close_comment(data){
-           this.CreatCommentVisible = false;
-  
+          this.CreatCommentVisible = false;
+          this.paperRemarkInit()
      },
+
      submit(){
        this.$axios({
                 method: "post",
@@ -405,9 +464,15 @@ export default {
         note,
         TopBar,
     },
-    created() {},
+    created() {
+      
+    },
     mounted() {
-      this.paper_init();
+      // this.paper_init();
+      this.paperInfoInit()
+      this.aboutListInit()
+      this.aboutNoteInit()
+      this.paperRemarkInit()
       // this.chart_init();
     }
 }
