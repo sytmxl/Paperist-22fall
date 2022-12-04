@@ -12,7 +12,12 @@
           <el-col :span="10">
             <!--:span占据行数-->
             <!--头像-->
-            <img v-if="!profile" class="picture" src="../../assets/mosy.jpg" alt="" />
+            <img
+              v-if="!profile"
+              class="picture"
+              src="../../assets/mosy.jpg"
+              alt=""
+            />
             <img v-else class="picture" :src="profile" alt="" />
             <el-upload
               ref="upload"
@@ -139,7 +144,12 @@
                   type="primary"
                   size="small"
                   v-if="!isOthers"
-                  @click="isChangePassword = true;newPassword='';oldPassword='';confirmNewPassword=''"
+                  @click="
+                    isChangePassword = true;
+                    newPassword = '';
+                    oldPassword = '';
+                    confirmNewPassword = '';
+                  "
                   >修改密码</el-button
                 >
                 <el-button
@@ -193,7 +203,9 @@
                 prefix-icon="el-icon-lock"
                 placeholder="在此输入旧密码"
                 v-model="oldPassword"
-                show-password type="password" clearable
+                show-password
+                type="password"
+                clearable
               ></el-input>
             </el-form-item>
             <el-form-item prop="" label="请输入新密码：">
@@ -201,7 +213,9 @@
                 prefix-icon="el-icon-lock"
                 placeholder="在此输入新密码"
                 v-model="newPassword"
-                show-password type="password" clearable
+                show-password
+                type="password"
+                clearable
               ></el-input>
             </el-form-item>
             <el-form-item prop="" label="请再输入一遍新密码：">
@@ -209,7 +223,9 @@
                 prefix-icon="el-icon-lock"
                 placeholder="再次输入新密码"
                 v-model="confirmNewPassword"
-                show-password type="password" clearable
+                show-password
+                type="password"
+                clearable
               ></el-input>
             </el-form-item>
           </el-form>
@@ -257,13 +273,63 @@
                 :relations="RelationsData"
                 :val="showRelation"
               ></RelationShip>
-              <h2 style="text-align: left">论文列表</h2>
+              <h2
+                style="text-align: left; margin-top: 20px; margin-bottom: 10px"
+              >
+                论文列表
+              </h2>
               <el-divider />
-              <paper-card
-                v-for="(paper, index) in papers"
-                :key="index"
-                :paper_data="paper._source"
-              />
+              <div style="margin-top: 15px; margin-bottom: 15px; width: 30%">
+                <div style="margin-top: 15px">
+                  <el-input
+                    placeholder="请输入你需要搜索的文献"
+                    v-model="selectScholarLiterature"
+                    class="input-with-select"
+                  >
+                    <el-button
+                      slot="append"
+                      icon="el-icon-search"
+                      @click="searchPaperCollection"
+                    ></el-button>
+                  </el-input>
+                  <el-select
+                    v-model="ScholarLiteratureSort"
+                    placeholder="请选择排序方式"
+                    @change="changeScholarLiteratureSort"
+                  >
+                    <el-option
+                      v-for="item in ScholarLiteratureOptions"
+                      :key="item.value"
+                      :label="item.label"
+                      :value="item.value"
+                    >
+                    </el-option>
+                  </el-select>
+                </div>
+              </div>
+              <!-- 用v-if代替slice，解决v-for，slice不敏感 -->
+              <!-- 同时利用flag解决排序更新问题 -->
+              <div v-for="(paper, index) in papers" :key="paper.id">
+                <paper-card
+                  v-if="
+                    index >= (currentPage - 1) * pageSize &&
+                    index < currentPage * pageSize &&
+                    flag
+                  "
+                  :paper_data="paper"
+                />
+              </div>
+              <el-pagination
+                :current-page.sync="currentPage"
+                :page-size="pageSize"
+                @size-change="handleSizeChange"
+                @current-change="handleCurrentChange"
+                background
+                layout="prev, pager, next, jumper"
+                :total="papers.length > 0 ? papers.length : null"
+                style="margin-top: 40px"
+              >
+              </el-pagination>
             </el-tab-pane>
             <el-tab-pane
               label="个人收藏"
@@ -699,7 +765,7 @@ export default {
     RelationShip,
     ScholarLine,
     TopBar,
-    PaperCard
+    PaperCard,
   },
   data() {
     return {
@@ -741,22 +807,153 @@ export default {
       confirmNewPassword: "",
       color: "",
       language: "",
+      selectScholarLiterature: "",
+      currentPage: 1,
+      pageSize: 5,
       papers: [
         {
-          _source: {
-            authors: [{
+          authors: [
+            {
               name: "杰哥",
-            }],
-            id: "56d850c8dabfae2eee0100f0",
-            issue: "是多少",
-            lang: "en",
-            n_citation: 12,
-            page_end: "",
-            page_start: "",
-            title: "动态式数学课堂中“交流”艺术的探寻",
-            volume: "",
-            year: 2011,
-          },
+            },
+          ],
+          id: "56d850c8dabfae2eee0100f0",
+          issue: "是多少",
+          lang: "en",
+          n_citation: 12,
+          page_end: "",
+          page_start: "",
+          title: "动态式12数学课堂中“交流”艺术的探寻",
+          volume: "",
+          year: 2019,
+        },
+        {
+          authors: [
+            {
+              name: "杰哥",
+            },
+          ],
+          id: "56d850c8dabfae2eee0100f0",
+          issue: "是多少",
+          lang: "en",
+          n_citation: 13,
+          page_end: "",
+          page_start: "",
+          title: "动态式23数学课堂中“交流”艺术的探寻",
+          volume: "",
+          year: 2001,
+        },
+        {
+          authors: [
+            {
+              name: "杰哥",
+            },
+          ],
+          id: "56d850c8dabfae2eee0100f0",
+          issue: "是多少",
+          lang: "en",
+          n_citation: 11,
+          page_end: "",
+          page_start: "",
+          title: "动态式数学232课堂中“交流”艺术的探寻",
+          volume: "",
+          year: 2011,
+        },
+        {
+          authors: [
+            {
+              name: "杰哥",
+            },
+          ],
+          id: "56d850c8dabfae2eee0100f0",
+          issue: "是多少",
+          lang: "en",
+          n_citation: 18,
+          page_end: "",
+          page_start: "",
+          title: "动态式数学课堂1中“交流”艺术的探寻",
+          volume: "",
+          year: 2009,
+        },
+        {
+          authors: [
+            {
+              name: "杰哥",
+            },
+          ],
+          id: "56d850c8dabfae2eee0100f0",
+          issue: "是多少",
+          lang: "en",
+          n_citation: 12,
+          page_end: "",
+          page_start: "",
+          title: "动态式数学课堂2中“交流”艺术的探寻",
+          volume: "",
+          year: 2012,
+        },
+        {
+          authors: [
+            {
+              name: "杰哥",
+            },
+          ],
+          id: "56d850c8dabfae2eee0100f0",
+          issue: "是多少",
+          lang: "en",
+          n_citation: 12,
+          page_end: "",
+          page_start: "",
+          title: "动态式数学课3堂中“交流”艺术的探寻",
+          volume: "",
+          year: 2013,
+        },
+        {
+          authors: [
+            {
+              name: "杰哥",
+            },
+          ],
+          id: "56d850c8dabfae2eee0100f0",
+          issue: "是多少",
+          lang: "en",
+          n_citation: 12,
+          page_end: "",
+          page_start: "",
+          title: "4动态式数学课堂中“交流”艺术的探寻",
+          volume: "",
+          year: 2011,
+        },
+        {
+          authors: [
+            {
+              name: "杰哥",
+            },
+          ],
+          id: "56d850c8dabfae2eee0100f0",
+          issue: "是多少",
+          lang: "en",
+          n_citation: 13,
+          page_end: "",
+          page_start: "",
+          title: "5动态式数学课堂中“交流”艺术的探寻",
+          volume: "",
+          year: 2011,
+        },
+        {
+          authors: [
+            {
+              name: "杰哥",
+            },
+          ],
+          id: "56d850c8dabfae2eee0100f0",
+          issue: "是多少",
+          lang: "en",
+          n_citation: 14,
+          page_end: "",
+          page_start: "",
+          title: "6动态式数学课堂中“交流”艺术的探寻",
+          volume: "",
+          year: 2010,
         },
       ],
       paperCollection: [],
@@ -765,11 +962,10 @@ export default {
       myComment: [],
 
       //图片
-      profile:"",
-      headers:{
-        "Authorization":"JWT " + sessionStorage.getItem("token"),
+      profile: "",
+      headers: {
+        Authorization: "JWT " + sessionStorage.getItem("token"),
       },
-
 
       RelationsData: [
         // {
@@ -789,6 +985,26 @@ export default {
         // },
       ],
       Linedata: [],
+      ScholarLiteratureSort: "",
+      ScholarLiteratureOptions: [
+        {
+          value: "1",
+          label: "发表时间从新到旧",
+        },
+        {
+          value: "2",
+          label: "发表时间从旧到新",
+        },
+        {
+          value: "3",
+          label: "引用量从高到低",
+        },
+        {
+          value: "4",
+          label: "引用量从低到高",
+        },
+      ],
+      flag: true,
     };
   },
   created() {
@@ -804,7 +1020,8 @@ export default {
   mounted() {
     this.initRelations();
     this.initLine();
-    this.initScholarPaper();
+    // this.initSort();
+    // this.initScholarPaper();
     this.noteLabel = this.isOthers ? "他的笔记" : "我的笔记";
   },
   watch: {
@@ -854,10 +1071,25 @@ export default {
     //     url: "/app/get_scholar_paper_list/",
     //   }).then((res) => {
     //     this.papers = res.data.data;
+    //     this.papars.sort(this.compareDown("year"));
     //     console.log("initScholarPaper");
     //     console.log(res.data);
     //   });
     // },
+    // 搜索学者指定标题文献
+    searchPaperCollection() {
+      this.$axios({
+        url: "/user/searchPaperCollection/",
+        method: "post",
+        data: {
+          token: sessionStorage.getItem("token"),
+          content: this.selectLiterature,
+        },
+      }).then((res) => {
+        this.paperCollection = res.data.data;
+        this.selectLiterature = "";
+      });
+    },
     //获取个人信息
     getPersonalInformation() {
       this.$axios({
@@ -872,7 +1104,7 @@ export default {
         this.username = res.data.data[0].username;
         this.personalProfile = res.data.data[0].sign;
         this.region = res.data.data[0].country;
-        this.profile=res.data.data[0].profile;
+        this.profile = res.data.data[0].profile;
 
         this.researchField = res.data.data[0].field;
         //异步访问，created结束还未执行完
@@ -1207,15 +1439,15 @@ export default {
         this.$message.warning(
           "密码仅能由数字、26个英文字母或者下划线组成，长度为8-16位，请检查您的密码"
         );
-        this.newPassword='';
-        this.oldPassword='';
-        yhis.confirmNewPassword='';
+        this.newPassword = "";
+        this.oldPassword = "";
+        yhis.confirmNewPassword = "";
         return;
       } else if (this.newPassword != this.confirmNewPassword) {
         this.$message.warning("两次输入密码不一致，请检查");
-        this.newPassword='';
-        this.oldPassword='';
-        yhis.confirmNewPassword='';
+        this.newPassword = "";
+        this.oldPassword = "";
+        yhis.confirmNewPassword = "";
         return;
       }
       this.isChangePassword = false;
@@ -1228,29 +1460,91 @@ export default {
           newPassword: CryptoJS.MD5(this.newPassword).toString(),
         },
       }).then((res) => {
-        if(res.data.isSuccess==-1){
-          this.$message.error("旧密码错误")
-        } else{
-          this.$message.success("修改密码成功")
+        if (res.data.isSuccess == -1) {
+          this.$message.error("旧密码错误");
+        } else {
+          this.$message.success("修改密码成功");
         }
       });
     },
     //修改头像
-    uploadProfile(file){
+    uploadProfile(file) {
       let formData = new FormData();
-      formData.append('profile',file.file)
-      this.$axios.post('/user/upload_profile/', formData).then(res => {
-        this.$message.success('上传成功')
-        window.location.reload();
-      }).catch(err=>{
-        this.$message.error('上传失败')
-      });
-
+      formData.append("profile", file.file);
+      this.$axios
+        .post("/user/upload_profile/", formData)
+        .then((res) => {
+          this.$message.success("上传成功");
+          window.location.reload();
+        })
+        .catch((err) => {
+          this.$message.error("上传失败");
+        });
     },
-
-
-
-
+    handleSizeChange: function (size) {
+      this.pagesize = size;
+    },
+    handleCurrentChange: function (currentPage) {
+      console.log(currentPage);
+      console.log(this.papers);
+      console.log(
+        this.papers.slice(
+          (currentPage - 1) * this.pageSize,
+          currentPage * this.pageSize
+        )
+      );
+      this.currentPage = currentPage;
+    },
+    // 封装升序排序规则
+    compareUp(property) {
+      return function (a, b) {
+        var value1 = a[property];
+        var value2 = b[property];
+        return value1 - value2;
+      };
+    },
+    // 封装降序排序规则
+    compareDown(property) {
+      return function (a, b) {
+        var value1 = a[property];
+        var value2 = b[property];
+        return value2 - value1;
+      };
+    },
+    // 利用flag解决了排序以后v-fo不更新的问题
+    changeScholarLiteratureSort(value) {
+      // window.alert(value);
+      if (value == "1") {
+        this.flag = false;
+        this.papers.sort(this.compareDown("year"));
+        console.log(this.papers.sort(this.compareDown("year")));
+        this.$nextTick(() => {
+          this.flag = true;
+        });
+      }
+      if (value == "2") {
+        this.flag = false;
+        this.papers.sort(this.compareUp("year"));
+        this.$nextTick(() => {
+          this.flag = true;
+        });
+      }
+      if (value == "3") {
+        this.flag = false;
+        this.papers.sort(this.compareDown("n_citation"));
+        console.log("3", this.papers.sort(this.compareDown("n_citation")));
+        this.$nextTick(() => {
+          this.flag = true;
+        });
+      }
+      if (value == "4") {
+        this.flag = false;
+        this.papers.sort(this.compareUp("n_citation"));
+        this.$nextTick(() => {
+          this.flag = true;
+        });
+      }
+    },
   },
 };
 </script>
