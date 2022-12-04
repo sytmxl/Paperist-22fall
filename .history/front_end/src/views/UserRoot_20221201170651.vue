@@ -12,11 +12,6 @@ export default {
   components: {
     TopBar,
   },
-  provide() {
-        return {
-          reload: this.reload
-        }
-  },
   mounted() {
     // window.addEventListener("scroll", this.scroll0,true);
     var topbar = document.getElementById("topbar");
@@ -43,11 +38,6 @@ export default {
         content.style.width='100%';
 			}
 		},
-  },
-  mounted(){
-     this.$router.push({
-          name:'FirstPage'
-        })
   }
 }
 </script>

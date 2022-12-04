@@ -43,11 +43,6 @@ export default {
         content.style.width='100%';
 			}
 		},
-  },
-  mounted(){
-     this.$router.push({
-          name:'FirstPage'
-        })
   }
 }
 </script>
