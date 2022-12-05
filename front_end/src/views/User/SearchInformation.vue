@@ -526,6 +526,7 @@ export default {
 <style lang="scss" scoped>
 @import '../../components/topbar.scss';
 @import '../../components/searchbox.scss';
+@import './pagination.scss';
 #SearchInformation {
   margin-top: 30px;
   width: calc(90vw);

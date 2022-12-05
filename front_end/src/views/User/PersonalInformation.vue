@@ -1569,6 +1569,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import './pagination.scss';
 .picture {
   height: 150px;
   width: 150px;
@@ -1675,19 +1676,5 @@ export default {
 /deep/.el-descriptions *:not(button) {
   background-color: #003b5500 !important;
 }
-//pagination
-/deep/.number {
-  border-radius: 10px !important;
-  &:hover {
-    background: #003b55b4 !important;
-    color: #ffffff !important;
-  }
-}
-/deep/.active {
-  background: #003b55 !important;
-  &:hover {
-    background: #003b55 !important;
-    color: #fafdff !important;
-  }
-}
+
 </style>
