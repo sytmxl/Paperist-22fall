@@ -287,11 +287,12 @@
               </h2>
               <el-divider />
               <div style="margin-top: 15px; margin-bottom: 15px; width: 30%">
-                <div style="margin-top: 15px">
+                <div style="margin-top: 15px;display: flex;">
                   <el-input
                     placeholder="请输入你需要搜索的文献"
                     v-model="selectScholarLiterature"
                     class="input-with-select"
+                    style="width:400px; margin-right:30px"
                   >
                     <el-button
                       slot="append"
@@ -303,6 +304,7 @@
                     v-model="ScholarLiteratureSort"
                     placeholder="请选择排序方式"
                     @change="changeScholarLiteratureSort"
+                    style="position: absolute; right: 0;"
                   >
                     <el-option
                       v-for="item in ScholarLiteratureOptions"
@@ -1672,5 +1674,20 @@ export default {
 //似乎必须要用deep、选择全部子标签、颜色用全透明才行
 /deep/.el-descriptions *:not(button) {
   background-color: #003b5500 !important;
+}
+//pagination
+/deep/.number {
+  border-radius: 10px !important;
+  &:hover {
+    background: #003b55b4 !important;
+    color: #ffffff !important;
+  }
+}
+/deep/.active {
+  background: #003b55 !important;
+  &:hover {
+    background: #003b55 !important;
+    color: #fafdff !important;
+  }
 }
 </style>
