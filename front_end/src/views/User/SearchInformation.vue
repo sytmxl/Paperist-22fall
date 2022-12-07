@@ -29,7 +29,7 @@
                   type="default"
                   slot="append"
                   icon="el-icon-search"
-                  @click="post_common_search(1)"
+                  @click="common_search()"
               >
               </el-button>
             </el-input>
@@ -169,18 +169,26 @@
       <el-aside class="left">
         <div>
           <el-card style="margin-bottom: 10px" class="display_zone" shadow="never">
-            <!--        复选框组1-->
-            <p style="text-align: left; color: #B3C0D1">来源</p>
-            <el-checkbox-group  v-model="secondarySearchFilters01" size="mini">
-              <el-checkbox border v-for="filter in filterGroup01" :label="filter" :key="filter"
+            <!--        复选框组 时间-->
+            <p style="text-align: left; color: #B3C0D1">年份</p>
+            <el-checkbox-group v-model="secondarySearchFilters_year" size="mini">
+              <el-checkbox border v-for="filter in filterGroup_year" :label="filter" :key="filter"
                            style="background: white; margin: 1% ;float: left"/>
             </el-checkbox-group>
           </el-card>
           <el-card style="margin-bottom: 10px" class="display_zone">
-            <!--        复选框组2-->
-            <p style="text-align: left; color: #B3C0D1">领域</p>
-            <el-checkbox-group v-model="secondarySearchFilters02" size="mini">
-              <el-checkbox border v-for="filter in filterGroup02" :label="filter" :key="filter"
+            <!--        复选框组 来源-->
+            <p style="text-align: left; color: #B3C0D1">来源</p>
+            <el-checkbox-group v-model="secondarySearchFilters_venue" size="mini">
+              <el-checkbox border v-for="filter in filterGroup_venue" :label="filter" :key="filter"
+                           style="background: white; margin: 1% ;float: left"/>
+            </el-checkbox-group>
+          </el-card>
+          <el-card style="margin-bottom: 10px" class="display_zone">
+            <!--        复选框组  作者-->
+            <p style="text-align: left; color: #B3C0D1">作者</p>
+            <el-checkbox-group v-model="secondarySearchFilters_author" size="mini">
+              <el-checkbox border v-for="filter in filterGroup_author" :label="filter" :key="filter"
                            style="background: white; margin: 1% ;float: left"/>
             </el-checkbox-group>
           </el-card>
@@ -198,7 +206,9 @@
             :total="resultNum">
         </el-pagination>
         <el-row :gutter="20">
-          <el-col :span="16" style="text-align: left; margin-left: 6%; margin-bottom: 3%; color: #B3C0D1">找到约{{toThousands(resultNum)}}条相关结果</el-col>
+          <el-col :span="16" style="text-align: left; margin-left: 6%; margin-bottom: 3%; color: #B3C0D1">
+            找到{{toThousands(resultNum) + (this.resultNum_relation === "gte" ? "+":"")}}
+            条相关结果{{this.resultNum_relation === "gte" ? "，您可能需要使用二次检索或高级检索获取更精确的结果":""}}</el-col>
           <el-col :span="4" style="text-align: left; margin-left: 6%; margin-bottom: 3%; color: #B3C0D1">
             <el-dropdown style="display: inline-block">
               <span>
@@ -226,7 +236,7 @@
 <!--右侧栏-->
       <el-aside class="right">
         <el-card  class="display_zone" shadow="never">
-          <h3 style="text-align: left; margin-left: 5%; margin-bottom: calc(2vh)" @click="post_common_search(1)">推荐</h3>
+          <h3 style="text-align: left; margin-left: 5%; margin-bottom: calc(2vh)">推荐</h3>
           <el-card class="recommend" v-for="recommend in recommends" :key="recommend" v-loading = "true" shadow="never"
                    style = "height: 75px;margin-bottom: 10px">
             <h5 style="margin-left: 10%; text-align: left;">{{recommend}}</h5>
@@ -259,22 +269,24 @@ export default {
   data() {
     return{
       //二次搜索标签
-      filterGroup01 : ['阿巴阿巴', '随便什么', '长度', '不一样','的字符串们', '交错的效果', '嗯'
-        , '其实这样','看起来还是挺乱的', '真的', '我懒得改样式', '因为', '这实在', '太麻烦了'],
-      filterGroup02 : ['随便', '填点', '什么东西', '意思意思吧：','我', '讨厌', '前端'
-        , 'html','vue', 'JavaScript', 'css','真的烦','啊啊啊啊'],
-      secondarySearchFilters01 : ['阿巴阿巴'],
-      secondarySearchFilters02 : ['前端'],
-      //搜索结果，暂时留白
+      //这些标签在普通或是高级搜索时更新
+      filters_updated_once : false,
+      filterGroup_venue : [],
+      filterGroup_author : [],
+      filterGroup_year : [],
+      secondarySearchFilters_venue : [],
+      secondarySearchFilters_author : [],
+      secondarySearchFilters_year : [],
       papers : [],
       //推荐栏，暂时留白
       recommends : [],
       resultNum : 0,
+      resultNum_relation : "eql",
       sortMethod : "默认",
       sortReserve : false,
       common_search_query :"",
-      es_request_body_json : "",
-      es_respond : "",
+      common_search_request : {},
+      // 用于分页
       page_size : 10,
       currentPage:1,
       card_index:[],
@@ -333,6 +345,54 @@ export default {
       return result.join('');
     },
     reserveSort(){$data.sortReserve = !$data.sortReserve;},
+    // 获取前250条查询结果的作者、机构、年份字段用于生成二次搜索索引
+    // 没有采用关键字，关键词可能会有所不同，简单地呈现近义关键词有较大难度
+    update_secondary_search_condition(){
+      if(this.filters_updated_once) return
+      this.filters_updated_once = true
+      this.filterGroup_author = []
+      this.filterGroup_venue = []
+      this.filterGroup_year = []
+      //深拷贝
+      let condition_filter_query = JSON.parse(JSON.stringify(this.common_search_request))
+      condition_filter_query._source = ["authors","year","venue"]
+      condition_filter_query.from = 0
+      condition_filter_query.size = 50
+      axios({
+            headers: {
+              'content-type': 'application/json',
+            },
+            auth: {
+              username: 'elastic',
+              password: 'BZYvLA-d*pS0EpI7utmJ'
+            },
+            url: 'es/paper/_search', method: "post",
+            data: JSON.stringify(condition_filter_query)
+          }
+      ).then(res=>{
+        let result = res.data.hits.hits
+
+        for(let i in result){
+          if(result[i]._source.authors.name !== []){
+            for(let j in result[i]._source.authors){
+              this.filterGroup_author.push(result[i]._source.authors[j].name)
+
+            }
+          }
+          if(result[i]._source.venue !== undefined) this.filterGroup_venue.push(result[i]._source.venue.raw)
+
+          if(result[i]._source.year !== undefined) this.filterGroup_year.push(result[i]._source.year)
+        }
+        this.filterGroup_author = Array.from(new Set(this.filterGroup_author))
+        this.filterGroup_venue = Array.from(new Set(this.filterGroup_venue))
+        this.filterGroup_year = Array.from(new Set(this.filterGroup_year))
+      })
+    },
+    // 点击按钮不仅发包，还更新filter
+    common_search(){
+      this.filters_updated_once = false;
+      this.post_common_search(1);
+    },
     post_common_search(page){
       let es_request_body = {
         "query":{
@@ -385,11 +445,14 @@ export default {
           }
       ).then(res=>{
         this.resultNum = res.data.hits.total.value
+        this.resultNum_relation = res.data.hits.total.relation
         this.papers = res.data.hits.hits
         this.card_index = []
         for(let i = 0; i < res.data.hits.hits.length; i++){
           this.card_index.push(i+this.currentPage*this.page_size)
         }
+        this.common_search_request = es_request_body
+        this.update_secondary_search_condition()
       })
     },
     post_advanced_search(page){
