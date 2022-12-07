@@ -1,0 +1,26 @@
+@mixin def {
+  border-radius: 10px !important;
+  &:hover {
+    background: #003b55b4 !important;
+    color: #ffffff !important;
+  }
+}
+/deep/.number {
+  @include def;
+}
+/deep/.active {
+  background: #003b55 !important;
+  color: #fafdff !important;
+  &:hover {
+    background: #003b55 !important;
+    color: #fafdff !important;
+  }
+}
+/deep/.btn-next{
+  @include def;
+  padding: 0 5px !important;
+}
+/deep/.btn-prev{
+  @include def;
+  padding: 0 5px !important;
+}

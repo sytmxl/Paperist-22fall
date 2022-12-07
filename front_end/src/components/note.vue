@@ -14,7 +14,7 @@
         <div class="response">
             <a @click="goto_note()">阅读全文</a>
             <i class="el-icon-thumb" @click="likeit(list.note_id)" v-if="list.like_flag" title="取消">{{list.likes}}</i>
-            <i class="el-icon-thumb" @click="likeit(list.note_id)" v-else title="赞">{{list.likes}}</i>
+            <i class="el-icon-thumb" @click="likeit(list.note_id)" v-else title="点赞">{{list.likes}}</i>
             <i class="el-icon-star-off" v-if="!list.collect_flag" @click="collect(list.note_id)" title="收藏"></i>
             <i class="el-icon-star-on" v-else @click="collect(list.note_id)" title="取消收藏"></i>
             <i class="el-icon-warning-outline" @click="tipoff(list.note_id)"></i>
@@ -61,12 +61,13 @@ export default {
             url:"http://127.0.0.1:8000/likeIt/",
             method:"post",
             data:{
-               comment_id:id,
-                note_id:"",
+                comment_id:"",
+                note_id:id,
                 op:0
             }
           }).then(res=>{
-              
+            let data={flag:"1"}
+              this.$emit('reaction_note',data)
           })
         }
         else{
@@ -74,12 +75,13 @@ export default {
             url:"http://127.0.0.1:8000/likeIt/",
             method:"post",
             data:{
-               comment_id:id,
-                note_id:"",
+                comment_id:"",
+                note_id:id,
                 op:1
             }
           }).then(res=>{
-            
+            let data={flag:"1"}
+            this.$emit('reaction_note',data)
           })
         }
     },
@@ -95,6 +97,8 @@ export default {
             }
           }).then(res=>{
               this.$message.success("已取消收藏")
+              let data={flag:"1"}
+              this.$emit('reaction_note',data)
           })
         }
         else{
@@ -108,6 +112,8 @@ export default {
             }
           }).then(res=>{
             this.$message.success("已收藏")
+            let data={flag:"1"}
+            this.$emit('reaction_note',data)
           })
         }
       }

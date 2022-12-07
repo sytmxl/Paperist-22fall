@@ -27,8 +27,8 @@
                 <el-button type="primary" @click="likeit()" v-else>点赞</el-button>
                 <el-button type="primary" @click="collect()" v-if="note.collect_flag" title="取消收藏">已收藏</el-button>
                 <el-button type="primary" @click="collect()" v-else title="收藏">收藏</el-button>
-                <el-button v-if="author.subscribe_flag" title="取消关注" @click="subscribe()">已关注</el-button>
-                <el-button v-else title="关注" @click="subscribe()">关注</el-button>
+                <el-button v-if="author.subscribe_flag" title="取消关注" @click="subscribe(author)">已关注</el-button>
+                <el-button v-else title="关注" @click="subscribe(author)">关注</el-button>
               </div>
             </el-card>
         </div>
@@ -72,7 +72,7 @@
 							</div>
 							<div v-if="remark_list.length!=0">
 								<div class="comment" v-for="i in remark_list" :key="i">
-									<remark :list="i.remark" :note_id="note.note_id" @throw_remark="open_comment"/>
+									<remark :list="i.remark" :note_id="note.note_id" @throw_remark="react_remark"/>
 								</div>
 							</div>
 							<div v-else><el-empty description="还没有评论，发表第一个评论吧"></el-empty></div>
@@ -231,14 +231,19 @@ export default {
           }
         })
      },
-     open_comment(data){
-        this.CreatCommentVisible = true;
-        this.remark_id = data.remark_id
-        this.receiver_id = data.sender_id
+      react_remark(data){
+        if(data.op=="remark"){
+             this.CreatCommentVisible = true;
+            this.remark_id = data.remark_id
+            this.receiver_id = data.sender_id
+        }
+        else if(data.op=="like"){
+           this.noteRemarkInit()
+        }
      },
      close_comment(data){
            this.CreatCommentVisible = false;
-  
+          this.noteRemarkInit()
      },
      likeit(){
         if(this.note.like_flag){
@@ -251,7 +256,7 @@ export default {
                 op:0
             }
           }).then(res=>{
-              
+              this.noteInfoInit()
           })
         }
         else{
@@ -264,7 +269,7 @@ export default {
                 op:1
             }
           }).then(res=>{
-            
+            this.noteInfoInit()
           })
         }
     },
@@ -280,6 +285,7 @@ export default {
             }
           }).then(res=>{
               this.$message.success("已取消收藏")
+              this.noteInfoInit()
           })
         }
         else{
@@ -293,13 +299,14 @@ export default {
             }
           }).then(res=>{
             this.$message.success("已收藏")
+            this.noteInfoInit()
           })
         }
      },
-     subcribe(){
-         if(this.author.subscribe_flag){
+     subscribe(author){
+         if(author.subscribe_flag){
           this.$axios({
-            url:"http://127.0.0.1:8000/subScribe/",
+            url:"http://127.0.0.1:8000/subscribe/",
             method:"post",
             data:{
                 author_id:author.id,
@@ -307,11 +314,12 @@ export default {
             }
           }).then(res=>{
               this.$message.success("已取消关注")
+              this.authorInit()
           })
         }
         else{
           this.$axios({
-            url:"http://127.0.0.1:8000/subScribe/",
+            url:"http://127.0.0.1:8000/subscribe/",
             method:"post",
             data:{
                 author_id:author.id,
@@ -319,29 +327,80 @@ export default {
             }
           }).then(res=>{
             this.$message.success("已关注")
+            this.authorInit()
           })
         }
      },
-     note_init(){
-        this.$axios({
-            url:"http://127.0.0.1:8000/noteInit/",
+
+    //  note_init(){
+    //     this.$axios({
+    //         url:"http://127.0.0.1:8000/noteInit/",
+    //         method:"post",
+    //         data:{
+    //             note_id:this.$route.params.note_id
+    //         }
+    //     }).then(res=>{
+    //         this.pdf_src = res.data.note_info[0].note_url
+    //         this.list = res.data.other_note
+    //         this.author = res.data.author_info[0]
+    //         this.note = res.data.note_info[0]
+    //         this.remark_list = res.data.note_info[0].remark_list
+    //         // this._loadFile(this.pdf_src)
+    //     })
+    //  },
+     noteInfoInit(){
+       this.$axios({
+            url:"http://127.0.0.1:8000/noteInfoInit/",
             method:"post",
             data:{
                 note_id:this.$route.params.note_id
             }
         }).then(res=>{
             this.pdf_src = res.data.note_info[0].note_url
-            this.list = res.data.other_note
-            this.author = res.data.author_info[0]
             this.note = res.data.note_info[0]
-            this.remark_list = res.data.note_info[0].remark_list
-            // this._loadFile(this.pdf_src)
+        })
+     },
+     authorInit(){
+      this.$axios({
+            url:"http://127.0.0.1:8000/authorInit/",
+            method:"post",
+            data:{
+                note_id:this.$route.params.note_id
+            }
+        }).then(res=>{
+            this.author = res.data.author_info[0]
+        })
+     },
+     otherNoteInit(){
+      this.$axios({
+            url:"http://127.0.0.1:8000/otherNoteInit/",
+            method:"post",
+            data:{
+                note_id:this.$route.params.note_id
+            }
+        }).then(res=>{
+            this.list = res.data.other_note
+        })
+     },
+     noteRemarkInit(){
+      this.$axios({
+            url:"http://127.0.0.1:8000/noteRemarkInit/",
+            method:"post",
+            data:{
+                note_id:this.$route.params.note_id
+            }
+        }).then(res=>{
+            this.remark_list = res.data.remark_list
         })
      }
   },
      mounted () {
         //   this.get_pdfurl()
-        this.note_init();
+        // this.note_init();
+        this.noteInfoInit();
+        this.authorInit();
+        this.noteRemarkInit();
+        this.otherNoteInit();
     }
 }
 </script>
