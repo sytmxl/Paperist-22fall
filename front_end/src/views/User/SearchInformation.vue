@@ -39,7 +39,7 @@
             </el-col>
           </el-row>
           <el-row
-              v-if="this.isAdvanced"
+              v-if="this.showAdvancedInput"
               id="advance"
               style="z-index: 99"
               type="flex"
@@ -208,7 +208,7 @@
 <!--      搜索结果-->
       <el-main>
         <el-pagination style="margin-top: calc(5vh)"
-            @current-change="post_common_search"
+            @current-change="change_page"
             :current-page="currentPage"
             :page-sizes="[10, 25, 50, 100]"
             :page-size= "page_size"
@@ -304,6 +304,7 @@ export default {
       PublishSelect: "1",
       LangValue: "1",
       common_search_type: 1,
+      showAdvancedInput: false,
       isAdvanced: false,
       searchMods: [
         { label: "篇名", value: 1 },
@@ -404,6 +405,7 @@ export default {
       this.post_common_search(1);
     },
     post_common_search(page){
+      this.isAdvanced = false;
       let es_request_body = {
         "query":{
           "bool":{
@@ -419,7 +421,7 @@ export default {
         case 1:
           es_request_body.query.bool.should.push({"match":{"title":this.common_search_query}})
           es_request_body.query.bool.should.push({"match_phrase":{"title":this.common_search_query}})
-          es_request_body.query.bool.filter={"term":{"title": this.common_search_query}}
+          //es_request_body.query.bool.filter={"term":{"title": this.common_search_query}}
           //es_request_body.aggs={"title":{"terms":{"field":"title","execution_hint": "map"}}}
           break;
         case 2:
@@ -466,6 +468,7 @@ export default {
       })
     },
     post_advanced_search(page){
+      this.isAdvanced = true
       let es_request_body = {
         "query":{
           "bool":{
@@ -528,6 +531,10 @@ export default {
         }
       })
     },
+    change_page(page){
+      if(this.isAdvanced){this.post_advanced_search(page)}
+      else this.post_common_search(page);
+    },
     //用于搜索框
     resetForm(formName) {
       this.$nextTick(() => {
@@ -535,11 +542,11 @@ export default {
       });
     },
     CancelAd() {
-      this.isAdvanced = false;
+      this.showAdvancedInput = false;
       this.resetForm("AdvancedSearchInput");
     },
     AdvancedSearch() {
-      this.isAdvanced = this.isAdvanced ? false : true;
+      this.showAdvancedInput = this.showAdvancedInput ? false : true;
     },
     get_avatar(){
       let tok = sessionStorage.getItem("token")
