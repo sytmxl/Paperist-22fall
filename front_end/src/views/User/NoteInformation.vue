@@ -47,23 +47,24 @@
        </el-main>
         <el-main class="right base">
             <div class="content">
-                <el-card>
-                    <!-- <iframe :src="url"></iframe> -->
+              <iframe style="width: 100%; height: 100%" :src="'/pdfjs-2.14.305-legacy-dist/web/viewer.html?file='+pdf_src" title="myFrame"></iframe>
+                <!-- <el-card> 
+                    
                      <div class="home_wrap">
-                          <!-- <div class="pdf_down" >
+                          <div class="pdf_down" >
                               <div class="pdf_set_left"  @click="scaleD()">放大</div>
                               <div class="pdf_set_middle" @click="scaleX()">缩小</div>
-                          </div> -->
+                          </div>
 
-                            <!-- <pdf 
+                            <pdf 
                               ref="pdf"
                               :src="pdf_src">
-                            </pdf> -->
+                            </pdf>
 							<div :style="{width:pdf_div_width,margin:'0 auto'}" >
 									<canvas v-for="page in pdf_pages" :id="'the_canvas'+page" :key="page"></canvas>
 							</div>
 							</div>
-						</el-card>
+						</el-card> -->
 					</div>
 					<div class="remark">
 						<el-card>
@@ -72,7 +73,7 @@
 							</div>
 							<div v-if="remark_list.length!=0">
 								<div class="comment" v-for="i in remark_list" :key="i">
-									<remark :list="i.remark" :note_id="note.note_id" @throw_remark="react_remark"/>
+									<remark :list="i[0].remark[0]" :note_id="note.note_id" @throw_remark="react_remark"/>
 								</div>
 							</div>
 							<div v-else><el-empty description="还没有评论，发表第一个评论吧"></el-empty></div>

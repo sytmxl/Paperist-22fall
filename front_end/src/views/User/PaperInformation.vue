@@ -64,7 +64,7 @@
                       </div>
                       <div v-if="Object.keys(remark_list).length!=0">
                         <div class="comment" v-for="i in remark_list" :key="i">
-                          <remark :list="i.remark" :paper_id="paper_id"  @throw_remark="react_remark"/>
+                          <remark :list="i[0].remark[0]" :paper_id="paper_id"  @throw_remark="react_remark"/>
                       </div>
                       </div>
                       <div v-else><el-empty description="还没有评论，发表第一个评论吧"></el-empty></div>
