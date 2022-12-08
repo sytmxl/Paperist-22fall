@@ -297,7 +297,7 @@
                     <el-button
                       slot="append"
                       icon="el-icon-search"
-                      @click="searchPaperCollection"
+                      @click="searchScholarPaperCollection"
                     ></el-button>
                   </el-input>
                   <el-select
@@ -1084,31 +1084,36 @@ export default {
       });
     },
     // 获取学者文献
-    // initScholarPaper() {
-    //   this.$axios({
-    //     method: "get",
-    //     url: "/app/get_scholar_paper_list/",
-    //   }).then((res) => {
-    //     this.papers = res.data.data;
-    //     this.papars.sort(this.compareDown("year"));
-    //     console.log("initScholarPaper");
-    //     console.log(res.data);
-    //   });
-    // },
-    // 搜索学者指定标题文献
-    searchPaperCollection() {
+    initScholarPaper() {
       this.$axios({
-        url: "/user/searchPaperCollection/",
-        method: "post",
+        method: "get",
+        url: "/app/get_scholar_paper_list/",
         data: {
+          // id: this.$route.params.id,
           token: sessionStorage.getItem("token"),
-          content: this.selectLiterature,
         },
       }).then((res) => {
-        this.paperCollection = res.data.data;
-        this.selectLiterature = "";
+        this.papers = res.data.data;
+        this.papars.sort(this.compareDown("year"));
+        console.log("initScholarPaper");
+        console.log(res.data);
       });
     },
+    // 搜索学者指定标题文献
+    // searchScholarPaperCollection() {
+    //   this.$axios({
+    //     url: "/app/get_scholar_paper_list/",
+    //     method: "post",
+    //     data: {
+    //       id:this.$route.params.id,//页面学者id
+    //       token: sessionStorage.getItem("token"),
+    //       content: this.selectLiterature,
+    //     },
+    //   }).then((res) => {
+    //     this.paperCollection = res.data.data;
+    //     this.selectLiterature = "";
+    //   });
+    // },
     //获取个人信息
     getPersonalInformation() {
       this.$axios({
