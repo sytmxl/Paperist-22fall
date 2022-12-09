@@ -365,7 +365,7 @@ export default {
   mounted() {
     // 获取一些信息
     // this.getRecommendList();
-    // this.getSubscribeList();
+    this.getFollowNoteList();
     // this.getFollowTextList();
     // this.getHot();
     $("#topbar").css("display", "none");
@@ -393,23 +393,23 @@ export default {
     //     });
     // },
     // 获取关注用户的笔记
-    // getFollowNoteList() {
-    //   this.$axios({
-    //     method: "get",
-    //     url: "/api/recommend",
-    //     params: {
-    //       token:sessionStorage.getItem("token")===null?"":sessionStorage.getItem("token")
-    //     },
-    //   })
-    //     .then((res) => {
-    //       this.showSubscribePeopleList=res.data.data;
-    //       this.SubscribeNoteList= res.data.data;
-    //       this.showSubscribeNoteList = this.SubscribeNoteList.slice(0, 3);
-    //     })
-    //     .catch((err) => {
-    //       console.log(err);
-    //     });
-    // },
+    getFollowNoteList() {
+      this.$axios({
+        method: "post",
+        url: "user/indexSubscribe/",
+        // data: {
+        //   token:sessionStorage.getItem("token")===null?"":sessionStorage.getItem("token")
+        // },
+      })
+        .then((res) => {
+          console.log("订阅笔记",res.data);
+          // this.SubscribeNoteList= res.data.data;
+          // this.showSubscribeNoteList = this.SubscribeNoteList.slice(0, 3);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
     // 获取关注用户的文献
     // getFollowTextList() {
     //   this.$axios({
