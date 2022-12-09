@@ -77,7 +77,7 @@
         v-for="(url, index) in MissDomains.urls"
         label-width="150px"
         :label="'文献阅读链接' + index"
-        :key="url.key"
+        :key="url.value"
         :prop="'urls.' + index + '.value'"
         :rules="[
           { required: true, message: '域名不能为空', trigger: 'blur' },
@@ -89,11 +89,15 @@
         ]"
         size="mini"
         ><el-col :span="21">
-          <el-input v-model="url.value" style="width: 100%" placeholder="必须以http://或https://开头"></el-input
+          <el-input
+            v-model="url.value"
+            style="width: 100%"
+            placeholder="必须以http://或https://开头"
+          ></el-input
           ><el-button
             v-show="index == MissDomains.urls.length - 1"
             type="primary"
-            @click="addMissDomain"
+            @click="addMissDomain()"
             >新增域名</el-button
           ><el-button
             v-show="index != 0"
@@ -106,7 +110,7 @@
     </el-form>
     <span v-if="Miss_Active <= 0" slot="footer" class="dialog-footer">
       <el-button type="primary" @click="CancelUpMiss()">取 消</el-button>
-      <el-button type="default" @click="initId(),submitForm1_Miss('MissText')"
+      <el-button type="default" @click="initId(), submitForm1_Miss('MissText')"
         >下一步</el-button
       >
     </span>
@@ -139,7 +143,7 @@ export default {
     return {
       MissTextDialogVisible: false,
       Miss_Active: 0,
-      user_id: '',
+      user_id: "",
       MissText: {
         name: "",
         author: "",
@@ -182,7 +186,7 @@ export default {
         url: "/user/getPersonalInformation/",
         method: "post",
         data: { token: sessionStorage.getItem("token") },
-      }).then ((res) => {
+      }).then((res) => {
         this.user_id = res.data.data[0].id;
         // 加回调函数解决异步问题
         this.saveId(this.user_id);
@@ -215,9 +219,16 @@ export default {
     },
     CancelUpMiss() {
       this.resetForm("MissText"),
-        this.resetForm("MissDomains"),
-        (this.MissTextDialogVisible = false),
-        (this.Miss_active = 0);
+        (this.MissDomains.urls = [
+          {
+            value: "",
+          },
+        ]);
+      // this.resetForm("MissDomains"),
+      this.Miss_Active = 0;
+      this.$nextTick(() => {
+        this.MissTextDialogVisible = false;
+      });
     },
     ConfirmUploadMissText(formName) {
       this.$refs[formName].validate((valid) => {
@@ -237,22 +248,29 @@ export default {
             },
           }).then((res) => {
             console.log(this.user_id);
-            if (res.data.code == 200) {
+            console.log(res.data);
+            if (res.data.errno == 0) {
               this.$message({
-                message: "上传成功",
+                message: "反馈成功",
                 type: "success",
               });
-              this.CancelUpMiss();
+              // this.CancelUpMiss();
             } else {
               this.$message({
-                message: "上传失败",
+                message: "反馈失败",
                 type: "error",
               });
             }
           });
-          alert("submit!");
+          // alert("submit!");
           this.resetForm("MissText");
-          this.resetForm("MissDomains");
+          this.MissDomains.urls = [
+            {
+              value: "",
+            },
+          ];
+          // this.resetForm("MissDomains");
+          console.log(this.MissDomains.urls);
           this.Miss_Active = 0;
           this.$nextTick(() => {
             this.MissTextDialogVisible = false;
@@ -272,7 +290,6 @@ export default {
     addMissDomain() {
       this.MissDomains.urls.push({
         value: "",
-        key: Date.now(),
       });
     },
   },

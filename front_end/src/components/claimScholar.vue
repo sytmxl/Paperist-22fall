@@ -21,13 +21,26 @@
       size="medium"
     >
       <el-form-item label="认证学者" prop="author">
-        <el-select v-model="AuthorInfo.author" filterable placeholder="请选择您要认领的学者">
+        <el-select
+          v-model="AuthorInfo.author"
+          filterable
+          remote
+          placeholder="请输入您的真实姓名"
+          no-match-text="系统内未找到匹配学者"
+          no-data-text="系统内未找到匹配学者"
+          :remote-method="remoteMethod"
+          :loading="loading"
+        >
           <el-option
-            v-for="item in authors"
+            v-for="item in options"
             :key="item.value"
             :label="item.label"
-            :value="item.value"
+            :value="item.label"
           >
+            <span style="float: left">{{ item.label }}</span>
+            <span style="float: right; color: #8492a6; font-size: 13px">{{
+              item.value
+            }}</span>
           </el-option>
         </el-select>
       </el-form-item>
@@ -48,6 +61,7 @@ export default {
     return {
       claimScholarDialog: false,
       user_id: "",
+      loading: false,
       AuthorInfo: {
         author: "",
       },
@@ -69,6 +83,10 @@ export default {
           label: "龙须面",
         },
         {
+          value: "选项4",
+          label: "须龙面",
+        },
+        {
           value: "选项5",
           label: "北京烤鸭",
         },
@@ -79,7 +97,7 @@ export default {
     };
   },
   mounted() {
-    this.initScholar()
+    this.initScholar();
   },
   methods: {
     // 获取学者
@@ -142,6 +160,7 @@ export default {
           //   });
           alert("submit!");
           this.resetForm("MissText");
+          console.log(this.AuthorInfo);
           this.$nextTick(() => {
             this.claimScholarDialog = false;
           });
@@ -154,24 +173,18 @@ export default {
     initclaimScholar() {
       this.claimScholarDialog = true;
     },
-    querySearch(queryString, cb) {
-      var restaurants = this.restaurants;
-      var results = queryString
-        ? restaurants.filter(this.createFilter(queryString))
-        : restaurants;
-      // 调用 callback 返回建议列表的数据
-      cb(results);
-    },
-    createFilter(queryString) {
-      return (restaurant) => {
-        return (
-          restaurant.value.toLowerCase().indexOf(queryString.toLowerCase()) ===
-          0
-        );
-      };
-    },
-    handleSelect(item) {
-      console.log(item);
+    remoteMethod(query) {
+      if (query !== "") {
+        this.loading = true;
+        setTimeout(() => {
+          this.loading = false;
+          this.options = this.authors.filter((item) => {
+            return item.label.toLowerCase().indexOf(query.toLowerCase()) > -1;
+          });
+        }, 200);
+      } else {
+        this.options = [];
+      }
     },
   },
 };

@@ -25,6 +25,7 @@
               accept="JPG, .PNG, .JPEG,.jpg, .png, .jpeg"
               :http-request="uploadProfile"
               :headers="headers"
+              action=""
             >
               <el-button
                 size="mini"
@@ -163,7 +164,7 @@
                   type="primary"
                   size="small"
                   v-if="!isOthers && !isScholar"
-                  @click="$refs.claimScholar.initclaimScholar();"
+                  @click="$refs.claimScholar.initclaimScholar()"
                   >学者认证</el-button
                 >
               </template>
@@ -287,12 +288,12 @@
               </h2>
               <el-divider />
               <div style="margin-top: 15px; margin-bottom: 15px; width: 30%">
-                <div style="margin-top: 15px;display: flex;">
+                <div style="margin-top: 15px; display: flex">
                   <el-input
                     placeholder="请输入你需要搜索的文献"
                     v-model="selectScholarLiterature"
                     class="input-with-select"
-                    style="width:400px; margin-right:30px"
+                    style="width: 400px; margin-right: 30px"
                   >
                     <el-button
                       slot="append"
@@ -304,7 +305,7 @@
                     v-model="ScholarLiteratureSort"
                     placeholder="请选择排序方式"
                     @change="changeScholarLiteratureSort"
-                    style="position: absolute; right: 0;"
+                    style="position: absolute; right: 0"
                   >
                     <el-option
                       v-for="item in ScholarLiteratureOptions"
@@ -374,7 +375,7 @@
                       v-for="(item, index) in this.paperCollection"
                       :key="index"
                     >
-                      <el-card class="box-card">
+                      <el-card class="box-card" v-if="index >= (currentPage - 1) * pageSize && index < currentPage * pageSize">
                         <el-button
                           style="float: right; margin-left: 5px"
                           icon="el-icon-delete"
@@ -399,6 +400,17 @@
                         </div>
                       </el-card>
                     </div>
+                    <el-pagination
+                        :current-page.sync="currentPage"
+                        :page-size="pageSize"
+                        @size-change="handleSizeChange"
+                        @current-change="handleCurrentChange"
+                        background
+                        layout="prev, pager, next, jumper"
+                        :total="paperCollection.length > 0 ? paperCollection.length : null"
+                        style="margin-top: 40px"
+                    >
+                    </el-pagination>
                   </div>
                 </el-tab-pane>
                 <el-tab-pane name="collectionSecond">
@@ -425,7 +437,7 @@
                       v-for="(item, index) in this.noteCollection"
                       :key="index"
                     >
-                      <el-card class="box-card">
+                      <el-card class="box-card" v-if="index >= (currentPage - 1) * pageSize && index < currentPage * pageSize">
                         <el-button
                           style="float: right; margin-left: 5px"
                           icon="el-icon-delete"
@@ -450,6 +462,17 @@
                         </div>
                       </el-card>
                     </div>
+                    <el-pagination
+                        :current-page.sync="currentPage"
+                        :page-size="pageSize"
+                        @size-change="handleSizeChange"
+                        @current-change="handleCurrentChange"
+                        background
+                        layout="prev, pager, next, jumper"
+                        :total="noteCollection.length > 0 ? noteCollection.length : null"
+                        style="margin-top: 40px"
+                    >
+                    </el-pagination>
                   </div>
                 </el-tab-pane>
               </el-tabs>
@@ -462,33 +485,48 @@
                     v-model="selectSubscribe"
                     class="input-with-select"
                   >
-                    <el-button slot="append" icon="el-icon-search"></el-button>
+                    <el-button slot="append" icon="el-icon-search" @click="searchSubscribe"></el-button>
                   </el-input>
                 </div>
-                <el-card class="box-card">
-                  <el-button
-                    style="float: right; margin-left: 5px"
-                    icon="el-icon-delete"
-                    circle
-                    size="small"
-                  ></el-button>
-                  <el-button
-                    style="float: right"
-                    icon="el-icon-more-outline"
-                    circle
-                    size="small"
-                  ></el-button>
-                  <div style="margin-bottom: 10px; text-align: left">
-                    <a href="">文献名：你好你好</a>
-                    <br />
-                    <p>sssssssssssssssssssssssssssssssss</p>
-                    <br />
-                    <br />
-                    <br />
-                    <p>2022 Ma hu</p>
-                  </div>
-                </el-card>
+                <div v-for="(item, index) in this.subscribes"
+                     :key="index">
+                  <el-card class="box-card" v-if="index >= (currentPage - 1) * pageSize && index < currentPage * pageSize">
+                    <el-button
+                        style="float: right; margin-left: 5px"
+                        icon="el-icon-delete"
+                        circle
+                        size="small"
+                        @click="delSubscribe(item.subscribe_id)"
+                    ></el-button>
+                    <el-button
+                        style="float: right"
+                        icon="el-icon-more-outline"
+                        circle
+                        size="small"
+                    ></el-button>
+                    <div style="margin-bottom: 10px; text-align: left">
+                      <a href="">{{item.name}}</a>
+                      <br />
+                      <br />
+                      <br />
+                      <p>订阅时间: {{ item.time }}</p>
+
+                    </div>
+                  </el-card>
+                </div>
               </div>
+
+              <el-pagination
+                  :current-page.sync="currentPage"
+                  :page-size="pageSize"
+                  @size-change="handleSizeChange"
+                  @current-change="handleCurrentChange"
+                  background
+                  layout="prev, pager, next, jumper"
+                  :total="subscribes.length > 0 ? subscribes.length : null"
+                  style="margin-top: 40px"
+              >
+              </el-pagination>
             </el-tab-pane>
             <el-tab-pane
               :label="this.noteLabel"
@@ -510,7 +548,7 @@
                   </el-input>
                 </div>
                 <div v-for="(item, index) in this.notes" :key="index">
-                  <el-card class="box-card">
+                  <el-card class="box-card" v-if="index >= (currentPage - 1) * pageSize && index < currentPage * pageSize">
                     <el-button
                       style="float: right; margin-left: 5px"
                       icon="el-icon-delete"
@@ -535,6 +573,18 @@
                     </div>
                   </el-card>
                 </div>
+                <el-pagination
+                    :current-page.sync="currentPage"
+                    :page-size="pageSize"
+                    @size-change="handleSizeChange"
+                    @current-change="handleCurrentChange"
+                    background
+                    layout="prev, pager, next, jumper"
+                    :total="notes.length > 0 ? notes.length : null"
+                    style="margin-top: 40px"
+                >
+                </el-pagination>
+
               </div>
             </el-tab-pane>
             <el-tab-pane
@@ -557,7 +607,7 @@
                   </el-input>
                 </div>
                 <div v-for="(item, index) in this.myComment" :key="index">
-                  <el-card class="box-card">
+                  <el-card class="box-card" v-if="index >= (currentPage - 1) * pageSize && index < currentPage * pageSize">
                     <el-button
                       style="float: right; margin-left: 5px"
                       icon="el-icon-delete"
@@ -582,6 +632,17 @@
                     </div>
                   </el-card>
                 </div>
+                <el-pagination
+                    :current-page.sync="currentPage"
+                    :page-size="pageSize"
+                    @size-change="handleSizeChange"
+                    @current-change="handleCurrentChange"
+                    background
+                    layout="prev, pager, next, jumper"
+                    :total="myComment.length > 0 ? myComment.length : null"
+                    style="margin-top: 40px"
+                >
+                </el-pagination>
               </div>
             </el-tab-pane>
             <el-tab-pane
@@ -777,7 +838,7 @@ export default {
     ScholarLine,
     TopBar,
     PaperCard,
-    claimScholar
+    claimScholar,
   },
   data() {
     return {
@@ -972,6 +1033,7 @@ export default {
       noteCollection: [],
       notes: [],
       myComment: [],
+      subscribes:[],
 
       //图片
       profile: "",
@@ -1061,7 +1123,7 @@ export default {
     },
     initLine() {
       this.$axios({
-        method: "get",
+        method: "post",
         url: "/app/get_scholar_paper_list/",
       }).then((res) => {
         var count = new Array(2500).fill(0);
@@ -1181,7 +1243,11 @@ export default {
         this.getPaperComment();
       } else if (tab.name == "fifth") {
         this.getSet();
+      } else if (tab.name == "second") {
+        this.getSubscribe();
       }
+      this.currentPage=1;
+      this.pageSize=3;
     },
     //收藏部分初始化栏
     handleClickCollection(tab, event) {
@@ -1190,6 +1256,8 @@ export default {
       } else if (tab.name == "collectionSecond") {
         this.getNoteCollection();
       }
+      this.currentPage=1;
+      this.pageSize=3;
     },
     //评论部分初始化栏
     handleClickComment(tab, event) {
@@ -1217,6 +1285,16 @@ export default {
         data: { token: sessionStorage.getItem("token") },
       }).then((res) => {
         this.noteCollection = res.data.data;
+      });
+    },
+    //获取订阅
+    getSubscribe() {
+      this.$axios({
+        url: "/user/getSubscribe/",
+        method: "post",
+        data: { token: sessionStorage.getItem("token") },
+      }).then((res) => {
+        this.subscribes = res.data.data;
       });
     },
     //获取我的笔记
@@ -1285,6 +1363,22 @@ export default {
         this.paperCollection = res.data.data;
 
         this.selectLiterature = "";
+      });
+    },
+    //搜索订阅
+    searchSubscribe() {
+      this.$axios({
+        url: "/user/searchSubscribe/",
+        method: "post",
+        data: {
+          token: sessionStorage.getItem("token"),
+          content: this.selectSubscribe,
+        },
+      }).then((res) => {
+        console.log(res.data.data)
+        this.subscribes = res.data.data;
+
+        this.selectSubscribe = "";
       });
     },
     //搜索个人笔记收藏
@@ -1387,6 +1481,35 @@ export default {
       }).then((res) => {
         this.$message.success("删除用户成功！");
         this.getNote();
+      });
+    },
+    //删除订阅
+    async delSubscribe(id) {
+      // 弹框询问用户是否删除数据
+      const confirmResult = await this.$confirm(
+          "此操作将永久删除该评论, 是否继续?",
+          "提示",
+          {
+            confirmButtonText: "确定",
+            cancelButtonText: "取消",
+            type: "warning",
+          }
+      ).catch(() => {
+        this.$message({
+          type: "info",
+          message: "已取消删除",
+        });
+      });
+      if (confirmResult !== "confirm") {
+        return;
+      }
+      this.$axios({
+        url: "/user/delSubscribe/",
+        method: "post",
+        data: { token: sessionStorage.getItem("token"), id: id },
+      }).then((res) => {
+        this.$message.success("删除用户成功！");
+        this.getSubscribe();
       });
     },
     //删除论文收藏
@@ -1574,7 +1697,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import './pagination.scss';
+@import "./pagination.scss";
 .picture {
   height: 150px;
   width: 150px;
@@ -1681,5 +1804,4 @@ export default {
 /deep/.el-descriptions *:not(button) {
   background-color: #003b5500 !important;
 }
-
 </style>
