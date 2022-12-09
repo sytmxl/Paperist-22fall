@@ -1061,7 +1061,7 @@ export default {
     },
     initLine() {
       this.$axios({
-        method: "get",
+        method: "post",
         url: "/app/get_scholar_paper_list/",
       }).then((res) => {
         var count = new Array(2500).fill(0);
