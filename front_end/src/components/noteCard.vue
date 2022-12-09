@@ -52,6 +52,7 @@ export default {
            note_id:note_id
           }
         })
+        window.location.reload()
     },
   }
 }

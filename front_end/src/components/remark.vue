@@ -11,6 +11,9 @@
             <div class="comment">
                 {{list.comment}}
             </div>
+            <div class="time">
+                发表于{{list.time}}
+            </div>
             <div class="response" id="response">
                 <i class="el-icon-chat-round" @click="ready(list)"></i>
                 <i class="el-icon-thumb" @click="likeit(list.id,list.like_flag)" v-if="list.like_flag" title="取消">{{list.likes}}</i>
@@ -31,6 +34,9 @@
             </div>
             <div class="comment">
                 {{list.comment}}
+            </div>
+            <div class="time">
+                发表于{{list.time}}
             </div>
               <div class="response" id="response">
                 <i class="el-icon-chat-round" @click="ready(list)"></i>
@@ -153,8 +159,54 @@ export default {
            this.CreatCommentVisible = false;
   
      },
+     process_time(){
+        let msg = JSON.stringify(this.list.time)
+        let currentTimeInMilliseconds = Date.now();
+        let currentDate = new Date(currentTimeInMilliseconds);
+        let currentYear = currentDate.getFullYear();
+        let currentMonth = currentDate.getMonth()+1;
+        let currentDay = currentDate.getDate();
+        let currentHours = currentDate.getHours();
+        let currentMinutes = currentDate.getMinutes();
+        let time = msg.split(/-|:|\"|T/gi)
+        console.log(msg)
+        console.log(time)
+        console.log(currentDate)
+        console.log(currentYear)
+        console.log(currentMonth)
+        console.log(currentDay)
+        console.log(currentHours)
+        console.log(currentMinutes)
+        if(parseInt(time[1])==currentYear){
+            if(parseInt(time[2])==currentMonth){
+                if(parseInt(time[3])==currentDay){
+                    if(parseInt(time[4])==currentHours){
+                        if(parseInt(time[5])==currentMinutes){
+                            this.list.time = "刚刚"
+                        }
+                        else{
+                            this.list.time = parseInt(currentMinutes)-parseInt(time[5])+"分钟前"
+                        }
+                    }
+                    else{
+                        this.list.time = parseInt(currentHours)-parseInt(time[4])+"小时前"
+                    }
+                }
+                else{
+                    this.list.time = this.list.time.split("T")[0]
+                }
+            }
+            else{
+                    this.list.time = this.list.time.split("T")[0]
+            }
+        }
+        else{
+                this.list.time = this.list.time.split("T")[0]
+        }
+     }
   },
   mounted() {
+        this.process_time()
     }
 }
 
@@ -206,6 +258,10 @@ export default {
 }
 .comment{
     font-size:15px;
+}
+.time{
+    margin-top: 3px;
+    font-size:10px;
 }
 .content{
     text-align: left;
