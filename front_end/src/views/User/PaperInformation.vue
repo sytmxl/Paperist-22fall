@@ -48,7 +48,7 @@
           <div class="remark">
             <el-card>
               <el-tabs>
-                <el-tab-pane label="相关文献" name="aboutPaper">
+                <el-tab-pane label="相关文献">
                     <div class="about" v-if="about_list!=[]">
                       <div class="relative" v-for="i in about_list" :key="i">
                           <aboutCard :name="i.paper_name" :author="i.author_name" :cite="i.cite_number" :origin="i.magazine" :intro="i.abstarct" :date="i.date" :paper_id="i.paper_id"/>
@@ -59,7 +59,7 @@
                     <el-button style="width:100%" @click="load()" v-loading = "start">加载更多</el-button>
                   </div>
                 </el-tab-pane>
-                <el-tab-pane label="评论" name="remark">
+                <el-tab-pane label="评论">
                     <div class="creat_comment">
                           <el-button @click="CreatCommentVisible =true">我要评论</el-button>
                       </div>
@@ -71,7 +71,7 @@
                       <div v-else><el-empty description="还没有评论，发表第一个评论吧"></el-empty></div>
                     
                 </el-tab-pane>
-                <el-tab-pane label="笔记" name="note">
+                <el-tab-pane label="笔记">
                       <div class="creat_mark">
                           <el-button @click="CreatMark =true">上传笔记</el-button>
                       </div>
