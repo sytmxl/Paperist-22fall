@@ -47,18 +47,19 @@
           </div>
           <div class="remark">
             <el-card>
-              <el-tabs >
-                <el-tab-pane label="相关文献">
+              <el-tabs>
+                <el-tab-pane label="相关文献" name="aboutPaper">
                     <div class="about" v-if="about_list!=[]">
                       <div class="relative" v-for="i in about_list" :key="i">
                           <aboutCard :name="i.paper_name" :author="i.author_name" :cite="i.cite_number" :origin="i.magazine" :intro="i.abstarct" :date="i.date" :paper_id="i.paper_id"/>
                       </div>
                   </div>
+                  <div v-else><el-empty description="尚无相关文献"></el-empty></div>
                     <div id="load">
                     <el-button style="width:100%" @click="load()" v-loading = "start">加载更多</el-button>
                   </div>
                 </el-tab-pane>
-                <el-tab-pane label="评论">
+                <el-tab-pane label="评论" name="remark">
                     <div class="creat_comment">
                           <el-button @click="CreatCommentVisible =true">我要评论</el-button>
                       </div>
@@ -70,7 +71,7 @@
                       <div v-else><el-empty description="还没有评论，发表第一个评论吧"></el-empty></div>
                     
                 </el-tab-pane>
-                <el-tab-pane label="笔记">
+                <el-tab-pane label="笔记" name="note">
                       <div class="creat_mark">
                           <el-button @click="CreatMark =true">上传笔记</el-button>
                       </div>
@@ -225,6 +226,7 @@ export default {
       return{
         number:4,//后期要改成session
         start:false,
+        activeName:"aboutPaper",
         ComplainVisible:false,
         QuoteVisible:false,
         ShareVisible:false,
@@ -262,6 +264,26 @@ export default {
 onError (e) {
  this.$message.error("抱歉，复制失败！")
 },
+      handleClick(tab, event){
+        if(tab.name="note"){
+           /* window.addEventListener("scroll", function() {
+              sessionStorage.setItem("scrollTop", window.scrollY);
+            });
+
+            // 在页面加载完成后还原用户的滚动位置
+            window.addEventListener("load", function() {
+              let scrollTop = sessionStorage.getItem("scrollTop");
+              window.scrollTo(0, scrollTop);
+            });*/
+            alert(this.activeName)
+        }
+        else if(tab.name="remark"){
+            alert.log(this.activeName)
+        }
+        else if(tab.name="aboutPaper"){
+            alert.log(this.activeName)
+        }
+      },
       chart_init(cite_number){
         var myChart = echarts.init(document.getElementById('echarts_box'))
         myChart.setOption({

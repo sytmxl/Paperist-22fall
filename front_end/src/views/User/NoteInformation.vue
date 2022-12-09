@@ -21,6 +21,7 @@
                 <span>获赞：{{note.likes}}</span>
                 <span>评论：{{note.remarks}}</span>
                 <span>收藏：{{note.collections}}</span>
+                <span>发表日期：{{note.time.split("T")[0]}}</span>
               </div>
               <div class="response">
                 <el-button type="primary" @click="likeit()" v-if="note.like_flag">已赞</el-button>
