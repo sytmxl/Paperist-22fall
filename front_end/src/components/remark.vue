@@ -169,14 +169,6 @@ export default {
         let currentHours = currentDate.getHours();
         let currentMinutes = currentDate.getMinutes();
         let time = msg.split(/-|:|\"|T/gi)
-        console.log(msg)
-        console.log(time)
-        console.log(currentDate)
-        console.log(currentYear)
-        console.log(currentMonth)
-        console.log(currentDay)
-        console.log(currentHours)
-        console.log(currentMinutes)
         if(parseInt(time[1])==currentYear){
             if(parseInt(time[2])==currentMonth){
                 if(parseInt(time[3])==currentDay){
@@ -193,15 +185,15 @@ export default {
                     }
                 }
                 else{
-                    this.list.time = this.list.time.split("T")[0]
+                    this.list.time = this.list.time.split("T")[0]+" "+currentHours+":"+currentMinutes
                 }
             }
             else{
-                    this.list.time = this.list.time.split("T")[0]
+                    this.list.time = this.list.time.split("T")[0]+" "+currentHours+":"+currentMinutes
             }
         }
         else{
-                this.list.time = this.list.time.split("T")[0]
+                this.list.time = this.list.time.split("T")[0]+" "+currentHours+":"+currentMinutes
         }
      }
   },
