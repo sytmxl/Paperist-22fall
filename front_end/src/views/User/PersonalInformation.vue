@@ -20,6 +20,7 @@
               accept="JPG, .PNG, .JPEG,.jpg, .png, .jpeg"
               :http-request="uploadProfile"
               :headers="headers"
+              action=""
             >
               <el-button
                 size="mini"
