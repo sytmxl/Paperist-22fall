@@ -212,6 +212,17 @@ export default {
       ],
     };
   },
+  mounted() {
+    let last_search = JSON.parse(sessionStorage.getItem("last_search"))
+    if(last_search !== null){
+      if(last_search.common_search_query!== null) this.common_search_query=last_search.common_search_query
+      if(last_search.PublishSelect!== null) this.PublishSelect= last_search.PublishSelect
+      if(last_search.LangValue!== null) this.LangValue= last_search.LangValue
+      if(last_search.common_search_type!== null) this.common_search_type= last_search.common_search_type
+      if(last_search.isAdvanced!== null) this.isAdvanced= last_search.isAdvanced
+      if(last_search.advanced_search_query!== null) this.advanced_search_query= last_search.advanced_search_query
+    }
+  },
   methods: {
     resetForm(formName) {
       this.$nextTick(() => {
@@ -260,7 +271,7 @@ export default {
           query:{
             search_type : "common",
             search_params : JSON.stringify(es_request_body)
-          }
+          },
       })
       this.route_push_params("common",es_request_body);
     },
@@ -307,6 +318,14 @@ export default {
       this.route_push_params("advanced",es_request_body)
     },
     route_push_params(search_type,es_request_body){
+      sessionStorage.setItem("last_search",JSON.stringify({
+        common_search_query: this.common_search_query,
+        PublishSelect: this.PublishSelect,
+        LangValue: this.LangValue,
+        common_search_type: this.common_search_type,
+        isAdvanced: this.isAdvanced,
+        advanced_search_query: this.advanced_search_query,
+      }))
       if(this.$route.path !== "/SearchInformation"){
         this.$router.push({
           path: "/SearchInformation",
