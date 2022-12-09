@@ -1,5 +1,8 @@
 <template>
   <el-container>
+<!--    顶栏-->
+<!--      <top-bar ref="topBar"/>-->
+
     <el-container id="SearchInformation">
 <!--      左侧栏-->
       <el-aside class="left">
@@ -99,6 +102,7 @@ export default {
   props :{
   },
   mounted() {
+    //document.getElementById("topbar").style.display="none";
     if(this.$route.query.search_params != null){
       this.es_request_body = JSON.parse(this.$route.query.search_params)
       this.es_request_body.from = 0
