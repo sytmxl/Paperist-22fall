@@ -6,7 +6,9 @@
     <el-container id="SearchInformation">
 <!--      左侧栏-->
       <el-aside class="left">
-        <el-collapse style="margin-top: calc(10vh)">
+        <h3 style="text-align: left; margin-left: 5%; margin-bottom: calc(2vh); margin-top: calc(10vh)">过滤结果</h3>
+        <el-button @click="secondary_search">二次搜索</el-button>
+        <el-collapse>
           <el-collapse-item title="时间" style="margin-bottom: 10px" class="display_zone" shadow="never">
             <!--        复选框组 时间-->
             <p style="text-align: left; color: #B3C0D1">年份</p>
@@ -191,12 +193,6 @@ export default {
         this.filterGroup_year = Array.from(new Set(this.filterGroup_year))
       })
     },
-    // 发起简单搜索，获取结果，同时发起标签检索，获取标签
-    common_search(){
-      this.filters_updated_once = false;
-      this.post_common_search(1);
-      this.update_secondary_search_condition();
-    },
     // 给es发包
     post_es_search(){
       axios({
@@ -221,8 +217,14 @@ export default {
       })
     },
     change_page(page){
-      if(this.isAdvanced){this.post_advanced_search(page)}
-      else this.post_common_search(page);
+      this.es_request_body.from = (page - 1) * this.page_size
+      this.post_es_search()
+    },
+    // 二次搜索
+    secondary_search(){
+      let condition_filter_query = JSON.parse(JSON.stringify(this.es_request_body))
+      condition_filter_query.from = 0
+      // TODO 给condition加东西，应该使用filter
     },
     // 搜索框的一些动作函数
     resetForm(formName) {
