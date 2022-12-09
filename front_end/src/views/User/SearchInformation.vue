@@ -6,32 +6,32 @@
     <el-container id="SearchInformation">
 <!--      左侧栏-->
       <el-aside class="left">
-        <div>
-          <el-card style="margin-bottom: 10px" class="display_zone" shadow="never">
+        <el-collapse style="margin-top: calc(10vh)">
+          <el-collapse-item title="时间" style="margin-bottom: 10px" class="display_zone" shadow="never">
             <!--        复选框组 时间-->
             <p style="text-align: left; color: #B3C0D1">年份</p>
             <el-checkbox-group v-model="secondarySearchFilters_year" size="mini">
               <el-checkbox border v-for="filter in filterGroup_year" :label="filter" :key="filter"
                            style="background: white; margin: 1% ;float: left"/>
             </el-checkbox-group>
-          </el-card>
-          <el-card style="margin-bottom: 10px" class="display_zone">
+          </el-collapse-item>
+          <el-collapse-item title="来源" style="margin-bottom: 10px" class="display_zone">
             <!--        复选框组 来源-->
             <p style="text-align: left; color: #B3C0D1">来源</p>
             <el-checkbox-group v-model="secondarySearchFilters_venue" size="mini">
               <el-checkbox border v-for="filter in filterGroup_venue" :label="filter" :key="filter"
                            style="background: white; margin: 1% ;float: left"/>
             </el-checkbox-group>
-          </el-card>
-          <el-card style="margin-bottom: 10px" class="display_zone">
+          </el-collapse-item>
+          <el-collapse-item title="作者" style="margin-bottom: 10px" class="display_zone">
             <!--        复选框组  作者-->
             <p style="text-align: left; color: #B3C0D1">作者</p>
             <el-checkbox-group v-model="secondarySearchFilters_author" size="mini">
               <el-checkbox border v-for="filter in filterGroup_author" :label="filter" :key="filter"
                            style="background: white; margin: 1% ;float: left"/>
             </el-checkbox-group>
-          </el-card>
-        </div>
+          </el-collapse-item>
+        </el-collapse>
 
       </el-aside>
 <!--      搜索结果-->
@@ -74,7 +74,7 @@
       </el-main>
 <!--右侧栏-->
       <el-aside class="right">
-        <el-card  class="display_zone" shadow="never">
+        <el-card  class="display_zone" shadow="never" style="margin-top: calc(10vh)">
           <h3 style="text-align: left; margin-left: 5%; margin-bottom: calc(2vh)">推荐</h3>
           <el-card class="recommend" v-for="recommend in recommends" :key="recommend" v-loading = "true" shadow="never"
                    style = "height: 75px;margin-bottom: 10px">
@@ -157,7 +157,7 @@ export default {
       this.filterGroup_venue = []
       this.filterGroup_year = []
       //深拷贝
-      let condition_filter_query = JSON.parse(JSON.stringify(this.common_search_request))
+      let condition_filter_query = JSON.parse(JSON.stringify(this.es_request_body))
       condition_filter_query._source = ["authors","year","venue"]
       condition_filter_query.from = 0
       condition_filter_query.size = 50
