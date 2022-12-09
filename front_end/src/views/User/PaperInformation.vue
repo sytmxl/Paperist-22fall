@@ -1,6 +1,5 @@
 <template>
     <el-container class="root">
-      <!-- <TopBar/> -->
       <el-container class="content">
         <el-main>
           <div class="main">

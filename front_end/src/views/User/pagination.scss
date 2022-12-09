@@ -24,3 +24,8 @@
   @include def;
   padding: 0 5px !important;
 }
+
+
+/deep/.el-select-dropdown__list {
+  border: 10px !important;
+}

@@ -38,15 +38,7 @@
       </el-aside>
 <!--      搜索结果-->
       <el-main>
-        <el-pagination style="margin-top: calc(5vh)"
-            @current-change="change_page"
-            :current-page="currentPage"
-            :page-sizes="[10, 25, 50, 100]"
-            :page-size= "page_size"
-            layout="total, sizes, prev, pager, next, jumper"
-            :total="resultNum">
-        </el-pagination>
-        <el-row :gutter="20">
+        <el-row :gutter="20" style="margin-top: 60px">
           <el-col :span="16" style="text-align: left; margin-left: 6%; margin-bottom: 3%; color: #B3C0D1">
             找到{{toThousands(resultNum) + (this.resultNum_relation === "gte" ? "+":"")}}
             条相关结果{{this.resultNum_relation === "gte" ? "，您可能需要使用二次检索或高级检索获取更精确的结果":""}}</el-col>
@@ -66,6 +58,15 @@
             <i style="display: inline-block; margin-left: 10%" class="el-icon-sort" @click="sortReserve"></i>
           </el-col>
         </el-row>
+        <el-pagination 
+        style="margin-bottom: 20px"
+            @current-change="change_page"
+            :current-page="currentPage"
+            :page-sizes="[10, 25, 50, 100]"
+            :page-size= "page_size"
+            layout="total, sizes, prev, pager, next, jumper"
+            :total="resultNum">
+        </el-pagination>
         <div>
           <!-- <el-card style="min-height: calc(75vh)" class="display_zone" shadow="never"> -->
           <paper-card v-for="paper in papers" :key="card_index"
@@ -73,6 +74,14 @@
           />
           <!-- </el-card> -->
         </div>
+        <el-pagination 
+            @current-change="change_page"
+            :current-page="currentPage"
+            :page-sizes="[10, 25, 50, 100]"
+            :page-size= "page_size"
+            layout="total, sizes, prev, pager, next, jumper"
+            :total="resultNum">
+        </el-pagination>
       </el-main>
 <!--右侧栏-->
       <el-aside class="right">
@@ -98,6 +107,7 @@ import PaperInformation from "@/views/User/PaperInformation";
 import {$data} from "../../../static/pdf/build/pdf.worker";
 import axios from "axios";
 import SearchBox from "@/components/SearchBox";
+import $ from "jquery";
 export default {
   name:"SearchInformation",
   components: {SearchBox, PaperInformation, PaperCard, TopBar},
@@ -112,6 +122,7 @@ export default {
     }
     this.post_es_search();
     this.update_secondary_search_condition();
+    $("#topbar").css("display", "none");
   },
   data() {
     return{
@@ -275,7 +286,9 @@ export default {
 #SearchInformation {
   // margin-top: 60px;
   width: calc(85vw);
+  min-width: 100vh !important;
   align-self: center;
+  min-height: calc(100vh) !important;
 }
 .el-aside{
   background: none;
@@ -304,6 +317,7 @@ export default {
   }
 }
 .el-main {
+  
   background:none;
   // border-radius: 20px !important;
 
@@ -318,5 +332,7 @@ export default {
 .search_input {
   width: 700px !important;
 }
-
+.el-select-dropdown__item.selected {
+  color: #003b55;
+}
 </style>
