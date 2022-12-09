@@ -655,8 +655,8 @@
               name="fourth"
               v-if="isScholar && !isOthers"
             >
-              <el-tabs tab-position="left">
-                <el-tab-pane>
+              <el-tabs tab-position="left" @tab-click="handleClickComment" v-model="commentDefaultLocation">
+                <el-tab-pane name="commentFirst">
                   <span slot="label"
                     ><i class="el-icon-message-solid"></i>我给他人的</span
                   >
@@ -669,16 +669,18 @@
                       <el-button
                         slot="append"
                         icon="el-icon-search"
+                        @click="searchPaperComment"
                       ></el-button>
                     </el-input>
                   </div>
-                  <el-card class="box-card">
+                  <el-card class="box-card" v-for="(item, index) in this.myComment" :key="index">
                     <el-button
                       style="float: right; margin-left: 5px"
                       icon="el-icon-delete"
                       circle
                       size="small"
-                      v-if="!this.isOthers"
+                      @click="delComment(item.comment_id)"
+                      v-if="!isOthers"
                     ></el-button>
                     <el-button
                       style="float: right"
@@ -687,17 +689,28 @@
                       size="small"
                     ></el-button>
                     <div style="margin-bottom: 10px; text-align: left">
-                      <a href="">文献名：你好你好</a>
+                      <a href="">{{ item.paper_name }}</a>
                       <br />
-                      <p>sssssssssssssssssssssssssssssssss</p>
+                      <p>{{ item.content }}</p>
                       <br />
                       <br />
                       <br />
-                      <p>2022 Ma hu</p>
+                      <p>{{ item.time }}</p>
                     </div>
                   </el-card>
+                  <el-pagination
+                      :current-page.sync="currentPage"
+                      :page-size="pageSize"
+                      @size-change="handleSizeChange"
+                      @current-change="handleCurrentChange"
+                      background
+                      layout="prev, pager, next, jumper"
+                      :total="myComment.length > 0 ? myComment.length : null"
+                      style="margin-top: 40px"
+                  >
+                  </el-pagination>
                 </el-tab-pane>
-                <el-tab-pane>
+                <el-tab-pane name="commentSecond">
                   <span slot="label"
                     ><i class="el-icon-message-solid"></i>他人给我的</span
                   >
@@ -858,6 +871,7 @@ export default {
       selectCollectionNote: "",
       selectLiteratureYear: "",
       selectComment: "",
+      selectCommentToMe: "",
       selectSubscribe: "",
       selectNote: "",
       username: "",
@@ -1282,13 +1296,15 @@ export default {
       this.currentPage=1;
       this.pageSize=3;
     },
-    //评论部分初始化栏
+    //学者评论部分初始化栏
     handleClickComment(tab, event) {
       if (tab.name == "commentFirst") {
-        this.getPaperCollection();
+        this.getPaperComment();
       } else if (tab.name == "commentSecond") {
         this.getNoteCollection();
       }
+      this.currentPage=1;
+      this.pageSize=3;
     },
     //获取个人论文收藏
     getPaperCollection() {
