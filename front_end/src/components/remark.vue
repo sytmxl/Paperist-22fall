@@ -16,8 +16,9 @@
             </div>
             <div class="response" id="response">
                 <i class="el-icon-chat-round" @click="ready(list)"></i>
-                <i class="el-icon-thumb" @click="likeit(list.id,list.like_flag)" v-if="list.like_flag" title="取消">{{list.likes}}</i>
-                <i class="el-icon-thumb" @click="likeit(list.id,list.like_flag)" v-else title="赞">{{list.likes}}</i>
+                <div class="thumb" @click="likeit(list.id,list.like_flag)" v-if="list.like_flag" title="取消">{{list.likes}}</div>
+                <div class="thumb-filled" @click="likeit(list.id,list.like_flag)" v-else title="赞">{{list.likes}}</div>
+                
                 <i class="el-icon-warning-outline" @click="tipoff(list.id)"></i>
             </div>
         </div>
@@ -38,10 +39,10 @@
             <div class="time">
                 发表于{{list.time}}
             </div>
-              <div class="response" id="response">
+            <div class="response" id="response">
                 <i class="el-icon-chat-round" @click="ready(list)"></i>
-                <i class="el-icon-thumb" @click="likeit(list.id,list.like_flag)" v-if="like_flag" title="取消" :key="list.likes">{{list.likes}}</i>
-                <i class="el-icon-thumb" @click="likeit(list.id,list.like_flag)" v-else title="赞" :key="list.likes">{{list.likes}}</i>
+                <div class="thumb" @click="likeit(list.note_id)" v-if="like_flag" title="取消" :key="list.likes">{{list.likes}}</div>
+                <div class="thumb-filled" @click="likeit(list.note_id)" v-else title="点赞" :key="list.likes">{{list.likes}}</div>
                 <i class="el-icon-warning-outline" @click="tipoff(list.id)"></i>
             </div>
         </div>
@@ -205,6 +206,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import './icon.scss';
 .prvoker{
     margin-top:15px;
     /* height: 100px; */

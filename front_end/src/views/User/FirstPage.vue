@@ -6,6 +6,7 @@
     <el-row class="search_area">
       <SearchBox />
     </el-row>
+    <note :list="1" @reaction_note="aboutNoteInit()"/>
     <el-row :gutter="10" class="display_zone">
       <el-col :offset="3" :span="12">
         <div class="leftone">
@@ -197,6 +198,8 @@ import RelationShip from "@/components/RelationShip.vue";
 import ScholarLine from "@/components/ScholarLine.vue";
 import TopBar from "@/components/TopBar";
 import noteCard from "../../components/noteCard.vue";
+import note from "../../components/note.vue"
+
 import $ from "jquery";
 export default {
   inject: ["reload"],
@@ -209,6 +212,7 @@ export default {
     ScholarLine,
     TopBar,
     noteCard,
+    note,
   },
   data() {
     return {

@@ -8,6 +8,7 @@
                 <span style="font-size:35px;font-weight:bolder">{{info_list.paper_name}}</span>
                 <h4>来源：{{info_list.origin}} &#12288; 引用次数：{{info_list.cite_number}}</h4>
               </div>
+              <el-skeleton />
               <div  class="text item">
                 作者：<span v-for="i in info_list.author_name" :key="i"> {{i}}</span>
               </div>
@@ -210,7 +211,7 @@
 
 <script>
 import * as echarts from 'echarts/core'
-import { Loading } from 'element-ui';
+import { Loading, Skeleton } from 'element-ui';
 import { init } from 'echarts';
 import aboutCard from "../../components/aboutCard.vue"
 import remark from "../../components/remark.vue"
@@ -218,6 +219,7 @@ import CreateComment from "../../components/CreateComment.vue"
 import uploadMark from "../../components/uploadMark.vue"
 import note from "../../components/note.vue"
 import TopBar from "@/components/TopBar";
+import $ from 'jquery';
 let formdata = new FormData();
 export default {
   inject: ['reload'],
@@ -500,6 +502,14 @@ onError (e) {
       this.paperRemarkInit()
       this.quoteInit()
       // this.chart_init();
+      $(function(){
+        $('.el-skeleton').hide();
+      })
+      $(document).ready(function(){
+          // document 不写默认document
+      })
+      this.$nextTick(() => {
+      })
     }
 }
 </script>

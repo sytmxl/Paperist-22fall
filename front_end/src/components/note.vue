@@ -16,8 +16,8 @@
             </div>
         <div class="response">
             <a @click="goto_note()">阅读全文</a>
-            <i class="el-icon-thumb" @click="likeit(list.note_id)" v-if="like_flag" title="取消" :key="list.likes">{{list.likes}}</i>
-            <i class="el-icon-thumb" @click="likeit(list.note_id)" v-else title="点赞" :key="list.likes">{{list.likes}}</i>
+            <div class="thumb" @click="likeit(list.note_id)" v-if="like_flag" title="取消" :key="list.likes">{{list.likes}}</div>
+            <div class="thumb-filled" @click="likeit(list.note_id)" v-else title="点赞" :key="list.likes">{{list.likes}}</div>
             <i class="el-icon-star-off" v-if="!collect_flag" @click="collect(list.note_id)" title="收藏"></i>
             <i class="el-icon-star-on" v-else @click="collect(list.note_id)" title="取消收藏"></i>
             <i class="el-icon-warning-outline" @click="tipoff(list.note_id)"></i>
@@ -192,7 +192,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-
+@import './icon.scss';
 .image{
     float: left;
     width: 40px;
@@ -205,7 +205,9 @@ export default {
     border-radius: 50%;
 }
 .response{
+  // display: flex;
     float: right;
+    
 }
 .response a{
     text-decoration: none;
