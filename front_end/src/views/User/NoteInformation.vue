@@ -6,7 +6,7 @@
         <div class="author">
             <el-card>
               <div class="author_img">
-                  <img :src="imgUrl" alt="">
+                  <img :src="author.image" alt="">
                   <span>{{author.name}}</span>
               </div>
               <div class="author_info">
@@ -73,7 +73,7 @@
 							</div>
 							<div v-if="remark_list.length!=0">
 								<div class="comment" v-for="i in remark_list" :key="i">
-									<remark :list="i[0].remark[0]" :note_id="note.note_id" @throw_remark="react_remark"/>
+									<remark :list="i" :note_id="note.note_id" @throw_remark="react_remark"/>
 								</div>
 							</div>
 							<div v-else><el-empty description="还没有评论，发表第一个评论吧"></el-empty></div>
