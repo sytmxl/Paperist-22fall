@@ -164,7 +164,7 @@
                   type="primary"
                   size="small"
                   v-if="!isOthers && !isScholar"
-                  @click="$refs.claimScholar.initclaimScholar();"
+                  @click="$refs.claimScholar.initclaimScholar()"
                   >学者认证</el-button
                 >
               </template>
@@ -288,12 +288,12 @@
               </h2>
               <el-divider />
               <div style="margin-top: 15px; margin-bottom: 15px; width: 30%">
-                <div style="margin-top: 15px;display: flex;">
+                <div style="margin-top: 15px; display: flex">
                   <el-input
                     placeholder="请输入你需要搜索的文献"
                     v-model="selectScholarLiterature"
                     class="input-with-select"
-                    style="width:400px; margin-right:30px"
+                    style="width: 400px; margin-right: 30px"
                   >
                     <el-button
                       slot="append"
@@ -305,7 +305,7 @@
                     v-model="ScholarLiteratureSort"
                     placeholder="请选择排序方式"
                     @change="changeScholarLiteratureSort"
-                    style="position: absolute; right: 0;"
+                    style="position: absolute; right: 0"
                   >
                     <el-option
                       v-for="item in ScholarLiteratureOptions"
@@ -838,7 +838,7 @@ export default {
     ScholarLine,
     TopBar,
     PaperCard,
-    claimScholar
+    claimScholar,
   },
   data() {
     return {
@@ -1123,7 +1123,7 @@ export default {
     },
     initLine() {
       this.$axios({
-        method: "get",
+        method: "post",
         url: "/app/get_scholar_paper_list/",
       }).then((res) => {
         var count = new Array(2500).fill(0);
@@ -1697,7 +1697,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import './pagination.scss';
+@import "./pagination.scss";
 .picture {
   height: 150px;
   width: 150px;
@@ -1804,5 +1804,4 @@ export default {
 /deep/.el-descriptions *:not(button) {
   background-color: #003b5500 !important;
 }
-
 </style>
