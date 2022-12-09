@@ -1,47 +1,44 @@
 <template>
   <el-container>
+<!--    顶栏-->
+<!--      <top-bar ref="topBar"/>-->
+
     <el-container id="SearchInformation">
 <!--      左侧栏-->
       <el-aside class="left">
-        <div>
-          <el-card style="margin-bottom: 10px" class="display_zone" shadow="never">
+        <h3 style="text-align: left; margin-left: 5%; margin-bottom: calc(2vh); margin-top: calc(10vh)">过滤结果</h3>
+        <el-button @click="secondary_search">二次搜索</el-button>
+        <el-collapse>
+          <el-collapse-item title="时间" style="margin-bottom: 10px" class="display_zone" shadow="never">
             <!--        复选框组 时间-->
             <p style="text-align: left; color: #B3C0D1">年份</p>
             <el-checkbox-group v-model="secondarySearchFilters_year" size="mini">
               <el-checkbox border v-for="filter in filterGroup_year" :label="filter" :key="filter"
                            style="background: white; margin: 1% ;float: left"/>
             </el-checkbox-group>
-          </el-card>
-          <el-card style="margin-bottom: 10px" class="display_zone">
+          </el-collapse-item>
+          <el-collapse-item title="来源" style="margin-bottom: 10px" class="display_zone">
             <!--        复选框组 来源-->
             <p style="text-align: left; color: #B3C0D1">来源</p>
             <el-checkbox-group v-model="secondarySearchFilters_venue" size="mini">
               <el-checkbox border v-for="filter in filterGroup_venue" :label="filter" :key="filter"
                            style="background: white; margin: 1% ;float: left"/>
             </el-checkbox-group>
-          </el-card>
-          <el-card style="margin-bottom: 10px" class="display_zone">
+          </el-collapse-item>
+          <el-collapse-item title="作者" style="margin-bottom: 10px" class="display_zone">
             <!--        复选框组  作者-->
             <p style="text-align: left; color: #B3C0D1">作者</p>
             <el-checkbox-group v-model="secondarySearchFilters_author" size="mini">
               <el-checkbox border v-for="filter in filterGroup_author" :label="filter" :key="filter"
                            style="background: white; margin: 1% ;float: left"/>
             </el-checkbox-group>
-          </el-card>
-        </div>
+          </el-collapse-item>
+        </el-collapse>
 
       </el-aside>
 <!--      搜索结果-->
       <el-main>
-        <el-pagination style="margin-top: calc(5vh)"
-            @current-change="change_page"
-            :current-page="currentPage"
-            :page-sizes="[10, 25, 50, 100]"
-            :page-size= "page_size"
-            layout="total, sizes, prev, pager, next, jumper"
-            :total="resultNum">
-        </el-pagination>
-        <el-row :gutter="20">
+        <el-row :gutter="20" style="margin-top: 60px">
           <el-col :span="16" style="text-align: left; margin-left: 6%; margin-bottom: 3%; color: #B3C0D1">
             找到{{toThousands(resultNum) + (this.resultNum_relation === "gte" ? "+":"")}}
             条相关结果{{this.resultNum_relation === "gte" ? "，您可能需要使用二次检索或高级检索获取更精确的结果":""}}</el-col>
@@ -61,6 +58,15 @@
             <i style="display: inline-block; margin-left: 10%" class="el-icon-sort" @click="sortReserve"></i>
           </el-col>
         </el-row>
+        <el-pagination 
+        style="margin-bottom: 20px"
+            @current-change="change_page"
+            :current-page="currentPage"
+            :page-sizes="[10, 25, 50, 100]"
+            :page-size= "page_size"
+            layout="total, sizes, prev, pager, next, jumper"
+            :total="resultNum">
+        </el-pagination>
         <div>
           <!-- <el-card style="min-height: calc(75vh)" class="display_zone" shadow="never"> -->
           <paper-card v-for="paper in papers" :key="card_index"
@@ -68,10 +74,18 @@
           />
           <!-- </el-card> -->
         </div>
+        <el-pagination 
+            @current-change="change_page"
+            :current-page="currentPage"
+            :page-sizes="[10, 25, 50, 100]"
+            :page-size= "page_size"
+            layout="total, sizes, prev, pager, next, jumper"
+            :total="resultNum">
+        </el-pagination>
       </el-main>
 <!--右侧栏-->
       <el-aside class="right">
-        <el-card  class="display_zone" shadow="never">
+        <el-card  class="display_zone" shadow="never" style="margin-top: calc(10vh)">
           <h3 style="text-align: left; margin-left: 5%; margin-bottom: calc(2vh)">推荐</h3>
           <el-card class="recommend" v-for="recommend in recommends" :key="recommend" v-loading = "true" shadow="never"
                    style = "height: 75px;margin-bottom: 10px">
@@ -93,12 +107,14 @@ import PaperInformation from "@/views/User/PaperInformation";
 import {$data} from "../../../static/pdf/build/pdf.worker";
 import axios from "axios";
 import SearchBox from "@/components/SearchBox";
+import $ from "jquery";
 export default {
   name:"SearchInformation",
   components: {SearchBox, PaperInformation, PaperCard, TopBar},
   props :{
   },
   mounted() {
+    //document.getElementById("topbar").style.display="none";
     if(this.$route.query.search_params != null){
       this.es_request_body = JSON.parse(this.$route.query.search_params)
       this.es_request_body.from = 0
@@ -106,6 +122,7 @@ export default {
     }
     this.post_es_search();
     this.update_secondary_search_condition();
+    $("#topbar").css("display", "none");
   },
   data() {
     return{
@@ -153,7 +170,7 @@ export default {
       this.filterGroup_venue = []
       this.filterGroup_year = []
       //深拷贝
-      let condition_filter_query = JSON.parse(JSON.stringify(this.common_search_request))
+      let condition_filter_query = JSON.parse(JSON.stringify(this.es_request_body))
       condition_filter_query._source = ["authors","year","venue"]
       condition_filter_query.from = 0
       condition_filter_query.size = 50
@@ -187,12 +204,6 @@ export default {
         this.filterGroup_year = Array.from(new Set(this.filterGroup_year))
       })
     },
-    // 发起简单搜索，获取结果，同时发起标签检索，获取标签
-    common_search(){
-      this.filters_updated_once = false;
-      this.post_common_search(1);
-      this.update_secondary_search_condition();
-    },
     // 给es发包
     post_es_search(){
       axios({
@@ -217,8 +228,14 @@ export default {
       })
     },
     change_page(page){
-      if(this.isAdvanced){this.post_advanced_search(page)}
-      else this.post_common_search(page);
+      this.es_request_body.from = (page - 1) * this.page_size
+      this.post_es_search()
+    },
+    // 二次搜索
+    secondary_search(){
+      let condition_filter_query = JSON.parse(JSON.stringify(this.es_request_body))
+      condition_filter_query.from = 0
+      // TODO 给condition加东西，应该使用filter
     },
     // 搜索框的一些动作函数
     resetForm(formName) {
@@ -269,7 +286,9 @@ export default {
 #SearchInformation {
   // margin-top: 60px;
   width: calc(85vw);
+  min-width: 100vh !important;
   align-self: center;
+  min-height: calc(100vh) !important;
 }
 .el-aside{
   background: none;
@@ -298,6 +317,7 @@ export default {
   }
 }
 .el-main {
+  
   background:none;
   // border-radius: 20px !important;
 
@@ -312,5 +332,7 @@ export default {
 .search_input {
   width: 700px !important;
 }
-
+.el-select-dropdown__item.selected {
+  color: #003b55;
+}
 </style>

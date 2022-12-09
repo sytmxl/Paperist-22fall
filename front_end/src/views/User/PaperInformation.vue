@@ -1,6 +1,5 @@
 <template>
     <el-container class="root">
-      <!-- <TopBar/> -->
       <el-container class="content">
         <el-main>
           <div class="main">
@@ -47,13 +46,14 @@
           </div>
           <div class="remark">
             <el-card>
-              <el-tabs >
+              <el-tabs>
                 <el-tab-pane label="相关文献">
                     <div class="about" v-if="about_list!=[]">
                       <div class="relative" v-for="i in about_list" :key="i">
                           <aboutCard :name="i.paper_name" :author="i.author_name" :cite="i.cite_number" :origin="i.magazine" :intro="i.abstarct" :date="i.date" :paper_id="i.paper_id"/>
                       </div>
                   </div>
+                  <div v-else><el-empty description="尚无相关文献"></el-empty></div>
                     <div id="load">
                     <el-button style="width:100%" @click="load()" v-loading = "start">加载更多</el-button>
                   </div>
@@ -158,9 +158,9 @@
             width="30%"
             >
             <div style="margin-bottom:40px">
-              <span>localhost:8080{{this.$route.path}}</span>
+              <span>{{path}}</span>
             </div>
-            <el-button round icon="el-icon-document-copy">复制链接</el-button>
+            <el-button round icon="el-icon-document-copy" v-clipboard:copy="path" v-clipboard:success="onCopy" v-clipboard:error="onError">复制链接</el-button>
             
           </el-dialog>
           <el-dialog
@@ -225,6 +225,7 @@ export default {
       return{
         number:4,//后期要改成session
         start:false,
+        activeName:"aboutPaper",
         ComplainVisible:false,
         QuoteVisible:false,
         ShareVisible:false,
@@ -240,25 +241,48 @@ export default {
         info_list:[],
         quote_list:[],
         uploadFiles:[],
-      //  remark_list:{1:{1:{flag:0,name:'胡博轩',image:require("../../assets/Cooper.jpg"),comment:"马哥太尴尬了哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈"},2:{flag:1,name:'李阳',image:require("../../assets/mosy.jpg"),res_name:'胡博轩',comment:"确实，怎么可以这么尬"},3:{flag:1,name:'朱康乐',image:require("../../assets/le.jpg"),res_name:'李阳',comment:"你是懂尴尬的"},4:{flag:1,name:'马泽远',image:require("../../assets/ma.jpg"),res_name:'胡博轩',comment:"基操勿6"}},
-      //   2:{1:{flag:0,name:'马泽远',image:require("../../assets/ma.jpg"),comment:"感谢大家支持"}},
-      //   3:{1:{flag:0,name:'王域杰',image:require("../../assets/jie.jpg"),comment:"苏珊，小心我告你"},2:{flag:1,name:'王域杰',image:require("../../assets/jie.jpg"),res_name:'王域杰',comment:"别来沾边"},3:{flag:1,name:'朱康乐',image:require("../../assets/le.jpg"),res_name:'王域杰',comment:"支持杰哥维权"},4:{flag:1,name:'马泽远',image:require("../../assets/ma.jpg"),res_name:'王域杰',comment:"我错了杰哥，我苏珊"}},
-      //   4:{1:{flag:0,name:'马泽远',image:require("../../assets/ma.jpg"),comment:"感谢大家支持"}},
-      //   5:{1:{flag:0,name:'王域杰',image:require("../../assets/jie.jpg"),comment:"苏珊，小心我告你"},2:{flag:1,name:'王域杰',image:require("../../assets/jie.jpg"),res_name:'王域杰',comment:"别来沾边"},3:{flag:1,name:'朱康乐',image:require("../../assets/le.jpg"),res_name:'王域杰',comment:"支持杰哥维权"},4:{flag:1,name:'马泽远',image:require("../../assets/ma.jpg"),res_name:'王域杰',comment:"我错了杰哥，我苏珊"}},},
-      //   mark_list:{1:{name:'胡博轩',image:require("../../assets/Cooper.jpg"),intro:"这篇笔记记录了第一章杰哥出世",likes:8},
-      //   2:{name:'李阳',image:require("../../assets/mosy.jpg"),intro:"这篇笔记非常精彩，不看后悔",likes:5},
-      //   3:{name:'朱康乐',image:require("../../assets/le.jpg"),intro:"第一篇笔记，请大家多多支持",likes:10}}
         remark_list:[],
-        mark_list:[]
+        mark_list:[],
+        path:"localhost:8080"+this.$route.path
       }
     },
     methods:{
+      load(){
+        this.start = true
+      },
       submitAvatarHttp(val){
        formdata.append('img',val.file)
       },
     loadJsonFromFile(file, fileList) {
       this.uploadFiles = fileList
     },
+    onCopy (e) {
+ this.$message.success("内容已复制到剪切板！")
+},
+// 复制失败时的回调函数
+onError (e) {
+ this.$message.error("抱歉，复制失败！")
+},
+      handleClick(tab, event){
+        if(tab.name="note"){
+           /* window.addEventListener("scroll", function() {
+              sessionStorage.setItem("scrollTop", window.scrollY);
+            });
+
+            // 在页面加载完成后还原用户的滚动位置
+            window.addEventListener("load", function() {
+              let scrollTop = sessionStorage.getItem("scrollTop");
+              window.scrollTo(0, scrollTop);
+            });*/
+            alert(this.activeName)
+        }
+        else if(tab.name="remark"){
+            alert.log(this.activeName)
+        }
+        else if(tab.name="aboutPaper"){
+            alert.log(this.activeName)
+        }
+      },
       chart_init(cite_number){
         var myChart = echarts.init(document.getElementById('echarts_box'))
         myChart.setOption({
@@ -378,10 +402,8 @@ export default {
           this.remark_list = res.data.remark_list
         })
        },
-
-      quote(){
-        this.QuoteVisible = true
-         this.$axios({
+      quoteInit(){
+        this.$axios({
             url:"http://127.0.0.1:8000/paperQuote/",
             method:"post",
             data:{
@@ -390,6 +412,9 @@ export default {
         }).then(res=>{
             this.quote_list = res.data.quote
         })
+      },
+      quote(){
+        this.QuoteVisible = true
       },
       collect(){
         if(this.info_list.collect_flag){
@@ -473,6 +498,7 @@ export default {
       this.aboutListInit()
       this.aboutNoteInit()
       this.paperRemarkInit()
+      this.quoteInit()
       // this.chart_init();
     }
 }

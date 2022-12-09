@@ -382,6 +382,7 @@
                           circle
                           size="small"
                           @click="delPaperCollection(item.id)"
+                          v-if="!isOthers"
                         ></el-button>
                         <el-button
                           style="float: right"
@@ -444,6 +445,7 @@
                           circle
                           size="small"
                           @click="delNoteCollection(item.id)"
+                          v-if="!isOthers"
                         ></el-button>
                         <el-button
                           style="float: right"
@@ -497,6 +499,7 @@
                         circle
                         size="small"
                         @click="delSubscribe(item.subscribe_id)"
+                        v-if="!isOthers"
                     ></el-button>
                     <el-button
                         style="float: right"
@@ -555,6 +558,7 @@
                       circle
                       size="small"
                       @click="delNotes(item.id)"
+                      v-if="!this.isOthers"
                     ></el-button>
                     <el-button
                       style="float: right"
@@ -614,6 +618,7 @@
                       circle
                       size="small"
                       @click="delComment(item.comment_id)"
+                      v-if="!isOthers"
                     ></el-button>
                     <el-button
                       style="float: right"
@@ -673,6 +678,7 @@
                       icon="el-icon-delete"
                       circle
                       size="small"
+                      v-if="!this.isOthers"
                     ></el-button>
                     <el-button
                       style="float: right"
@@ -713,6 +719,7 @@
                       icon="el-icon-delete"
                       circle
                       size="small"
+                      v-if="!this.isOthers"
                     ></el-button>
                     <el-button
                       style="float: right"
@@ -883,6 +890,8 @@ export default {
       selectScholarLiterature: "",
       currentPage: 1,
       pageSize: 5,
+      isToken:0,
+      id:0,
       papers: [
         {
           authors: [
@@ -1082,6 +1091,16 @@ export default {
     };
   },
   created() {
+    this.id=this.$route.params.id
+    console.log(this.id)
+    if(this.id==undefined){
+      this.isToken=1;//是自己，用token访问
+      this.isOthers=false;
+      this.id=1;//无用
+    } else {
+      this.isToken=0;
+      this.isOthers=true;
+    }
     //个人信息
     this.getPersonalInformation();
     this.getPaperCollection();
@@ -1181,7 +1200,9 @@ export default {
       this.$axios({
         url: "/user/getPersonalInformation/",
         method: "post",
-        data: { token: sessionStorage.getItem("token") },
+        data: { token: sessionStorage.getItem("token") ,
+                isToken: this.isToken,
+                id: this.id},
       }).then((res) => {
         console.log(res.data.data);
         this.realname = res.data.data[0].realname;
@@ -1214,6 +1235,8 @@ export default {
           sign: this.new_personalProfile,
           country: this.new_region,
           field: this.new_researchField,
+          isToken: this.isToken,
+          id: this.id
         },
       }).then((res) => {
         if (res.data.isSuccess) {
@@ -1272,7 +1295,9 @@ export default {
       this.$axios({
         url: "/user/getPaperCollection/",
         method: "post",
-        data: { token: sessionStorage.getItem("token") },
+        data: { token: sessionStorage.getItem("token"),
+          isToken: this.isToken,
+          id: this.id},
       }).then((res) => {
         this.paperCollection = res.data.data;
       });
@@ -1282,7 +1307,9 @@ export default {
       this.$axios({
         url: "/user/getNoteCollection/",
         method: "post",
-        data: { token: sessionStorage.getItem("token") },
+        data: { token: sessionStorage.getItem("token"),
+          isToken: this.isToken,
+          id: this.id},
       }).then((res) => {
         this.noteCollection = res.data.data;
       });
@@ -1292,7 +1319,9 @@ export default {
       this.$axios({
         url: "/user/getSubscribe/",
         method: "post",
-        data: { token: sessionStorage.getItem("token") },
+        data: { token: sessionStorage.getItem("token"),
+          isToken: this.isToken,
+          id: this.id},
       }).then((res) => {
         this.subscribes = res.data.data;
       });
@@ -1302,7 +1331,9 @@ export default {
       this.$axios({
         url: "/user/getNote/",
         method: "post",
-        data: { token: sessionStorage.getItem("token") },
+        data: { token: sessionStorage.getItem("token"),
+          isToken: this.isToken,
+          id: this.id},
       }).then((res) => {
         this.notes = res.data.data;
       });
@@ -1312,7 +1343,9 @@ export default {
       this.$axios({
         url: "/user/getPaperComment/",
         method: "post",
-        data: { token: sessionStorage.getItem("token") },
+        data: { token: sessionStorage.getItem("token"),
+          isToken: this.isToken,
+          id: this.id},
       }).then((res) => {
         this.myComment = res.data.data;
       });
@@ -1322,7 +1355,9 @@ export default {
       this.$axios({
         url: "/user/getSet/",
         method: "post",
-        data: { token: sessionStorage.getItem("token") },
+        data: { token: sessionStorage.getItem("token"),
+          isToken: this.isToken,
+          id: this.id},
       }).then((res) => {
         this.isNoteCommentable = res.data.isNoteCommentable;
         this.isNoteVisible = res.data.isNoteVisible;
@@ -1345,6 +1380,8 @@ export default {
           isCollectionVisible: this.isCollectionVisible,
           color: this.color,
           language: this.language,
+          isToken: this.isToken,
+          id: this.id
         },
       }).then((res) => {
         this.$message.success("修改成功");
@@ -1358,6 +1395,8 @@ export default {
         data: {
           token: sessionStorage.getItem("token"),
           content: this.selectLiterature,
+          isToken: this.isToken,
+          id: this.id
         },
       }).then((res) => {
         this.paperCollection = res.data.data;
@@ -1373,6 +1412,8 @@ export default {
         data: {
           token: sessionStorage.getItem("token"),
           content: this.selectSubscribe,
+          isToken: this.isToken,
+          id: this.id
         },
       }).then((res) => {
         console.log(res.data.data)
@@ -1389,6 +1430,8 @@ export default {
         data: {
           token: sessionStorage.getItem("token"),
           content: this.selectCollectionNote,
+          isToken: this.isToken,
+          id: this.id
         },
       }).then((res) => {
         this.noteCollection = res.data.data;
@@ -1404,6 +1447,8 @@ export default {
         data: {
           token: sessionStorage.getItem("token"),
           content: this.selectNote,
+          isToken: this.isToken,
+          id: this.id
         },
       }).then((res) => {
         this.notes = res.data.data;
@@ -1419,6 +1464,8 @@ export default {
         data: {
           token: sessionStorage.getItem("token"),
           content: this.selectComment,
+          isToken: this.isToken,
+          id: this.id
         },
       }).then((res) => {
         this.myComment = res.data.data;
@@ -1448,7 +1495,9 @@ export default {
       this.$axios({
         url: "/user/delComment/",
         method: "post",
-        data: { token: sessionStorage.getItem("token"), comment_id: id },
+        data: { token: sessionStorage.getItem("token"), comment_id: id,
+          isToken: this.isToken,
+          id: this.id},
       }).then((res) => {
         this.$message.success("删除用户成功！");
         this.getPaperComment();
@@ -1477,7 +1526,9 @@ export default {
       this.$axios({
         url: "/user/delNote/",
         method: "post",
-        data: { token: sessionStorage.getItem("token"), note_id: id },
+        data: { token: sessionStorage.getItem("token"), note_id: id,
+          isToken: this.isToken,
+          id: this.id},
       }).then((res) => {
         this.$message.success("删除用户成功！");
         this.getNote();
@@ -1506,7 +1557,9 @@ export default {
       this.$axios({
         url: "/user/delSubscribe/",
         method: "post",
-        data: { token: sessionStorage.getItem("token"), id: id },
+        data: { token: sessionStorage.getItem("token"), id: id,
+          isToken: this.isToken,
+          userid: this.id},//呜呜呜id重复了是我的问题
       }).then((res) => {
         this.$message.success("删除用户成功！");
         this.getSubscribe();
@@ -1535,7 +1588,9 @@ export default {
       this.$axios({
         url: "/user/delPaperCollection/",
         method: "post",
-        data: { token: sessionStorage.getItem("token"), paper_id: id },
+        data: { token: sessionStorage.getItem("token"), paper_id: id,
+          isToken: this.isToken,
+          id: this.id},
       }).then((res) => {
         this.$message.success("删除用户成功！");
         this.getPaperCollection();
@@ -1564,7 +1619,9 @@ export default {
       this.$axios({
         url: "/user/delNoteCollection/",
         method: "post",
-        data: { token: sessionStorage.getItem("token"), note_id: id },
+        data: { token: sessionStorage.getItem("token"), note_id: id,
+          isToken: this.isToken,
+          id: this.id},
       }).then((res) => {
         this.$message.success("删除用户成功！");
         this.getNoteCollection();
@@ -1605,6 +1662,8 @@ export default {
           token: sessionStorage.getItem("token"),
           oldPassword: CryptoJS.MD5(this.oldPassword).toString(),
           newPassword: CryptoJS.MD5(this.newPassword).toString(),
+          isToken: this.isToken,
+          id: this.id
         },
       }).then((res) => {
         if (res.data.isSuccess == -1) {
@@ -1618,6 +1677,8 @@ export default {
     uploadProfile(file) {
       let formData = new FormData();
       formData.append("profile", file.file);
+      formData.append("isToken", this.isToken);
+      formData.append("id", this.id);
       this.$axios
         .post("/user/upload_profile/", formData)
         .then((res) => {
@@ -1692,6 +1753,10 @@ export default {
         });
       }
     },
+
+
+
+
   },
 };
 </script>
