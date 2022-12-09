@@ -20,6 +20,7 @@
                 :origin="item.origin"
                 :intro="item.intro"
                 :date="item.date"
+                :paper_id="item.paper_id"
               />
               <div id="load">
                 <el-button
@@ -122,6 +123,7 @@
                   :origin="item.origin"
                   :intro="item.intro"
                   :date="item.date"
+                  :paper_id="item.paper_id"
                 />
                 <div id="load">
                   <el-button
@@ -195,7 +197,7 @@ import RelationShip from "@/components/RelationShip.vue";
 import ScholarLine from "@/components/ScholarLine.vue";
 import TopBar from "@/components/TopBar";
 import noteCard from "../../components/noteCard.vue";
-import $ from 'jquery';
+import $ from "jquery";
 export default {
   inject: ["reload"],
   components: {
@@ -229,6 +231,7 @@ export default {
           origin: "中国科学院",
           intro: "杰哥是个大帅哥",
           date: "2020-10-10",
+          paper_id: "1",
         },
         {
           name: "论杰哥",
@@ -237,6 +240,7 @@ export default {
           origin: "中国科学院",
           intro: "杰哥是个大帅哥",
           date: "2020-10-10",
+          paper_id: "2",
         },
         {
           name: "论杰哥",
@@ -245,44 +249,37 @@ export default {
           origin: "中国科学院",
           intro: "杰哥是个大帅哥",
           date: "2020-10-10",
+          paper_id: "1",
         },
       ],
       SubscribeNoteList: [{}],
       showSubscribeNoteList: [
         {
-          name: "论杰哥",
-          intro: "介绍奇人杰哥",
-          likes: 8,
-          collections: 10,
-          remarks: 9,
+          note_id: "3",
+          paper_id: "2",
+          paper_name: "杰哥",
+          introduction: "杰哥喜欢下围棋",
+          likes: "3",
+          collections: "1111",
+          remarks: "232",
         },
         {
-          name: "论杰哥",
-          intro: "介绍奇人杰哥",
-          likes: 8,
-          collections: 10,
-          remarks: 9,
+          note_id: "3",
+          paper_id: "2",
+          paper_name: "杰哥",
+          introduction: "杰哥喜欢下围棋",
+          likes: "3",
+          collections: "1111",
+          remarks: "232",
         },
         {
-          name: "论杰哥",
-          intro: "介绍奇人杰哥",
-          likes: 8,
-          collections: 10,
-          remarks: 9,
-        },
-        {
-          name: "论杰哥",
-          intro: "介绍奇人杰哥",
-          likes: 8,
-          collections: 10,
-          remarks: 9,
-        },
-        {
-          name: "论杰哥",
-          intro: "介绍奇人杰哥",
-          likes: 8,
-          collections: 10,
-          remarks: 9,
+          note_id: "3",
+          paper_id: "2",
+          paper_name: "杰哥",
+          introduction: "杰哥喜欢下围棋",
+          likes: "3",
+          collections: "1111",
+          remarks: "232",
         },
       ],
       SubscribeTextList: [{}],
@@ -294,6 +291,7 @@ export default {
           origin: "中国科学院",
           intro: "杰哥是个大帅哥",
           date: "2020-10-10",
+          paper_id: "1",
         },
         {
           name: "论杰哥",
@@ -302,6 +300,7 @@ export default {
           origin: "中国科学院",
           intro: "杰哥是个大帅哥",
           date: "2020-10-10",
+          paper_id: "1",
         },
         {
           name: "论杰哥",
@@ -310,6 +309,7 @@ export default {
           origin: "中国科学院",
           intro: "杰哥是个大帅哥",
           date: "2020-10-10",
+          paper_id: "1",
         },
       ],
       showSubscribePeopleList: [
@@ -368,12 +368,12 @@ export default {
     // this.getSubscribeList();
     // this.getFollowTextList();
     // this.getHot();
-    $('#topbar').css('display', 'none');
-    window.addEventListener("scroll", this.scroll,true);
+    $("#topbar").css("display", "none");
+    window.addEventListener("scroll", this.scroll, true);
   },
   destroyed() {
-		window.removeEventListener("scroll", this.scroll,true);
-	},
+    window.removeEventListener("scroll", this.scroll, true);
+  },
   methods: {
     // 获取推荐文章
     // getRecommendList() {
@@ -511,17 +511,39 @@ export default {
       return true;
     },
     uploadTextMiss() {
-      this.$refs.MissTextComplain.uploadTextMiss();
+      if (!this.isLogin()) {
+        this.$message({
+          message: "您还未登录,正在为您跳转至登录界面",
+          type: "warning",
+        });
+        setTimeout(() => {
+          this.$router.push({
+            path: "/login",
+          });
+        }, 1500);
+        return;
+      } else {
+        this.$refs.MissTextComplain.uploadTextMiss();
+      }
+    },
+    handleClick(tab, event) {
+      if (tab.name == "second") {
+        window.alert("second");
+        // this.getPaperCollection();
+      } else if (tab.name == "third") {
+        window.alert("third");
+        // this.getFollowTextList();
+      }
     },
     scroll() {
       var windowTop = $(window).scrollTop();
       // windowTop > 300 ?
       if (windowTop > 300) {
-        $('#topbar').css('display', 'block');
+        $("#topbar").css("display", "block");
       } else {
-        $('#topbar').css('display', 'none');
+        $("#topbar").css("display", "none");
       }
-		},
+    },
     toggleDarkLight() {
       var body = document.getElementById("app");
       var currentClass = body.className;
@@ -747,6 +769,5 @@ export default {
   background: #003b55;
 }
 /deep/.el-input-group {
-
 }
 </style>

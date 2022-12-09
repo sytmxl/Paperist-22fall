@@ -4,7 +4,7 @@
       <el-container class="content">
         <el-main>
           <div class="main">
-            <el-card class="box-card">
+            <el-card class="box-card" v-if="info_list!=[]">
               <div style="margin-bottom:20px">
                 <span style="font-size:35px;font-weight:bolder">{{info_list.paper_name}}</span>
                 <h4>来源：{{info_list.origin}} &#12288; 引用次数：{{info_list.cite_number}}</h4>
@@ -64,7 +64,7 @@
                       </div>
                       <div v-if="Object.keys(remark_list).length!=0">
                         <div class="comment" v-for="i in remark_list" :key="i">
-                          <remark :list="i.remark" :paper_id="paper_id"  @throw_remark="open_comment"/>
+                          <remark :list="i[0].remark[0]" :paper_id="paper_id"  @throw_remark="react_remark"/>
                       </div>
                       </div>
                       <div v-else><el-empty description="还没有评论，发表第一个评论吧"></el-empty></div>
@@ -76,7 +76,7 @@
                       </div>
                       <div v-if="Object.keys(mark_list).length!=0">
                         <div class="mark" v-for="i in mark_list" :key="i">
-                          <note :list="i"/>
+                          <note :list="i" @reaction_note="aboutNoteInit()"/>
                         </div>
                       </div>
                       <div v-else><el-empty description="还没有笔记，发表第一篇笔记吧"></el-empty></div>
@@ -116,44 +116,20 @@
               </div>
               <div class="picture">
                 相关图片：
-                <el-upload
-                style="margin-top:20px"
-                    action="#"
-                    list-type="picture-card"
-                    :auto-upload="false"
-                    :accept="jpg"
-                    :limit="4"
-                    :on-exceed="handleExceed">
-                      <i slot="default" class="el-icon-plus"></i>
-                      <div slot="file" slot-scope="{file}">
-                        <img
-                          class="el-upload-list__item-thumbnail"
-                          :src="file.url" alt=""
-                        >
-                        <span class="el-upload-list__item-actions">
-                          <span
-                            class="el-upload-list__item-preview"
-                            @click="handlePictureCardPreview(file)"
-                          >
-                            <i class="el-icon-zoom-in"></i>
-                          </span>
-                          <span
-                            v-if="!disabled"
-                            class="el-upload-list__item-delete"
-                            @click="handleDownload(file)"
-                          >
-                            <i class="el-icon-download"></i>
-                          </span>
-                          <span
-                            v-if="!disabled"
-                            class="el-upload-list__item-delete"
-                            @click="handleRemove(file)"
-                          >
-                            <i class="el-icon-delete"></i>
-                          </span>
-                        </span>
-                      </div>
-                  </el-upload>
+               <el-upload
+            class="upload-demo"
+            drag
+            action=""
+            :on-change="loadJsonFromFile"
+            :http-request="submitAvatarHttp"
+            :file-list="uploadFiles"
+            limit="1"
+            list-type="picture">
+            <img v-if="imageUrl" :src="imageUrl" class="avatar">
+            <i v-else class="el-icon-upload"></i>
+            <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
+            <div class="el-upload__tip" slot="tip">只能上传jpg/png文件</div>
+        </el-upload>
                 
               </div>
               <div class="contact">
@@ -170,7 +146,7 @@
               </div>
               <span slot="footer" class="dialog-footer">
                 <!-- <el-button @click="dialogVisible = false">取 消</el-button> -->
-                <el-button type="primary" @click="dialogVisible = false">提交申诉</el-button>
+                <el-button type="primary" @click="submit()">提交申诉</el-button>
               </span>
                   <el-dialog :visible.sync="dialogVisible">
                     <img width="100%" :src="dialogImageUrl" alt="">
@@ -192,14 +168,14 @@
                     :visible.sync="CreatMark"
                     width="30%"
                     >
-                    <uploadMark :paper_id="paper_id"/>
+                    <uploadMark :paper_id="paper_id" @finish_upload="CreatMark=false"/>
           </el-dialog>
           <el-dialog
                 title="留下你的评论吧~"
                 :visible.sync="CreatCommentVisible"
                 width="30%"
                 >
-                <CreateComment :paper_id="paper_id" :receiver_id="-1" :remark_id="-1" @finish_remark="close_comment"/>
+                <CreateComment :paper_id="paper_id" :receiver_id="receiver_id" :remark_id="remark_id" @finish_remark="close_comment"/>
           </el-dialog>
         </el-main>
         <el-aside>
@@ -242,7 +218,7 @@ import CreateComment from "../../components/CreateComment.vue"
 import uploadMark from "../../components/uploadMark.vue"
 import note from "../../components/note.vue"
 import TopBar from "@/components/TopBar";
-let loading
+let formdata = new FormData();
 export default {
   inject: ['reload'],
     data(){
@@ -263,6 +239,7 @@ export default {
         now_list:[],
         info_list:[],
         quote_list:[],
+        uploadFiles:[],
       //  remark_list:{1:{1:{flag:0,name:'胡博轩',image:require("../../assets/Cooper.jpg"),comment:"马哥太尴尬了哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈"},2:{flag:1,name:'李阳',image:require("../../assets/mosy.jpg"),res_name:'胡博轩',comment:"确实，怎么可以这么尬"},3:{flag:1,name:'朱康乐',image:require("../../assets/le.jpg"),res_name:'李阳',comment:"你是懂尴尬的"},4:{flag:1,name:'马泽远',image:require("../../assets/ma.jpg"),res_name:'胡博轩',comment:"基操勿6"}},
       //   2:{1:{flag:0,name:'马泽远',image:require("../../assets/ma.jpg"),comment:"感谢大家支持"}},
       //   3:{1:{flag:0,name:'王域杰',image:require("../../assets/jie.jpg"),comment:"苏珊，小心我告你"},2:{flag:1,name:'王域杰',image:require("../../assets/jie.jpg"),res_name:'王域杰',comment:"别来沾边"},3:{flag:1,name:'朱康乐',image:require("../../assets/le.jpg"),res_name:'王域杰',comment:"支持杰哥维权"},4:{flag:1,name:'马泽远',image:require("../../assets/ma.jpg"),res_name:'王域杰',comment:"我错了杰哥，我苏珊"}},
@@ -276,6 +253,12 @@ export default {
       }
     },
     methods:{
+      submitAvatarHttp(val){
+       formdata.append('img',val.file)
+      },
+    loadJsonFromFile(file, fileList) {
+      this.uploadFiles = fileList
+    },
       chart_init(cite_number){
         var myChart = echarts.init(document.getElementById('echarts_box'))
         myChart.setOption({
@@ -311,17 +294,22 @@ export default {
         return a;
       },
       handleRemove(file) {
-        // console.log(file);
+        console.log(file);
       },
       handlePictureCardPreview(file) {
         this.dialogImageUrl = file.url;
         this.dialogVisible = true;
       },
       handleDownload(file) {
-        // console.log(file);
+        console.log(file);
       },
       handleExceed(files, fileList) {
-        this.$message.warning(`当前限制选择 4 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`);
+        this.$message.warning(`最多上传四张图片`);
+      },
+      react_note(data){
+        if(data.flag==1){
+          this.aboutNoteInit()
+        }
       },
       paper_init(){
            this.$axios({
@@ -342,6 +330,55 @@ export default {
         })
         
       },
+
+      paperInfoInit(){
+        this.$axios({
+            url:"http://127.0.0.1:8000/paperInfoInit/",
+            method:"post",
+            data:{
+                paper_id:this.$route.params.paper_id
+            }
+        }).then(res=>{
+          // console.log(res.data.about_list)
+            this.info_list = res.data.info_list[0]
+            this.chart_init(res.data.info_list[0].cite_number)
+            // this._loadFile(this.pdf_src)
+        })
+      },
+       aboutListInit(){
+          this.$axios({
+            url:"http://127.0.0.1:8000/aboutListInit/",
+            method:"post",
+            data:{
+                paper_id:this.$route.params.paper_id
+            }
+        }).then(res=>{
+          this.about_list = res.data.about_list
+        })
+       },
+       aboutNoteInit(){
+          this.$axios({
+            url:"http://127.0.0.1:8000/aboutNoteInit/",
+            method:"post",
+            data:{
+                paper_id:this.$route.params.paper_id
+            }
+        }).then(res=>{
+          this.mark_list = res.data.note_list
+        })
+       },
+       paperRemarkInit(){
+          this.$axios({
+            url:"http://127.0.0.1:8000/paperRemarkInit/",
+            method:"post",
+            data:{
+                paper_id:this.$route.params.paper_id
+            }
+        }).then(res=>{
+          this.remark_list = res.data.remark_list
+        })
+       },
+
       quote(){
         this.QuoteVisible = true
          this.$axios({
@@ -366,6 +403,7 @@ export default {
             }
           }).then(res=>{
               this.$message.success("已取消收藏")
+              this.paperInfoInit()
           })
         }
         else{
@@ -379,18 +417,44 @@ export default {
             }
           }).then(res=>{
             this.$message.success("已收藏")
+            this.paperInfoInit()
           })
         }
       },
-      open_comment(data){
-        this.CreatCommentVisible = true;
-        this.remark_id = data.remark_id
-        this.receiver_id = data.sender_id
+      react_remark(data){
+        if(data.op=="remark"){
+             this.CreatCommentVisible = true;
+            this.remark_id = data.remark_id
+            this.receiver_id = data.sender_id
+            console.log(data)
+        }
+        else if(data.op=="like"){
+           this.paperRemarkInit()
+        }
      },
      close_comment(data){
-           this.CreatCommentVisible = false;
-  
+          this.CreatCommentVisible = false;
+          this.paperRemarkInit()
      },
+
+     submit(){
+       this.$axios({
+                method: "post",
+                headers: { "Content-Type": "multipart/form-data" },
+                url: "http://127.0.0.1:8000/paperComplain/" ,
+                data: {
+                  img: formdata.get('img'),
+                  contact:this.contact,
+                  introduction:this.describe,
+                  paper_id:this.$route.params.paper_id
+                },
+
+              })
+                .then((res) => {
+                      this.ComplainVisible = false
+                      
+                });
+     }
     },
     components:{
         aboutCard,
@@ -400,9 +464,15 @@ export default {
         note,
         TopBar,
     },
-    created() {},
+    created() {
+      
+    },
     mounted() {
-      this.paper_init();
+      // this.paper_init();
+      this.paperInfoInit()
+      this.aboutListInit()
+      this.aboutNoteInit()
+      this.paperRemarkInit()
       // this.chart_init();
     }
 }

@@ -1,48 +1,46 @@
 <template>
 <el-main>
-    <div v-for="i in list" :key="i">
-    <div class="prvoker" v-if="i.flag==0">
+    <div class="prvoker" v-if="list.flag==0">
         <div class="image">
-            <img :src="i.image" alt="">
+            <img :src="list.image" alt="">
         </div>
         <div class="content">
             <div class="name">
-                <span>{{i.name}}</span>
+                <span>{{list.name}}</span>
             </div>
             <div class="comment">
-                {{i.comment}}
+                {{list.comment}}
             </div>
-            <div class="response">
-                <i class="el-icon-chat-round" @click="ready(i)"></i>
-                <i class="el-icon-thumb" @click="likeit(i.id,i.like_flag)" v-if="i.like_flag" title="取消">{{i.likes}}</i>
-                <i class="el-icon-thumb" @click="likeit(i.id,i.like_flag)" v-else title="赞">{{i.likes}}</i>
-                <i class="el-icon-warning-outline" @click="tipoff(i.id)"></i>
+            <div class="response" id="response">
+                <i class="el-icon-chat-round" @click="ready(list)"></i>
+                <i class="el-icon-thumb" @click="likeit(list.id,list.like_flag)" v-if="list.like_flag" title="取消">{{list.likes}}</i>
+                <i class="el-icon-thumb" @click="likeit(list.id,list.like_flag)" v-else title="赞">{{list.likes}}</i>
+                <i class="el-icon-warning-outline" @click="tipoff(list.id)"></i>
             </div>
         </div>
     </div>
-    <div class="responser" v-if="i.flag==1">
+    <div class="prvoker" v-if="list.flag==1">
         <div class="image">
-            <img :src="i.image" alt="">
+            <img :src="list.image" alt="">
         </div>
         <div class="content">
             <div class="name">
-                <span>{{i.name}}</span>
+                <span>{{list.name}}</span>
                 <span>&nbsp;<i class="el-icon-caret-right"></i>&nbsp;</span>
-                <span>{{i.res_name}}</span>
+                <span>{{list.res_name}}</span>
             </div>
             <div class="comment">
-                {{i.comment}}
+                {{list.comment}}
             </div>
-              <div class="response">
-                <i class="el-icon-chat-round" @click="ready(i)"></i>
-                <i class="el-icon-thumb" @click="likeit(i.id,i.like_flag,i)" v-if="i.like_flag" title="取消">{{i.likes}}</i>
-                <i class="el-icon-thumb" @click="likeit(i.id,i.like_flag,i)" v-else title="赞">{{i.likes}}</i>
-                <i class="el-icon-warning-outline" @click="tipoff(i.id)"></i>
+              <div class="response" id="response">
+                <i class="el-icon-chat-round" @click="ready(list)"></i>
+                <i class="el-icon-thumb" @click="likeit(list.id,list.like_flag)" v-if="like_flag" title="取消" :key="list.likes">{{list.likes}}</i>
+                <i class="el-icon-thumb" @click="likeit(list.id,list.like_flag)" v-else title="赞" :key="list.likes">{{list.likes}}</i>
+                <i class="el-icon-warning-outline" @click="tipoff(list.id)"></i>
             </div>
         </div>
     </div>
  
-    </div>
     <el-dialog
         title="留下你的评论吧~"
         :visible.sync="CommentVisible"
@@ -58,6 +56,7 @@
 </template>
 
 <script>
+let isclick = true
 import CreateComment from "../components/CreateComment.vue"
 export default {
     components:{
@@ -72,12 +71,17 @@ export default {
     return{
         CommentVisible:false,
         receiver_id:-1,
-        remark_id:-1
+        remark_id:-1,
+        like_flag:this.list.like_flag,
     }
   },
   methods:{
-    likeit(id,like_flag,item){
-        if(like_flag){
+    likeit(id,like){
+        if(isclick){
+            isclick=false
+            this.like_flag = !this.like_flag;
+        if(like){
+
           this.$axios({
             url:"http://127.0.0.1:8000/likeIt/",
             method:"post",
@@ -87,7 +91,13 @@ export default {
                 op:0
             }
           }).then(res=>{
-              i.likes = i.likes-1;
+            //   $("#response").load(location.href + "#response");
+            //   document.getElementById("#response").load(location.href + "#response");
+            this.list.likes = this.list.likes-1;
+            let data = {
+            op:"like"
+            }
+        this.$emit('throw_remark',data)
           })
         }
         else{
@@ -100,9 +110,21 @@ export default {
                 op:1
             }
           }).then(res=>{
-            i.likes = i.likes+1;
-          })
+            // $("#response").load(location.href + "#response");
+            // document.getElementById("#response").load(location.href + "#response");
+            this.list.likes = this.list.likes+1;
+            let data = {
+            op:"like"
+            }
+            this.$emit('throw_remark',data)
+            })
         }
+        setTimeout(()=>{isclick=true},1500)
+        }
+        else{
+            this.$message.warning("请勿频繁操作")
+        }
+        
     },
     tipoff(id){
          this.$axios({
@@ -118,6 +140,7 @@ export default {
     },
     ready(item){
         let data = {
+            op:"remark",
             sender_id: item.sender_id,
             remark_id: item.id
         }

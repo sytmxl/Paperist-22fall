@@ -1,5 +1,5 @@
 <template>
-  
+
   <div class="login">
     <el-row class="logo_area">
       <div id="logo1" class="home_logo"></div>
@@ -86,7 +86,7 @@ export default {
       forgetDialogVisible: false,
     };
   },
-  
+
   methods:{
     forgetPass(){
       // TODO
@@ -131,7 +131,7 @@ export default {
           sessionStorage.setItem("token", res.data.token);
           await this.$router.push("/FirstPage")
         }
-      }) 
+      })
     }
   }
 };

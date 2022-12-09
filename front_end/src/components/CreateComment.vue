@@ -53,7 +53,7 @@
         input.focus()
         input.selectionStart = startPos + emoji.data.length
         input.selectionEnd = startPos + emoji.data.length
-        this.text = resultText
+        this.textarea = resultText
       },
       submit(){
         this.$axios({
