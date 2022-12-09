@@ -4,13 +4,13 @@
       <el-col :span="20">
         <el-input
           placeholder="请输入内容"
-          v-model="simpleInput"
+          v-model="common_search_query"
           class="input-with-select"
           clearable
         >
-          <el-select v-model="select" slot="prepend" placeholder="请选择">
+          <el-select v-model="common_search_type" slot="prepend" placeholder="请选择">
             <el-option
-              v-for="(item, index) in list"
+              v-for="(item, index) in searchMods"
               :key="index"
               :label="item.label"
               :value="item.value"
@@ -21,14 +21,15 @@
             type="default"
             slot="append"
             icon="el-icon-search"
-            @click="SimpletoResult"
+            @click="common_search_jump()"
           >
             <!-- 开始搜索 -->
           </el-button>
         </el-input>
       </el-col>
       <el-col class="advsearch" :span="4">
-        <el-button type="primary" size="mini" round @click="AdvancedSearch()"
+        <el-button type="primary" size="mini" round
+                   @click="isAdvanced = !isAdvanced"
           >高级搜索
         </el-button>
       </el-col>
@@ -43,7 +44,7 @@
       <el-col :span="16">
         <el-card>
           <el-form
-            :model="AdvancedSearchInput"
+            :model="advanced_search_query"
             :rules="rules"
             ref="AdvancedSearchInput"
             label-width="150px"
@@ -53,11 +54,11 @@
             size="mini"
           >
             <el-form-item label="包含全部检索词" prop="Allselect">
-              <el-input v-model="AdvancedSearchInput.Allselect"></el-input>
+              <el-input v-model="advanced_search_query.fuzzy_search"></el-input>
             </el-form-item>
             <el-form-item label="包含精确检索词" prop="Exectselect">
               <el-input
-                v-model="AdvancedSearchInput.Exectselect"
+                v-model="advanced_search_query.must_contain"
                 placeholder="多个检索词以逗号,分隔"
               >
                 <el-dropdown slot="suffix" size="mini" placement="top-start">
@@ -72,24 +73,24 @@
             </el-form-item>
             <el-form-item label="包含至少一个检索词" prop="LeastOneSelect">
               <el-input
-                v-model="AdvancedSearchInput.LeastOneSelect"
+                v-model="advanced_search_query.at_least_one"
                 placeholder="多个检索词以逗号,分隔"
               ></el-input>
             </el-form-item>
             <el-form-item label="不包含检索词" prop="NoSelect">
               <el-input
-                v-model="AdvancedSearchInput.NoSelect"
+                v-model="advanced_search_query.contains_none"
                 placeholder="多个检索词以逗号,分隔"
               ></el-input>
             </el-form-item>
             <el-form-item label="出现检索词的位置" prop="Position">
               <el-select
-                v-model="option.PositionValue"
+                v-model="option.searchPositionValue"
                 placeholder="请选择"
                 style="width: 150px; margin-left: -58%"
               >
                 <el-option
-                  v-for="item in Positions"
+                  v-for="item in searchPosition"
                   :key="item.value"
                   :label="item.label"
                   :value="item.value"
@@ -99,16 +100,16 @@
             </el-form-item>
             <el-form-item label="作者" prop="AdAuthor">
               <el-input
-                v-model="AdvancedSearchInput.AdAuthor"
+                v-model="advanced_search_query.authors"
                 placeholder="多个作者间以顿号、分隔"
               ></el-input>
             </el-form-item>
             <el-form-item label="机构" prop="AdOrganization">
-              <el-input v-model="AdvancedSearchInput.AdOrganization"></el-input>
+              <el-input v-model="advanced_search_query.organization"></el-input>
             </el-form-item>
             <el-form-item label="出版物" prop="AdPublish">
               <el-input
-                v-model="AdvancedSearchInput.AdPublish"
+                v-model="advanced_search_query.venue"
                 placeholder="请输入名称"
               >
                 <el-select
@@ -124,7 +125,7 @@
             <el-form-item label="发表时间" prop="AdTime">
               <el-date-picker
                 class="date-picker"
-                v-model="AdvancedSearchInput.date1"
+                v-model="advanced_search_query.year_begin"
                 type="year"
                 placeholder="起始年份"
                 format="yyyy 年"
@@ -134,7 +135,7 @@
               <div style="float: left">&nbsp;-&nbsp;</div>
               <el-date-picker
                 class="date-picker"
-                v-model="AdvancedSearchInput.date2"
+                v-model="advanced_search_query.year_end"
                 type="year"
                 placeholder="终止年份"
                 format="yyyy 年"
@@ -154,10 +155,9 @@
               </el-select>
             </el-form-item>
           </el-form>
-          <el-button type="primary" class="but"  @click="GoAdvancedSearch()"
+          <el-button type="primary" class="but"  @click="advanced_search_jump"
             >立即搜索</el-button
           >
-          <el-button class="but" @click="CancelAd()">取消搜索</el-button>
         </el-card>
       </el-col>
     </el-row>
@@ -169,39 +169,38 @@ export default {
   name: "SearchBox",
   data() {
     return {
-      simpleInput: "",
+      common_search_query: "",
       PublishSelect: "1",
       LangValue: "1",
-      select: 1,
+      common_search_type: 1,
       isAdvanced: false,
-      list: [
+      searchMods: [
         { label: "篇名", value: 1 },
-        { label: "领域", value: 2 },
-        { label: "关键词", value: 3 },
-        { label: "作者", value: 4 },
-        { label: "摘要", value: 5 },
-        { label: "DOI", value: 6 },
+        { label: "关键词", value: 2 },
+        { label: "作者", value: 3 },
+        { label: "摘要", value: 4 },
+        { label: "机构", value: 5 },
       ],
       option: {
         // 1：摘要 2：标题
-        PositionValue: 1,
+        searchPositionValue: 1,
         // 1：不限 2：中文 3：英语
         LangValue: "1",
         // 1：期刊 2：会议
         PublishSelect: "1",
       },
-      AdvancedSearchInput: {
-        Allselect: "",//默认搜索
-        Exectselect: "",//包含检索词
-        LeastOneSelect: "",//至少一个
-        NoSelect: "",//不包含
-        AdAuthor: "",//包含作者
-        AdOrganization: "",//包含机构
-        AdPublish: "",//所在出版物
-        date1: "",//起始年份
-        date2: "",//终止年份
+      advanced_search_query: {
+        fuzzy_search: null,//默认搜索
+        must_contain: null,//包含检索词
+        at_least_one: null,//至少一个
+        contains_none: null,//不包含
+        authors: null,//包含作者
+        organization: null,//包含机构
+        venue: null,//所在出版物
+        year_begin: null,//起始年份
+        year_end: null,//终止年份
       },
-      Positions: [
+      searchPosition: [
         {
           label: "文章摘要",
           value: 1,
@@ -219,13 +218,114 @@ export default {
         this.$refs[formName].resetFields();
       });
     },
-    CancelAd() {
-      this.isAdvanced = false;
-      this.resetForm("AdvancedSearchInput");
+    common_search_jump(){
+      let es_request_body = {
+        "query":{
+          "bool":{
+            "must":[],
+            "should":[],
+            //"filter":{}
+          }
+        }
+      }
+      switch (this.common_search_type){
+        case 1:
+          es_request_body.query.bool.should.push({"match":{"title":this.common_search_query}})
+          es_request_body.query.bool.should.push({"match_phrase":{"title":this.common_search_query}})
+          //es_request_body.query.bool.filter={"term":{"title": this.common_search_query}}
+          //es_request_body.aggs={"title":{"terms":{"field":"title","execution_hint": "map"}}}
+          break;
+        case 2:
+          es_request_body.query.bool.must.push({"match":{"keywords":this.common_search_query}})
+          es_request_body.query.bool.filter={"term":{"keywords": this.common_search_query}}
+          //es_request_body.aggs={"keywords":{"terms":{"field":"keywords","execution_hint": "map"}}}
+          break;
+        case 3:
+          es_request_body.query.bool.must.push({"match_phrase":{"authors.name":this.common_search_query}})
+          es_request_body.query.bool.filter={"match_phrase":{"authors.name": this.common_search_query}}
+          //es_request_body.aggs={"authors.name":{"terms":{"field":"authors.name.raw","execution_hint": "map"}}}
+          break;
+        case 4:
+          es_request_body.query.bool.must.push({"match":{"abstract":this.common_search_query}})
+          es_request_body.query.bool.filter={"term":{"abstract": this.common_search_query}}
+          break;
+        case 5:
+          //es_request_body.query.bool.must.push({"match":{"venue.raw":this.common_search_query}})
+          es_request_body.query.bool.filter={"match_phrase":{"venue.raw": this.common_search_query}}
+          //es_request_body.aggs={"venue":{"terms":{"field":"venue.raw","execution_hint": "map"}}}
+          break;
+      }
+      this.$router.push({
+          path: "/SearchInformation",
+          query:{
+            search_type : "common",
+            search_params : JSON.stringify(es_request_body)
+          }
+      })
+      this.route_push_params("common",es_request_body);
     },
-    AdvancedSearch() {
-      this.isAdvanced = this.isAdvanced ? false : true;
+    advanced_search_jump(){
+      let es_request_body = {
+        "query":{
+          "bool":{
+            "must":[],
+            "must_not":[],
+            "should":[],
+          }
+        }
+      }
+      let searchPositionQueue = this.option.searchPositionValue == 1 ? "abstract":"title"
+      if(this.advanced_search_query.fuzzy_search) {
+        let keylist = this.advanced_search_query.fuzzy_search.split(",")
+        for(let key in keylist){
+          console.log(keylist[key])
+          es_request_body.query.bool.must.push({"match":{[searchPositionQueue]:keylist[key]}})
+        }
+      }
+      if(this.advanced_search_query.must_contain){
+        for(let key in this.advanced_search_query.must_contain.split(","))
+          es_request_body.query.bool.must.push({"match":{[searchPositionQueue]:key}})
+      }
+      if(this.advanced_search_query.at_least_one){
+        for(let key in this.advanced_search_query.at_least_one.split(","))
+          es_request_body.query.bool.should.push({"match":{[searchPositionQueue]:this.advanced_search_query.at_least_one}})
+      }
+      if(this.advanced_search_query.contains_none){
+        for(let key in this.advanced_search_query.contains_none.split(","))
+          es_request_body.query.bool.must_not.push({"match":{[searchPositionQueue]:key}})
+      }
+      if(this.advanced_search_query.authors){
+        for(let key in this.advanced_search_query.authors.split(","))
+          es_request_body.query.bool.must.push({"match":{"authors.name":key}})
+      }
+      if(this.advanced_search_query.venue){
+        for(let key in this.advanced_search_query.venue.split(","))
+          es_request_body.query.bool.must.push({"match":{"venue.raw":this.advanced_search_query.key}})
+      }
+      if(this.advanced_search_query.year_begin) es_request_body.query.bool.must.push({"range":{"year":{"gte":this.advanced_search_query.year_begin}}})
+      if(this.advanced_search_query.year_end) es_request_body.query.bool.must.push({"range":{"year":{"lte":this.advanced_search_query.year_end}}})
+      this.route_push_params("advanced",es_request_body)
     },
+    route_push_params(search_type,es_request_body){
+      if(this.$route.path !== "/SearchInformation"){
+        this.$router.push({
+          path: "/SearchInformation",
+          query:{
+            search_type : search_type,
+            search_params : JSON.stringify(es_request_body)
+          }
+        })
+      }else {
+        this.$router.replace({
+          path: "/SearchInformation",
+          query:{
+            search_type : search_type,
+            search_params : JSON.stringify(es_request_body)
+          }
+        })
+        location.reload();
+      }
+    }
   },
 };
 </script>
