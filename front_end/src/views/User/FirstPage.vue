@@ -6,7 +6,7 @@
     <el-row class="search_area">
       <SearchBox />
     </el-row>
-    <note :list="1" @reaction_note="aboutNoteInit()" />
+    <!-- <note :list="1" @reaction_note="aboutNoteInit()" /> -->
     <el-row :gutter="10" class="display_zone">
       <el-col :offset="3" :span="12">
         <div class="leftone">
