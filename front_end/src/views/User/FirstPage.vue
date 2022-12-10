@@ -6,7 +6,7 @@
     <el-row class="search_area">
       <SearchBox />
     </el-row>
-    <note :list="1" @reaction_note="aboutNoteInit()"/>
+    <note :list="1" @reaction_note="aboutNoteInit()" />
     <el-row :gutter="10" class="display_zone">
       <el-col :offset="3" :span="12">
         <div class="leftone">
@@ -198,7 +198,7 @@ import RelationShip from "@/components/RelationShip.vue";
 import ScholarLine from "@/components/ScholarLine.vue";
 import TopBar from "@/components/TopBar";
 import noteCard from "../../components/noteCard.vue";
-import note from "../../components/note.vue"
+import note from "../../components/note.vue";
 
 import $ from "jquery";
 export default {
@@ -369,7 +369,7 @@ export default {
   mounted() {
     // 获取一些信息
     // this.getRecommendList();
-    this.getFollowNoteList();
+    // this.getFollowNoteList();
     // this.getFollowTextList();
     // this.getHot();
     $("#topbar").css("display", "none");
@@ -406,7 +406,7 @@ export default {
         // },
       })
         .then((res) => {
-          console.log("订阅笔记",res.data);
+          console.log("订阅笔记", res.data);
           // this.SubscribeNoteList= res.data.data;
           // this.showSubscribeNoteList = this.SubscribeNoteList.slice(0, 3);
         })
@@ -415,21 +415,25 @@ export default {
         });
     },
     // 获取关注用户的文献
-    // getFollowTextList() {
-    //   this.$axios({
-    //     method: "get",
-    //     url: "/api/recommend",
-    //     params: {
-    //       token:sessionStorage.getItem("token")===null?"":sessionStorage.getItem("token")  //     },
-    //   })
-    //     .then((res) => {
-    //       this.SubscribeTextList = res.data.data;
-    //       this.showSubscribeTextList = this.SubscribeTextList.slice(0, 3);
-    //     })
-    //     .catch((err) => {
-    //       console.log(err);
-    //     });
-    // },
+    getFollowTextList() {
+      this.$axios({
+        method: "get",
+        url: "/user/getFollowPaper",
+        data: {
+          token:
+            sessionStorage.getItem("token") === null
+              ? ""
+              : sessionStorage.getItem("token"), //     },
+        },
+      })
+        .then((res) => {
+          this.SubscribeTextList = res.data.data;
+          this.showSubscribeTextList = this.SubscribeTextList.slice(0, 3);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
     // 获取热门领域
     // getHot() {
     //   this.$axios({
@@ -533,10 +537,10 @@ export default {
     handleClick(tab, event) {
       if (tab.name == "second") {
         window.alert("second");
-        // this.getPaperCollection();
+        this.getFollowNoteList();
       } else if (tab.name == "third") {
         window.alert("third");
-        // this.getFollowTextList();
+        this.getFollowTextList();
       }
     },
     scroll() {
