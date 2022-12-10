@@ -6,7 +6,7 @@
     <el-container id="SearchInformation">
 <!--      左侧栏-->
       <el-aside class="left">
-        <h3 style="text-align: left; margin-left: 5%; margin-bottom: calc(2vh); margin-top: calc(10vh)">过滤结果</h3>
+        <h3 style="text-align: left; margin-left: 5%; margin-bottom: calc(2vh); margin-top: 20px">过滤结果</h3>
         <el-button @click="secondary_search">二次搜索</el-button>
         <el-collapse>
           <el-collapse-item title="时间" style="margin-bottom: 10px" class="display_zone" shadow="never">
@@ -38,7 +38,7 @@
       </el-aside>
 <!--      搜索结果-->
       <el-main>
-        <el-row :gutter="20" style="margin-top: 60px">
+        <el-row :gutter="20" style="margin-top: 50px">
           <el-col :span="16" style="text-align: left; margin-left: 6%; margin-bottom: 3%; color: #B3C0D1">
             找到{{toThousands(resultNum) + (this.resultNum_relation === "gte" ? "+":"")}}
             条相关结果{{this.resultNum_relation === "gte" ? "，您可能需要使用二次检索或高级检索获取更精确的结果":""}}</el-col>
@@ -70,7 +70,7 @@
         <div>
           <!-- <el-card style="min-height: calc(75vh)" class="display_zone" shadow="never"> -->
           <paper-card v-for="paper in papers" :key="card_index"
-                      :paper_data = "paper._source"
+                      :paper_data = "paper"
           />
           <!-- </el-card> -->
         </div>
@@ -85,7 +85,7 @@
       </el-main>
 <!--右侧栏-->
       <el-aside class="right">
-        <el-card  class="display_zone" shadow="never" style="margin-top: calc(10vh)">
+        <el-card  class="display_zone" shadow="never" style="margin-top: 20px">
           <h3 style="text-align: left; margin-left: 5%; margin-bottom: calc(2vh)">推荐</h3>
           <el-card class="recommend" v-for="recommend in recommends" :key="recommend" v-loading = "true" shadow="never"
                    style = "height: 75px;margin-bottom: 10px">
@@ -122,7 +122,8 @@ export default {
     }
     this.post_es_search();
     this.update_secondary_search_condition();
-    $("#topbar").css("display", "none");
+    $("#topbar").css("display", "block");
+    this.isAdvanced = false;
   },
   data() {
     return{
@@ -182,7 +183,7 @@ export default {
               username: 'elastic',
               password: 'BZYvLA-d*pS0EpI7utmJ'
             },
-            url: 'es/paper/_search', method: "post",
+            url: '/es/paper/_search', method: "post",
             data: JSON.stringify(condition_filter_query)
           }
       ).then(res=>{
@@ -235,7 +236,6 @@ export default {
     secondary_search(){
       let condition_filter_query = JSON.parse(JSON.stringify(this.es_request_body))
       condition_filter_query.from = 0
-      // TODO 给condition加东西，应该使用filter
     },
     // 搜索框的一些动作函数
     resetForm(formName) {

@@ -3,13 +3,14 @@
       <el-container class="content">
         <el-main>
           <div class="main">
-            <el-card class="box-card" v-if="info_list!=[]">
+            <el-card class="box-card" v-if="info_list.length != 0">
               <div style="margin-bottom:20px">
                 <span style="font-size:35px;font-weight:bolder">{{info_list.paper_name}}</span>
                 <h4>来源：{{info_list.origin}} &#12288; 引用次数：{{info_list.cite_number}}</h4>
               </div>
+              
               <div  class="text item">
-                作者：<span v-for="i in info_list.author_name" :key="i"> {{i}}</span>
+                作者：<span v-for="i in info_list.author_name" :key="i" style="margin-right:20px"> {{i}}</span>
               </div>
               <div  class="text item">
                 摘要：{{info_list.abstract}}
@@ -24,7 +25,7 @@
                 DOI：{{info_list.DOI}}
               </div>
               <div class="button">
-                  <el-button round icon="el-icon-star-off" v-if="!info_list.collect_flag" @click="collect()" title="收藏">收藏</el-button>
+                  <el-button round icon="el-icon-star-off" v-if="!collect_flag" @click="collect()" title="收藏">收藏</el-button>
                   <el-button round icon="el-icon-star-on" v-else @click="collect()" title="取消收藏">已收藏</el-button>
                   <el-button round icon="el-icon-link" @click="quote()">引用</el-button>
                   <el-button round icon="el-icon-warning-outline" @click="ComplainVisible = true">申诉</el-button>
@@ -32,31 +33,38 @@
               </div>
          
             </el-card>
-            <el-card class="box-card2">
+            <el-card v-else>
+              <el-skeleton :rows="10" animated/>
+            </el-card>
+            <el-card class="box-card2" v-if="info_list.length != 0">
                 <span style="font-size:25px;font-weight:bolder">全部来源</span>
                 <div class="origion">
-                    <div class="org" v-for="i in info_list.readlist" :key="i">
+                    <div class="org" v-for="(i,index) in info_list.readlist" :key="index">
                         <div class="logo">
-                            <img :src="i.icon" alt="" width="20px" height="20px">
+                             <a :href="i"  target="_blank" >阅读链接{{index+1}}</a>
                         </div>
-                          {{i.name}}
+                         
                     </div>
                 </div>
+            </el-card>
+            <el-card style="margin-top: 30px" v-else>
+              <el-skeleton :rows="4" animated/>
             </el-card>
           </div>
           <div class="remark">
             <el-card>
               <el-tabs>
                 <el-tab-pane label="相关文献">
-                    <div class="about" v-if="about_list!=[]">
+                    <div class="about" v-if="about_list.length!=0">
                       <div class="relative" v-for="i in about_list" :key="i">
-                          <aboutCard :name="i.paper_name" :author="i.author_name" :cite="i.cite_number" :origin="i.magazine" :intro="i.abstarct" :date="i.date" :paper_id="i.paper_id"/>
+                          <aboutCard :name="i._source.title" :author="i._source.authors" :cite="i._source.n_citation" :origin="i._source.venue" :intro="i._source.abstract" :date="i._source.year" :paper_id="i._source.id"/>
+                      </div>
+                      <div id="load">
+                          <el-button style="width:100%" @click="load()" v-loading = "start">加载更多</el-button>
                       </div>
                   </div>
                   <div v-else><el-empty description="尚无相关文献"></el-empty></div>
-                    <div id="load">
-                    <el-button style="width:100%" @click="load()" v-loading = "start">加载更多</el-button>
-                  </div>
+                    
                 </el-tab-pane>
                 <el-tab-pane label="评论">
                     <div class="creat_comment">
@@ -76,7 +84,8 @@
                       </div>
                       <div v-if="Object.keys(mark_list).length!=0">
                         <div class="mark" v-for="i in mark_list" :key="i">
-                          <note :list="i" @reaction_note="aboutNoteInit()"/>
+                          <!-- <note :list="i" @reaction_note="aboutNoteInit()"/> -->
+                          <note :list="i" />
                         </div>
                       </div>
                       <div v-else><el-empty description="还没有笔记，发表第一篇笔记吧"></el-empty></div>
@@ -92,8 +101,11 @@
             :visible.sync="QuoteVisible"
             width="30%"
             >
-            <div v-for="i in quote_list" :key="i" style="margin-top:15px">
-              <span>{{i.type}}</span>: <span>{{i.content}}</span> 
+            <div v-for="i in quote_list" :key="i" style="margin-bottom:15px">
+              <div style="border-radius:10px;background-color:red;padding:5px;width:30%">{{i.type}} </div><el-button round icon="el-icon-document-copy" v-clipboard:copy="i.content" v-clipboard:success="onCopy" v-clipboard:error="onError">复制链接</el-button>
+              <div style="border-radius:10px;background-color:blue;padding:5px;margin:5px 0">
+                {{i.content}}
+              </div>
             </div>
           </el-dialog>
           <el-dialog
@@ -180,15 +192,18 @@
         </el-main>
         <el-aside>
           <div class="about">
-            <el-card class="gap">
+            <el-card class="gap" v-if="info_list.length != 0">
               <div class="about_content" style="width:100%;">
                 来源期刊
                 <div class="ogjournal">
-                  <a href="https://book.qq.com/book-detail/34129913" style="text-decoration:none" class="journal_content">{{info_list.origin}}</a>
+                  <a style="text-decoration:none" class="journal_content" @click="goto_search(info_list.origin)">{{info_list.origin}}</a>
                 </div> 
               </div>
             </el-card>
-            <el-card class="gap">
+            <el-card style="margin-top: 20px" v-else>
+              <el-skeleton :rows="3" animated/>
+            </el-card>
+            <el-card class="gap" v-if="info_list.length != 0">
               <div class="about_content" style="width:100%;">
                 研究领域
                 <div class="domain">
@@ -196,10 +211,16 @@
                 </div>
               </div>
             </el-card>
-            <el-card class="gap">
+            <el-card style="margin-top: 30px" v-else>
+              <el-skeleton :rows="4" animated/>
+            </el-card>
+            <el-card class="gap" v-if="info_list.length != 0">
               <div class="about_content">
                 <div id="echarts_box" style="width:100%;height:300px"></div>
               </div>
+            </el-card>
+            <el-card style="margin-top: 30px" v-else>
+              <el-skeleton :rows="7" animated/>
             </el-card>
           </div>
         </el-aside>
@@ -210,7 +231,7 @@
 
 <script>
 import * as echarts from 'echarts/core'
-import { Loading } from 'element-ui';
+import { Loading, Skeleton } from 'element-ui';
 import { init } from 'echarts';
 import aboutCard from "../../components/aboutCard.vue"
 import remark from "../../components/remark.vue"
@@ -218,7 +239,10 @@ import CreateComment from "../../components/CreateComment.vue"
 import uploadMark from "../../components/uploadMark.vue"
 import note from "../../components/note.vue"
 import TopBar from "@/components/TopBar";
+import $ from 'jquery';
+import axios from "axios";
 let formdata = new FormData();
+let isclick = true;
 export default {
   inject: ['reload'],
     data(){
@@ -243,9 +267,12 @@ export default {
         uploadFiles:[],
         remark_list:[],
         mark_list:[],
-        path:"localhost:8080"+this.$route.path
+        authors:[],
+        path:"localhost:8080"+this.$route.path,
+        collect_flag:""
       }
     },
+   
     methods:{
       load(){
         this.start = true
@@ -284,7 +311,21 @@ onError (e) {
         }
       },
       chart_init(cite_number){
-        var myChart = echarts.init(document.getElementById('echarts_box'))
+        if(cite_number<10){
+          var a=[];
+          a.push(0,0,0,0,0,cite_number)
+        }
+        else{
+          var a=[];
+          var y6 = cite_number;
+          var y5 = parseInt(0.8*y6);
+          var y4 = y5 - parseInt(Math.random()*(0.1*y5-1)+0.1*y5+1);
+          var y3 = y4 - parseInt(Math.random()*(0.1*y4-1)+0.1*y4+1);
+          var y2 = parseInt(0.6*y3);
+          var y1 = parseInt(0.4*y2);
+          a.push(y1,y2,y3,y4,y5,y6)
+        }
+        $(document).ready(function(){ var myChart = echarts.init(document.getElementById('echarts_box'))
         myChart.setOption({
         title: {
           text: '引用走势'
@@ -301,21 +342,11 @@ onError (e) {
           {
             name: '引用量',
             type: 'line',
-            data: this.calculate(cite_number)
+            data: a
           }
         ]
-        });
-      },
-      calculate(cite_number){
-        var a=[];
-        var y6 = cite_number;
-        var y5 = parseInt(0.8*y6);
-        var y4 = y5 - parseInt(Math.random()*(0.1*y5-1)+0.1*y5+1);
-        var y3 = y4 - parseInt(Math.random()*(0.1*y4-1)+0.1*y4+1);
-        var y2 = parseInt(0.6*y3);
-        var y1 = parseInt(0.4*y2);
-        a.push(y1,y2,y3,y4,y5,y6)
-        return a;
+        });})
+       
       },
       handleRemove(file) {
         console.log(file);
@@ -335,25 +366,6 @@ onError (e) {
           this.aboutNoteInit()
         }
       },
-      paper_init(){
-           this.$axios({
-            url:"http://127.0.0.1:8000/paperInformation/",
-            method:"post",
-            data:{
-                paper_id:this.$route.params.paper_id
-            }
-        }).then(res=>{
-          // console.log(res.data.about_list)
-            this.remark_list = res.data.remark_list
-            this.mark_list = res.data.note_list
-            this.about_list = res.data.about_list
-            this.info_list = res.data.info_list[0]
-            console.log(res.data.remark_list)
-            this.chart_init(res.data.info_list[0].cite_number)
-            // this._loadFile(this.pdf_src)
-        })
-        
-      },
 
       paperInfoInit(){
         this.$axios({
@@ -365,21 +377,11 @@ onError (e) {
         }).then(res=>{
           // console.log(res.data.about_list)
             this.info_list = res.data.info_list[0]
+            this.collect_flag = res.data.info_list[0].collect_flag
             this.chart_init(res.data.info_list[0].cite_number)
             // this._loadFile(this.pdf_src)
         })
       },
-       aboutListInit(){
-          this.$axios({
-            url:"http://127.0.0.1:8000/aboutListInit/",
-            method:"post",
-            data:{
-                paper_id:this.$route.params.paper_id
-            }
-        }).then(res=>{
-          this.about_list = res.data.about_list
-        })
-       },
        aboutNoteInit(){
           this.$axios({
             url:"http://127.0.0.1:8000/aboutNoteInit/",
@@ -417,7 +419,10 @@ onError (e) {
         this.QuoteVisible = true
       },
       collect(){
-        if(this.info_list.collect_flag){
+        if(isclick){
+          isclick = false;
+          this.collect_flag = !this.collect_flag
+           if(this.info_list.collect_flag){
           this.$axios({
             url:"http://127.0.0.1:8000/paperCollection/",
             method:"post",
@@ -445,6 +450,12 @@ onError (e) {
             this.paperInfoInit()
           })
         }
+        setTimeout(()=>{isclick=true},500)
+        }
+        else{
+          this.$message.warning("请勿频繁操作")
+        }
+       
       },
       react_remark(data){
         if(data.op=="remark"){
@@ -454,7 +465,7 @@ onError (e) {
             console.log(data)
         }
         else if(data.op=="like"){
-           this.paperRemarkInit()
+          //  this.paperRemarkInit()
         }
      },
      close_comment(data){
@@ -479,7 +490,65 @@ onError (e) {
                       this.ComplainVisible = false
                       
                 });
-     }
+     },
+     get_authors(){
+      let obj = {
+        query:{
+          bool:{
+          must:[],
+          filter:{}
+        }
+        }
+      }
+      obj.query.bool.must.push({"match_phrase":{"id":this.$route.params.paper_id}})
+      obj.query.bool.filter={"match_phrase":{"id":this.$route.params.paper_id}}
+      axios({
+            headers: {
+              'content-type': 'application/json',
+            },
+            auth: {
+              username: 'elastic',
+              password: 'BZYvLA-d*pS0EpI7utmJ'
+            },
+            url: '/es/paper/_search', method: "post",
+            data: JSON.stringify(obj)
+          }
+      ).then(res=>{
+        this.authors = res.data.hits.hits[0]._source.authors  
+        console.log(res.data.hits.hits[0]._source.authors.length)
+        // for(var i=0;i<res.data.hits.hits[0]._source.authors.length;i++){
+        //   this.aboutListInit(res.data.hits.hits[0]._source.authors[i])
+        // }
+        this.aboutListInit(res.data.hits.hits[0]._source.authors)
+      })
+     },
+     aboutListInit(authors){
+      console.log(authors)
+      let obj = {
+        query:{
+          bool:{
+          must:[],
+          filter:{}
+        }
+        }
+      }
+      obj.query.bool.must.push({"match_phrase":{"authors.id":authors[0].id}})
+      obj.query.bool.filter={"match_phrase":{"authors.id":authors[0].id}}
+      axios({
+            headers: {
+              'content-type': 'application/json',
+            },
+            auth: {
+              username: 'elastic',
+              password: 'BZYvLA-d*pS0EpI7utmJ'
+            },
+            url: '/es/paper/_search', method: "post",
+            data: JSON.stringify(obj)
+          }
+      ).then(res=>{
+        this.about_list=res.data.hits.hits
+      })
+    },
     },
     components:{
         aboutCard,
@@ -495,11 +564,13 @@ onError (e) {
     mounted() {
       // this.paper_init();
       this.paperInfoInit()
-      this.aboutListInit()
+      // this.aboutListInit()
       this.aboutNoteInit()
       this.paperRemarkInit()
       this.quoteInit()
+      this.get_authors()
       // this.chart_init();
+      
     }
 }
 </script>
@@ -543,6 +614,16 @@ onError (e) {
 .logo{
   float: left;
   margin-right: 20px;
+}
+.logo a{
+  text-decoration: none;
+  color: #000;
+}
+.logo a:hover{
+  cursor: pointer;
+}
+.logo a:after{
+  color: #000;
 }
 .button .el-button{
   margin-right:50px;

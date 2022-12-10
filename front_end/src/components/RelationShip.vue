@@ -268,7 +268,12 @@ export default {
                 window.location.href =
                   "/result?input=" + params.data.name + "&type=4";
               } else {
-                window.location.href = "" + that.relations[i].id;
+                let routeData = this.$router.resolve({
+                  path: "/personalInformation",
+                  params: { id: that.relations[i].id },
+                });
+                window.open(routeData.href, "_blank");
+                // window.location.href = "" + that.relations[i].id;
               }
             }
           }
@@ -284,7 +289,7 @@ export default {
   height: 500px;
   border: 1px solid #eee;
   box-shadow: 0 2px 4px hsla(0, 0%, 92.5%, 0.5);
-  margin-top:20px;
+  margin-top: 20px;
   margin-bottom: 20px;
 }
 </style>

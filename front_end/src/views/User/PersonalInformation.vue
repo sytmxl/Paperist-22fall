@@ -375,7 +375,13 @@
                       v-for="(item, index) in this.paperCollection"
                       :key="index"
                     >
-                      <el-card class="box-card" v-if="index >= (currentPage - 1) * pageSize && index < currentPage * pageSize">
+                      <el-card
+                        class="box-card"
+                        v-if="
+                          index >= (currentPage - 1) * pageSize &&
+                          index < currentPage * pageSize
+                        "
+                      >
                         <el-button
                           style="float: right; margin-left: 5px"
                           icon="el-icon-delete"
@@ -389,6 +395,7 @@
                           icon="el-icon-more-outline"
                           circle
                           size="small"
+                          @click="jumpPaperCollection(item.id)"
                         ></el-button>
                         <div style="margin-bottom: 10px; text-align: left">
                           <a href="">{{ item.name }}</a>
@@ -402,14 +409,18 @@
                       </el-card>
                     </div>
                     <el-pagination
-                        :current-page.sync="currentPage"
-                        :page-size="pageSize"
-                        @size-change="handleSizeChange"
-                        @current-change="handleCurrentChange"
-                        background
-                        layout="prev, pager, next, jumper"
-                        :total="paperCollection.length > 0 ? paperCollection.length : null"
-                        style="margin-top: 40px"
+                      :current-page.sync="currentPage"
+                      :page-size="pageSize"
+                      @size-change="handleSizeChange"
+                      @current-change="handleCurrentChange"
+                      background
+                      layout="prev, pager, next, jumper"
+                      :total="
+                        paperCollection.length > 0
+                          ? paperCollection.length
+                          : null
+                      "
+                      style="margin-top: 40px"
                     >
                     </el-pagination>
                   </div>
@@ -438,7 +449,13 @@
                       v-for="(item, index) in this.noteCollection"
                       :key="index"
                     >
-                      <el-card class="box-card" v-if="index >= (currentPage - 1) * pageSize && index < currentPage * pageSize">
+                      <el-card
+                        class="box-card"
+                        v-if="
+                          index >= (currentPage - 1) * pageSize &&
+                          index < currentPage * pageSize
+                        "
+                      >
                         <el-button
                           style="float: right; margin-left: 5px"
                           icon="el-icon-delete"
@@ -452,6 +469,7 @@
                           icon="el-icon-more-outline"
                           circle
                           size="small"
+                          @click="jumpNoteCollection(item.id)"
                         ></el-button>
                         <div style="margin-bottom: 10px; text-align: left">
                           <a href="">{{ item.id }}</a>
@@ -465,14 +483,16 @@
                       </el-card>
                     </div>
                     <el-pagination
-                        :current-page.sync="currentPage"
-                        :page-size="pageSize"
-                        @size-change="handleSizeChange"
-                        @current-change="handleCurrentChange"
-                        background
-                        layout="prev, pager, next, jumper"
-                        :total="noteCollection.length > 0 ? noteCollection.length : null"
-                        style="margin-top: 40px"
+                      :current-page.sync="currentPage"
+                      :page-size="pageSize"
+                      @size-change="handleSizeChange"
+                      @current-change="handleCurrentChange"
+                      background
+                      layout="prev, pager, next, jumper"
+                      :total="
+                        noteCollection.length > 0 ? noteCollection.length : null
+                      "
+                      style="margin-top: 40px"
                     >
                     </el-pagination>
                   </div>
@@ -487,47 +507,56 @@
                     v-model="selectSubscribe"
                     class="input-with-select"
                   >
-                    <el-button slot="append" icon="el-icon-search" @click="searchSubscribe"></el-button>
+                    <el-button
+                      slot="append"
+                      icon="el-icon-search"
+                      @click="searchSubscribe"
+                    ></el-button>
                   </el-input>
                 </div>
-                <div v-for="(item, index) in this.subscribes"
-                     :key="index">
-                  <el-card class="box-card" v-if="index >= (currentPage - 1) * pageSize && index < currentPage * pageSize">
+                <div v-for="(item, index) in this.subscribes" :key="index">
+                  <el-card
+                    class="box-card"
+                    v-if="
+                      index >= (currentPage - 1) * pageSize &&
+                      index < currentPage * pageSize
+                    "
+                  >
                     <el-button
-                        style="float: right; margin-left: 5px"
-                        icon="el-icon-delete"
-                        circle
-                        size="small"
-                        @click="delSubscribe(item.subscribe_id)"
-                        v-if="!isOthers"
+                      style="float: right; margin-left: 5px"
+                      icon="el-icon-delete"
+                      circle
+                      size="small"
+                      @click="delSubscribe(item.subscribe_id)"
+                      v-if="!isOthers"
                     ></el-button>
                     <el-button
-                        style="float: right"
-                        icon="el-icon-more-outline"
-                        circle
-                        size="small"
+                      style="float: right"
+                      icon="el-icon-more-outline"
+                      circle
+                      size="small"
+                      @click="jumpSubscribes(item.id)"
                     ></el-button>
                     <div style="margin-bottom: 10px; text-align: left">
-                      <a href="">{{item.name}}</a>
+                      <a href="">{{ item.name }}</a>
                       <br />
                       <br />
                       <br />
                       <p>订阅时间: {{ item.time }}</p>
-
                     </div>
                   </el-card>
                 </div>
               </div>
 
               <el-pagination
-                  :current-page.sync="currentPage"
-                  :page-size="pageSize"
-                  @size-change="handleSizeChange"
-                  @current-change="handleCurrentChange"
-                  background
-                  layout="prev, pager, next, jumper"
-                  :total="subscribes.length > 0 ? subscribes.length : null"
-                  style="margin-top: 40px"
+                :current-page.sync="currentPage"
+                :page-size="pageSize"
+                @size-change="handleSizeChange"
+                @current-change="handleCurrentChange"
+                background
+                layout="prev, pager, next, jumper"
+                :total="subscribes.length > 0 ? subscribes.length : null"
+                style="margin-top: 40px"
               >
               </el-pagination>
             </el-tab-pane>
@@ -551,20 +580,27 @@
                   </el-input>
                 </div>
                 <div v-for="(item, index) in this.notes" :key="index">
-                  <el-card class="box-card" v-if="index >= (currentPage - 1) * pageSize && index < currentPage * pageSize">
+                  <el-card
+                    class="box-card"
+                    v-if="
+                      index >= (currentPage - 1) * pageSize &&
+                      index < currentPage * pageSize
+                    "
+                  >
                     <el-button
                       style="float: right; margin-left: 5px"
                       icon="el-icon-delete"
                       circle
                       size="small"
                       @click="delNotes(item.id)"
-                      v-if="!this.isOthers"
+                      v-if="!isOthers"
                     ></el-button>
                     <el-button
                       style="float: right"
                       icon="el-icon-more-outline"
                       circle
                       size="small"
+                      @click="jumpNotes(item.id)"
                     ></el-button>
                     <div style="margin-bottom: 10px; text-align: left">
                       <a href="">{{ item.id }}</a>
@@ -578,17 +614,16 @@
                   </el-card>
                 </div>
                 <el-pagination
-                    :current-page.sync="currentPage"
-                    :page-size="pageSize"
-                    @size-change="handleSizeChange"
-                    @current-change="handleCurrentChange"
-                    background
-                    layout="prev, pager, next, jumper"
-                    :total="notes.length > 0 ? notes.length : null"
-                    style="margin-top: 40px"
+                  :current-page.sync="currentPage"
+                  :page-size="pageSize"
+                  @size-change="handleSizeChange"
+                  @current-change="handleCurrentChange"
+                  background
+                  layout="prev, pager, next, jumper"
+                  :total="notes.length > 0 ? notes.length : null"
+                  style="margin-top: 40px"
                 >
                 </el-pagination>
-
               </div>
             </el-tab-pane>
             <el-tab-pane
@@ -611,7 +646,13 @@
                   </el-input>
                 </div>
                 <div v-for="(item, index) in this.myComment" :key="index">
-                  <el-card class="box-card" v-if="index >= (currentPage - 1) * pageSize && index < currentPage * pageSize">
+                  <el-card
+                    class="box-card"
+                    v-if="
+                      index >= (currentPage - 1) * pageSize &&
+                      index < currentPage * pageSize
+                    "
+                  >
                     <el-button
                       style="float: right; margin-left: 5px"
                       icon="el-icon-delete"
@@ -625,6 +666,7 @@
                       icon="el-icon-more-outline"
                       circle
                       size="small"
+                      @click="jumpMyComment(item.id)"
                     ></el-button>
                     <div style="margin-bottom: 10px; text-align: left">
                       <a href="">{{ item.paper_name }}</a>
@@ -638,14 +680,14 @@
                   </el-card>
                 </div>
                 <el-pagination
-                    :current-page.sync="currentPage"
-                    :page-size="pageSize"
-                    @size-change="handleSizeChange"
-                    @current-change="handleCurrentChange"
-                    background
-                    layout="prev, pager, next, jumper"
-                    :total="myComment.length > 0 ? myComment.length : null"
-                    style="margin-top: 40px"
+                  :current-page.sync="currentPage"
+                  :page-size="pageSize"
+                  @size-change="handleSizeChange"
+                  @current-change="handleCurrentChange"
+                  background
+                  layout="prev, pager, next, jumper"
+                  :total="myComment.length > 0 ? myComment.length : null"
+                  style="margin-top: 40px"
                 >
                 </el-pagination>
               </div>
@@ -687,6 +729,7 @@
                       icon="el-icon-more-outline"
                       circle
                       size="small"
+                      @click="jumpMyComment(item.id)"
                     ></el-button>
                     <div style="margin-bottom: 10px; text-align: left">
                       <a href="">{{ item.paper_name }}</a>
@@ -717,39 +760,53 @@
                   <div style="margin-top: 15px; width: 30%">
                     <el-input
                       placeholder="请输入你需要搜索的评论"
-                      v-model="selectComment"
+                      v-model="selectCommentToMe"
                       class="input-with-select"
                     >
                       <el-button
                         slot="append"
                         icon="el-icon-search"
+                        @click="searchPaperCommentToMe"
                       ></el-button>
                     </el-input>
                   </div>
-                  <el-card class="box-card">
+                  <el-card class="box-card" v-for="(item, index) in this.commentToMe" :key="index">
                     <el-button
                       style="float: right; margin-left: 5px"
                       icon="el-icon-delete"
                       circle
                       size="small"
-                      v-if="!this.isOthers"
+                      v-if="!isOthers"
+                      @click="delComment(item.comment_id)"
                     ></el-button>
                     <el-button
                       style="float: right"
                       icon="el-icon-more-outline"
                       circle
                       size="small"
+                      @click="jumpMyComment(item.id)"
                     ></el-button>
                     <div style="margin-bottom: 10px; text-align: left">
-                      <a href="">文献名：你好你好</a>
+                      <a href="">{{ item.paper_name }}</a>
                       <br />
-                      <p>sssssssssssssssssssssssssssssssss</p>
+                      <p>{{ item.content }}</p>
                       <br />
                       <br />
                       <br />
-                      <p>2022 Ma hu</p>
+                      <p>{{ item.time }}</p>
                     </div>
                   </el-card>
+                  <el-pagination
+                      :current-page.sync="currentPage"
+                      :page-size="pageSize"
+                      @size-change="handleSizeChange"
+                      @current-change="handleCurrentChange"
+                      background
+                      layout="prev, pager, next, jumper"
+                      :total="myComment.length > 0 ? myComment.length : null"
+                      style="margin-top: 40px"
+                  >
+                  </el-pagination>
                 </el-tab-pane>
               </el-tabs>
             </el-tab-pane>
@@ -904,8 +961,8 @@ export default {
       selectScholarLiterature: "",
       currentPage: 1,
       pageSize: 5,
-      isToken:0,
-      id:0,
+      isToken: 0,
+      id: 0,
       papers: [
         {
           authors: [
@@ -1056,7 +1113,8 @@ export default {
       noteCollection: [],
       notes: [],
       myComment: [],
-      subscribes:[],
+      commentToMe:[],
+      subscribes: [],
 
       //图片
       profile: "",
@@ -1064,23 +1122,7 @@ export default {
         Authorization: "JWT " + sessionStorage.getItem("token"),
       },
 
-      RelationsData: [
-        // {
-        //   name: "皮蓬",
-        //   value: 3,
-        //   id: 1,
-        // },
-        // {
-        //   name: "ss",
-        //   value: 4,
-        //   id: 2,
-        // },
-        // {
-        //   name: "ssaw",
-        //   value: 40,
-        //   id: 3,
-        // },
-      ],
+      RelationsData: [],
       Linedata: [],
       ScholarLiteratureSort: "",
       ScholarLiteratureOptions: [
@@ -1105,15 +1147,15 @@ export default {
     };
   },
   created() {
-    this.id=this.$route.params.id
-    console.log(this.id)
-    if(this.id==undefined){
-      this.isToken=1;//是自己，用token访问
-      this.isOthers=false;
-      this.id=1;//无用
+    this.id = this.$route.params.id;
+    console.log(this.id);
+    if (this.id == undefined) {
+      this.isToken = 1; //是自己，用token访问
+      this.isOthers = false;
+      this.id = 1; //无用
     } else {
-      this.isToken=0;
-      this.isOthers=true;
+      this.isToken = 0;
+      this.isOthers = true;
     }
     //个人信息
     this.getPersonalInformation();
@@ -1132,7 +1174,7 @@ export default {
     this.initRelations();
     this.initLine();
     // this.initSort();
-    // this.initScholarPaper();
+    this.initScholarPaper();
     this.noteLabel = this.isOthers ? "他的笔记" : "我的笔记";
   },
   watch: {
@@ -1149,6 +1191,9 @@ export default {
       this.$axios({
         method: "post",
         url: "/app/get_scholar_relation/",
+        data: {
+          id: this.$route.params.id,
+        },
       }).then((res) => {
         console.log("initRelations", res.data);
         this.RelationsData = res.data.data;
@@ -1158,6 +1203,9 @@ export default {
       this.$axios({
         method: "post",
         url: "/app/get_scholar_paper_list/",
+        data: {
+          id: this.$route.params.id,
+        },
       }).then((res) => {
         var count = new Array(2500).fill(0);
         res.data.data.forEach((item, index) => {
@@ -1181,7 +1229,7 @@ export default {
     // 获取学者文献
     initScholarPaper() {
       this.$axios({
-        method: "get",
+        method: "post",
         url: "/app/get_scholar_paper_list/",
         data: {
           // id: this.$route.params.id,
@@ -1214,9 +1262,11 @@ export default {
       this.$axios({
         url: "/user/getPersonalInformation/",
         method: "post",
-        data: { token: sessionStorage.getItem("token") ,
-                isToken: this.isToken,
-                id: this.id},
+        data: {
+          token: sessionStorage.getItem("token"),
+          isToken: this.isToken,
+          id: this.id,
+        },
       }).then((res) => {
         console.log(res.data.data);
         this.realname = res.data.data[0].realname;
@@ -1250,7 +1300,7 @@ export default {
           country: this.new_region,
           field: this.new_researchField,
           isToken: this.isToken,
-          id: this.id
+          id: this.id,
         },
       }).then((res) => {
         if (res.data.isSuccess) {
@@ -1283,8 +1333,8 @@ export default {
       } else if (tab.name == "second") {
         this.getSubscribe();
       }
-      this.currentPage=1;
-      this.pageSize=3;
+      this.currentPage = 1;
+      this.pageSize = 3;
     },
     //收藏部分初始化栏
     handleClickCollection(tab, event) {
@@ -1293,8 +1343,8 @@ export default {
       } else if (tab.name == "collectionSecond") {
         this.getNoteCollection();
       }
-      this.currentPage=1;
-      this.pageSize=3;
+      this.currentPage = 1;
+      this.pageSize = 3;
     },
     //学者评论部分初始化栏
     handleClickComment(tab, event) {
@@ -1311,9 +1361,11 @@ export default {
       this.$axios({
         url: "/user/getPaperCollection/",
         method: "post",
-        data: { token: sessionStorage.getItem("token"),
+        data: {
+          token: sessionStorage.getItem("token"),
           isToken: this.isToken,
-          id: this.id},
+          id: this.id,
+        },
       }).then((res) => {
         this.paperCollection = res.data.data;
       });
@@ -1323,9 +1375,11 @@ export default {
       this.$axios({
         url: "/user/getNoteCollection/",
         method: "post",
-        data: { token: sessionStorage.getItem("token"),
+        data: {
+          token: sessionStorage.getItem("token"),
           isToken: this.isToken,
-          id: this.id},
+          id: this.id,
+        },
       }).then((res) => {
         this.noteCollection = res.data.data;
       });
@@ -1335,9 +1389,11 @@ export default {
       this.$axios({
         url: "/user/getSubscribe/",
         method: "post",
-        data: { token: sessionStorage.getItem("token"),
+        data: {
+          token: sessionStorage.getItem("token"),
           isToken: this.isToken,
-          id: this.id},
+          id: this.id,
+        },
       }).then((res) => {
         this.subscribes = res.data.data;
       });
@@ -1347,10 +1403,13 @@ export default {
       this.$axios({
         url: "/user/getNote/",
         method: "post",
-        data: { token: sessionStorage.getItem("token"),
+        data: {
+          token: sessionStorage.getItem("token"),
           isToken: this.isToken,
-          id: this.id},
+          id: this.id,
+        },
       }).then((res) => {
+        console.log(res.data)
         this.notes = res.data.data;
       });
     },
@@ -1359,11 +1418,29 @@ export default {
       this.$axios({
         url: "/user/getPaperComment/",
         method: "post",
-        data: { token: sessionStorage.getItem("token"),
+        data: {
+          token: sessionStorage.getItem("token"),
           isToken: this.isToken,
-          id: this.id},
+          id: this.id,
+        },
       }).then((res) => {
+        console.log(res.data)
         this.myComment = res.data.data;
+      });
+    },
+    //获取给我的评论
+    getCommentToMe() {
+      this.$axios({
+        url: "/user/getCommentToMe/",
+        method: "post",
+        data: {
+          token: sessionStorage.getItem("token"),
+          isToken: this.isToken,
+          id: this.id,
+        },
+      }).then((res) => {
+        console.log(res.data)
+        this.commentToMe = res.data.data;
       });
     },
     //获取个人设置
@@ -1371,9 +1448,11 @@ export default {
       this.$axios({
         url: "/user/getSet/",
         method: "post",
-        data: { token: sessionStorage.getItem("token"),
+        data: {
+          token: sessionStorage.getItem("token"),
           isToken: this.isToken,
-          id: this.id},
+          id: this.id,
+        },
       }).then((res) => {
         this.isNoteCommentable = res.data.isNoteCommentable;
         this.isNoteVisible = res.data.isNoteVisible;
@@ -1397,7 +1476,7 @@ export default {
           color: this.color,
           language: this.language,
           isToken: this.isToken,
-          id: this.id
+          id: this.id,
         },
       }).then((res) => {
         this.$message.success("修改成功");
@@ -1412,7 +1491,7 @@ export default {
           token: sessionStorage.getItem("token"),
           content: this.selectLiterature,
           isToken: this.isToken,
-          id: this.id
+          id: this.id,
         },
       }).then((res) => {
         this.paperCollection = res.data.data;
@@ -1429,10 +1508,10 @@ export default {
           token: sessionStorage.getItem("token"),
           content: this.selectSubscribe,
           isToken: this.isToken,
-          id: this.id
+          id: this.id,
         },
       }).then((res) => {
-        console.log(res.data.data)
+        console.log(res.data.data);
         this.subscribes = res.data.data;
 
         this.selectSubscribe = "";
@@ -1447,7 +1526,7 @@ export default {
           token: sessionStorage.getItem("token"),
           content: this.selectCollectionNote,
           isToken: this.isToken,
-          id: this.id
+          id: this.id,
         },
       }).then((res) => {
         this.noteCollection = res.data.data;
@@ -1464,7 +1543,7 @@ export default {
           token: sessionStorage.getItem("token"),
           content: this.selectNote,
           isToken: this.isToken,
-          id: this.id
+          id: this.id,
         },
       }).then((res) => {
         this.notes = res.data.data;
@@ -1481,11 +1560,27 @@ export default {
           token: sessionStorage.getItem("token"),
           content: this.selectComment,
           isToken: this.isToken,
-          id: this.id
+          id: this.id,
         },
       }).then((res) => {
         this.myComment = res.data.data;
         this.selectComment = "";
+      });
+    },
+    //搜索他人给我的评论
+    searchPaperCommentToMe() {
+      this.$axios({
+        url: "user/searchPaperComment/",
+        method: "post",
+        data: {
+          token: sessionStorage.getItem("token"),
+          content: this.selectComment,
+          isToken: this.isToken,
+          id: this.id,
+        },
+      }).then((res) => {
+        this.commentToMe = res.data.data;
+        this.selectCommentToMe = "";
       });
     },
     //删除我的评论
@@ -1511,12 +1606,16 @@ export default {
       this.$axios({
         url: "/user/delComment/",
         method: "post",
-        data: { token: sessionStorage.getItem("token"), comment_id: id,
+        data: {
+          token: sessionStorage.getItem("token"),
+          comment_id: id,
           isToken: this.isToken,
-          id: this.id},
+          id: this.id,
+        },
       }).then((res) => {
         this.$message.success("删除用户成功！");
         this.getPaperComment();
+        this.getCommentToMe();
       });
     },
     //删除我的笔记
@@ -1542,9 +1641,12 @@ export default {
       this.$axios({
         url: "/user/delNote/",
         method: "post",
-        data: { token: sessionStorage.getItem("token"), note_id: id,
+        data: {
+          token: sessionStorage.getItem("token"),
+          note_id: id,
           isToken: this.isToken,
-          id: this.id},
+          id: this.id,
+        },
       }).then((res) => {
         this.$message.success("删除用户成功！");
         this.getNote();
@@ -1554,13 +1656,13 @@ export default {
     async delSubscribe(id) {
       // 弹框询问用户是否删除数据
       const confirmResult = await this.$confirm(
-          "此操作将永久删除该评论, 是否继续?",
-          "提示",
-          {
-            confirmButtonText: "确定",
-            cancelButtonText: "取消",
-            type: "warning",
-          }
+        "此操作将永久删除该评论, 是否继续?",
+        "提示",
+        {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning",
+        }
       ).catch(() => {
         this.$message({
           type: "info",
@@ -1573,9 +1675,12 @@ export default {
       this.$axios({
         url: "/user/delSubscribe/",
         method: "post",
-        data: { token: sessionStorage.getItem("token"), id: id,
+        data: {
+          token: sessionStorage.getItem("token"),
+          id: id,
           isToken: this.isToken,
-          userid: this.id},//呜呜呜id重复了是我的问题
+          userid: this.id,
+        }, //呜呜呜id重复了是我的问题
       }).then((res) => {
         this.$message.success("删除用户成功！");
         this.getSubscribe();
@@ -1604,9 +1709,12 @@ export default {
       this.$axios({
         url: "/user/delPaperCollection/",
         method: "post",
-        data: { token: sessionStorage.getItem("token"), paper_id: id,
+        data: {
+          token: sessionStorage.getItem("token"),
+          paper_id: id,
           isToken: this.isToken,
-          id: this.id},
+          id: this.id,
+        },
       }).then((res) => {
         this.$message.success("删除用户成功！");
         this.getPaperCollection();
@@ -1635,9 +1743,12 @@ export default {
       this.$axios({
         url: "/user/delNoteCollection/",
         method: "post",
-        data: { token: sessionStorage.getItem("token"), note_id: id,
+        data: {
+          token: sessionStorage.getItem("token"),
+          note_id: id,
           isToken: this.isToken,
-          id: this.id},
+          id: this.id,
+        },
       }).then((res) => {
         this.$message.success("删除用户成功！");
         this.getNoteCollection();
@@ -1679,7 +1790,7 @@ export default {
           oldPassword: CryptoJS.MD5(this.oldPassword).toString(),
           newPassword: CryptoJS.MD5(this.newPassword).toString(),
           isToken: this.isToken,
-          id: this.id
+          id: this.id,
         },
       }).then((res) => {
         if (res.data.isSuccess == -1) {
@@ -1769,10 +1880,36 @@ export default {
         });
       }
     },
-
-
-
-
+    //论文收藏跳转
+    jumpPaperCollection(paper_id){
+      this.$router.push({
+        path:"/PaperInformation/"+paper_id,
+      })
+    },
+    //笔记收藏跳转
+    jumpNoteCollection(note_id){
+      this.$router.push({
+        path:"/NoteInformation/"+note_id,
+      })
+    },
+    //订阅跳转
+    jumpSubscribes(id){
+      this.$router.push({
+        path:"/PersonalInformation/"+id,
+      })
+    },
+    //我的评论跳转
+    jumpMyComment(id){
+      this.$router.push({
+        path:"/PaperInformation/"+id,
+      })
+    },
+    //我的笔记跳转
+    jumpNotes(note_id){
+      this.$router.push({
+        path:"/NoteInformation/"+note_id,
+      })
+    },
   },
 };
 </script>
