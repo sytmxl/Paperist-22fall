@@ -1,5 +1,4 @@
-<template>
-    
+<template> 
     <el-container class="root">
         <!-- <TopBar/>  -->
        <el-main class="left base">
@@ -16,7 +15,7 @@
               </div>
             </el-card>
             <el-card style="margin-top:10px">
-                <div class="note_info">
+              <div class="note_info">
                 <span @click="goto_paper()" title="了解此论文" style="cursor:pointer; ">原论文：{{note.paper_name}}</span>
                 <span>获赞：{{note.likes}}</span>
                 <span>评论：{{note.remarks}}</span>
@@ -34,15 +33,12 @@
             </el-card>
         </div>
         <div class="notes">
-            <!-- <el-card> -->
-                <div class="notes_title">
-                    <span>作者其他笔记</span>
-                </div>
-                <div v-for="i in list" :key="i">
-                    <noteCard :note="i"/>
-                </div>
-
-            <!-- </el-card> -->
+          <div class="notes_title">
+            <span>作者其他笔记</span>
+          </div>
+          <div v-for="i in list" :key="i">
+              <noteCard :note="i"/>
+          </div>
         </div>
 
        </el-main>
@@ -414,8 +410,9 @@ export default {
     height: auto;
 }
 .left .author{
-    height: 500px;
-    margin-bottom: 80px;
+    // height: 500px;
+    height: fit-content;
+    margin-bottom: 20px;
 }
 .author img{
     width: 100px;
@@ -451,16 +448,18 @@ export default {
 }
 .el-card{
     width:100%;
-    height: 100%;
+    // height: 100%;
     /* border: 1px solid grey; */
 }
 .left {
 	height: fit-content;
 	.el-card{
-    height: auto;
+    // height: auto;
 	}
 	.notes{
-    margin-top:50px;
+    // width: 100%;
+    // display: block;
+    // margin-top:50px;
     // height: 550px;
     // overflow-y:scroll;
     // overflow-x:hidden;
@@ -469,10 +468,10 @@ export default {
 .right{
 	width: 70%;
 	margin-right: 100px;
-		margin-top: 30px;
-	 overflow: hidden;
+	margin-top: 30px;
+	overflow: hidden;
 	.content{
-    height: calc(100vh);
+    min-height: calc(100vh);
 		.el-card{
 			height: 100%;
 			overflow-y: scroll;
@@ -490,9 +489,9 @@ export default {
 		width:100%;
 		// opacity: 0.6;
 	}
-	position: sticky;
-	position: -webkit-sticky;
-	top: 0;
+	// position: sticky;
+	// position: -webkit-sticky;
+	// top: 0;
 }
 .home_wrap{
    width: 100%;
@@ -534,6 +533,7 @@ export default {
     text-align: center;
 }
 .base {
+  margin-top: 80px;
   border-radius: 20px !important;
 	border: none !important;
   box-shadow: 0 0 7px rgba(204, 204, 204, 0.713);
