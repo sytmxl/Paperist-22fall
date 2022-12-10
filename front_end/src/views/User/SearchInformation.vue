@@ -70,7 +70,7 @@
         <div>
           <!-- <el-card style="min-height: calc(75vh)" class="display_zone" shadow="never"> -->
           <paper-card v-for="paper in papers" :key="card_index"
-                      :paper_data = "paper._source"
+                      :paper_data = "paper"
           />
           <!-- </el-card> -->
         </div>
@@ -236,7 +236,6 @@ export default {
     secondary_search(){
       let condition_filter_query = JSON.parse(JSON.stringify(this.es_request_body))
       condition_filter_query.from = 0
-      // TODO 给condition加东西，应该使用filter
     },
     // 搜索框的一些动作函数
     resetForm(formName) {
