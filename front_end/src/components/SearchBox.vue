@@ -7,6 +7,7 @@
           v-model="common_search_query"
           class="input-with-select"
           clearable
+          size="small"
         >
           <el-select v-model="common_search_type" slot="prepend" placeholder="请选择">
             <el-option
@@ -58,6 +59,7 @@
             </el-form-item>
             <el-form-item label="包含精确检索词" prop="Exectselect">
               <el-input
+                
                 v-model="advanced_search_query.must_contain"
                 placeholder="多个检索词以逗号,分隔"
               >
