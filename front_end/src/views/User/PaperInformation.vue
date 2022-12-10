@@ -488,7 +488,7 @@ onError (e) {
         query:{
           bool:{
           must:[],
-          fileter:{}
+          filter:{}
         }
         }
       }
@@ -502,7 +502,7 @@ onError (e) {
               username: 'elastic',
               password: 'BZYvLA-d*pS0EpI7utmJ'
             },
-            url: 'es/paper/_search', method: "post",
+            url: '/es/paper/_search', method: "post",
             data: JSON.stringify(obj)
           }
       ).then(res=>{
