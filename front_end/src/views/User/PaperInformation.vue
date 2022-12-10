@@ -10,7 +10,7 @@
               </div>
               
               <div  class="text item">
-                作者：<span v-for="i in info_list.author_name" :key="i"> {{i}}</span>
+                作者：<span v-for="i in info_list.author_name" :key="i" style="margin-right:20px"> {{i}}</span>
               </div>
               <div  class="text item">
                 摘要：{{info_list.abstract}}
@@ -55,15 +55,16 @@
             <el-card>
               <el-tabs>
                 <el-tab-pane label="相关文献">
-                    <div class="about" v-if="about_list!=[]">
+                    <div class="about" v-if="about_list.length!=0">
                       <div class="relative" v-for="i in about_list" :key="i">
                           <aboutCard :name="i._source.title" :author="i._source.authors" :cite="i._source.n_citation" :origin="i._source.venue" :intro="i._source.abstract" :date="i._source.year" :paper_id="i._source.id"/>
                       </div>
+                      <div id="load">
+                          <el-button style="width:100%" @click="load()" v-loading = "start">加载更多</el-button>
+                      </div>
                   </div>
                   <div v-else><el-empty description="尚无相关文献"></el-empty></div>
-                    <div id="load">
-                    <el-button style="width:100%" @click="load()" v-loading = "start">加载更多</el-button>
-                  </div>
+                    
                 </el-tab-pane>
                 <el-tab-pane label="评论">
                     <div class="creat_comment">
@@ -100,8 +101,11 @@
             :visible.sync="QuoteVisible"
             width="30%"
             >
-            <div v-for="i in quote_list" :key="i" style="margin-top:15px">
-              <span>{{i.type}}</span>: <span>{{i.content}}</span> 
+            <div v-for="i in quote_list" :key="i" style="margin-bottom:15px">
+              <div style="border-radius:10px;background-color:red;padding:5px;width:30%">{{i.type}} </div><el-button round icon="el-icon-document-copy" v-clipboard:copy="i.content" v-clipboard:success="onCopy" v-clipboard:error="onError">复制链接</el-button>
+              <div style="border-radius:10px;background-color:blue;padding:5px;margin:5px 0">
+                {{i.content}}
+              </div>
             </div>
           </el-dialog>
           <el-dialog
@@ -192,7 +196,7 @@
               <div class="about_content" style="width:100%;">
                 来源期刊
                 <div class="ogjournal">
-                  <a href="https://book.qq.com/book-detail/34129913" style="text-decoration:none" class="journal_content">{{info_list.origin}}</a>
+                  <a style="text-decoration:none" class="journal_content" @click="goto_search(info_list.origin)">{{info_list.origin}}</a>
                 </div> 
               </div>
             </el-card>
@@ -307,7 +311,21 @@ onError (e) {
         }
       },
       chart_init(cite_number){
-        var myChart = echarts.init(document.getElementById('echarts_box'))
+        if(cite_number<10){
+          var a=[];
+          a.push(0,0,0,0,0,cite_number)
+        }
+        else{
+          var a=[];
+          var y6 = cite_number;
+          var y5 = parseInt(0.8*y6);
+          var y4 = y5 - parseInt(Math.random()*(0.1*y5-1)+0.1*y5+1);
+          var y3 = y4 - parseInt(Math.random()*(0.1*y4-1)+0.1*y4+1);
+          var y2 = parseInt(0.6*y3);
+          var y1 = parseInt(0.4*y2);
+          a.push(y1,y2,y3,y4,y5,y6)
+        }
+        $(document).ready(function(){ var myChart = echarts.init(document.getElementById('echarts_box'))
         myChart.setOption({
         title: {
           text: '引用走势'
@@ -324,21 +342,11 @@ onError (e) {
           {
             name: '引用量',
             type: 'line',
-            data: this.calculate(cite_number)
+            data: a
           }
         ]
-        });
-      },
-      calculate(cite_number){
-        var a=[];
-        var y6 = cite_number;
-        var y5 = parseInt(0.8*y6);
-        var y4 = y5 - parseInt(Math.random()*(0.1*y5-1)+0.1*y5+1);
-        var y3 = y4 - parseInt(Math.random()*(0.1*y4-1)+0.1*y4+1);
-        var y2 = parseInt(0.6*y3);
-        var y1 = parseInt(0.4*y2);
-        a.push(y1,y2,y3,y4,y5,y6)
-        return a;
+        });})
+       
       },
       handleRemove(file) {
         console.log(file);
@@ -358,25 +366,6 @@ onError (e) {
           this.aboutNoteInit()
         }
       },
-      // paper_init(){
-      //      this.$axios({
-      //       url:"http://127.0.0.1:8000/paperInformation/",
-      //       method:"post",
-      //       data:{
-      //           paper_id:this.$route.params.paper_id
-      //       }
-      //   }).then(res=>{
-      //     // console.log(res.data.about_list)
-      //       this.remark_list = res.data.remark_list
-      //       this.mark_list = res.data.note_list
-      //       this.about_list = res.data.about_list
-      //       this.info_list = res.data.info_list[0]
-      //       console.log(res.data.remark_list)
-      //       this.chart_init(res.data.info_list[0].cite_number)
-      //       // this._loadFile(this.pdf_src)
-      //   })
-        
-      // },
 
       paperInfoInit(){
         this.$axios({
@@ -393,17 +382,6 @@ onError (e) {
             // this._loadFile(this.pdf_src)
         })
       },
-      //  aboutListInit(){
-      //     this.$axios({
-      //       url:"http://127.0.0.1:8000/aboutListInit/",
-      //       method:"post",
-      //       data:{
-      //           paper_id:this.$route.params.paper_id
-      //       }
-      //   }).then(res=>{
-      //     this.about_list = res.data.about_list
-      //   })
-      //  },
        aboutNoteInit(){
           this.$axios({
             url:"http://127.0.0.1:8000/aboutNoteInit/",
@@ -537,7 +515,10 @@ onError (e) {
           }
       ).then(res=>{
         this.authors = res.data.hits.hits[0]._source.authors  
-        console.log(res.data.hits.hits[0]._source.authors)
+        console.log(res.data.hits.hits[0]._source.authors.length)
+        // for(var i=0;i<res.data.hits.hits[0]._source.authors.length;i++){
+        //   this.aboutListInit(res.data.hits.hits[0]._source.authors[i])
+        // }
         this.aboutListInit(res.data.hits.hits[0]._source.authors)
       })
      },
@@ -565,7 +546,7 @@ onError (e) {
             data: JSON.stringify(obj)
           }
       ).then(res=>{
-        this.about_list = res.data.hits.hits
+        this.about_list=res.data.hits.hits
       })
     },
     },
