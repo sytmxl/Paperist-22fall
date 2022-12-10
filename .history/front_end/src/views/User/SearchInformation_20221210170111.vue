@@ -183,7 +183,7 @@ export default {
               username: 'elastic',
               password: 'BZYvLA-d*pS0EpI7utmJ'
             },
-            url: '/es/paper/_search', method: "post",
+            url: 'localhost:8080/es/paper/_search', method: "post",
             data: JSON.stringify(condition_filter_query)
           }
       ).then(res=>{

@@ -220,7 +220,6 @@ import uploadMark from "../../components/uploadMark.vue"
 import note from "../../components/note.vue"
 import TopBar from "@/components/TopBar";
 import $ from 'jquery';
-import axios from "axios";
 let formdata = new FormData();
 export default {
   inject: ['reload'],
@@ -484,10 +483,11 @@ onError (e) {
                 });
      },
      post_es_search(){
+      console.log(666)
       let obj = {
         query:{
           bool:{
-          must:[],
+          must:{},
           fileter:{}
         }
         }

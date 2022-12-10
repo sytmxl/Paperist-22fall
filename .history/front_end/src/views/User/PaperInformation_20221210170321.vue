@@ -484,6 +484,7 @@ onError (e) {
                 });
      },
      post_es_search(){
+      console.log(666)
       let obj = {
         query:{
           bool:{
@@ -502,7 +503,7 @@ onError (e) {
               username: 'elastic',
               password: 'BZYvLA-d*pS0EpI7utmJ'
             },
-            url: 'es/paper/_search', method: "post",
+            url: '/es/paper/_search', method: "post",
             data: JSON.stringify(obj)
           }
       ).then(res=>{

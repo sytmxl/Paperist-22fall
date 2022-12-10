@@ -1,5 +1,6 @@
 <template>
     <el-container class="root">
+      <!-- <TopBar/> -->
       <el-container class="content">
         <el-main>
           <div class="main">
@@ -8,7 +9,6 @@
                 <span style="font-size:35px;font-weight:bolder">{{info_list.paper_name}}</span>
                 <h4>来源：{{info_list.origin}} &#12288; 引用次数：{{info_list.cite_number}}</h4>
               </div>
-              <el-skeleton />
               <div  class="text item">
                 作者：<span v-for="i in info_list.author_name" :key="i"> {{i}}</span>
               </div>
@@ -36,30 +36,29 @@
             <el-card class="box-card2">
                 <span style="font-size:25px;font-weight:bolder">全部来源</span>
                 <div class="origion">
-                    <div class="org" v-for="(i,index) in info_list.readlist" :key="index">
+                    <div class="org" v-for="i in info_list.readlist" :key="i">
                         <div class="logo">
-                             <a :href="i"  target="_blank" >阅读链接{{index+1}}</a>
+                            <img :src="i.icon" alt="" width="20px" height="20px">
                         </div>
-                         
+                          {{i.name}}
                     </div>
                 </div>
             </el-card>
           </div>
           <div class="remark">
             <el-card>
-              <el-tabs>
-                <el-tab-pane label="相关文献">
+              <el-tabs @tab-click="handleClick">
+                <el-tab-pane label="相关文献" name="aboutPaper">
                     <div class="about" v-if="about_list!=[]">
                       <div class="relative" v-for="i in about_list" :key="i">
                           <aboutCard :name="i.paper_name" :author="i.author_name" :cite="i.cite_number" :origin="i.magazine" :intro="i.abstarct" :date="i.date" :paper_id="i.paper_id"/>
                       </div>
                   </div>
-                  <div v-else><el-empty description="尚无相关文献"></el-empty></div>
                     <div id="load">
                     <el-button style="width:100%" @click="load()" v-loading = "start">加载更多</el-button>
                   </div>
                 </el-tab-pane>
-                <el-tab-pane label="评论">
+                <el-tab-pane label="评论" name="remark">
                     <div class="creat_comment">
                           <el-button @click="CreatCommentVisible =true">我要评论</el-button>
                       </div>
@@ -71,7 +70,7 @@
                       <div v-else><el-empty description="还没有评论，发表第一个评论吧"></el-empty></div>
                     
                 </el-tab-pane>
-                <el-tab-pane label="笔记">
+                <el-tab-pane label="笔记" name="note">
                       <div class="creat_mark">
                           <el-button @click="CreatMark =true">上传笔记</el-button>
                       </div>
@@ -211,7 +210,7 @@
 
 <script>
 import * as echarts from 'echarts/core'
-import { Loading, Skeleton } from 'element-ui';
+import { Loading } from 'element-ui';
 import { init } from 'echarts';
 import aboutCard from "../../components/aboutCard.vue"
 import remark from "../../components/remark.vue"
@@ -219,8 +218,6 @@ import CreateComment from "../../components/CreateComment.vue"
 import uploadMark from "../../components/uploadMark.vue"
 import note from "../../components/note.vue"
 import TopBar from "@/components/TopBar";
-import $ from 'jquery';
-import axios from "axios";
 let formdata = new FormData();
 export default {
   inject: ['reload'],
@@ -228,7 +225,6 @@ export default {
       return{
         number:4,//后期要改成session
         start:false,
-        activeName:"aboutPaper",
         ComplainVisible:false,
         QuoteVisible:false,
         ShareVisible:false,
@@ -266,26 +262,9 @@ export default {
 onError (e) {
  this.$message.error("抱歉，复制失败！")
 },
-      handleClick(tab, event){
-        if(tab.name="note"){
-           /* window.addEventListener("scroll", function() {
-              sessionStorage.setItem("scrollTop", window.scrollY);
-            });
-
-            // 在页面加载完成后还原用户的滚动位置
-            window.addEventListener("load", function() {
-              let scrollTop = sessionStorage.getItem("scrollTop");
-              window.scrollTo(0, scrollTop);
-            });*/
-            alert(this.activeName)
-        }
-        else if(tab.name="remark"){
-            alert.log(this.activeName)
-        }
-        else if(tab.name="aboutPaper"){
-            alert.log(this.activeName)
-        }
-      },
+handleClick(){
+  alert(666)
+},
       chart_init(cite_number){
         var myChart = echarts.init(document.getElementById('echarts_box'))
         myChart.setOption({
@@ -482,33 +461,7 @@ onError (e) {
                       this.ComplainVisible = false
                       
                 });
-     },
-     post_es_search(){
-      let obj = {
-        query:{
-          bool:{
-          must:[],
-          fileter:{}
-        }
-        }
-      }
-      obj.query.bool.must.push({"match_phrase":{"authors.id":"5448bc89dabfae87b7e715ef"}})
-      obj.query.bool.filter={"match_phrase":{"authors.id":"5448bc89dabfae87b7e715ef"}}
-      axios({
-            headers: {
-              'content-type': 'application/json',
-            },
-            auth: {
-              username: 'elastic',
-              password: 'BZYvLA-d*pS0EpI7utmJ'
-            },
-            url: 'es/paper/_search', method: "post",
-            data: JSON.stringify(obj)
-          }
-      ).then(res=>{
-        console.log(res)
-      })
-    },
+     }
     },
     components:{
         aboutCard,
@@ -528,16 +481,7 @@ onError (e) {
       this.aboutNoteInit()
       this.paperRemarkInit()
       this.quoteInit()
-      this.post_es_search()
       // this.chart_init();
-      $(function(){
-        $('.el-skeleton').hide();
-      })
-      $(document).ready(function(){
-          // document 不写默认document
-      })
-      this.$nextTick(() => {
-      })
     }
 }
 </script>
@@ -581,16 +525,6 @@ onError (e) {
 .logo{
   float: left;
   margin-right: 20px;
-}
-.logo a{
-  text-decoration: none;
-  color: #000;
-}
-.logo a:hover{
-  cursor: pointer;
-}
-.logo a:after{
-  color: #000;
 }
 .button .el-button{
   margin-right:50px;

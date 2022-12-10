@@ -36,11 +36,11 @@
             <el-card class="box-card2">
                 <span style="font-size:25px;font-weight:bolder">全部来源</span>
                 <div class="origion">
-                    <div class="org" v-for="(i,index) in info_list.readlist" :key="index">
+                    <div class="org" v-for="i in info_list.readlist" :key="i">
                         <div class="logo">
-                             <a :href="i"  target="_blank" >阅读链接{{index+1}}</a>
+                            <img :src="i.icon" alt="" width="20px" height="20px">
                         </div>
-                         
+                          <a :href="i">{{i.name}}</a>
                     </div>
                 </div>
             </el-card>
@@ -220,7 +220,6 @@ import uploadMark from "../../components/uploadMark.vue"
 import note from "../../components/note.vue"
 import TopBar from "@/components/TopBar";
 import $ from 'jquery';
-import axios from "axios";
 let formdata = new FormData();
 export default {
   inject: ['reload'],
@@ -482,33 +481,7 @@ onError (e) {
                       this.ComplainVisible = false
                       
                 });
-     },
-     post_es_search(){
-      let obj = {
-        query:{
-          bool:{
-          must:[],
-          fileter:{}
-        }
-        }
-      }
-      obj.query.bool.must.push({"match_phrase":{"authors.id":"5448bc89dabfae87b7e715ef"}})
-      obj.query.bool.filter={"match_phrase":{"authors.id":"5448bc89dabfae87b7e715ef"}}
-      axios({
-            headers: {
-              'content-type': 'application/json',
-            },
-            auth: {
-              username: 'elastic',
-              password: 'BZYvLA-d*pS0EpI7utmJ'
-            },
-            url: 'es/paper/_search', method: "post",
-            data: JSON.stringify(obj)
-          }
-      ).then(res=>{
-        console.log(res)
-      })
-    },
+     }
     },
     components:{
         aboutCard,
@@ -528,7 +501,6 @@ onError (e) {
       this.aboutNoteInit()
       this.paperRemarkInit()
       this.quoteInit()
-      this.post_es_search()
       // this.chart_init();
       $(function(){
         $('.el-skeleton').hide();
@@ -581,16 +553,6 @@ onError (e) {
 .logo{
   float: left;
   margin-right: 20px;
-}
-.logo a{
-  text-decoration: none;
-  color: #000;
-}
-.logo a:hover{
-  cursor: pointer;
-}
-.logo a:after{
-  color: #000;
 }
 .button .el-button{
   margin-right:50px;

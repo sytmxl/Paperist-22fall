@@ -220,7 +220,6 @@ import uploadMark from "../../components/uploadMark.vue"
 import note from "../../components/note.vue"
 import TopBar from "@/components/TopBar";
 import $ from 'jquery';
-import axios from "axios";
 let formdata = new FormData();
 export default {
   inject: ['reload'],
@@ -484,16 +483,6 @@ onError (e) {
                 });
      },
      post_es_search(){
-      let obj = {
-        query:{
-          bool:{
-          must:[],
-          fileter:{}
-        }
-        }
-      }
-      obj.query.bool.must.push({"match_phrase":{"authors.id":"5448bc89dabfae87b7e715ef"}})
-      obj.query.bool.filter={"match_phrase":{"authors.id":"5448bc89dabfae87b7e715ef"}}
       axios({
             headers: {
               'content-type': 'application/json',
@@ -503,7 +492,7 @@ onError (e) {
               password: 'BZYvLA-d*pS0EpI7utmJ'
             },
             url: 'es/paper/_search', method: "post",
-            data: JSON.stringify(obj)
+            data: JSON.stringify("5448bc89dabfae87b7e715ef")
           }
       ).then(res=>{
         console.log(res)
@@ -528,7 +517,6 @@ onError (e) {
       this.aboutNoteInit()
       this.paperRemarkInit()
       this.quoteInit()
-      this.post_es_search()
       // this.chart_init();
       $(function(){
         $('.el-skeleton').hide();
