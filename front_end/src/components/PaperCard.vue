@@ -1,6 +1,6 @@
 <template>
   <el-card shadow="hover">
-    <h3 style="text-align: left">{{title}}</h3>
+    <h3 style="text-align: left" @click="jump2PaperInforMation">{{title}}</h3>
     <p style="text-align: left; margin-top: 1%; margin-right: 1%">{{limitWords(content)}}</p>
 
 
@@ -47,30 +47,24 @@
 </template>
 
 <script>
-import {$data} from "../../static/pdf/build/pdf.worker";
 
 export default {
   name: "PaperCard",
   props: {
     paper_data:{default:{}}
   },
-  //                      :title=".title"
-// :authors="paper._source.authors"
-// :cite="paper._source.n_citation"
-// :content="paper._source.abstract"
-// :source="paper._source.venue.raw"
-// :year="paper._source.year"
-// :keywords="paper._source.keywords"
-// :issue="paper._source.issue"
   mounted() {
-    if(this.$props.paper_data.title) this.title = this.$props.paper_data.title
-    if(this.$props.paper_data.authors) this.authors = this.$props.paper_data.authors
-    if(this.$props.paper_data.n_citation) this.cite = this.$props.paper_data.n_citation
-    if(this.$props.paper_data.abstract) this.content = this.$props.paper_data.abstract
-    if(this.$props.paper_data.venue.raw) this.source = this.$props.paper_data.venue.raw
-    if(this.$props.paper_data.year) this.year = this.$props.paper_data.year
-    if(this.$props.paper_data.keywords) this.keywords = this.$props.paper_data.keywords
-    if(this.$props.paper_data.issue) this.issue = this.$props.paper_data.issue
+    let source = this.$props.paper_data._source
+    if(source.title) this.title = source.title
+    if(source.authors) this.authors = source.authors
+    if(source.n_citation) this.cite = source.n_citation
+    if(source.abstract) this.content = source.abstract
+    if(source.venue.raw) this.source = source.venue.raw
+    if(source.year) this.year = source.year
+    if(source.keywords) this.keywords = source.keywords
+    if(source.issue) this.issue = source.issue
+    if(source.id) this.es_id = source.id
+    console.log(this.es_id)
   },
   data(){
     return{
@@ -82,7 +76,8 @@ export default {
       cite:"未知",
       year:"未知",
       keywords:[],
-      issue:"未知"
+      issue:"未知",
+      es_id : ""
     }
   },
   methods:{
@@ -113,6 +108,11 @@ export default {
       str = this.limitWords(str + this.keywords[this.keywords.length-1])
       return str
     },
+    jump2PaperInforMation(){
+      this.$router.push({
+        path: "/PaperInformation/" + this.es_id,
+      })
+    }
   }
 }
 </script>

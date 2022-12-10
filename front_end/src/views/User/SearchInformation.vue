@@ -70,7 +70,7 @@
         <div>
           <!-- <el-card style="min-height: calc(75vh)" class="display_zone" shadow="never"> -->
           <paper-card v-for="paper in papers" :key="card_index"
-                      :paper_data = "paper._source"
+                      :paper_data = "paper"
           />
           <!-- </el-card> -->
         </div>
