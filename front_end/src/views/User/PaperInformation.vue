@@ -3,12 +3,12 @@
       <el-container class="content">
         <el-main>
           <div class="main">
-            <el-card class="box-card" v-if="info_list!=[]">
+            <el-card class="box-card" v-if="info_list.length != 0">
               <div style="margin-bottom:20px">
                 <span style="font-size:35px;font-weight:bolder">{{info_list.paper_name}}</span>
                 <h4>来源：{{info_list.origin}} &#12288; 引用次数：{{info_list.cite_number}}</h4>
               </div>
-              <el-skeleton />
+              
               <div  class="text item">
                 作者：<span v-for="i in info_list.author_name" :key="i"> {{i}}</span>
               </div>
@@ -33,7 +33,10 @@
               </div>
          
             </el-card>
-            <el-card class="box-card2">
+            <el-card v-else>
+              <el-skeleton :rows="10" animated/>
+            </el-card>
+            <el-card class="box-card2" v-if="info_list.length != 0">
                 <span style="font-size:25px;font-weight:bolder">全部来源</span>
                 <div class="origion">
                     <div class="org" v-for="(i,index) in info_list.readlist" :key="index">
@@ -43,6 +46,9 @@
                          
                     </div>
                 </div>
+            </el-card>
+            <el-card style="margin-top: 30px" v-else>
+              <el-skeleton :rows="4" animated/>
             </el-card>
           </div>
           <div class="remark">
@@ -181,7 +187,7 @@
         </el-main>
         <el-aside>
           <div class="about">
-            <el-card class="gap">
+            <el-card class="gap" v-if="info_list.length != 0">
               <div class="about_content" style="width:100%;">
                 来源期刊
                 <div class="ogjournal">
@@ -189,7 +195,10 @@
                 </div> 
               </div>
             </el-card>
-            <el-card class="gap">
+            <el-card style="margin-top: 20px" v-else>
+              <el-skeleton :rows="3" animated/>
+            </el-card>
+            <el-card class="gap" v-if="info_list.length != 0">
               <div class="about_content" style="width:100%;">
                 研究领域
                 <div class="domain">
@@ -197,10 +206,16 @@
                 </div>
               </div>
             </el-card>
-            <el-card class="gap">
+            <el-card style="margin-top: 30px" v-else>
+              <el-skeleton :rows="4" animated/>
+            </el-card>
+            <el-card class="gap" v-if="info_list.length != 0">
               <div class="about_content">
                 <div id="echarts_box" style="width:100%;height:300px"></div>
               </div>
+            </el-card>
+            <el-card style="margin-top: 30px" v-else>
+              <el-skeleton :rows="7" animated/>
             </el-card>
           </div>
         </el-aside>
@@ -250,6 +265,7 @@ export default {
         path:"localhost:8080"+this.$route.path
       }
     },
+   
     methods:{
       load(){
         this.start = true
