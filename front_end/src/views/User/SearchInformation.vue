@@ -122,7 +122,8 @@ export default {
     }
     this.post_es_search();
     this.update_secondary_search_condition();
-    $("#topbar").css("display", "none");
+    $("#topbar").css("display", "block");
+    this.isAdvanced = false;
   },
   data() {
     return{
