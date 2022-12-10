@@ -112,6 +112,7 @@ export default {
 * {
   margin: 0;
   padding: 0;
+  // transition: 0.3s;
   // animation-name: enter_blur;
   // animation-iteration-count: 1;
   // animation-duration: 0.3s;
@@ -211,8 +212,9 @@ el-icon:hover, el-icon-close:hover {
 
   border-radius: 20px !important;
   box-shadow: 0 0 20px rgba(204, 204, 204, 0.768);
-  background-color: rgba(255, 255, 255, 0.649) !important;
-  backdrop-filter: blur(40px) brightness(100%);
+  // 动态+模糊加载效果不是很好
+  // background-color: rgba(255, 255, 255, 0.649) !important;
+  // backdrop-filter: blur(40px) brightness(100%);
   font-family: 微软雅黑;
   animation: shift_down 0.3s cubic-bezier(.23,1.38,.65,.99);
 

@@ -38,7 +38,7 @@
             </el-card>
             <el-card class="box-card2" v-if="info_list.length != 0">
                 <span style="font-size:25px;font-weight:bolder">全部来源</span>
-                <div class="origion">
+                <div class="origion" v-if="info_list.readlist.length != 0">
                     <div class="org" v-for="(i,index) in info_list.readlist" :key="index">
                         <div class="logo">
                              <a :href="i"  target="_blank" >阅读链接{{index+1}}</a>
@@ -46,6 +46,7 @@
                          
                     </div>
                 </div>
+                <div v-else><el-empty description="还没有笔记，发表第一篇笔记吧"></el-empty></div>
             </el-card>
             <el-card style="margin-top: 30px" v-else>
               <el-skeleton :rows="4" animated/>
@@ -227,8 +228,6 @@
       </el-container>
     </el-container>
 </template>
-
-
 <script>
 import * as echarts from 'echarts/core'
 import { Loading, Skeleton } from 'element-ui';
