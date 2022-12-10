@@ -36,11 +36,11 @@
             <el-card class="box-card2">
                 <span style="font-size:25px;font-weight:bolder">全部来源</span>
                 <div class="origion">
-                    <div class="org" v-for="i in info_list.readlist" :key="i">
+                    <div class="org" v-for="(i,index) in info_list.readlist" :key="index">
                         <div class="logo">
-                            <img :src="i.icon" alt="" width="20px" height="20px">
+                             <a :href="i"  target="_blank" >阅读链接{{index+1}}</a>
                         </div>
-                          {{i.name}}
+                         
                     </div>
                 </div>
             </el-card>
@@ -553,6 +553,16 @@ onError (e) {
 .logo{
   float: left;
   margin-right: 20px;
+}
+.logo a{
+  text-decoration: none;
+  color: #000;
+}
+.logo a:hover{
+  cursor: pointer;
+}
+.logo a:after{
+  color: #000;
 }
 .button .el-button{
   margin-right:50px;
