@@ -1,7 +1,7 @@
 <template>
     <el-main>
 
-      <div class="image">
+      <div class="image" @click="goto_person()">
         <img :src="list.image" alt="">
       </div>
       <div class="content">
@@ -40,6 +40,14 @@ export default {
     }
   },
   methods:{
+    goto_person(){
+        this.$router.push({
+          name:'PersonalInformation',
+          params:{
+          id:this.list.id
+          }
+        })
+    },
    goto_note(){
      this.$router.push({
           name:'NoteInformation',
