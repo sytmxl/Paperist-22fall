@@ -87,6 +87,12 @@ export default {
         if(isclick){
             isclick=false
             this.like_flag = !this.like_flag;
+            if(like){
+                 this.list.likes = this.list.likes-1;
+            }
+            else{
+                 this.list.likes = this.list.likes+1;
+            }
         if(like){
 
           this.$axios({
@@ -100,7 +106,6 @@ export default {
           }).then(res=>{
             //   $("#response").load(location.href + "#response");
             //   document.getElementById("#response").load(location.href + "#response");
-            this.list.likes = this.list.likes-1;
             let data = {
             op:"like"
             }
@@ -119,7 +124,6 @@ export default {
           }).then(res=>{
             // $("#response").load(location.href + "#response");
             // document.getElementById("#response").load(location.href + "#response");
-            this.list.likes = this.list.likes+1;
             let data = {
             op:"like"
             }
