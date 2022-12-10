@@ -395,6 +395,7 @@
                           icon="el-icon-more-outline"
                           circle
                           size="small"
+                          @click="jumpPaperCollection(item.id)"
                         ></el-button>
                         <div style="margin-bottom: 10px; text-align: left">
                           <a href="">{{ item.name }}</a>
@@ -468,6 +469,7 @@
                           icon="el-icon-more-outline"
                           circle
                           size="small"
+                          @click="jumpNoteCollection(item.id)"
                         ></el-button>
                         <div style="margin-bottom: 10px; text-align: left">
                           <a href="">{{ item.id }}</a>
@@ -533,6 +535,7 @@
                       icon="el-icon-more-outline"
                       circle
                       size="small"
+                      @click="jumpSubscribes(item.id)"
                     ></el-button>
                     <div style="margin-bottom: 10px; text-align: left">
                       <a href="">{{ item.name }}</a>
@@ -590,13 +593,14 @@
                       circle
                       size="small"
                       @click="delNotes(item.id)"
-                      v-if="!this.isOthers"
+                      v-if="!isOthers"
                     ></el-button>
                     <el-button
                       style="float: right"
                       icon="el-icon-more-outline"
                       circle
                       size="small"
+                      @click="jumpNotes(item.id)"
                     ></el-button>
                     <div style="margin-bottom: 10px; text-align: left">
                       <a href="">{{ item.id }}</a>
@@ -662,6 +666,7 @@
                       icon="el-icon-more-outline"
                       circle
                       size="small"
+                      @click="jumpMyComment(item.id)"
                     ></el-button>
                     <div style="margin-bottom: 10px; text-align: left">
                       <a href="">{{ item.paper_name }}</a>
@@ -724,6 +729,7 @@
                       icon="el-icon-more-outline"
                       circle
                       size="small"
+                      @click="jumpMyComment(item.id)"
                     ></el-button>
                     <div style="margin-bottom: 10px; text-align: left">
                       <a href="">{{ item.paper_name }}</a>
@@ -754,39 +760,53 @@
                   <div style="margin-top: 15px; width: 30%">
                     <el-input
                       placeholder="请输入你需要搜索的评论"
-                      v-model="selectComment"
+                      v-model="selectCommentToMe"
                       class="input-with-select"
                     >
                       <el-button
                         slot="append"
                         icon="el-icon-search"
+                        @click="searchPaperCommentToMe"
                       ></el-button>
                     </el-input>
                   </div>
-                  <el-card class="box-card">
+                  <el-card class="box-card" v-for="(item, index) in this.commentToMe" :key="index">
                     <el-button
                       style="float: right; margin-left: 5px"
                       icon="el-icon-delete"
                       circle
                       size="small"
-                      v-if="!this.isOthers"
+                      v-if="!isOthers"
+                      @click="delComment(item.comment_id)"
                     ></el-button>
                     <el-button
                       style="float: right"
                       icon="el-icon-more-outline"
                       circle
                       size="small"
+                      @click="jumpMyComment(item.id)"
                     ></el-button>
                     <div style="margin-bottom: 10px; text-align: left">
-                      <a href="">文献名：你好你好</a>
+                      <a href="">{{ item.paper_name }}</a>
                       <br />
-                      <p>sssssssssssssssssssssssssssssssss</p>
+                      <p>{{ item.content }}</p>
                       <br />
                       <br />
                       <br />
-                      <p>2022 Ma hu</p>
+                      <p>{{ item.time }}</p>
                     </div>
                   </el-card>
+                  <el-pagination
+                      :current-page.sync="currentPage"
+                      :page-size="pageSize"
+                      @size-change="handleSizeChange"
+                      @current-change="handleCurrentChange"
+                      background
+                      layout="prev, pager, next, jumper"
+                      :total="myComment.length > 0 ? myComment.length : null"
+                      style="margin-top: 40px"
+                  >
+                  </el-pagination>
                 </el-tab-pane>
               </el-tabs>
             </el-tab-pane>
@@ -1093,6 +1113,7 @@ export default {
       noteCollection: [],
       notes: [],
       myComment: [],
+      commentToMe:[],
       subscribes: [],
 
       //图片
@@ -1388,6 +1409,7 @@ export default {
           id: this.id,
         },
       }).then((res) => {
+        console.log(res.data)
         this.notes = res.data.data;
       });
     },
@@ -1402,7 +1424,23 @@ export default {
           id: this.id,
         },
       }).then((res) => {
+        console.log(res.data)
         this.myComment = res.data.data;
+      });
+    },
+    //获取给我的评论
+    getCommentToMe() {
+      this.$axios({
+        url: "/user/getCommentToMe/",
+        method: "post",
+        data: {
+          token: sessionStorage.getItem("token"),
+          isToken: this.isToken,
+          id: this.id,
+        },
+      }).then((res) => {
+        console.log(res.data)
+        this.commentToMe = res.data.data;
       });
     },
     //获取个人设置
@@ -1529,6 +1567,22 @@ export default {
         this.selectComment = "";
       });
     },
+    //搜索他人给我的评论
+    searchPaperCommentToMe() {
+      this.$axios({
+        url: "user/searchPaperComment/",
+        method: "post",
+        data: {
+          token: sessionStorage.getItem("token"),
+          content: this.selectComment,
+          isToken: this.isToken,
+          id: this.id,
+        },
+      }).then((res) => {
+        this.commentToMe = res.data.data;
+        this.selectCommentToMe = "";
+      });
+    },
     //删除我的评论
     async delComment(id) {
       // 弹框询问用户是否删除数据
@@ -1561,6 +1615,7 @@ export default {
       }).then((res) => {
         this.$message.success("删除用户成功！");
         this.getPaperComment();
+        this.getCommentToMe();
       });
     },
     //删除我的笔记
@@ -1824,6 +1879,36 @@ export default {
           this.flag = true;
         });
       }
+    },
+    //论文收藏跳转
+    jumpPaperCollection(paper_id){
+      this.$router.push({
+        path:"/PaperInformation/"+paper_id,
+      })
+    },
+    //笔记收藏跳转
+    jumpNoteCollection(note_id){
+      this.$router.push({
+        path:"/NoteInformation/"+note_id,
+      })
+    },
+    //订阅跳转
+    jumpSubscribes(id){
+      this.$router.push({
+        path:"/PersonalInformation/"+id,
+      })
+    },
+    //我的评论跳转
+    jumpMyComment(id){
+      this.$router.push({
+        path:"/PaperInformation/"+id,
+      })
+    },
+    //我的笔记跳转
+    jumpNotes(note_id){
+      this.$router.push({
+        path:"/NoteInformation/"+note_id,
+      })
     },
   },
 };
