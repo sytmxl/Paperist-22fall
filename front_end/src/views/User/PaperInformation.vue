@@ -735,10 +735,14 @@ onError (e) {
 }
 .el-card {
   border-radius: 20px !important;
+  background-color: rgba(255, 255, 255, 0.535) !important;
+  backdrop-filter: blur(40px) brightness(100%);
 }
 .relative {
   .el-card {
     border-radius: 10px !important;
+    background-color: rgba(255, 255, 255, 0) !important;
+
   }
 }
 //tabs
