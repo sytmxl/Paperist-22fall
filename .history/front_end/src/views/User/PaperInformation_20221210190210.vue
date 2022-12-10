@@ -471,7 +471,7 @@ onError (e) {
             console.log(data)
         }
         else if(data.op=="like"){
-          //  this.paperRemarkInit()
+           this.paperRemarkInit()
         }
      },
      close_comment(data){

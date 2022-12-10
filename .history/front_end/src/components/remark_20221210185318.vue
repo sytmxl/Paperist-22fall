@@ -16,8 +16,8 @@
             </div>
             <div class="response" id="response">
                 <i class="el-icon-chat-round" @click="ready(list)"></i>
-                <div class="thumb-filled" @click="likeit(list.id,list.like_flag)" v-if="like_flag" title="取消">{{list.likes}}</div>
-                <div class="thumb" @click="likeit(list.id,list.like_flag)" v-else title="赞">{{list.likes}}</div>
+                <div class="thumb" @click="likeit(list.id,list.like_flag)" v-if="list.like_flag" title="取消">{{list.likes}}</div>
+                <div class="thumb-filled" @click="likeit(list.id,list.like_flag)" v-else title="赞">{{list.likes}}</div>
                 
                 <i class="el-icon-warning-outline" @click="tipoff(list.id)"></i>
             </div>
@@ -86,13 +86,12 @@ export default {
     likeit(id,like){
         if(isclick){
             isclick=false
-            if(this.like_flag){
+            this.like_flag = !this.like_flag;
+            if(like){
                  this.list.likes = this.list.likes-1;
-                 this.like_flag = !this.like_flag;
             }
             else{
                  this.list.likes = this.list.likes+1;
-                 this.like_flag = !this.like_flag;
             }
         if(like){
 

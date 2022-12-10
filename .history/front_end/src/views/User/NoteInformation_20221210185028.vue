@@ -237,7 +237,7 @@ export default {
             this.receiver_id = data.sender_id
         }
         else if(data.op=="like"){
-          //  this.noteRemarkInit()
+           this.noteRemarkInit()
         }
      },
      close_comment(data){

@@ -25,7 +25,7 @@
                 DOI：{{info_list.DOI}}
               </div>
               <div class="button">
-                  <el-button round icon="el-icon-star-off" v-if="!collect_flag" @click="collect()" title="收藏">收藏</el-button>
+                  <el-button round icon="el-icon-star-off" v-if="!info_list.collect_flag" @click="collect()" title="收藏">收藏</el-button>
                   <el-button round icon="el-icon-star-on" v-else @click="collect()" title="取消收藏">已收藏</el-button>
                   <el-button round icon="el-icon-link" @click="quote()">引用</el-button>
                   <el-button round icon="el-icon-warning-outline" @click="ComplainVisible = true">申诉</el-button>
@@ -51,7 +51,7 @@
                 <el-tab-pane label="相关文献">
                     <div class="about" v-if="about_list!=[]">
                       <div class="relative" v-for="i in about_list" :key="i">
-                          <aboutCard :name="i._source.title" :author="i._source.authors" :cite="i._source.n_citation" :origin="i._source.venue" :intro="i._source.abstract" :date="i._source.year" :paper_id="i._source.id"/>
+                          <aboutCard :name="i.paper_name" :author="i.author_name" :cite="i.cite_number" :origin="i.magazine" :intro="i.abstarct" :date="i.date" :paper_id="i.paper_id"/>
                       </div>
                   </div>
                   <div v-else><el-empty description="尚无相关文献"></el-empty></div>
@@ -77,8 +77,7 @@
                       </div>
                       <div v-if="Object.keys(mark_list).length!=0">
                         <div class="mark" v-for="i in mark_list" :key="i">
-                          <!-- <note :list="i" @reaction_note="aboutNoteInit()"/> -->
-                          <note :list="i" />
+                          <note :list="i" @reaction_note="aboutNoteInit()"/>
                         </div>
                       </div>
                       <div v-else><el-empty description="还没有笔记，发表第一篇笔记吧"></el-empty></div>
@@ -223,7 +222,6 @@ import TopBar from "@/components/TopBar";
 import $ from 'jquery';
 import axios from "axios";
 let formdata = new FormData();
-let isclick = true;
 export default {
   inject: ['reload'],
     data(){
@@ -248,9 +246,7 @@ export default {
         uploadFiles:[],
         remark_list:[],
         mark_list:[],
-        authors:[],
-        path:"localhost:8080"+this.$route.path,
-        collect_flag:""
+        path:"localhost:8080"+this.$route.path
       }
     },
     methods:{
@@ -342,25 +338,25 @@ onError (e) {
           this.aboutNoteInit()
         }
       },
-      // paper_init(){
-      //      this.$axios({
-      //       url:"http://127.0.0.1:8000/paperInformation/",
-      //       method:"post",
-      //       data:{
-      //           paper_id:this.$route.params.paper_id
-      //       }
-      //   }).then(res=>{
-      //     // console.log(res.data.about_list)
-      //       this.remark_list = res.data.remark_list
-      //       this.mark_list = res.data.note_list
-      //       this.about_list = res.data.about_list
-      //       this.info_list = res.data.info_list[0]
-      //       console.log(res.data.remark_list)
-      //       this.chart_init(res.data.info_list[0].cite_number)
-      //       // this._loadFile(this.pdf_src)
-      //   })
+      paper_init(){
+           this.$axios({
+            url:"http://127.0.0.1:8000/paperInformation/",
+            method:"post",
+            data:{
+                paper_id:this.$route.params.paper_id
+            }
+        }).then(res=>{
+          // console.log(res.data.about_list)
+            this.remark_list = res.data.remark_list
+            this.mark_list = res.data.note_list
+            this.about_list = res.data.about_list
+            this.info_list = res.data.info_list[0]
+            console.log(res.data.remark_list)
+            this.chart_init(res.data.info_list[0].cite_number)
+            // this._loadFile(this.pdf_src)
+        })
         
-      // },
+      },
 
       paperInfoInit(){
         this.$axios({
@@ -372,22 +368,21 @@ onError (e) {
         }).then(res=>{
           // console.log(res.data.about_list)
             this.info_list = res.data.info_list[0]
-            this.collect_flag = res.data.info_list[0].collect_flag
             this.chart_init(res.data.info_list[0].cite_number)
             // this._loadFile(this.pdf_src)
         })
       },
-      //  aboutListInit(){
-      //     this.$axios({
-      //       url:"http://127.0.0.1:8000/aboutListInit/",
-      //       method:"post",
-      //       data:{
-      //           paper_id:this.$route.params.paper_id
-      //       }
-      //   }).then(res=>{
-      //     this.about_list = res.data.about_list
-      //   })
-      //  },
+       aboutListInit(){
+          this.$axios({
+            url:"http://127.0.0.1:8000/aboutListInit/",
+            method:"post",
+            data:{
+                paper_id:this.$route.params.paper_id
+            }
+        }).then(res=>{
+          this.about_list = res.data.about_list
+        })
+       },
        aboutNoteInit(){
           this.$axios({
             url:"http://127.0.0.1:8000/aboutNoteInit/",
@@ -425,10 +420,7 @@ onError (e) {
         this.QuoteVisible = true
       },
       collect(){
-        if(isclick){
-          isclick = false;
-          this.collect_flag = !this.collect_flag
-           if(this.info_list.collect_flag){
+        if(this.info_list.collect_flag){
           this.$axios({
             url:"http://127.0.0.1:8000/paperCollection/",
             method:"post",
@@ -456,12 +448,6 @@ onError (e) {
             this.paperInfoInit()
           })
         }
-        setTimeout(()=>{isclick=true},500)
-        }
-        else{
-          this.$message.warning("请勿频繁操作")
-        }
-       
       },
       react_remark(data){
         if(data.op=="remark"){
@@ -471,7 +457,7 @@ onError (e) {
             console.log(data)
         }
         else if(data.op=="like"){
-          //  this.paperRemarkInit()
+           this.paperRemarkInit()
         }
      },
      close_comment(data){
@@ -497,17 +483,17 @@ onError (e) {
                       
                 });
      },
-     get_authors(){
+     post_es_search(){
       let obj = {
         query:{
           bool:{
           must:[],
-          filter:{}
+          fileter:{}
         }
         }
       }
-      obj.query.bool.must.push({"match_phrase":{"id":this.$route.params.paper_id}})
-      obj.query.bool.filter={"match_phrase":{"id":this.$route.params.paper_id}}
+      obj.query.bool.must.push({"match_phrase":{"authors.id":"5448bc89dabfae87b7e715ef"}})
+      obj.query.bool.filter={"match_phrase":{"authors.id":"5448bc89dabfae87b7e715ef"}}
       axios({
             headers: {
               'content-type': 'application/json',
@@ -516,40 +502,11 @@ onError (e) {
               username: 'elastic',
               password: 'BZYvLA-d*pS0EpI7utmJ'
             },
-            url: '/es/paper/_search', method: "post",
+            url: 'https://123.249.72.97:9200/es/paper/_search', method: "post",
             data: JSON.stringify(obj)
           }
       ).then(res=>{
-        this.authors = res.data.hits.hits[0]._source.authors  
-        console.log(res.data.hits.hits[0]._source.authors)
-        this.aboutListInit(res.data.hits.hits[0]._source.authors)
-      })
-     },
-     aboutListInit(authors){
-      console.log(authors)
-      let obj = {
-        query:{
-          bool:{
-          must:[],
-          filter:{}
-        }
-        }
-      }
-      obj.query.bool.must.push({"match_phrase":{"authors.id":authors[0].id}})
-      obj.query.bool.filter={"match_phrase":{"authors.id":authors[0].id}}
-      axios({
-            headers: {
-              'content-type': 'application/json',
-            },
-            auth: {
-              username: 'elastic',
-              password: 'BZYvLA-d*pS0EpI7utmJ'
-            },
-            url: '/es/paper/_search', method: "post",
-            data: JSON.stringify(obj)
-          }
-      ).then(res=>{
-        this.about_list = res.data.hits.hits
+        console.log(res)
       })
     },
     },
@@ -567,11 +524,11 @@ onError (e) {
     mounted() {
       // this.paper_init();
       this.paperInfoInit()
-      // this.aboutListInit()
+      this.aboutListInit()
       this.aboutNoteInit()
       this.paperRemarkInit()
       this.quoteInit()
-      this.get_authors()
+      this.post_es_search()
       // this.chart_init();
       $(function(){
         $('.el-skeleton').hide();

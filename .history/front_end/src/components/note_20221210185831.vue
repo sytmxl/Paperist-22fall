@@ -86,6 +86,7 @@ export default {
           })
         }
         else{
+          
           this.$axios({
             url:"http://127.0.0.1:8000/likeIt/",
             method:"post",
@@ -109,7 +110,13 @@ export default {
       if(isclick){
         isclick = false
         this.collect_flag= !this.collect_flag
-        if(!this.collect_flag){
+        if(this.collect_flag){
+            this.$message.success("已收藏")
+        }
+        else{
+          this.$message.success("已取消收藏")
+        }
+        if(this.list.collect_flag){
           this.$axios({
             url:"http://127.0.0.1:8000/paperCollection/",
             method:"post",
@@ -119,7 +126,7 @@ export default {
                 op:0
             }
           }).then(res=>{
-               this.$message.success("已取消收藏")
+              
               let data={flag:"1"}
               this.$emit('reaction_note',data)
           })
@@ -134,12 +141,12 @@ export default {
                 op:1
             }
           }).then(res=>{
-            this.$message.success("已收藏")
+            
             let data={flag:"1"}
             this.$emit('reaction_note',data)
           })
         }
-        setTimeout(()=>{isclick=true},500)
+        setTimeout(()=>{isclick=true},1500)
       }
       else{
         this.$message.warning("请勿频繁操作")

@@ -77,8 +77,7 @@
                       </div>
                       <div v-if="Object.keys(mark_list).length!=0">
                         <div class="mark" v-for="i in mark_list" :key="i">
-                          <!-- <note :list="i" @reaction_note="aboutNoteInit()"/> -->
-                          <note :list="i" />
+                          <note :list="i" @reaction_note="aboutNoteInit()"/>
                         </div>
                       </div>
                       <div v-else><el-empty description="还没有笔记，发表第一篇笔记吧"></el-empty></div>
@@ -471,7 +470,7 @@ onError (e) {
             console.log(data)
         }
         else if(data.op=="like"){
-          //  this.paperRemarkInit()
+           this.paperRemarkInit()
         }
      },
      close_comment(data){

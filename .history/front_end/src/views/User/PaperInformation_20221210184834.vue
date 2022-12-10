@@ -77,8 +77,7 @@
                       </div>
                       <div v-if="Object.keys(mark_list).length!=0">
                         <div class="mark" v-for="i in mark_list" :key="i">
-                          <!-- <note :list="i" @reaction_note="aboutNoteInit()"/> -->
-                          <note :list="i" />
+                          <note :list="i" @reaction_note="aboutNoteInit()"/>
                         </div>
                       </div>
                       <div v-else><el-empty description="还没有笔记，发表第一篇笔记吧"></el-empty></div>
@@ -223,7 +222,6 @@ import TopBar from "@/components/TopBar";
 import $ from 'jquery';
 import axios from "axios";
 let formdata = new FormData();
-let isclick = true;
 export default {
   inject: ['reload'],
     data(){
@@ -425,10 +423,7 @@ onError (e) {
         this.QuoteVisible = true
       },
       collect(){
-        if(isclick){
-          isclick = false;
-          this.collect_flag = !this.collect_flag
-           if(this.info_list.collect_flag){
+        if(this.info_list.collect_flag){
           this.$axios({
             url:"http://127.0.0.1:8000/paperCollection/",
             method:"post",
@@ -456,12 +451,6 @@ onError (e) {
             this.paperInfoInit()
           })
         }
-        setTimeout(()=>{isclick=true},500)
-        }
-        else{
-          this.$message.warning("请勿频繁操作")
-        }
-       
       },
       react_remark(data){
         if(data.op=="remark"){
@@ -471,7 +460,7 @@ onError (e) {
             console.log(data)
         }
         else if(data.op=="like"){
-          //  this.paperRemarkInit()
+           this.paperRemarkInit()
         }
      },
      close_comment(data){

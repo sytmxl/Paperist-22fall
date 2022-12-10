@@ -237,7 +237,7 @@ export default {
             this.receiver_id = data.sender_id
         }
         else if(data.op=="like"){
-          //  this.noteRemarkInit()
+           this.noteRemarkInit()
         }
      },
      close_comment(data){
@@ -273,7 +273,10 @@ export default {
         }
     },
      collect(){
-        if(this.note.collect_flag){
+      if(isclick){
+        isclick = false;
+        this.collect_flag = !this.collect_flag;
+            if(this.note.collect_flag){
           this.$axios({
             url:"http://127.0.0.1:8000/paperCollection/",
             method:"post",
@@ -301,6 +304,8 @@ export default {
             this.noteInfoInit()
           })
         }
+      }
+    
      },
      subscribe(author){
          if(author.subscribe_flag){
