@@ -51,7 +51,7 @@
                 <el-tab-pane label="相关文献">
                     <div class="about" v-if="about_list!=[]">
                       <div class="relative" v-for="i in about_list" :key="i">
-                          <aboutCard :name="i.paper_name" :author="i.author_name" :cite="i.cite_number" :origin="i.magazine" :intro="i.abstarct" :date="i.date" :paper_id="i.paper_id"/>
+                          <aboutCard :name="i._source.title" :author="i._source.authors" :cite="i._source.n_citation" :origin="i._source.venue" :intro="i._source.abstract" :date="i._source.year" :paper_id="i._source.id"/>
                       </div>
                   </div>
                   <div v-else><el-empty description="尚无相关文献"></el-empty></div>
@@ -246,6 +246,7 @@ export default {
         uploadFiles:[],
         remark_list:[],
         mark_list:[],
+        authors:[],
         path:"localhost:8080"+this.$route.path
       }
     },
@@ -338,25 +339,25 @@ onError (e) {
           this.aboutNoteInit()
         }
       },
-      paper_init(){
-           this.$axios({
-            url:"http://127.0.0.1:8000/paperInformation/",
-            method:"post",
-            data:{
-                paper_id:this.$route.params.paper_id
-            }
-        }).then(res=>{
-          // console.log(res.data.about_list)
-            this.remark_list = res.data.remark_list
-            this.mark_list = res.data.note_list
-            this.about_list = res.data.about_list
-            this.info_list = res.data.info_list[0]
-            console.log(res.data.remark_list)
-            this.chart_init(res.data.info_list[0].cite_number)
-            // this._loadFile(this.pdf_src)
-        })
+      // paper_init(){
+      //      this.$axios({
+      //       url:"http://127.0.0.1:8000/paperInformation/",
+      //       method:"post",
+      //       data:{
+      //           paper_id:this.$route.params.paper_id
+      //       }
+      //   }).then(res=>{
+      //     // console.log(res.data.about_list)
+      //       this.remark_list = res.data.remark_list
+      //       this.mark_list = res.data.note_list
+      //       this.about_list = res.data.about_list
+      //       this.info_list = res.data.info_list[0]
+      //       console.log(res.data.remark_list)
+      //       this.chart_init(res.data.info_list[0].cite_number)
+      //       // this._loadFile(this.pdf_src)
+      //   })
         
-      },
+      // },
 
       paperInfoInit(){
         this.$axios({
@@ -372,17 +373,17 @@ onError (e) {
             // this._loadFile(this.pdf_src)
         })
       },
-       aboutListInit(){
-          this.$axios({
-            url:"http://127.0.0.1:8000/aboutListInit/",
-            method:"post",
-            data:{
-                paper_id:this.$route.params.paper_id
-            }
-        }).then(res=>{
-          this.about_list = res.data.about_list
-        })
-       },
+      //  aboutListInit(){
+      //     this.$axios({
+      //       url:"http://127.0.0.1:8000/aboutListInit/",
+      //       method:"post",
+      //       data:{
+      //           paper_id:this.$route.params.paper_id
+      //       }
+      //   }).then(res=>{
+      //     this.about_list = res.data.about_list
+      //   })
+      //  },
        aboutNoteInit(){
           this.$axios({
             url:"http://127.0.0.1:8000/aboutNoteInit/",
@@ -483,17 +484,17 @@ onError (e) {
                       
                 });
      },
-     post_es_search(){
+     get_authors(){
       let obj = {
         query:{
           bool:{
           must:[],
-          fileter:{}
+          filter:{}
         }
         }
       }
-      obj.query.bool.must.push({"match_phrase":{"authors.id":"5448bc89dabfae87b7e715ef"}})
-      obj.query.bool.filter={"match_phrase":{"authors.id":"5448bc89dabfae87b7e715ef"}}
+      obj.query.bool.must.push({"match_phrase":{"id":this.$route.params.paper_id}})
+      obj.query.bool.filter={"match_phrase":{"id":this.$route.params.paper_id}}
       axios({
             headers: {
               'content-type': 'application/json',
@@ -502,11 +503,40 @@ onError (e) {
               username: 'elastic',
               password: 'BZYvLA-d*pS0EpI7utmJ'
             },
-            url: 'es/paper/_search', method: "post",
+            url: '/es/paper/_search', method: "post",
             data: JSON.stringify(obj)
           }
       ).then(res=>{
-        console.log(res)
+        this.authors = res.data.hits.hits[0]._source.authors  
+        console.log(res.data.hits.hits[0]._source.authors)
+        this.aboutListInit(res.data.hits.hits[0]._source.authors)
+      })
+     },
+     aboutListInit(authors){
+      console.log(authors)
+      let obj = {
+        query:{
+          bool:{
+          must:[],
+          filter:{}
+        }
+        }
+      }
+      obj.query.bool.must.push({"match_phrase":{"authors.id":authors[0].id}})
+      obj.query.bool.filter={"match_phrase":{"authors.id":authors[0].id}}
+      axios({
+            headers: {
+              'content-type': 'application/json',
+            },
+            auth: {
+              username: 'elastic',
+              password: 'BZYvLA-d*pS0EpI7utmJ'
+            },
+            url: '/es/paper/_search', method: "post",
+            data: JSON.stringify(obj)
+          }
+      ).then(res=>{
+        this.about_list = res.data.hits.hits
       })
     },
     },
@@ -524,11 +554,11 @@ onError (e) {
     mounted() {
       // this.paper_init();
       this.paperInfoInit()
-      this.aboutListInit()
+      // this.aboutListInit()
       this.aboutNoteInit()
       this.paperRemarkInit()
       this.quoteInit()
-      this.post_es_search()
+      this.get_authors()
       // this.chart_init();
       $(function(){
         $('.el-skeleton').hide();

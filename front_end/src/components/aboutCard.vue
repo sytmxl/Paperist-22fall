@@ -5,13 +5,16 @@
       <!-- <el-button style="float: right; padding: 3px 0" type="text">操作按钮</el-button> -->
     </div>
       <div class="text item">
-      {{intro}}
+      摘要：{{intro}}
     </div>
     <div class="text item">
-      作者：{{author}}
+      作者：
+      <span v-for="i in author" :key="i" style="margin-right:20px">
+        {{i.name}}
+      </span>
     </div>
     <div class="text item">
-      来源：{{origin}}
+      来源：{{origin.raw}}
     </div>
       <div class="text item">
       引用量：{{cite}}
