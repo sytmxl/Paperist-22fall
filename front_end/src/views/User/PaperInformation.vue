@@ -589,14 +589,7 @@ onError (e) {
       this.quoteInit()
       this.get_authors()
       // this.chart_init();
-      $(function(){
-        $('.el-skeleton').hide();
-      })
-      $(document).ready(function(){
-          // document 不写默认document
-      })
-      this.$nextTick(() => {
-      })
+      
     }
 }
 </script>
