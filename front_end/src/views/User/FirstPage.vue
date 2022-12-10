@@ -580,8 +580,8 @@ export default {
   // overflow: hidden;
 }
 .home_logo {
-  width: 300px;
-  height: 200px;
+  width: 250px;
+  height: 180px;
   margin: 50px auto -70px;
 }
 .logo_area {
