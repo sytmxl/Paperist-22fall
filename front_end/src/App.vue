@@ -112,6 +112,7 @@ export default {
 * {
   margin: 0;
   padding: 0;
+  
   // transition: 0.3s;
   // animation-name: enter_blur;
   // animation-iteration-count: 1;
@@ -217,17 +218,23 @@ el-icon:hover, el-icon-close:hover {
   // backdrop-filter: blur(40px) brightness(100%);
   font-family: 微软雅黑;
   animation: shift_down 0.3s cubic-bezier(.23,1.38,.65,.99);
-
 }
 .el-dialog__close {
   &:hover {
     color: $theme !important;
   }
 }
-// .el-dialog__wrapper, .el-message-box__wrapper {
-//   backdrop-filter: blur(15px) brightness(90%) !important;   
-//   transition: 1s !important; 
-// }
+.v-modal {
+  display: none;
+}
+/deep/.el-dialog {
+  animation: none !important;
+}
+.el-dialog__wrapper, .el-message-box__wrapper {
+  overflow: hidden;
+  // position: relative;
+  // width: fit-content;
+}
 
 .el-popper, 
 .el-dropdown-menu__item {
@@ -324,10 +331,5 @@ iframe {
 .material-theme .menu_item_expand {
   background: rgba(0, 0, 0, 0.04) !important;
 }
-.v-modal {
-  display: none;
-}
-/deep/.el-dialog {
-  animation: none !important;
-}
+
 </style>
