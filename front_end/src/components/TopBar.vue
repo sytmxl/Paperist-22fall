@@ -45,7 +45,7 @@
           <el-button size="small" type="warning">
             未登录<i class="el-icon-arrow-down el-icon--right"></i>
           </el-button>
-          <el-dropdown-menu slot="dropdown">
+          <el-dropdown-menu slot="dropdown2">
             <el-dropdown-item command="c">注册</el-dropdown-item>
             <el-dropdown-item command="d">登录</el-dropdown-item>
           </el-dropdown-menu>
