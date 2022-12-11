@@ -7,7 +7,7 @@
               <div style="margin-bottom:20px">
                 <span style="font-size:35px;font-weight:700;color: #003B55;">{{info_list.title}}</span>
                 <el-divider></el-divider>
-                <h4 style="margin-top:20px">来源：{{info_list.venue.raw}} &#12288; 引用次数：{{info_list.cite_number}}</h4>
+                <h4 style="margin-top:20px">来源：{{info_list.venue.raw}} &#12288; 引用次数：{{info_list.n_citation}}</h4>
               </div>
               
               <div  class="text item">
@@ -69,7 +69,7 @@
                     
                 </el-tab-pane>
                 <el-tab-pane label="评论">
-                  <div v-if="token!=null">
+                
                     <div class="creat_comment" >
                           <el-button @click="CreatCommentVisible =true">我要评论</el-button>
                       </div>
@@ -79,14 +79,12 @@
                       </div>
                       </div>
                       <div v-else><el-empty description="还没有评论，发表第一个评论吧"></el-empty></div>
-                  </div>
-                    <div v-else>
-                      <el-empty description="还没有登录，登录后才可查看和发表评论哦"><span @click="goto_login()">点击登录</span></el-empty>
-                    </div>
+                 
+                
                     
                 </el-tab-pane>
                 <el-tab-pane label="笔记">
-                  <div v-if="token!=null">
+                 
                       <div class="creat_mark">
                           <el-button @click="CreatMark =true">上传笔记</el-button>
                       </div>
@@ -97,10 +95,7 @@
                         </div>
                       </div>
                       <div v-else><el-empty description="还没有笔记，发表第一篇笔记吧"></el-empty></div>
-                  </div>
-                    <div v-else>
-                      <el-empty description="还没有登录，登录后才可查看和发表笔记哦"><span @click="goto_login()">点击登录</span></el-empty>
-                    </div>
+                 
                       
                 </el-tab-pane>
                   
@@ -310,11 +305,11 @@ export default {
     },
     onCopy (e) {
  this.$message.success("内容已复制到剪切板！")
-},
+    },
 // 复制失败时的回调函数
-onError (e) {
+    onError (e) {
  this.$message.error("抱歉，复制失败！")
-},
+    },
       handleClick(tab, event){
         if(tab.name="note"){
            /* window.addEventListener("scroll", function() {
@@ -392,20 +387,20 @@ onError (e) {
         }
       },
 
-      paperInfoInit(){
-        this.$axios({
-            url:"http://127.0.0.1:8000/paperInfoInit/",
-            method:"post",
-            data:{
-                paper_id:this.$route.params.paper_id
-            }
-        }).then(res=>{
-            this.collect_flag = res.data.info_list[0].collect_flag
-        })
-      },
+      // paperInfoInit(){
+      //   this.$axios({
+      //       url:"http://127.0.0.1:8000/paperInfoInit/",
+      //       method:"post",
+      //       data:{
+      //           paper_id:this.$route.params.paper_id
+      //       }
+      //   }).then(res=>{
+      //       this.collect_flag = res.data.info_list[0].collect_flag
+      //   })
+      // },
        aboutNoteInit(){
           this.$axios({
-            url:"http://127.0.0.1:8000/aboutNoteInit/",
+            url:"http://127.0.0.1:8000/aboutNoteInitNoToken/",
             method:"post",
             data:{
                 paper_id:this.$route.params.paper_id
@@ -416,7 +411,7 @@ onError (e) {
        },
        paperRemarkInit(){
           this.$axios({
-            url:"http://127.0.0.1:8000/paperRemarkInit/",
+            url:"http://127.0.0.1:8000/paperRemarkInitNoToken/",
             method:"post",
             data:{
                 paper_id:this.$route.params.paper_id
@@ -604,7 +599,7 @@ onError (e) {
     },
     mounted() {
       // this.paper_init();
-      this.paperInfoInit()
+      // this.paperInfoInit()
       // this.aboutListInit()
       this.aboutNoteInit()
       this.paperRemarkInit()

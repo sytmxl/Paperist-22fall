@@ -80,6 +80,7 @@ export default {
         receiver_id:-1,
         remark_id:-1,
         like_flag:this.list.like_flag,
+        token:sessionStorage.getItem("token")
     }
   },
   methods:{
@@ -97,7 +98,8 @@ export default {
       window.open(routeData.href, '_blank')
     },
     likeit(id,like){
-        if(isclick){
+        if(this.token){
+             if(isclick){
             isclick=false
             if(this.like_flag){
                  this.list.likes = this.list.likes-1;
@@ -149,10 +151,19 @@ export default {
         else{
             this.$message.warning("请勿频繁操作")
         }
+        }else{
+        this.$message.warning("请先登录")
+        setTimeout(()=>{let routeData = this.$router.resolve({
+        name: 'login',
+      })
+      window.open(routeData.href, '_blank')},1000)
+      }
+       
         
     },
     tipoff(id){
-         this.$axios({
+        if(this.token){
+                 this.$axios({
             url:"http://127.0.0.1:8000/tipOff/",
             method:"post",
             data:{
@@ -162,14 +173,34 @@ export default {
         }).then(res=>{
           this.$message.success("您的举报已发送，敬请等待后台处理");
         })
+        }else{
+        this.$message.warning("请先登录")
+        setTimeout(()=>{let routeData = this.$router.resolve({
+        name: 'login',
+      })
+      window.open(routeData.href, '_blank')},1000)
+      }
+
+
+        
     },
     ready(item){
-        let data = {
+
+        if(this.token){
+            let data = {
             op:"remark",
             sender_id: item.sender_id,
             remark_id: item.id
         }
         this.$emit('throw_remark',data)
+        }else{
+        this.$message.warning("请先登录")
+        setTimeout(()=>{let routeData = this.$router.resolve({
+        name: 'login',
+      })
+      window.open(routeData.href, '_blank')},1000)
+      }
+        
         // this.CommentVisible =true ,
         // this.receiver_id=item.sender_id,
         // this.remark_id=item.id

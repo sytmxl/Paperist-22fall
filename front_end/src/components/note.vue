@@ -37,6 +37,7 @@ export default {
     return{
         like_flag:this.list.like_flag,
         collect_flag:this.list.collect_flag,
+        token:sessionStorage.getItem("token")
     }
   },
   methods:{
@@ -68,7 +69,8 @@ export default {
       window.open(routeData.href, '_blank')
    },
    tipoff(id){
-         this.$axios({
+    if(this.token){
+       this.$axios({
             url:"http://127.0.0.1:8000/tipOff/",
             method:"post",
             data:{
@@ -78,9 +80,18 @@ export default {
         }).then(res=>{
           this.$message.success("您的举报已发送，敬请等待后台处理");
         })
+    }else{
+        this.$message.warning("请先登录")
+        setTimeout(()=>{let routeData = this.$router.resolve({
+        name: 'login',
+      })
+      window.open(routeData.href, '_blank')},1000)
+      }
+        
     },
      likeit(id){
-      if(isclick){
+      if(this.token){
+         if(isclick){
         isclick = false
          if(this.like_flag){
                  this.list.likes = this.list.likes-1;
@@ -123,9 +134,18 @@ export default {
       else{
         this.$message.warning("请勿频繁操作")
       }
+      }
+      else{
+        this.$message.warning("请先登录")
+        setTimeout(()=>{let routeData = this.$router.resolve({
+        name: 'login',
+      })
+      window.open(routeData.href, '_blank')},1000)
+      }
     },
     collect(id){
-      if(isclick){
+      if(this.token){
+        if(isclick){
         isclick = false
         this.collect_flag= !this.collect_flag
         if(!this.collect_flag){
@@ -163,8 +183,18 @@ export default {
       else{
         this.$message.warning("请勿频繁操作")
       }
+      }
+      else{
+        this.$message.warning("请先登录")
+        setTimeout(()=>{let routeData = this.$router.resolve({
+        name: 'login',
+      })
+      window.open(routeData.href, '_blank')},1000)
+        
+      }
+      
       },
-        process_time(){
+      process_time(){
         let msg = JSON.stringify(this.list.time)
         let currentTimeInMilliseconds = Date.now();
         let currentDate = new Date(currentTimeInMilliseconds);
