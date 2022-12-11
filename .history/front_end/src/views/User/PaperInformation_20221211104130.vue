@@ -561,12 +561,9 @@ onError (e) {
           this.about_list=res.data.hits.hits
         }
         else{
-          // console.log(res.data.hits.hits)
-          for(var i=0;i<res.data.hits.hits.length;i++){
-            this.about_list.push(res.data.hits.hits[i])
-          }
-          
-          // console.log(this.about_list)
+          console.log(res.data.hits.hits)
+          this.about_list.push(res.data.hits.hits)
+          console.log($data.about_list)
         }
         
       })
