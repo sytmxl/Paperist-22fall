@@ -30,7 +30,7 @@ export default {
 
 <style lang="scss">
   $dark-color: #111;
-  $light-color: #eee;
+  $light-color: rgb(217, 219, 222);
   $dark-theme: #001C2A;
   $theme: #003B55;
 
@@ -103,7 +103,15 @@ export default {
   .el-button {
     border: 0px;
     border-radius: 10px;
-    transition: 0.3s;
+    transition: 0.2s;
+    &:hover {
+    transform: scale(105%);
+      cursor: pointer;
+      // border: #000 solid 2px;
+    }
+    &:active {
+      transform: scale(90%);
+    }
   }
   el-card {
     border-radius: 10px !important;

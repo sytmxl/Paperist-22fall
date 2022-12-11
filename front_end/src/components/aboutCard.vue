@@ -1,5 +1,5 @@
 <template>
-  <el-card class="box-card">
+  <el-card class="box-card" @click="goto_paper(paper_id)">
     <div slot="header" class="clearfix">
       <span @click="goto_paper(paper_id)" style="cursor:pointer" title="了解此论文">{{name}}</span>
       <!-- <el-button style="float: right; padding: 3px 0" type="text">操作按钮</el-button> -->
@@ -75,6 +75,7 @@ export default {
 
   background: none;
   margin-bottom: 15px !important;
+  
 }
 .dark-mode {
   .el-card {
@@ -89,5 +90,12 @@ export default {
   background-color: #003b55 !important;
   color: white;
   font-weight: bold;
+  transition: 0.3s;
+  &:hover {
+    // background: rgb(231, 231, 231) !important;
+    cursor: pointer;
+    transform: scale(102%);
+    background-color: #003b55a3 !important;
+  }
 }
 </style>

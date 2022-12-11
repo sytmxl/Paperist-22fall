@@ -1,8 +1,8 @@
 <template>
 <div class="other_note">
        <el-card>
-        <span style="font-weight:bolder; font-size: large; color: #003B55;" title="点击阅读笔记" @click="goto_note(note.note_id)">{{note.introduction}}</span>
-        <span @click="goto_paper(note.paper_id)" title="了解此论文">关联论文：{{note.paper_name}}</span>
+        <span class="link1" style="font-weight:bolder; font-size: large; color: #003B55;" title="点击阅读笔记" @click="goto_note(note.note_id)">{{note.introduction}}</span>
+        <span class="link2" @click="goto_paper(note.paper_id)" title="了解此论文">关联论文：{{note.paper_name}}</span>
         <!-- <span class="inline">获赞：{{note.likes}}</span>
         <span class="inline">评论：{{note.remarks}}</span>
         <span class="inline">收藏：{{note.collections}}</span> -->
@@ -76,7 +76,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-// @import './icon.scss';
+@import './link.scss';
 .other_note{
     margin-top: 15px;
     .el-card {
@@ -134,5 +134,11 @@ export default {
   .thumb {
     text-align: left;
   }
+}
+.link1 {
+  @include link();
+}
+.link2 {
+  @include link();
 }
 </style>
