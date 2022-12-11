@@ -59,7 +59,7 @@
                 <el-tab-pane label="相关文献">
                     <div class="about" v-if="about_list.length!=0">
                       <div class="relative" v-for="(i,index) in about_list" :key="index">
-                          <aboutCard  :name="i._source.title" :author="i._source.authors" :cite="i._source.n_citation" :origin="i._source.venue" :intro="i._source.abstract" :date="i._source.year" :paper_id="i._source.id"/>
+                          <aboutCard v-if="index<=number-1" :name="i._source.title" :author="i._source.authors" :cite="i._source.n_citation" :origin="i._source.venue" :intro="i._source.abstract" :date="i._source.year" :paper_id="i._source.id"/>
                       </div>
                       <div id="load">
                           <el-button style="width:100%" @click="load()" v-loading = "start">加载更多</el-button>
@@ -112,7 +112,7 @@
                 {{i.content}}
               </div>
               <el-button size="medium" style="width: 100%" round icon="el-icon-document-copy" v-clipboard:copy="i.content" v-clipboard:success="onCopy" v-clipboard:error="onError">
-                复制引用
+                复制链接
               </el-button>
             </div>
           </el-dialog>
@@ -284,8 +284,8 @@ export default {
     methods:{
       load(){
         // this.start = true
-        // this.number = this.number+4
-        this.aboutListInit(this.authors,this.now_index)
+        this.number = this.number+4
+        this.aboutListInit(this.authors,now_index)
         this.now_index = this.now_index +1
       },
       submitAvatarHttp(val){
@@ -557,18 +557,7 @@ onError (e) {
             data: JSON.stringify(obj)
           }
       ).then(res=>{
-        if(index==0){
-          this.about_list=res.data.hits.hits
-        }
-        else{
-          // console.log(res.data.hits.hits)
-          for(var i=0;i<res.data.hits.hits.length;i++){
-            this.about_list.push(res.data.hits.hits[i])
-          }
-          
-          // console.log(this.about_list)
-        }
-        
+        this.about_list=res.data.hits.hits
       })
     },
     },
