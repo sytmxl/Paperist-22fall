@@ -91,12 +91,13 @@
       </el-main>
 <!--右侧栏-->
       <el-aside class="right">
-        <el-card  class="display_zone" shadow="never" style="margin-top: 20px">
+        <el-card  class="display_zone" shadow="never" style="margin-top: 20px" :v-loading = "loading_interested">
           <h3 style="text-align: left; margin-left: 5%; margin-bottom: calc(2vh)">推荐</h3>
-          <el-card class="recommend" v-for="recommend in recommends" :key="recommend" v-loading = "true" shadow="never"
+          <div class="recommend" v-for="recommend in recommends" :key="recommend"  shadow="never"
                    style = "height: 75px;margin-bottom: 10px">
-            <h5 style="margin-left: 10%; text-align: left;">{{recommend}}</h5>
-          </el-card>
+            <el-divider></el-divider>
+            <h5 style="margin-left: 10%; text-align: left;" @click="goto_interested(recommend._source.id)">{{limitWords(recommend._source.title)}}</h5>
+          </div>
         </el-card>
       </el-aside>
 
@@ -119,7 +120,7 @@ export default {
   components: {SearchBox, PaperInformation, PaperCard, TopBar},
   props :{
   },
-  mounted() {
+  async mounted() {
     if(this.$route.query.search_params != null){
       this.es_request_body = JSON.parse(this.$route.query.search_params)
       this.es_request_body_raw = JSON.parse(JSON.stringify(this.es_request_body))
@@ -127,8 +128,9 @@ export default {
       this.es_request_body.size = this.page_size
     }
 
-    this.post_es_search();
-    this.update_secondary_search_condition();
+    await this.post_es_search();
+    await this.update_secondary_search_condition();
+    await this.load_interested()
     $("#topbar").css("display", "block");
     this.isAdvanced = false;
   },
@@ -160,7 +162,8 @@ export default {
       page_size : 10,
       currentPage:1,
       card_index:[],
-      loading:true
+      loading:true,
+      loading_interested:true,
     }
   },
   methods :{
@@ -185,7 +188,7 @@ export default {
       this.filterGroup_year = []
       //深拷贝
       let condition_filter_query = JSON.parse(JSON.stringify(this.es_request_body))
-      condition_filter_query._source = ["authors","year","venue"]
+      condition_filter_query._source = ["authors","year","venue","keywords"]
       condition_filter_query.from = 0
       condition_filter_query.size = 50
       axios({
@@ -201,12 +204,18 @@ export default {
           }
       ).then(res=>{
         let result = res.data.hits.hits
-
+        let keywords = JSON.parse(localStorage.getItem("interested_keywords"))
+        if(keywords == null) keywords = []
         for(let i in result){
           if(result[i]._source.authors.name !== []){
             for(let j in result[i]._source.authors){
               this.filterGroup_author.push(result[i]._source.authors[j].name)
 
+            }
+          }
+          if(result[i]._source.keywords !== []){
+            for(let j in result[i]._source.keywords){
+              keywords.push(result[i]._source.keywords[j])
             }
           }
           if(result[i]._source.venue !== undefined) this.filterGroup_venue.push(result[i]._source.venue.raw)
@@ -222,7 +231,10 @@ export default {
         this.filterGroup_author = Array.from(new Set(this.filterGroup_author))
         this.filterGroup_venue = Array.from(new Set(this.filterGroup_venue))
         this.filterGroup_year = Array.from(new Set(this.filterGroup_year))
+
+        localStorage.setItem("interested_keywords",JSON.stringify(Array.from(new Set(keywords))))
       })
+
     },
     // 给es发包
     post_es_search(){
@@ -276,6 +288,50 @@ export default {
       this.change_page(1)
 
     },
+    // 推荐内容
+    load_interested(){
+      let keywords = JSON.parse(localStorage.getItem("interested_keywords"))
+      if(keywords == null) return
+      let interested_search_request_body = {
+        "_source" : ["title","id"],
+        "query":{
+          "bool":{
+            "should":[]
+          }
+        },
+        "from":0,
+        "size":10
+      }
+      for(let i=0;i<5;i++){
+        let idx=parseInt(Math.random()*keywords.length)
+        interested_search_request_body.query.bool.should.push({"match":{"keywords":keywords[idx]}})
+        keywords.splice(idx,1)
+      }
+
+      this.loading_interested=true
+      axios({
+            headers: {
+              'content-type': 'application/json',
+            },
+            auth: {
+              username: 'elastic',
+              password: 'BZYvLA-d*pS0EpI7utmJ'
+            },
+            url: 'es/paper/_search', method: "post",
+            data: JSON.stringify(interested_search_request_body)
+          }
+      ).then(res=>{
+        this.recommends = res.data.hits.hits
+        this.loading_interested=false
+      })
+    },
+    goto_interested(id){
+      let routeData = this.$router.resolve({
+        name: "PaperInformation",
+        params: { paper_id: id },
+      });
+      window.open(routeData.href, "_blank");
+    },
     // 搜索框的一些动作函数
     resetForm(formName) {
       this.$nextTick(() => {
@@ -314,6 +370,12 @@ export default {
       let currentClass = body.className;
       body.className = currentClass == "dark-mode" ? "light-mode" : "dark-mode";
     },
+    limitWords(txt) {
+      let str = txt;
+      if (str == null) return "";
+      if (str.length > 100) str = str.substr(0, 100) + "...";
+      return str;
+    }
   }
   
 }
