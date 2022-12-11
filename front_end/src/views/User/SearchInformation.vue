@@ -265,7 +265,7 @@ export default {
         condition_filter_query.query.function_score.query.bool.filter.push({"match_phrase":{"venue.raw.raw":this.secondarySearchFilters_venue[i]}})
       }
       for(let i in this.secondarySearchFilters_year){
-        condition_filter_query.query.function_score.query.bool.filter.push({"match_phrase":{"year":this.secondarySearchFilters_year[i]}})
+        condition_filter_query.query.function_score.query.bool.should.push({"match_phrase":{"year":this.secondarySearchFilters_year[i]}})
       }
        if(use_slow_method){
          condition_filter_query.query.function_score.query.bool.filter.push({
