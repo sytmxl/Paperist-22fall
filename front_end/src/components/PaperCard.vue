@@ -3,8 +3,6 @@
     <h3 style="text-align: left" @click="jump2PaperInforMation">{{title}}</h3>
     <p style="text-align: left; margin-top: 1%; margin-right: 1%">{{limitWords(content)}}</p>
 
-    <p>{{this.$props.paper_data._source}}</p>
-
     <el-row>
       <el-col :span="16">
         <span style="margin-top: 2%; float: left">
