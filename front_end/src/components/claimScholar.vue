@@ -97,7 +97,8 @@ export default {
     };
   },
   mounted() {
-    this.initScholar();
+    // this.initScholar();
+    this.initId();
   },
   methods: {
     // 获取学者
@@ -108,7 +109,7 @@ export default {
       this.$axios({
         url: "/user/getPersonalInformation/",
         method: "post",
-        data: { token: sessionStorage.getItem("token") },
+        data: { token: sessionStorage.getItem("token"), isToken: 1, id: 1 },
       }).then((res) => {
         this.user_id = res.data.data[0].id;
         // 加回调函数解决异步问题
@@ -159,7 +160,7 @@ export default {
           //     }
           //   });
           alert("submit!");
-          this.resetForm("MissText");
+          this.resetForm("AuthorInfo");
           console.log(this.AuthorInfo);
           this.$nextTick(() => {
             this.claimScholarDialog = false;
