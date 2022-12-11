@@ -398,12 +398,15 @@
                           @click="jumpPaperCollection(item.id)"
                         ></el-button>
                         <div style="margin-bottom: 10px; text-align: left">
-                          <a href="">{{ item.name }}</a>
+                          <h4>论文标题:</h4>
+                          <p style="text-decoration:underline;color: mediumpurple;cursor:pointer" @click="jumpPaperCollection(item.id)">{{ item.name }}</p>
                           <br />
+                          <br />
+                          <h4>论文摘要:</h4>
                           <p>{{ item.abstract }}</p>
                           <br />
                           <br />
-                          <br />
+                          <h4>收藏时间:</h4>
                           <p>{{ item.time }}</p>
                         </div>
                       </el-card>
@@ -472,12 +475,15 @@
                           @click="jumpNoteCollection(item.id)"
                         ></el-button>
                         <div style="margin-bottom: 10px; text-align: left">
-                          <a href="">{{ item.id }}</a>
+                          <h4>文献标题:</h4>
+                          <p style="text-decoration:underline;color: mediumpurple;cursor:pointer" @click="jumpPaperCollection(item.paper_id)">{{ item.paper_name }}</p>
                           <br />
+                          <br />
+                          <h4>笔记内容:</h4>
                           <p>{{ item.introduction }}</p>
                           <br />
                           <br />
-                          <br />
+                          <h4>收藏时间:</h4>
                           <p>{{ item.time }}</p>
                         </div>
                       </el-card>
@@ -538,11 +544,13 @@
                       @click="jumpSubscribes(item.id)"
                     ></el-button>
                     <div style="margin-bottom: 10px; text-align: left">
+                      <h4>订阅人:</h4>
                       <a href="">{{ item.name }}</a>
                       <br />
                       <br />
                       <br />
-                      <p>订阅时间: {{ item.time }}</p>
+                      <h4>订阅时间:</h4>
+                      <p>{{ item.time }}</p>
                     </div>
                   </el-card>
                 </div>
@@ -603,12 +611,15 @@
                       @click="jumpNotes(item.id)"
                     ></el-button>
                     <div style="margin-bottom: 10px; text-align: left">
-                      <a href="">{{ item.id }}</a>
+                      <h4>文献标题:</h4>
+                      <p style="text-decoration:underline;color: mediumpurple;cursor:pointer" @click="jumpPaperCollection(item.paper_id)">{{ item.paper_name }}</p>
                       <br />
+                      <br />
+                      <h4>笔记内容:</h4>
                       <p>{{ item.introduction }}</p>
                       <br />
                       <br />
-                      <br />
+                      <h4>收藏时间:</h4>
                       <p>{{ item.time }}</p>
                     </div>
                   </el-card>
@@ -1381,6 +1392,7 @@ export default {
           id: this.id,
         },
       }).then((res) => {
+        console.log(res.data.data)
         this.noteCollection = res.data.data;
       });
     },
