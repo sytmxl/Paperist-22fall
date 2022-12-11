@@ -1182,6 +1182,7 @@ export default {
     this.getNoteCollection();
     this.getSubscribe();
     this.getCommentToMe();
+    this.getNote();
     // if (this.isScholar) this.DefaultLocation = "zero";
     // else this.DefaultLocation = "first";
     if (this.isScholar) {
