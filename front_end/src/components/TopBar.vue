@@ -14,8 +14,7 @@
         name="dark_light"
         @click="toggleDarkLight"
         title="Toggle dark/light mode"
-        >日/夜</el-button
-      >
+        >日/夜</el-button>
       <search-box />
       <div v-if="loged" class="avatar" @click="gotoPersonalInformation">
         <el-dropdown size="medium" placement="bottom" @command="handleCommand">
