@@ -160,13 +160,6 @@
                   @click="isEditPersonalInformation = true"
                   >修改信息</el-button
                 >
-                <el-button
-                  type="primary"
-                  size="small"
-                  v-if="!isOthers && !isScholar"
-                  @click="$refs.claimScholar.initclaimScholar()"
-                  >学者认证</el-button
-                >
               </template>
               <el-descriptions-item label="真实姓名">{{
                 realname
@@ -951,7 +944,6 @@
           </el-tabs>
         </div>
       </el-main>
-      <claimScholar ref="claimScholar"></claimScholar>
     </el-container>
   </el-card>
 </template>
@@ -977,7 +969,7 @@ export default {
   },
   data() {
     return {
-      isMyself:"",
+      isMyself: "",
       isNoteVisible: true,
       isNoteCommentable: true,
       isLiteratureCommentable: true,
@@ -1040,7 +1032,8 @@ export default {
             volume: "",
             year: 2019,
           },
-        },{
+        },
+        {
           _source: {
             authors: [
               {
@@ -1057,7 +1050,8 @@ export default {
             volume: "",
             year: 2015,
           },
-        },{
+        },
+        {
           _source: {
             authors: [
               {
@@ -1121,11 +1115,10 @@ export default {
         id: this.$route.params.id,
       },
     }).then((res) => {
-      console.log(11111111)
-      console.log(res.data.flag)
-      this.isMyself=res.data.flag;
+      console.log(11111111);
+      console.log(res.data.flag);
+      this.isMyself = res.data.flag;
     });
-
 
     this.id = this.$route.params.id;
     console.log(this.id);
@@ -1165,15 +1158,15 @@ export default {
       this.DefaultLocation = this.isScholar ? "zero" : "first";
     },
     isMyself: function (newVal, oldVal) {
-      if(this.isMyself==1){
-          this.isToken = 1; //是自己，用token访问
-          this.isOthers = false;
-          this.id = 1; //无用
-          console.log(memememememememe)
-      } else if(this.isMyself==0){
+      if (this.isMyself == 1) {
+        this.isToken = 1; //是自己，用token访问
+        this.isOthers = false;
+        this.id = 1; //无用
+        console.log(memememememememe);
+      } else if (this.isMyself == 0) {
         this.isToken = 0;
         this.isOthers = true;
-        console.log(youyouyouyou)
+        console.log(youyouyouyou);
       }
     },
   },
@@ -1272,7 +1265,7 @@ export default {
 
         this.researchField = res.data.data[0].field;
         //异步访问，created结束还未执行完
-        if (res.data.data[0].isScholar != null) {
+        if (res.data.data[0].isScholar == 1) {
           this.isScholar = true;
         } else {
           this.isScholar = false;
