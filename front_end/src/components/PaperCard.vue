@@ -3,6 +3,7 @@
     <h3 style="text-align: left" @click="jump2PaperInforMation">{{title}}</h3>
     <p style="text-align: left; margin-top: 1%; margin-right: 1%">{{limitWords(content)}}</p>
 
+    <p>{{this.$props.paper_data._source}}</p>
 
     <el-row>
       <el-col :span="16">
@@ -54,17 +55,19 @@ export default {
     paper_data:{default:{}}
   },
   mounted() {
+
     let source = this.$props.paper_data._source
-    if(source.title) this.title = source.title
-    if(source.authors) this.authors = source.authors
-    if(source.n_citation) this.cite = source.n_citation
-    if(source.abstract) this.content = source.abstract
-    if(source.venue.raw) this.source = source.venue.raw
-    if(source.year) this.year = source.year
-    if(source.keywords) this.keywords = source.keywords
-    if(source.issue) this.issue = source.issue
-    if(source.id) this.es_id = source.id
-    console.log(this.es_id)
+    if(source.title!=null) this.title = source.title
+    if(source.authors!=null) this.authors = source.authors
+    if(source.n_citation!=null) this.cite = source.n_citation
+    if(source.abstract!=null) this.content = source.abstract
+    if(source.venue != null && source.venue.raw!=null) this.source = source.venue.raw
+    if(source.year!=null) this.year = source.year
+    if(source.keywords!=null) this.keywords = source.keywords
+    if(source.issue!=null) this.issue = source.issue
+    if(source.id!=null) this.es_id = source.id
+
+
   },
   data(){
     return{
