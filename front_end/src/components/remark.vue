@@ -24,7 +24,7 @@
         </div>
     </div>
     <div class="prvoker" v-if="list.flag==1">
-        <div class="image">
+        <div class="image"  @click="goto_person()">
             <img :src="list.image" alt="">
         </div>
         <div class="content">
