@@ -89,7 +89,7 @@
               <el-select
                 v-model="option.searchPositionValue"
                 placeholder="请选择"
-                style="width: 150px; margin-left: -58%"
+                style="width: 100%;"
               >
                 <el-option
                   v-for="item in searchPosition"
@@ -149,22 +149,22 @@
               <el-select
                 v-model="option.LangValue"
                 placeholder="请选择"
-                style="width: 150px; margin-left: -58%"
+                style="width: 100%"
               >
                 <el-option label="不限" value="1"></el-option>
                 <el-option label="中文" value="2"></el-option>
                 <el-option label="英语" value="3"></el-option>
               </el-select>
             </el-form-item>
-            <p>检索权重</p>
-            <el-form-item label="关键词更匹配" prop="AdLang">
+            <!-- <p>检索权重</p> -->
+            <el-form-item label="关键词权重" prop="AdLang">
               <el-input-number v-model="weight_default" :precision="2" :step="0.1" :max="10"></el-input-number>
               <p></p>
             </el-form-item>
-            <el-form-item label="年份较近" prop="AdLang">
+            <el-form-item label="年份权重" prop="AdLang">
               <el-input-number v-model="weight_year" :precision="2" :step="0.1" :max="10"></el-input-number>
             </el-form-item>
-            <el-form-item label="更多引用" prop="AdLang">
+            <el-form-item label="引用权重" prop="AdLang">
               <el-input-number v-model="weight_n_citation" :precision="2" :step="0.1" :max="10"></el-input-number>
             </el-form-item>
           </el-form>

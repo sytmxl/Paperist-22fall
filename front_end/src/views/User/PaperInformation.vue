@@ -767,7 +767,6 @@ onError (e) {
   .el-card {
     border-radius: 10px !important;
     background-color: rgba(255, 255, 255, 0) !important;
-
   }
 }
 //tabs
