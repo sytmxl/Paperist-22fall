@@ -5,8 +5,9 @@
           <div class="main">
             <el-card class="box-card" v-if="info_list.length != 0">
               <div style="margin-bottom:20px">
-                <span style="font-size:35px;font-weight:bolder">{{info_list.paper_name}}</span>
-                <h4>来源：{{info_list.origin}} &#12288; 引用次数：{{info_list.cite_number}}</h4>
+                <span style="font-size:35px;font-weight:700;color: #003B55;">{{info_list.paper_name}}</span>
+                <el-divider></el-divider>
+                <h4 style="margin-top:20px">来源：{{info_list.origin}} &#12288; 引用次数：{{info_list.cite_number}}</h4>
               </div>
               
               <div  class="text item">
@@ -38,7 +39,7 @@
             </el-card>
             <el-card class="box-card2" v-if="info_list.length != 0">
                 <span style="font-size:25px;font-weight:bolder">全部来源</span>
-                <div class="origion">
+                <div class="origion" v-if="info_list.readlist.length != 0">
                     <div class="org" v-for="(i,index) in info_list.readlist" :key="index">
                         <div class="logo">
                              <a :href="i"  target="_blank" >阅读链接{{index+1}}</a>
@@ -46,14 +47,15 @@
                          
                     </div>
                 </div>
+                <div v-else><el-empty description="还没有笔记，发表第一篇笔记吧"></el-empty></div>
             </el-card>
             <el-card style="margin-top: 30px" v-else>
               <el-skeleton :rows="4" animated/>
             </el-card>
           </div>
           <div class="remark">
-            <el-card>
-              <el-tabs>
+            <el-card  style="overflow-x: visible !important">
+              <el-tabs style="overflow-x: visible !important">
                 <el-tab-pane label="相关文献">
                     <div class="about" v-if="about_list.length!=0">
                       <div class="relative" v-for="i in about_list" :key="i">
@@ -97,18 +99,25 @@
             
           </div>
           <el-dialog
+            :lock-scroll="false"
             title="引用"
             :visible.sync="QuoteVisible"
             width="30%"
             >
-            <div v-for="i in quote_list" :key="i" style="margin-bottom:15px">
-              <div style="border-radius:10px;background-color:red;padding:5px;width:30%">{{i.type}} </div><el-button round icon="el-icon-document-copy" v-clipboard:copy="i.content" v-clipboard:success="onCopy" v-clipboard:error="onError">复制链接</el-button>
-              <div style="border-radius:10px;background-color:blue;padding:5px;margin:5px 0">
+            <div v-for="i in quote_list" :key="i" style="margin-bottom:10px">
+              <div style="border-radius:10px;padding:5px;width:30%; font-size: medium;">
+                {{i.type}} 
+              </div>
+              <div style="border-radius:10px;padding:5px;margin:2px 0">
                 {{i.content}}
               </div>
+              <el-button size="medium" style="width: 100%" round icon="el-icon-document-copy" v-clipboard:copy="i.content" v-clipboard:success="onCopy" v-clipboard:error="onError">
+                复制链接
+              </el-button>
             </div>
           </el-dialog>
           <el-dialog
+              :lock-scroll="false"
               title="文章申诉"
               :visible.sync="ComplainVisible"
               width="30%"
@@ -116,7 +125,7 @@
               <div class="describe">
                   问题描述：
                 <el-input
-                style="margin-top:20px"
+                style="margin-top:10px"
                   type="textarea"
                   :autosize="{ minRows: 2, maxRows: 4}"
                   placeholder="请输入需要申诉的内容"
@@ -128,26 +137,25 @@
               </div>
               <div class="picture">
                 相关图片：
-               <el-upload
-            class="upload-demo"
-            drag
-            action=""
-            :on-change="loadJsonFromFile"
-            :http-request="submitAvatarHttp"
-            :file-list="uploadFiles"
-            limit="1"
-            list-type="picture">
-            <img v-if="imageUrl" :src="imageUrl" class="avatar">
-            <i v-else class="el-icon-upload"></i>
-            <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
-            <div class="el-upload__tip" slot="tip">只能上传jpg/png文件</div>
-        </el-upload>
-                
+              <el-upload
+                  class="upload-demo"
+                  drag
+                  action=""
+                  :on-change="loadJsonFromFile"
+                  :http-request="submitAvatarHttp"
+                  :file-list="uploadFiles"
+                  limit="1"
+                  list-type="picture">
+                  <img v-if="imageUrl" :src="imageUrl" class="avatar">
+                  <i v-else class="el-icon-upload"></i>
+                  <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
+                  <div class="el-upload__tip" slot="tip">只能上传jpg/png文件</div>
+              </el-upload>
               </div>
               <div class="contact">
                 联系方式：
                 <el-input
-                style="margin-top:20px"
+                style="margin-top:10px"
                   type="text"
                   placeholder="请输入你的联系方式，手机号、微信号、邮箱均可"
                   v-model="contact"
@@ -168,6 +176,7 @@
             title="分享"
             :visible.sync="ShareVisible"
             width="30%"
+            :lock-scroll="false"
             >
             <div style="margin-bottom:40px">
               <span>{{path}}</span>
@@ -193,7 +202,7 @@
         <el-aside>
           <div class="about">
             <el-card class="gap" v-if="info_list.length != 0">
-              <div class="about_content" style="width:100%;">
+              <div class="about_content" style="width:100%;height: fit-content;">
                 来源期刊
                 <div class="ogjournal">
                   <a style="text-decoration:none" class="journal_content" @click="goto_search(info_list.origin)">{{info_list.origin}}</a>
@@ -203,8 +212,8 @@
             <el-card style="margin-top: 20px" v-else>
               <el-skeleton :rows="3" animated/>
             </el-card>
-            <el-card class="gap" v-if="info_list.length != 0">
-              <div class="about_content" style="width:100%;">
+            <el-card class="gap"  v-if="info_list.length != 0">
+              <div class="about_content" style="width:100%; height: fit-content;">
                 研究领域
                 <div class="domain">
                   <el-tag class="domain_content" v-for="i in info_list.domain" :key="i">{{i}}</el-tag>
@@ -227,8 +236,6 @@
       </el-container>
     </el-container>
 </template>
-
-
 <script>
 import * as echarts from 'echarts/core'
 import { Loading, Skeleton } from 'element-ui';
@@ -576,6 +583,11 @@ onError (e) {
 </script>
 
 <style lang="scss" scoped>
+@mixin overflow {
+  overflow-x: hidden;
+  text-overflow:ellipsis;
+  max-width: 100%;
+}
 .root{
   margin: 0 auto;
   height: 100%;
@@ -591,7 +603,7 @@ onError (e) {
   // margin-left: 10vw;
 }
 .about{
-  margin-left:10px;
+  margin: 0px 5px;
 }
 
 .ogjournal{
@@ -600,10 +612,11 @@ onError (e) {
 }
 .about_content{
   //  margin-top: 20px;
-   width: 280px;
-   font-weight: bold;
-   text-align: left;
-   font-size: 18px;
+  //  width: 280px;
+  height: 260px;
+  font-weight: bold;
+  text-align: left;
+  font-size: 18px;
 }
 #load{
   margin-top:20px
@@ -636,7 +649,7 @@ onError (e) {
 }
 .domain_content{
   margin-top: 10px;
-  margin-left:10px;
+  // margin-left:10px;
   color: #000;
 }
 .journal_content:hover{
@@ -644,7 +657,8 @@ onError (e) {
 }
 .journal_content{
   margin-top: 10px;
-  margin-left:10px;
+  
+  // margin-left:10px;
   color: #000;
 }
 .org{
@@ -658,6 +672,7 @@ onError (e) {
 }
 .remark{
   margin-top:30px;
+  overflow-x: visible !important
 }
 .el-tabs>>>.el-tabs__content{
   height: 800px;
@@ -706,28 +721,29 @@ onError (e) {
 }
 .creat_comment{
   width:100%;
- 
 }
 .creat_comment .el-button{
   width:100%;
-  opacity: 0.6;
-
+  // opacity: 0.6;
 }
 .creat_mark{
   width:100%;
- 
 }
 .creat_mark .el-button{
   width:100%;
-  opacity: 0.6;
-
+  // opacity: 0.6;
 }
 .el-card {
   border-radius: 20px !important;
-	border: none !important;
-  box-shadow: 0 0 7px rgba(204, 204, 204, 0.713);
-  background-color: rgba(255, 255, 255, 0.5);
+  background-color: rgba(255, 255, 255, 0.535) !important;
   backdrop-filter: blur(40px) brightness(100%);
+}
+.relative {
+  .el-card {
+    border-radius: 10px !important;
+    background-color: rgba(255, 255, 255, 0) !important;
+
+  }
 }
 //tabs
 .el-tabs--left {
@@ -757,8 +773,26 @@ onError (e) {
 }
 .gap {
   margin-top: 20px;
+  height: fit-content;
 }
 .el-tag {
   border-radius: 50px;
+}
+a {
+  padding: 3px;
+  border-radius: 5px;
+  transition: 0.2s;
+}
+a:hover {
+  background-color: rgb(219, 219, 219) !important;
+  color: rgb(0, 0, 0) !important;
+  cursor: pointer;
+}
+
+/deep/.el-tag {
+  @include overflow();
+  background-color: #003B55 !important;
+  border: none;
+  color: white;
 }
 </style>
