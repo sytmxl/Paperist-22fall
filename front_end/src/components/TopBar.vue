@@ -115,6 +115,7 @@ export default {
       } else if (command == "b") {
         sessionStorage.removeItem("token");
         sessionStorage.removeItem("userInfo");
+        sessionStorage.removeItem("last_search");
         // 页面刷新
         location.reload();
         // location.href = "/FirstPage";
