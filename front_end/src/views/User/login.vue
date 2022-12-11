@@ -129,7 +129,8 @@ export default {
             type: 'success'
           });
           sessionStorage.setItem("token", res.data.token);
-          await window.history.go(-1);
+          await this.$router.push("/FirstPage")
+          // await window.history.go(-1);
         }
       })
     }
