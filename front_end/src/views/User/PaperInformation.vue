@@ -11,7 +11,7 @@
               </div>
               
               <div  class="text item">
-                作者：<span v-for="i in info_list.authors" :key="i" style="margin-right:20px"> {{i.name}}</span>
+                作者：<span v-for="i in info_list.authors" :key="i" style="margin-right:20px;cursor: pointer;" @click="goto_person(i.id)"> {{i.name}}</span>
               </div>
               <div  class="text item">
                 摘要：{{info_list.abstract}}
@@ -54,9 +54,9 @@
             </el-card>
           </div>
           <div class="remark">
-            <el-card  style="overflow-x: visible !important">
-              <el-tabs style="overflow-x: visible !important">
-                <el-tab-pane label="相关文献">
+            <el-card  style="overflow-x: visible !important;">
+              <el-tabs style="overflow-x: visible !important;">
+                <el-tab-pane label="相关文献" style="height:1000px;overflow-y: scroll;">
                     <div class="about" v-if="about_list.length!=0">
                       <div class="relative" v-for="(i,index) in about_list" :key="index">
                           <aboutCard  :name="i._source.title" :author="i._source.authors" :cite="i._source.n_citation" :origin="i._source.venue" :intro="i._source.abstract" :date="i._source.year" :paper_id="i._source.id"/>
@@ -68,7 +68,7 @@
                   <div v-else><el-empty description="尚无相关文献"></el-empty></div>
                     
                 </el-tab-pane>
-                <el-tab-pane label="评论">
+                <el-tab-pane label="评论" style="height:1000px;overflow-y: scroll;">
                 
                     <div class="creat_comment" >
                           <el-button @click="CreatCommentVisible =true">我要评论</el-button>
@@ -83,7 +83,7 @@
                 
                     
                 </el-tab-pane>
-                <el-tab-pane label="笔记">
+                <el-tab-pane label="笔记" style="height:1000px;overflow-y: scroll;">
                  
                       <div class="creat_mark">
                           <el-button @click="CreatMark =true">上传笔记</el-button>
@@ -386,7 +386,13 @@ export default {
           this.aboutNoteInit()
         }
       },
-
+      goto_person(id){
+        let routeData = this.$router.resolve({
+        name: 'PersonalInformation',
+        params: { id: id }
+      })
+      window.open(routeData.href, '_blank')
+      },
       // paperInfoInit(){
       //   this.$axios({
       //       url:"http://127.0.0.1:8000/paperInfoInit/",
@@ -701,7 +707,7 @@ export default {
 }
 .remark{
   margin-top:30px;
-  overflow-x: visible !important
+  overflow-x: visible !important;
 }
 .el-tabs>>>.el-tabs__content{
   height: 800px;
