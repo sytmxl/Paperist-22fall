@@ -1,6 +1,6 @@
 <template>
   <div id="app" class="light-mode">
-    <div class="main"><router-view /></div>
+    <div class="main"><router-view :key="$route.fullPath"/></div>
     <Footer v-show="!this.$route.path.includes('login')"></Footer>
   </div>
 </template>
