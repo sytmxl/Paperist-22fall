@@ -5,22 +5,22 @@
           <div class="main">
             <el-card class="box-card" v-if="info_list.length != 0">
               <div style="margin-bottom:20px">
-                <span style="font-size:35px;font-weight:700;color: #003B55;">{{info_list.title}}</span>
+                <span style="font-size:35px;font-weight:700;color: #003B55;">{{info_list.paper_name}}</span>
                 <el-divider></el-divider>
-                <h4 style="margin-top:20px">来源：{{info_list.venue.raw}} &#12288; 引用次数：{{info_list.cite_number}}</h4>
+                <h4 style="margin-top:20px">来源：{{info_list.origin}} &#12288; 引用次数：{{info_list.cite_number}}</h4>
               </div>
               
               <div  class="text item">
-                作者：<span v-for="i in info_list.authors" :key="i" style="margin-right:20px"> {{i.name}}</span>
+                作者：<span v-for="i in info_list.author_name" :key="i" style="margin-right:20px"> {{i}}</span>
               </div>
               <div  class="text item">
                 摘要：{{info_list.abstract}}
               </div>
               <div  class="text item">
-                关键词：<span v-for="i in info_list.keywords" :key="i" style="margin-right:20px"> {{i}}</span>
+                关键词：<span v-for="i in info_list.keyword" :key="i"> {{i}}</span>
               </div>
               <div  class="text item">
-                年份：{{info_list.year}}
+                年份：{{info_list.date}}
               </div>
               <div  class="text item">
                 DOI：{{info_list.DOI}}
@@ -39,8 +39,8 @@
             </el-card>
             <el-card class="box-card2" v-if="info_list.length != 0">
                 <span style="font-size:25px;font-weight:bolder">全部来源</span>
-                <div class="origion" v-if="info_list.url.length != 0">
-                    <div class="org" v-for="(i,index) in info_list.url" :key="index">
+                <div class="origion" v-if="info_list.readlist.length != 0">
+                    <div class="org" v-for="(i,index) in info_list.readlist" :key="index">
                         <div class="logo">
                              <a :href="i"  target="_blank" >阅读链接{{index+1}}</a>
                         </div>
@@ -112,7 +112,7 @@
                 {{i.content}}
               </div>
               <el-button size="medium" style="width: 100%" round icon="el-icon-document-copy" v-clipboard:copy="i.content" v-clipboard:success="onCopy" v-clipboard:error="onError">
-                复制引用
+                复制链接
               </el-button>
             </div>
           </el-dialog>
@@ -205,7 +205,7 @@
               <div class="about_content" style="width:100%;height: fit-content;">
                 来源期刊
                 <div class="ogjournal">
-                  <a style="text-decoration:none" class="journal_content" @click="goto_search(info_list.venue.raw)">{{info_list.venue.raw}}</a>
+                  <a style="text-decoration:none" class="journal_content" @click="goto_search(info_list.origin)">{{info_list.origin}}</a>
                 </div> 
               </div>
             </el-card>
@@ -216,7 +216,7 @@
               <div class="about_content" style="width:100%; height: fit-content;">
                 研究领域
                 <div class="domain">
-                  <el-tag class="domain_content" v-for="i in info_list.keywords" :key="i">{{i}}</el-tag>
+                  <el-tag class="domain_content" v-for="i in info_list.domain" :key="i">{{i}}</el-tag>
                 </div>
               </div>
             </el-card>
@@ -268,7 +268,7 @@ export default {
         describe:'',
         contact:'',
         paper_id:this.$route.params.paper_id,
-        about_list:[],
+        about_list:[{}],
         now_list:[],
         info_list:[],
         quote_list:[],
@@ -386,7 +386,11 @@ onError (e) {
                 paper_id:this.$route.params.paper_id
             }
         }).then(res=>{
+          // console.log(res.data.about_list)
+            this.info_list = res.data.info_list[0]
             this.collect_flag = res.data.info_list[0].collect_flag
+            this.chart_init(res.data.info_list[0].cite_number)
+            // this._loadFile(this.pdf_src)
         })
       },
        aboutNoteInit(){
@@ -429,7 +433,7 @@ onError (e) {
         if(isclick){
           isclick = false;
           this.collect_flag = !this.collect_flag
-           if(!this.collect_flag){
+           if(this.info_list.collect_flag){
           this.$axios({
             url:"http://127.0.0.1:8000/paperCollection/",
             method:"post",
@@ -440,6 +444,7 @@ onError (e) {
             }
           }).then(res=>{
               this.$message.success("已取消收藏")
+              this.paperInfoInit()
           })
         }
         else{
@@ -453,6 +458,7 @@ onError (e) {
             }
           }).then(res=>{
             this.$message.success("已收藏")
+            this.paperInfoInit()
           })
         }
         setTimeout(()=>{isclick=true},500)
@@ -519,9 +525,8 @@ onError (e) {
             data: JSON.stringify(obj)
           }
       ).then(res=>{
-        this.info_list = res.data.hits.hits[0]._source
         this.authors = res.data.hits.hits[0]._source.authors  
-        this.chart_init(this.info_list.n_citation)
+        console.log(res.data.hits.hits[0]._source.authors.length)
         // for(var i=0;i<res.data.hits.hits[0]._source.authors.length;i++){
         //   this.aboutListInit(res.data.hits.hits[0]._source.authors[i])
         // }
@@ -552,18 +557,7 @@ onError (e) {
             data: JSON.stringify(obj)
           }
       ).then(res=>{
-        if(index==0){
-          this.about_list=res.data.hits.hits
-        }
-        else{
-          // console.log(res.data.hits.hits)
-          for(var i=0;i<res.data.hits.hits.length;i++){
-            this.about_list.push(res.data.hits.hits[i])
-          }
-          
-          // console.log(this.about_list)
-        }
-        
+        this.about_list.push(res.data.hits.hits)
       })
     },
     },

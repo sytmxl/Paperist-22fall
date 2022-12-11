@@ -223,12 +223,17 @@ export default {
           })
      },
      goto_paper(){
-        this.$router.push({
-          name:'PaperInformation',
-          params:{
-           paper_id:this.note.paper_id
-          }
-        })
+        // this.$router.push({
+        //   name:'PaperInformation',
+        //   params:{
+        //    paper_id:this.note.paper_id
+        //   }
+        // })
+         let routeData = this.$router.resolve({
+        name: 'PaperInformation',
+        params: { paper_id:this.note.paper_id }
+      })
+      window.open(routeData.href, '_blank')
      },
       react_remark(data){
         if(data.op=="remark"){

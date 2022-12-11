@@ -67,8 +67,8 @@
               </div>
               <div v-else>
                 <noteCard
-                  v-for="(item, index) in showSubscribeNoteList"
-                  :key="index"
+                  v-for="item in showSubscribeNoteList"
+                  :key="item.note_id"
                   :note="item"
                 />
                 <div id="load">
@@ -226,7 +226,7 @@ export default {
       recPage: 3,
       followNotePage: 3,
       followTextPage: 3,
-      RecommendList: [{}],
+      RecommendList: [],
       showRecommendList: [
         {
           name: "论杰哥",
@@ -256,37 +256,9 @@ export default {
           paper_id: "1",
         },
       ],
-      SubscribeNoteList: [{}],
-      showSubscribeNoteList: [
-        {
-          note_id: "3",
-          paper_id: "2",
-          paper_name: "杰哥",
-          introduction: "杰哥喜欢下围棋",
-          likes: "3",
-          collections: "1111",
-          remarks: "232",
-        },
-        {
-          note_id: "3",
-          paper_id: "2",
-          paper_name: "杰哥",
-          introduction: "杰哥喜欢下围棋",
-          likes: "3",
-          collections: "1111",
-          remarks: "232",
-        },
-        {
-          note_id: "3",
-          paper_id: "2",
-          paper_name: "杰哥",
-          introduction: "杰哥喜欢下围棋",
-          likes: "3",
-          collections: "1111",
-          remarks: "232",
-        },
-      ],
-      SubscribeTextList: [{}],
+      SubscribeNoteList: [],
+      showSubscribeNoteList: [],
+      SubscribeTextList: [],
       showSubscribeTextList: [
         {
           name: "论杰哥",
@@ -369,8 +341,8 @@ export default {
   mounted() {
     // 获取一些信息
     // this.getRecommendList();
-    // this.getFollowNoteList();
-    // this.getFollowTextList();
+    this.getFollowNoteList();
+    this.getFollowTextList();
     // this.getHot();
     $("#topbar").css("display", "none");
     window.addEventListener("scroll", this.scroll, true);
@@ -401,14 +373,26 @@ export default {
       this.$axios({
         method: "post",
         url: "user/indexSubscribe/",
-        // data: {
-        //   token:sessionStorage.getItem("token")===null?"":sessionStorage.getItem("token")
-        // },
       })
         .then((res) => {
           console.log("订阅笔记", res.data);
-          // this.SubscribeNoteList= res.data.data;
-          // this.showSubscribeNoteList = this.SubscribeNoteList.slice(0, 3);
+          let noteList = [];
+          res.data.followPeople.forEach((item) => {
+            item[0].note.forEach((item2) => {
+              let tmpNote = {
+                note_id: item2.note_id,
+                paper_id: item2.paper_id,
+                paper_name: item2.paper_name,
+                introduction: item2.note_introduction,
+                likes: item2.likes,
+                collections: item2.collections,
+                remarks: item2.remarks,
+              };
+              noteList.push(tmpNote);
+            });
+          });
+          this.SubscribeNoteList = noteList;
+          this.showSubscribeNoteList = this.SubscribeNoteList.slice(0, 3);
         })
         .catch((err) => {
           console.log(err);
@@ -417,17 +401,30 @@ export default {
     // 获取关注用户的文献
     getFollowTextList() {
       this.$axios({
-        method: "get",
-        url: "/user/getFollowPaper",
+        method: "post",
+        url: "/user/getPaperCollection/",
         data: {
-          token:
-            sessionStorage.getItem("token") === null
-              ? ""
-              : sessionStorage.getItem("token"), //     },
+          token: sessionStorage.getItem("token"),
+          isToken: 1,
+          id: 1,
         },
       })
         .then((res) => {
-          this.SubscribeTextList = res.data.data;
+          console.log(res.data);
+          let tmpFollowText = [];
+          res.data.data.forEach((item) => {
+            let tmpText = {
+              name: item.name,
+              author: item.author,
+              cite: item.cite,
+              origin: item.origin,
+              intro: item.abstract,
+              date: item.time,
+              paper_id: item.id,
+            };
+            tmpFollowText.push(tmpText);
+          });
+          this.SubscribeTextList = tmpFollowText;
           this.showSubscribeTextList = this.SubscribeTextList.slice(0, 3);
         })
         .catch((err) => {
@@ -483,21 +480,24 @@ export default {
         this.showRecommendList = this.showRecommendList.concat(
           this.RecommendList.slice(this.recPage, this.recPage + 3)
         );
-      }, 2000);
-      this.recPage += 3;
+        this.recPage += 3;
+      }, 1400);
     },
     loadSub() {
       this.start2 = true;
       setTimeout(() => {
         this.start2 = false;
         // 获取到全部数据，分布给用户展示
+        console.log(this.followNotePage);
         this.showSubscribeNoteList = this.showSubscribeNoteList.concat(
           this.SubscribeNoteList.slice(
             this.followNotePage,
             this.followNotePage + 3
           )
         );
-      }, 2000);
+        console.log(this.showSubscribeNoteList);
+        this.followNotePage += 3;
+      }, 1400);
     },
     loadSub2() {
       this.start3 = true;
@@ -510,7 +510,8 @@ export default {
             this.followTextPage + 3
           )
         );
-      }, 2000);
+        this.followTextPage += 3;
+      }, 1400);
     },
     isEmptyObject(obj) {
       for (var key in obj) {
@@ -534,15 +535,15 @@ export default {
         this.$refs.MissTextComplain.uploadTextMiss();
       }
     },
-    handleClick(tab, event) {
-      if (tab.name == "second") {
-        window.alert("second");
-        this.getFollowNoteList();
-      } else if (tab.name == "third") {
-        window.alert("third");
-        this.getFollowTextList();
-      }
-    },
+    // handleClick(tab, event) {
+    //   if (tab.name == "second") {
+    //     window.alert("second");
+    //     this.getFollowNoteList();
+    //   } else if (tab.name == "third") {
+    //     window.alert("third");
+    //     this.getFollowTextList();
+    //   }
+    // },
     scroll() {
       var windowTop = $(window).scrollTop();
       // windowTop > 300 ?
