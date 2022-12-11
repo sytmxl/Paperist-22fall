@@ -379,15 +379,15 @@ export default {
           let noteList = [];
           res.data.followPeople.forEach((item) => {
             item[0].note.forEach((item2) => {
-              let tmpNote={
-                note_id:item2.note_id,
-                paper_id:item2.paper_id,
-                paper_name:item2.paper_name,
+              let tmpNote = {
+                note_id: item2.note_id,
+                paper_id: item2.paper_id,
+                paper_name: item2.paper_name,
                 introduction: item2.note_introduction,
                 likes: item2.likes,
                 collections: item2.collections,
                 remarks: item2.remarks,
-              }
+              };
               noteList.push(tmpNote);
             });
           });
@@ -406,13 +406,26 @@ export default {
         data: {
           token: sessionStorage.getItem("token"),
           isToken: 1,
-          id: 1
+          id: 1,
         },
       })
         .then((res) => {
-          console.log(res.data)
-          // this.SubscribeTextList = res.data.data;
-          // this.showSubscribeTextList = this.SubscribeTextList.slice(0, 3);
+          console.log(res.data);
+          let tmpFollowText = [];
+          res.data.data.forEach((item) => {
+            let tmpText = {
+              name: item.name,
+              author: item.author,
+              cite: item.cite,
+              origin: item.origin,
+              intro: item.abstract,
+              date: item.time,
+              paper_id: item.id,
+            };
+            tmpFollowText.push(tmpText);
+          });
+          this.SubscribeTextList = tmpFollowText;
+          this.showSubscribeTextList = this.SubscribeTextList.slice(0, 3);
         })
         .catch((err) => {
           console.log(err);
@@ -467,8 +480,8 @@ export default {
         this.showRecommendList = this.showRecommendList.concat(
           this.RecommendList.slice(this.recPage, this.recPage + 3)
         );
+        this.recPage += 3;
       }, 1400);
-      this.recPage += 3;
     },
     loadSub() {
       this.start2 = true;

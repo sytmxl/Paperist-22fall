@@ -295,12 +295,12 @@ export default {
         {"field_value_factor":{
             "field": "n_citation",
             "modifier": "sqrt",
-            "factor": 1,
+            "factor": 0.1,
             "missing": 1
           }},
         {"script_score": {
             "script": {
-              "source": "if(!doc['year'].empty && doc['year'].value>1990) { " +  1 + "* 0.5 *(doc['year'].value - 1990)} else {0}"
+              "source": "if(!doc['year'].empty && doc['year'].value>1990) { " +  1 + "* 0.1 *(doc['year'].value - 1990)} else {0}"
             }
           }}
       ]
@@ -353,7 +353,7 @@ export default {
         {"field_value_factor":{
             "field": "n_citation",
             "modifier": "sqrt",
-            "factor": 1,
+            "factor": 0.1,
             "missing": 1
           }},
         {"script_score": {

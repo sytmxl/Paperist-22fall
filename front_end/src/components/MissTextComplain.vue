@@ -185,7 +185,7 @@ export default {
       this.$axios({
         url: "/user/getPersonalInformation/",
         method: "post",
-        data: { token: sessionStorage.getItem("token") },
+        data: { token: sessionStorage.getItem("token"), isToken: 1, id: 1 },
       }).then((res) => {
         this.user_id = res.data.data[0].id;
         // 加回调函数解决异步问题
