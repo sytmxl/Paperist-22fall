@@ -69,7 +69,8 @@
                     
                 </el-tab-pane>
                 <el-tab-pane label="评论">
-                    <div class="creat_comment">
+                  <div v-if="token!=null">
+                    <div class="creat_comment" >
                           <el-button @click="CreatCommentVisible =true">我要评论</el-button>
                       </div>
                       <div v-if="Object.keys(remark_list).length!=0">
@@ -78,9 +79,14 @@
                       </div>
                       </div>
                       <div v-else><el-empty description="还没有评论，发表第一个评论吧"></el-empty></div>
+                  </div>
+                    <div v-else>
+                      <el-empty description="还没有登录，登录后才可查看和发表评论哦"><span @click="goto_login()">点击登录</span></el-empty>
+                    </div>
                     
                 </el-tab-pane>
                 <el-tab-pane label="笔记">
+                  <div v-if="token!=null">
                       <div class="creat_mark">
                           <el-button @click="CreatMark =true">上传笔记</el-button>
                       </div>
@@ -91,6 +97,10 @@
                         </div>
                       </div>
                       <div v-else><el-empty description="还没有笔记，发表第一篇笔记吧"></el-empty></div>
+                  </div>
+                    <div v-else>
+                      <el-empty description="还没有登录，登录后才可查看和发表笔记哦"><span @click="goto_login()">点击登录</span></el-empty>
+                    </div>
                       
                 </el-tab-pane>
                   
@@ -277,7 +287,8 @@ export default {
         mark_list:[],
         authors:[],
         path:"localhost:8080"+this.$route.path,
-        collect_flag:""
+        collect_flag:"",
+        token:sessionStorage.getItem("token")
       }
     },
    
@@ -477,7 +488,11 @@ onError (e) {
           this.CreatCommentVisible = false;
           this.paperRemarkInit()
      },
-
+    goto_login(){
+      this.$router.push({
+          name:'login',
+        })
+    },
      submit(){
        this.$axios({
                 method: "post",

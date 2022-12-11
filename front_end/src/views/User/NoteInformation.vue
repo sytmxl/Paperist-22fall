@@ -7,9 +7,11 @@
               <div class="author_img">
                   <img :src="author.image" alt="">
                   <span>{{author.name}}</span>
+                  <span @click="goto_person()">他的主页</span>
               </div>
               <div class="author_info">
-                <span>所属机构：<div v-for="i in author.institution" :key="i">{{i}}</div></span>
+                <span v-if="author.institution.length!=0">所属机构：<div v-for="i in author.institution" :key="i">{{i}}</div></span>
+                <span v-else>所属机构：暂无数据</span>
                 <span>发表论文数：{{author.paper_num}}</span>
                 <span>发表笔记数：{{author.note_num}}</span>
               </div>
@@ -221,6 +223,13 @@ export default {
               this._renderPage(num + 1)
             }
           })
+     },
+     goto_person(){
+      let routeData = this.$router.resolve({
+        name: 'PersonalInformation',
+        params: { id: this.author.id }
+      })
+      window.open(routeData.href, '_blank')
      },
      goto_paper(){
         // this.$router.push({
