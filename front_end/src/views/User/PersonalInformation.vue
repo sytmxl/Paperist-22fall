@@ -399,7 +399,16 @@
                         ></el-button>
                         <div style="margin-bottom: 10px; text-align: left">
                           <h4>论文标题:</h4>
-                          <p style="text-decoration:underline;color: mediumpurple;cursor:pointer" @click="jumpPaperCollection(item.id)">{{ item.name }}</p>
+                          <p
+                            style="
+                              text-decoration: underline;
+                              color: mediumpurple;
+                              cursor: pointer;
+                            "
+                            @click="jumpPaperCollection(item.id)"
+                          >
+                            {{ item.name }}
+                          </p>
                           <br />
                           <br />
                           <h4>论文摘要:</h4>
@@ -476,7 +485,16 @@
                         ></el-button>
                         <div style="margin-bottom: 10px; text-align: left">
                           <h4>文献标题:</h4>
-                          <p style="text-decoration:underline;color: mediumpurple;cursor:pointer" @click="jumpPaperCollection(item.paper_id)">{{ item.paper_name }}</p>
+                          <p
+                            style="
+                              text-decoration: underline;
+                              color: mediumpurple;
+                              cursor: pointer;
+                            "
+                            @click="jumpPaperCollection(item.paper_id)"
+                          >
+                            {{ item.paper_name }}
+                          </p>
                           <br />
                           <br />
                           <h4>笔记内容:</h4>
@@ -545,7 +563,16 @@
                     ></el-button>
                     <div style="margin-bottom: 10px; text-align: left">
                       <h4>订阅人:</h4>
-                      <p style="text-decoration:underline;color: mediumpurple;cursor:pointer" @click="jumpSubscribes(item.id)">{{ item.name }}</p>
+                      <p
+                        style="
+                          text-decoration: underline;
+                          color: mediumpurple;
+                          cursor: pointer;
+                        "
+                        @click="jumpSubscribes(item.id)"
+                      >
+                        {{ item.name }}
+                      </p>
                       <br />
                       <br />
                       <br />
@@ -612,7 +639,16 @@
                     ></el-button>
                     <div style="margin-bottom: 10px; text-align: left">
                       <h4>文献标题:</h4>
-                      <p style="text-decoration:underline;color: mediumpurple;cursor:pointer" @click="jumpPaperCollection(item.paper_id)">{{ item.paper_name }}</p>
+                      <p
+                        style="
+                          text-decoration: underline;
+                          color: mediumpurple;
+                          cursor: pointer;
+                        "
+                        @click="jumpPaperCollection(item.paper_id)"
+                      >
+                        {{ item.paper_name }}
+                      </p>
                       <br />
                       <br />
                       <h4>笔记内容:</h4>
@@ -708,7 +744,11 @@
               name="fourth"
               v-if="isScholar && !isOthers"
             >
-              <el-tabs tab-position="left" @tab-click="handleClickComment" v-model="commentDefaultLocation">
+              <el-tabs
+                tab-position="left"
+                @tab-click="handleClickComment"
+                v-model="commentDefaultLocation"
+              >
                 <el-tab-pane name="commentFirst">
                   <span slot="label"
                     ><i class="el-icon-message-solid"></i>我给他人的</span
@@ -726,7 +766,11 @@
                       ></el-button>
                     </el-input>
                   </div>
-                  <el-card class="box-card" v-for="(item, index) in this.myComment" :key="index">
+                  <el-card
+                    class="box-card"
+                    v-for="(item, index) in this.myComment"
+                    :key="index"
+                  >
                     <el-button
                       style="float: right; margin-left: 5px"
                       icon="el-icon-delete"
@@ -753,14 +797,14 @@
                     </div>
                   </el-card>
                   <el-pagination
-                      :current-page.sync="currentPage"
-                      :page-size="pageSize"
-                      @size-change="handleSizeChange"
-                      @current-change="handleCurrentChange"
-                      background
-                      layout="prev, pager, next, jumper"
-                      :total="myComment.length > 0 ? myComment.length : null"
-                      style="margin-top: 40px"
+                    :current-page.sync="currentPage"
+                    :page-size="pageSize"
+                    @size-change="handleSizeChange"
+                    @current-change="handleCurrentChange"
+                    background
+                    layout="prev, pager, next, jumper"
+                    :total="myComment.length > 0 ? myComment.length : null"
+                    style="margin-top: 40px"
                   >
                   </el-pagination>
                 </el-tab-pane>
@@ -781,7 +825,11 @@
                       ></el-button>
                     </el-input>
                   </div>
-                  <el-card class="box-card" v-for="(item, index) in this.commentToMe" :key="index">
+                  <el-card
+                    class="box-card"
+                    v-for="(item, index) in this.commentToMe"
+                    :key="index"
+                  >
                     <el-button
                       style="float: right; margin-left: 5px"
                       icon="el-icon-delete"
@@ -808,14 +856,14 @@
                     </div>
                   </el-card>
                   <el-pagination
-                      :current-page.sync="currentPage"
-                      :page-size="pageSize"
-                      @size-change="handleSizeChange"
-                      @current-change="handleCurrentChange"
-                      background
-                      layout="prev, pager, next, jumper"
-                      :total="myComment.length > 0 ? myComment.length : null"
-                      style="margin-top: 40px"
+                    :current-page.sync="currentPage"
+                    :page-size="pageSize"
+                    @size-change="handleSizeChange"
+                    @current-change="handleCurrentChange"
+                    background
+                    layout="prev, pager, next, jumper"
+                    :total="myComment.length > 0 ? myComment.length : null"
+                    style="margin-top: 40px"
                   >
                   </el-pagination>
                 </el-tab-pane>
@@ -976,155 +1024,63 @@ export default {
       id: 0,
       papers: [
         {
-          authors: [
-            {
-              name: "杰哥",
-            },
-          ],
-          id: "56d850c8dabfae2eee0100f0",
-          issue: "是多少",
-          lang: "en",
-          n_citation: 12,
-          page_end: "",
-          page_start: "",
-          title: "动态式12数学课堂中“交流”艺术的探寻",
-          volume: "",
-          year: 2019,
-        },
-        {
-          authors: [
-            {
-              name: "杰哥",
-            },
-          ],
-          id: "56d850c8dabfae2eee0100f0",
-          issue: "是多少",
-          lang: "en",
-          n_citation: 13,
-          page_end: "",
-          page_start: "",
-          title: "动态式23数学课堂中“交流”艺术的探寻",
-          volume: "",
-          year: 2001,
-        },
-        {
-          authors: [
-            {
-              name: "杰哥",
-            },
-          ],
-          id: "56d850c8dabfae2eee0100f0",
-          issue: "是多少",
-          lang: "en",
-          n_citation: 11,
-          page_end: "",
-          page_start: "",
-          title: "动态式数学232课堂中“交流”艺术的探寻",
-          volume: "",
-          year: 2011,
-        },
-        {
-          authors: [
-            {
-              name: "杰哥",
-            },
-          ],
-          id: "56d850c8dabfae2eee0100f0",
-          issue: "是多少",
-          lang: "en",
-          n_citation: 18,
-          page_end: "",
-          page_start: "",
-          title: "动态式数学课堂1中“交流”艺术的探寻",
-          volume: "",
-          year: 2009,
-        },
-        {
-          authors: [
-            {
-              name: "杰哥",
-            },
-          ],
-          id: "56d850c8dabfae2eee0100f0",
-          issue: "是多少",
-          lang: "en",
-          n_citation: 12,
-          page_end: "",
-          page_start: "",
-          title: "动态式数学课堂2中“交流”艺术的探寻",
-          volume: "",
-          year: 2012,
-        },
-        {
-          authors: [
-            {
-              name: "杰哥",
-            },
-          ],
-          id: "56d850c8dabfae2eee0100f0",
-          issue: "是多少",
-          lang: "en",
-          n_citation: 12,
-          page_end: "",
-          page_start: "",
-          title: "动态式数学课3堂中“交流”艺术的探寻",
-          volume: "",
-          year: 2013,
-        },
-        {
-          authors: [
-            {
-              name: "杰哥",
-            },
-          ],
-          id: "56d850c8dabfae2eee0100f0",
-          issue: "是多少",
-          lang: "en",
-          n_citation: 12,
-          page_end: "",
-          page_start: "",
-          title: "4动态式数学课堂中“交流”艺术的探寻",
-          volume: "",
-          year: 2011,
-        },
-        {
-          authors: [
-            {
-              name: "杰哥",
-            },
-          ],
-          id: "56d850c8dabfae2eee0100f0",
-          issue: "是多少",
-          lang: "en",
-          n_citation: 13,
-          page_end: "",
-          page_start: "",
-          title: "5动态式数学课堂中“交流”艺术的探寻",
-          volume: "",
-          year: 2011,
-        },
-        {
-          authors: [
-            {
-              name: "杰哥",
-            },
-          ],
-          id: "56d850c8dabfae2eee0100f0",
-          issue: "是多少",
-          lang: "en",
-          n_citation: 14,
-          page_end: "",
-          page_start: "",
-          title: "6动态式数学课堂中“交流”艺术的探寻",
-          volume: "",
-          year: 2010,
+          _source: {
+            authors: [
+              {
+                name: "杰哥",
+              },
+            ],
+            id: "56d850c8dabfae2eee0100f0",
+            issue: "是多少",
+            lang: "en",
+            n_citation: 12,
+            page_end: "",
+            page_start: "",
+            title: "动态式12数学课堂中“交流”艺术的探寻",
+            volume: "",
+            year: 2019,
+          },
+        },{
+          _source: {
+            authors: [
+              {
+                name: "杰哥",
+              },
+            ],
+            id: "56d850c8dabfae2eee0100f0",
+            issue: "是多少",
+            lang: "en",
+            n_citation: 12,
+            page_end: "",
+            page_start: "",
+            title: "动态式123数学课堂中“交流”艺术的探寻",
+            volume: "",
+            year: 2015,
+          },
+        },{
+          _source: {
+            authors: [
+              {
+                name: "杰哥",
+              },
+            ],
+            id: "56d850c8dabfae2eee0100f0",
+            issue: "是多少",
+            lang: "en",
+            n_citation: 15,
+            page_end: "",
+            page_start: "",
+            title: "动态式12数学课堂中“交流”艺术的探寻",
+            volume: "",
+            year: 2019,
+          },
         },
       ],
       paperCollection: [],
       noteCollection: [],
       notes: [],
       myComment: [],
-      commentToMe:[],
+      commentToMe: [],
       subscribes: [],
 
       //图片
@@ -1222,6 +1178,7 @@ export default {
         res.data.data.forEach((item, index) => {
           count[item.year]++;
         });
+        this.Linedata = [];
         count.forEach((item, index) => {
           if (item != 0) {
             this.Linedata.push({
@@ -1364,8 +1321,8 @@ export default {
       } else if (tab.name == "commentSecond") {
         this.getNoteCollection();
       }
-      this.currentPage=1;
-      this.pageSize=3;
+      this.currentPage = 1;
+      this.pageSize = 3;
     },
     //获取个人论文收藏
     getPaperCollection() {
@@ -1392,7 +1349,7 @@ export default {
           id: this.id,
         },
       }).then((res) => {
-        console.log(res.data.data)
+        console.log(res.data.data);
         this.noteCollection = res.data.data;
       });
     },
@@ -1421,7 +1378,7 @@ export default {
           id: this.id,
         },
       }).then((res) => {
-        console.log(res.data)
+        console.log(res.data);
         this.notes = res.data.data;
       });
     },
@@ -1436,7 +1393,7 @@ export default {
           id: this.id,
         },
       }).then((res) => {
-        console.log(res.data)
+        console.log(res.data);
         this.myComment = res.data.data;
       });
     },
@@ -1451,7 +1408,7 @@ export default {
           id: this.id,
         },
       }).then((res) => {
-        console.log(res.data)
+        console.log(res.data);
         this.commentToMe = res.data.data;
       });
     },
@@ -1845,16 +1802,16 @@ export default {
     // 封装升序排序规则
     compareUp(property) {
       return function (a, b) {
-        var value1 = a[property];
-        var value2 = b[property];
+        var value1 = a._source[property];
+        var value2 = b._source[property];
         return value1 - value2;
       };
     },
     // 封装降序排序规则
     compareDown(property) {
       return function (a, b) {
-        var value1 = a[property];
-        var value2 = b[property];
+        var value1 = a._source[property];
+        var value2 = b._source[property];
         return value2 - value1;
       };
     },
@@ -1893,34 +1850,34 @@ export default {
       }
     },
     //论文收藏跳转
-    jumpPaperCollection(paper_id){
+    jumpPaperCollection(paper_id) {
       this.$router.push({
-        path:"/PaperInformation/"+paper_id,
-      })
+        path: "/PaperInformation/" + paper_id,
+      });
     },
     //笔记收藏跳转
-    jumpNoteCollection(note_id){
+    jumpNoteCollection(note_id) {
       this.$router.push({
-        path:"/NoteInformation/"+note_id,
-      })
+        path: "/NoteInformation/" + note_id,
+      });
     },
     //订阅跳转
-    jumpSubscribes(id){
+    jumpSubscribes(id) {
       this.$router.push({
-        path:"/PersonalInformation/"+id,
-      })
+        path: "/PersonalInformation/" + id,
+      });
     },
     //我的评论跳转
-    jumpMyComment(id){
+    jumpMyComment(id) {
       this.$router.push({
-        path:"/PaperInformation/"+id,
-      })
+        path: "/PaperInformation/" + id,
+      });
     },
     //我的笔记跳转
-    jumpNotes(note_id){
+    jumpNotes(note_id) {
       this.$router.push({
-        path:"/NoteInformation/"+note_id,
-      })
+        path: "/NoteInformation/" + note_id,
+      });
     },
   },
 };
