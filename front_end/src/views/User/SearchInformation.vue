@@ -11,10 +11,16 @@
         <el-collapse>
           <el-collapse-item title="时间" style="margin-bottom: 10px" class="display_zone" shadow="never">
             <!--        复选框组 时间-->
-            <p style="text-align: left; color: #B3C0D1">年份</p>
+            <el-collapse-item title="年份范围" style="margin-bottom: 10px" class="display_zone" shadow="never">
+              <p style="text-align: left; color: #B3C0D1">注意，该检索模式有严重的性能问题，请谨慎使用</p>
+              <p>开始年份</p>
+              <el-input-number v-model="begin_year_secondary" @change="secondary_search(true)" :min="begin_year" :max="end_year_secondary"></el-input-number>
+              <p>截止年份</p>
+              <el-input-number v-model="end_year_secondary" @change="secondary_search(true)" :min="begin_year_secondary" :max="end_year"></el-input-number>
+            </el-collapse-item>
             <el-checkbox-group v-model="secondarySearchFilters_year" size="mini">
               <el-checkbox border v-for="filter in filterGroup_year" :label="filter" :key="filter"
-                           style="background: white; margin: 1% ;float: left"/>
+                           style="background: white; margin: 1% ;float: left" @change="secondary_search(false)"/>
             </el-checkbox-group>
           </el-collapse-item>
           <el-collapse-item title="来源" style="margin-bottom: 10px" class="display_zone">
@@ -22,7 +28,7 @@
             <p style="text-align: left; color: #B3C0D1">来源</p>
             <el-checkbox-group v-model="secondarySearchFilters_venue" size="mini">
               <el-checkbox border v-for="filter in filterGroup_venue" :label="filter" :key="filter"
-                           style="background: white; margin: 1% ;float: left"/>
+                           style="background: white; margin: 1% ;float: left" @change="secondary_search(false)"/>
             </el-checkbox-group>
           </el-collapse-item>
           <el-collapse-item title="作者" style="margin-bottom: 10px" class="display_zone">
@@ -30,14 +36,14 @@
             <p style="text-align: left; color: #B3C0D1">作者</p>
             <el-checkbox-group v-model="secondarySearchFilters_author" size="mini">
               <el-checkbox border v-for="filter in filterGroup_author" :label="filter" :key="filter"
-                           style="background: white; margin: 1% ;float: left"/>
+                           style="background: white; margin: 1% ;float: left " @change="secondary_search(false)"/>
             </el-checkbox-group>
           </el-collapse-item>
         </el-collapse>
 
       </el-aside>
 <!--      搜索结果-->
-      <el-main>
+      <el-main v-loading = loading  >
         <el-row :gutter="20" style="margin-top: 50px">
           <el-col :span="16" style="text-align: left; margin-left: 6%; margin-bottom: 3%; color: #B3C0D1">
             找到{{toThousands(resultNum) + (this.resultNum_relation === "gte" ? "+":"")}}
@@ -114,12 +120,13 @@ export default {
   props :{
   },
   mounted() {
-    //document.getElementById("topbar").style.display="none";
     if(this.$route.query.search_params != null){
       this.es_request_body = JSON.parse(this.$route.query.search_params)
+      this.es_request_body_raw = JSON.parse(JSON.stringify(this.es_request_body))
       this.es_request_body.from = 0
       this.es_request_body.size = this.page_size
     }
+
     this.post_es_search();
     this.update_secondary_search_condition();
     $("#topbar").css("display", "block");
@@ -134,6 +141,11 @@ export default {
       filterGroup_venue : [],
       filterGroup_author : [],
       filterGroup_year : [],
+      //二次检索参数
+      begin_year:9999999,
+      end_year:0,
+      begin_year_secondary:-1,
+      end_year_secondary:-1,
       secondarySearchFilters_venue : [],
       secondarySearchFilters_author : [],
       secondarySearchFilters_year : [],
@@ -148,6 +160,7 @@ export default {
       page_size : 10,
       currentPage:1,
       card_index:[],
+      loading:true
     }
   },
   methods :{
@@ -198,7 +211,13 @@ export default {
           }
           if(result[i]._source.venue !== undefined) this.filterGroup_venue.push(result[i]._source.venue.raw)
 
-          if(result[i]._source.year !== undefined) this.filterGroup_year.push(result[i]._source.year)
+          if(result[i]._source.year !== undefined && result[i]._source.year != null) {
+            this.begin_year = Math.min(result[i]._source.year,this.begin_year)
+            this.end_year = Math.max(result[i]._source.year,this.end_year)
+            this.filterGroup_year.push(result[i]._source.year)
+          }
+          this.end_year_secondary =this.end_year
+          this.begin_year_secondary = Math.max(this.begin_year,this.end_year - 10)
         }
         this.filterGroup_author = Array.from(new Set(this.filterGroup_author))
         this.filterGroup_venue = Array.from(new Set(this.filterGroup_venue))
@@ -207,6 +226,7 @@ export default {
     },
     // 给es发包
     post_es_search(){
+      this.loading=true
       axios({
             headers: {
               'content-type': 'application/json',
@@ -226,6 +246,7 @@ export default {
         for(let i = 0; i < res.data.hits.hits.length; i++){
           this.card_index.push(i+this.currentPage*this.page_size)
         }
+        this.loading=false
       })
     },
     change_page(page){
@@ -233,9 +254,27 @@ export default {
       this.post_es_search()
     },
     // 二次搜索
-    secondary_search(){
-      let condition_filter_query = JSON.parse(JSON.stringify(this.es_request_body))
-      condition_filter_query.from = 0
+    secondary_search(use_slow_method){
+      let condition_filter_query = JSON.parse(JSON.stringify(this.es_request_body_raw))
+      if(condition_filter_query.query.function_score.query.bool.filter == null)
+        condition_filter_query.query.function_score.query.bool.filter = []
+      for(let i in this.secondarySearchFilters_author){
+        condition_filter_query.query.function_score.query.bool.must.push({"match_phrase":{"authors.name":this.secondarySearchFilters_author[i]}})
+      }
+      for(let i in this.secondarySearchFilters_venue){
+        condition_filter_query.query.function_score.query.bool.filter.push({"match_phrase":{"venue.raw":this.secondarySearchFilters_venue[i]}})
+      }
+      for(let i in this.secondarySearchFilters_year){
+        condition_filter_query.query.function_score.query.bool.filter.push({"match_phrase":{"year":this.secondarySearchFilters_year[i]}})
+      }
+       if(use_slow_method){
+         condition_filter_query.query.function_score.query.bool.filter.push({
+           "range":{"year":{"gte":this.begin_year_secondary,"lte":this.end_year_secondary}}})
+       }
+      this.es_request_body = condition_filter_query
+      this.currentPage = 1
+      this.change_page(1)
+
     },
     // 搜索框的一些动作函数
     resetForm(formName) {
