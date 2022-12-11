@@ -259,7 +259,7 @@ export default {
       if(condition_filter_query.query.function_score.query.bool.filter == null)
         condition_filter_query.query.function_score.query.bool.filter = []
       for(let i in this.secondarySearchFilters_author){
-        condition_filter_query.query.function_score.query.bool.must.push({"match_phrase":{"authors.name":this.secondarySearchFilters_author[i]}})
+        condition_filter_query.query.function_score.query.bool.must.push({"match_phrase":{"authors.name.raw":this.secondarySearchFilters_author[i]}})
       }
       for(let i in this.secondarySearchFilters_venue){
         condition_filter_query.query.function_score.query.bool.filter.push({"match_phrase":{"venue.raw.raw":this.secondarySearchFilters_venue[i]}})
