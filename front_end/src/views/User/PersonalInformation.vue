@@ -575,7 +575,6 @@
                       </p>
                       <br />
                       <br />
-                      <br />
                       <h4>订阅时间:</h4>
                       <p>{{ item.time }}</p>
                     </div>
@@ -978,6 +977,7 @@ export default {
   },
   data() {
     return {
+      isMyself:"",
       isNoteVisible: true,
       isNoteCommentable: true,
       isLiteratureCommentable: true,
@@ -1114,16 +1114,29 @@ export default {
     };
   },
   created() {
+    this.$axios({
+      method: "post",
+      url: "/user/judgeIsMyself/",
+      data: {
+        id: this.$route.params.id,
+      },
+    }).then((res) => {
+      console.log(11111111)
+      console.log(res.data.flag)
+      this.isMyself=res.data.flag;
+    });
+
+
     this.id = this.$route.params.id;
     console.log(this.id);
-    if (this.id == undefined) {
-      this.isToken = 1; //是自己，用token访问
-      this.isOthers = false;
-      this.id = 1; //无用
-    } else {
-      this.isToken = 0;
-      this.isOthers = true;
-    }
+    // if (this.id == undefined) {
+    //   this.isToken = 1; //是自己，用token访问
+    //   this.isOthers = false;
+    //   this.id = 1; //无用
+    // } else {
+    //   this.isToken = 0;
+    //   this.isOthers = true;
+    // }
     //个人信息
     this.getPersonalInformation();
     this.getPaperCollection();
@@ -1150,6 +1163,18 @@ export default {
     },
     isScholar: function (newVal, oldVal) {
       this.DefaultLocation = this.isScholar ? "zero" : "first";
+    },
+    isMyself: function (newVal, oldVal) {
+      if(this.isMyself==1){
+          this.isToken = 1; //是自己，用token访问
+          this.isOthers = false;
+          this.id = 1; //无用
+          console.log(memememememememe)
+      } else if(this.isMyself==0){
+        this.isToken = 0;
+        this.isOthers = true;
+        console.log(youyouyouyou)
+      }
     },
   },
   methods: {
