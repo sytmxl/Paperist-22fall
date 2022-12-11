@@ -571,7 +571,7 @@
                         </p>
                         <br />
                         <h4>订阅时间:</h4>
-                        <p>{{ item.time }}</p>
+                        <p>{{ item.time.replace("T"," ") }}</p>
                       </div>
                     </el-card>
                   </div>
@@ -653,7 +653,7 @@
                       <p>{{ item.introduction }}</p>
                       <br />
                       <h4>收藏时间:</h4>
-                      <p>{{ item.time }}</p>
+                      <p>{{ item.time.replace("T"," ") }}</p>
                     </div>
                   </el-card>
                 </div>
@@ -732,7 +732,7 @@
                       <p>{{ item.content }}</p>
                       <br />
                       <h4>评论时间:</h4>
-                      <p>{{ item.time }}</p>
+                      <p>{{ item.time.replace("T"," ") }}</p>
                     </div>
                   </el-card>
                 </div>
@@ -817,7 +817,7 @@
                         <p>{{ item.content }}</p>
                         <br />
                         <h4>评论时间:</h4>
-                        <p>{{ item.time }}</p>
+                        <p>{{ item.time.replace("T"," ") }}</p>
                       </div>
                     </el-card>
                     <el-pagination
@@ -891,7 +891,7 @@
                         <p>{{ item.content }}</p>
                         <br />
                         <h4>评论时间:</h4>
-                        <p>{{ item.time }}</p>
+                        <p>{{ item.time.replace("T"," ") }}</p>
                       </div>
                     </el-card>
                     <el-pagination
