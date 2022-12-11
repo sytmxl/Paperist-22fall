@@ -1247,16 +1247,16 @@ export default {
         res.data.data.forEach((item, index) => {
           count[item.year]++;
         });
-        this.Linedata = [];
+        this.tmpLinedata = [];
         count.forEach((item, index) => {
           if (item != 0) {
-            this.Linedata.push({
+            this.tmpLinedata.push({
               count: item,
               content: index,
             });
           }
         });
-        // this.Linedata = res.data;
+        this.Linedata = this.tmpLinedata;
         console.log("initLine");
         console.log(res.data);
         console.log(count);
