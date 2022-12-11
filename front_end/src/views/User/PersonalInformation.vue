@@ -1044,7 +1044,7 @@ export default {
       collectionDefaultLocation: "collectionFirst",
       commentDefaultLocation: "commentFirst",
       noteLabel: "",
-      isScholar: true,
+      isScholar: false,
       researchField: "暂无数据",
       isOthers: false,
       showRelation: true,
