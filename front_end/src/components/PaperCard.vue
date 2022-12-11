@@ -151,6 +151,9 @@ export default {
 <style lang="scss" scoped>
 .el-card {
   margin-bottom: 15px;
+  &:hover {
+    // background: rgb(235, 235, 235);
+  }
 }
 .el-button {
   // border-radius: 10px !important;

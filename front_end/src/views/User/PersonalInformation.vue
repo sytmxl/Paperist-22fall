@@ -15,7 +15,7 @@
             <img
               v-if="!profile"
               class="picture"
-              src="../../assets/mosy.jpg"
+              src="../../assets/white.png"
               alt=""
             />
             <img v-else class="picture" :src="profile" alt="" />
@@ -394,7 +394,6 @@
                           <h4>论文标题:</h4>
                           <p
                             style="
-                              text-decoration: underline;
                               color: mediumpurple;
                               cursor: pointer;
                             "
@@ -481,7 +480,6 @@
                           <h4>文献标题:</h4>
                           <p
                             style="
-                              text-decoration: underline;
                               color: mediumpurple;
                               cursor: pointer;
                             "
@@ -561,7 +559,6 @@
                         <h4>订阅人:</h4>
                         <p
                             style="
-                          text-decoration: underline;
                           color: mediumpurple;
                           cursor: pointer;
                         "
@@ -640,7 +637,6 @@
                       <h4>文献标题:</h4>
                       <p
                         style="
-                          text-decoration: underline;
                           color: mediumpurple;
                           cursor: pointer;
                         "
@@ -719,7 +715,6 @@
                       <h4>文献标题:</h4>
                       <p
                           style="
-                          text-decoration: underline;
                           color: mediumpurple;
                           cursor: pointer;
                         "
@@ -804,7 +799,6 @@
                         <h4>文献标题:</h4>
                         <p
                             style="
-                          text-decoration: underline;
                           color: mediumpurple;
                           cursor: pointer;
                         "
@@ -878,7 +872,6 @@
                         <h4>文献标题:</h4>
                         <p
                             style="
-                          text-decoration: underline;
                           color: mediumpurple;
                           cursor: pointer;
                         "
@@ -1033,12 +1026,12 @@ export default {
       selectCommentToMe: "",
       selectSubscribe: "",
       selectNote: "",
-      username: "",
-      realname: "",
-      gender: "",
-      region: "",
-      email: "",
-      personalProfile: "",
+      username: "暂无数据",
+      realname: "暂无数据",
+      gender: "暂无数据",
+      region: "暂无数据",
+      email: "暂无数据",
+      personalProfile: "暂无数据",
       isEditPersonalInformation: false,
       new_username: "",
       new_realname: "",
@@ -1051,8 +1044,8 @@ export default {
       collectionDefaultLocation: "collectionFirst",
       commentDefaultLocation: "commentFirst",
       noteLabel: "",
-      isScholar: true,
-      researchField: "打篮球",
+      isScholar: false,
+      researchField: "暂无数据",
       isOthers: false,
       showRelation: true,
       oldPassword: "",
@@ -1185,6 +1178,11 @@ export default {
     this.getPersonalInformation();
     this.getPaperCollection();
     this.getSet();
+    this.getPaperComment();
+    this.getNoteCollection();
+    this.getSubscribe();
+    this.getCommentToMe();
+    this.getNote();
     // if (this.isScholar) this.DefaultLocation = "zero";
     // else this.DefaultLocation = "first";
     if (this.isScholar) {
@@ -1200,6 +1198,7 @@ export default {
     // this.initSort();
     this.initScholarPaper();
     this.noteLabel = this.isOthers ? "他的笔记" : "我的笔记";
+
   },
   watch: {
     isOthers: function (newVal, oldVal) {
@@ -1306,13 +1305,13 @@ export default {
         },
       }).then((res) => {
         console.log(res.data.data);
-        this.realname = res.data.data[0].realname;
-        this.email = res.data.data[0].email;
-        this.gender = res.data.data[0].sex;
-        this.username = res.data.data[0].username;
-        this.personalProfile = res.data.data[0].sign;
-        this.region = res.data.data[0].country;
-        this.profile = res.data.data[0].profile;
+        if(res.data.data[0].realname!="") this.realname = res.data.data[0].realname;
+        if(res.data.data[0].email!="") this.email = res.data.data[0].email;
+        if(res.data.data[0].sex!="") this.gender = res.data.data[0].sex;
+        if(res.data.data[0].username!="") this.username = res.data.data[0].username;
+        if(res.data.data[0].sign!="") this.personalProfile = res.data.data[0].sign;
+        if(res.data.data[0].country!="") this.region = res.data.data[0].country;
+        if(res.data.data[0].profile!="") this.profile = res.data.data[0].profile;
 
         this.researchField = res.data.data[0].field;
         //异步访问，created结束还未执行完

@@ -133,97 +133,11 @@ export default {
         // 4:{1:{flag:0,name:'马泽远',image:require("../../assets/ma.jpg"),comment:"感谢大家支持"}},
         // 5:{1:{flag:0,name:'王域杰',image:require("../../assets/jie.jpg"),comment:"苏珊，小心我告你"},2:{flag:1,name:'王域杰',image:require("../../assets/jie.jpg"),res_name:'王域杰',comment:"别来沾边"},3:{flag:1,name:'朱康乐',image:require("../../assets/le.jpg"),res_name:'王域杰',comment:"支持杰哥维权"},4:{flag:1,name:'马泽远',image:require("../../assets/ma.jpg"),res_name:'王域杰',comment:"我错了杰哥，我苏珊"}},},
         remark_list:[],
+         token:sessionStorage.getItem("token")
         }
     },
       methods:{
-     scaleD() {  //放大
-         let max = 0
-         if (window.screen.width > 1440) {
-             max = 1.4
-         }else{
-           max = 1.2
-         }
-         if(this.pdf_scale >= max){
-           return
-         }
-         this.pdf_scale = this.pdf_scale+0.1
-         this._loadFile(this.pdf_src)
-     },
-     scaleX() {  //缩小
-         let min = 1.0
-         if(this.pdf_scale <= min){
-           return
-         }
-         this.pdf_scale = this.pdf_scale - 0.1
-         this._loadFile(this.pdf_src)
-     },
-     get_pdfurl(){  //获得pdf教案
-
-     	   //加载本地
-        //  this.pdf_src = 'https://mozilla.github.io/pdf.js/web/compressed.tracemonkey-pldi-09.pdf'
-     
-        // this.pdf_src = 'adminapi/blogs/%E5%89%8D%E7%AB%AF%E9%9D%A2%E8%AF%95/4%E3%80%81%E7%AC%AC%E5%9B%9B%E9%83%A8%E5%88%86%EF%BC%9A%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80%2814%E9%A2%98%29.pdf'
-        // this.pdf_src = encodeURIComponent('../../../assets/test.pdf');
-        //  this._loadFile(this.pdf_src)
-     	//    return
-
-
-     	   //线上请求
-        //  this.$axios.get('')
-        //  .then((res)=>{
-        //  	this.pdf_src = res.url
-        //  	this._loadFile(this.pdf_src)
-        //  })
-     },
-     _loadFile (url) {  //初始化pdf
-     console.log(url);
-        let loadingTask = PDFJS.getDocument(url)
-        console.log(loadingTask)
-        loadingTask.promise
-        .then((pdf) => {
-          this.pdfDoc = pdf
-          this.pdf_pages = this.pdfDoc.numPages
-          //debugger
-          this.$nextTick(() => {
-            this._renderPage(1)
-          })
-        })
-     },
-     _renderPage (num) {  //渲染pdf页
-          const that = this
-          this.pdfDoc.getPage(num)
-          .then((page) => {
-            let canvas = document.getElementById('the_canvas' + num)
-            let ctx = canvas.getContext('2d')
-            let dpr = window.devicePixelRatio || 1
-            let bsr = ctx.webkitBackingStorePixelRatio ||
-              ctx.mozBackingStorePixelRatio ||
-              ctx.msBackingStorePixelRatio ||
-              ctx.oBackingStorePixelRatio ||
-              ctx.backingStorePixelRatio || 1
-            let ratio = dpr / bsr
-            let viewport = page.getViewport({ scale: this.pdf_scale })
-
-            canvas.width = viewport.width * ratio
-            canvas.height = viewport.height * ratio
-
-            canvas.style.width = viewport.width + 'px'
-
-            that.pdf_div_width = viewport.width + 'px'
-
-            canvas.style.height = viewport.height + 'px'
-
-            ctx.setTransform(ratio, 0, 0, ratio, 0, 0)
-            let renderContext = {
-              canvasContext: ctx,
-              viewport: viewport
-            }
-            page.render(renderContext)
-            if (this.pdf_pages > num) {
-              this._renderPage(num + 1)
-            }
-          })
-     },
+    
      goto_person(){
       let routeData = this.$router.resolve({
         name: 'PersonalInformation',
@@ -245,6 +159,7 @@ export default {
       window.open(routeData.href, '_blank')
      },
       react_remark(data){
+    
         if(data.op=="remark"){
              this.CreatCommentVisible = true;
             this.remark_id = data.remark_id
@@ -259,7 +174,8 @@ export default {
           this.noteRemarkInit()
      },
      likeit(){
-        if(this.note.like_flag){
+        if(this.token){
+          if(this.note.like_flag){
           this.$axios({
             url:"http://127.0.0.1:8000/likeIt/",
             method:"post",
@@ -285,9 +201,18 @@ export default {
             this.noteInfoInit()
           })
         }
+        }else{
+        this.$message.warning("请先登录")
+        setTimeout(()=>{let routeData = this.$router.resolve({
+        name: 'login',
+      })
+      window.open(routeData.href, '_blank')},1000)
+      }
+        
     },
      collect(){
-        if(this.note.collect_flag){
+        if(this.token){
+           if(this.note.collect_flag){
           this.$axios({
             url:"http://127.0.0.1:8000/paperCollection/",
             method:"post",
@@ -315,9 +240,19 @@ export default {
             this.noteInfoInit()
           })
         }
+        }else{
+        this.$message.warning("请先登录")
+        setTimeout(()=>{let routeData = this.$router.resolve({
+        name: 'login',
+      })
+      window.open(routeData.href, '_blank')},1000)
+      }
+
+       
      },
      subscribe(author){
-         if(author.subscribe_flag){
+        if(this.token){
+           if(author.subscribe_flag){
           this.$axios({
             url:"http://127.0.0.1:8000/subscribe/",
             method:"post",
@@ -343,27 +278,20 @@ export default {
             this.authorInit()
           })
         }
+        }else{
+        this.$message.warning("请先登录")
+        setTimeout(()=>{let routeData = this.$router.resolve({
+        name: 'login',
+      })
+      window.open(routeData.href, '_blank')},1000)
+      }
+
+        
      },
 
-    //  note_init(){
-    //     this.$axios({
-    //         url:"http://127.0.0.1:8000/noteInit/",
-    //         method:"post",
-    //         data:{
-    //             note_id:this.$route.params.note_id
-    //         }
-    //     }).then(res=>{
-    //         this.pdf_src = res.data.note_info[0].note_url
-    //         this.list = res.data.other_note
-    //         this.author = res.data.author_info[0]
-    //         this.note = res.data.note_info[0]
-    //         this.remark_list = res.data.note_info[0].remark_list
-    //         // this._loadFile(this.pdf_src)
-    //     })
-    //  },
      noteInfoInit(){
        this.$axios({
-            url:"http://127.0.0.1:8000/noteInfoInit/",
+            url:"http://127.0.0.1:8000/noteInfoInitNoToken/",
             method:"post",
             data:{
                 note_id:this.$route.params.note_id
@@ -375,7 +303,7 @@ export default {
      },
      authorInit(){
       this.$axios({
-            url:"http://127.0.0.1:8000/authorInit/",
+            url:"http://127.0.0.1:8000/authorInitNoToken/",
             method:"post",
             data:{
                 note_id:this.$route.params.note_id
@@ -386,7 +314,7 @@ export default {
      },
      otherNoteInit(){
       this.$axios({
-            url:"http://127.0.0.1:8000/otherNoteInit/",
+            url:"http://127.0.0.1:8000/otherNoteInitNoToken/",
             method:"post",
             data:{
                 note_id:this.$route.params.note_id
@@ -397,7 +325,7 @@ export default {
      },
      noteRemarkInit(){
       this.$axios({
-            url:"http://127.0.0.1:8000/noteRemarkInit/",
+            url:"http://127.0.0.1:8000/noteRemarkInitNoToken/",
             method:"post",
             data:{
                 note_id:this.$route.params.note_id
