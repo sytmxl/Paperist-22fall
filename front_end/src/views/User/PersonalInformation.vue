@@ -545,7 +545,7 @@
                     ></el-button>
                     <div style="margin-bottom: 10px; text-align: left">
                       <h4>订阅人:</h4>
-                      <a href="">{{ item.name }}</a>
+                      <p style="text-decoration:underline;color: mediumpurple;cursor:pointer" @click="jumpSubscribes(item.id)">{{ item.name }}</p>
                       <br />
                       <br />
                       <br />
