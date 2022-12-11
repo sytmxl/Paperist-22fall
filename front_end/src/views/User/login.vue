@@ -125,7 +125,7 @@ export default {
           }
         } else {
           this.$message({
-            message: '登陆成功',
+            message: '登录成功',
             type: 'success'
           });
           sessionStorage.setItem("token", res.data.token);
@@ -147,7 +147,7 @@ export default {
 .logo_area {
   width: 100%;
   margin: 0 auto;
-  padding-top: 160px;
+  padding-top: 100px;
   clear: both;
 }
 

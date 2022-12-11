@@ -202,7 +202,7 @@ export default {
 .logo_area {
   width: 100%;
   margin: 0 auto;
-  padding-top: 100px;
+  padding-top: 50px;
   clear: both;
 }
 .kuang {

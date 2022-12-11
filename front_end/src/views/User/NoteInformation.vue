@@ -1,9 +1,9 @@
 <template> 
     <el-container class="root">
         <!-- <TopBar/>  -->
-       <el-main class="left base">
-        <div class="author">
-            <el-card>
+       <el-main class="left base" v-if="author.length != 0">
+        <div class="author" >
+            <el-card v-if="author.length != 0">
               <div class="author_img">
                   <img :src="author.image" alt="">
                   <span>{{author.name}}</span>
@@ -16,7 +16,7 @@
                 <span>发表笔记数：{{author.note_num}}</span>
               </div>
             </el-card>
-            <el-card style="margin-top:10px">
+            <el-card style="margin-top:10px" v-if="note.length != 0">
               <div class="note_info">
                 <span @click="goto_paper()" title="了解此论文" style="cursor:pointer; ">原论文：{{note.paper_name}}</span>
                 <span>获赞：{{note.likes}}</span>
@@ -44,7 +44,7 @@
         </div>
 
        </el-main>
-        <el-main class="right base">
+        <el-main class="right base" v-if="author.length != 0">
             <div class="content">
               <iframe style="width: 100%; height: 100%" :src="'/pdfjs-2.14.305-legacy-dist/web/viewer.html?file='+pdf_src" title="myFrame"></iframe>
                 <!-- <el-card> 
@@ -70,7 +70,7 @@
 							<div class="creat_comment">
 								<el-button id="comment" @click="CreatCommentVisible =true">我要评论</el-button>
 							</div>
-							<div v-if="remark_list.length!=0">
+							<div v-if="remark_list.length != 0">
 								<div class="comment" v-for="i in remark_list" :key="i">
 									<remark :list="i" :note_id="note.note_id" @throw_remark="react_remark"/>
 								</div>
@@ -407,7 +407,7 @@ export default {
         })
      }
   },
-     mounted () {
+    mounted () {
         //   this.get_pdfurl()
         // this.note_init();
         this.noteInfoInit();
@@ -419,6 +419,11 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.root{
+  margin: 0 auto;
+  height: 100%;
+  width: 100%;
+}
 .left{
     width: 25%;
 		margin: 30px 30px 0px 100px;
@@ -485,8 +490,10 @@ export default {
 	margin-right: 100px;
 	margin-top: 30px;
 	overflow: hidden;
+  height: fit-content;
 	.content{
     min-height: calc(100vh);
+    height: fit-content;
 		.el-card{
 			height: 100%;
 			overflow-y: scroll;
