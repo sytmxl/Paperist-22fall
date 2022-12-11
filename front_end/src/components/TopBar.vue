@@ -28,7 +28,7 @@
             <el-avatar v-else-if="avatar_src" :src="avatar_src"></el-avatar>
           </span>
           <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item v-if="!isScholar" command="claimScholar,"
+            <el-dropdown-item v-if="!isScholar" command="a"
               >学者认证</el-dropdown-item
             >
             <el-dropdown-item command="b">登出</el-dropdown-item>
@@ -36,20 +36,28 @@
         </el-dropdown>
       </div>
       <div v-else-if="!loged" class="notLog" @click="gotoLogin">
-        <el-dropdown
-          size="small"
-          placement="bottom"
-          @command="handleCommand"
-          type="primary"
+        <el-popover
+          placement="top"
+          width="160"
+          v-model="visible"
+          trigger="hover"
         >
-          <el-button size="small" type="warning">
-            未登录<i class="el-icon-arrow-down el-icon--right"></i>
-          </el-button>
-          <el-dropdown-menu slot="dropdown2">
-            <el-dropdown-item command="c">注册</el-dropdown-item>
-            <el-dropdown-item command="d">登录</el-dropdown-item>
-          </el-dropdown-menu>
-        </el-dropdown>
+          <el-row>
+            <el-col :span="12"
+              ><el-button type="primary" @click="(visible = false), gotoLogin()"
+                >登录</el-button
+              >
+            </el-col>
+            <el-col :span="12"
+              ><el-button
+                type="primary"
+                @click="(visible = false), gotoRegister()"
+                >注册</el-button
+              >
+            </el-col>
+          </el-row>
+          <span slot="reference">登录</span>
+        </el-popover>
       </div>
     </div>
     <claimScholar ref="claimScholar"></claimScholar>
@@ -102,28 +110,31 @@ export default {
   },
   methods: {
     handleCommand(command) {
-      if (command == "c") {
-        location.href = "/Register";
-      } else if (command == "d") {
-        location.href = "/Login";
-      } else if (command == "a") {
+      if (command == "a") {
         this.$refs.claimScholar.initclaimScholar();
       } else if (command == "b") {
         sessionStorage.removeItem("token");
         sessionStorage.removeItem("userInfo");
-        location.href = "/FirstPage";
+        // 页面刷新
+        location.reload();
+        // location.href = "/FirstPage";
       }
     },
     gotoFirstPage() {
       location.href = "/FirstPage";
     },
+    gotoRegister() {
+      location.href = "/Register";
+    },
     gotoLogin() {
       location.href = "/Login";
     },
     gotoPersonalInformation() {
-      location.href =
-        "/PersonalInformation/" +
-        JSON.parse(sessionStorage.getItem("userInfo")).id;
+      let routeData = this.$router.resolve({
+        name: "PersonalInformation",
+        params: { id: JSON.parse(sessionStorage.getItem("userInfo")).id },
+      });
+      window.open(routeData.href, "_blank");
     },
     toggleDarkLight() {
       let body = document.getElementById("app");
