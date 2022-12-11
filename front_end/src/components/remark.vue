@@ -84,12 +84,17 @@ export default {
   },
   methods:{
     goto_person(){
-        this.$router.push({
-          name:'PersonalInformation',
-          params:{
-          id:this.list.id
-          }
-        })
+        // this.$router.push({
+        //   name:'PersonalInformation',
+        //   params:{
+        //   id:this.list.id
+        //   }
+        // })
+    let routeData = this.$router.resolve({
+        name: 'PersonalInformation',
+        params: { id: this.list.id }
+      })
+      window.open(routeData.href, '_blank')
     },
     likeit(id,like){
         if(isclick){

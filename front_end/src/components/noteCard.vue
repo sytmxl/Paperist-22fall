@@ -38,21 +38,33 @@ export default {
   },
   methods:{
     goto_paper(paper_id){
-      this.$router.push({
-          name:'PaperInformation',
-          params:{
-           paper_id:paper_id
-          }
-        })
+      // this.$router.push({
+      //     name:'PaperInformation',
+      //     params:{
+      //      paper_id:paper_id
+      //     }
+      //   })
+
+        let routeData = this.$router.resolve({
+        name: 'PaperInformation',
+        params: { paper_id:paper_id }
+      })
+      window.open(routeData.href, '_blank')
     },
     goto_note(note_id){
-      this.$router.push({
-          name:'NoteInformation',
-          params:{
-           note_id:note_id
-          }
-        })
-        window.location.reload()
+      // this.$router.push({
+      //     name:'NoteInformation',
+      //     params:{
+      //      note_id:note_id
+      //     }
+      //   })
+      //   window.location.reload()
+
+        let routeData = this.$router.resolve({
+        name: 'NoteInformation',
+        params: { note_id:note_id }
+      })
+      window.open(routeData.href, '_blank')
     },
   }
 }

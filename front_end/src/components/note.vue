@@ -41,20 +41,31 @@ export default {
   },
   methods:{
     goto_person(){
-        this.$router.push({
-          name:'PersonalInformation',
-          params:{
-          id:this.list.id
-          }
-        })
+        // this.$router.push({
+        //   name:'PersonalInformation',
+        //   params:{
+        //   id:this.list.id
+        //   }
+        // })
+        let routeData = this.$router.resolve({
+        name: 'PersonalInformation',
+        params: { id: this.list.id }
+      })
+      window.open(routeData.href, '_blank')
     },
    goto_note(){
-     this.$router.push({
-          name:'NoteInformation',
-          params:{
-           note_id:this.list.note_id
-          }
-        })
+    //  this.$router.push({
+    //       name:'NoteInformation',
+    //       params:{
+    //        note_id:this.list.note_id
+    //       }
+    //     })
+
+        let routeData = this.$router.resolve({
+        name: 'NoteInformation',
+        params: { note_id:this.list.note_id }
+      })
+      window.open(routeData.href, '_blank')
    },
    tipoff(id){
          this.$axios({
