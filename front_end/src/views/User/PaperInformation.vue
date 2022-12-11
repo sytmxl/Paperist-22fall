@@ -29,7 +29,7 @@
                   <el-button round icon="el-icon-star-off" v-if="!collect_flag" @click="collect()" title="收藏">收藏</el-button>
                   <el-button round icon="el-icon-star-on" v-else @click="collect()" title="取消收藏">已收藏</el-button>
                   <el-button round icon="el-icon-link" @click="quote()">引用</el-button>
-                  <el-button round icon="el-icon-warning-outline" @click="ComplainVisible = true">申诉</el-button>
+                  <el-button round icon="el-icon-warning-outline" @click="token?ComplainVisible = true:warning()">申诉</el-button>
                   <el-button round icon="el-icon-share" @click="ShareVisible = true">分享</el-button>
               </div>
          
@@ -293,6 +293,9 @@ export default {
     },
    
     methods:{
+      warning(){
+        this.$message.warning("请先登录")
+      },
       load(){
         // this.start = true
         // this.number = this.number+4
@@ -437,7 +440,11 @@ onError (e) {
         this.QuoteVisible = true
       },
       collect(){
-        if(isclick){
+        if(this.token==null){
+          this.$message.warning("请先登录")
+        }
+        else{
+          if(isclick){
           isclick = false;
           this.collect_flag = !this.collect_flag
            if(!this.collect_flag){
@@ -471,6 +478,8 @@ onError (e) {
         else{
           this.$message.warning("请勿频繁操作")
         }
+        }
+        
        
       },
       react_remark(data){
