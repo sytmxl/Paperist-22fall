@@ -1809,13 +1809,13 @@ export default {
         );
         this.newPassword = "";
         this.oldPassword = "";
-        yhis.confirmNewPassword = "";
+        this.confirmNewPassword = "";
         return;
       } else if (this.newPassword != this.confirmNewPassword) {
         this.$message.warning("两次输入密码不一致，请检查");
         this.newPassword = "";
         this.oldPassword = "";
-        yhis.confirmNewPassword = "";
+        this.confirmNewPassword = "";
         return;
       }
       this.isChangePassword = false;

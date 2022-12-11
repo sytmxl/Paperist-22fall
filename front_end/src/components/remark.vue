@@ -92,7 +92,7 @@ export default {
         // })
     let routeData = this.$router.resolve({
         name: 'PersonalInformation',
-        params: { id: this.list.id }
+        params: { id: this.list.sender_id }
       })
       window.open(routeData.href, '_blank')
     },
