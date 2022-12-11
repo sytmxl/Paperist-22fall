@@ -262,7 +262,7 @@ export default {
         condition_filter_query.query.function_score.query.bool.must.push({"match_phrase":{"authors.name":this.secondarySearchFilters_author[i]}})
       }
       for(let i in this.secondarySearchFilters_venue){
-        condition_filter_query.query.function_score.query.bool.filter.push({"match_phrase":{"venue.raw":this.secondarySearchFilters_venue[i]}})
+        condition_filter_query.query.function_score.query.bool.filter.push({"match_phrase":{"venue.raw.raw":this.secondarySearchFilters_venue[i]}})
       }
       for(let i in this.secondarySearchFilters_year){
         condition_filter_query.query.function_score.query.bool.filter.push({"match_phrase":{"year":this.secondarySearchFilters_year[i]}})
