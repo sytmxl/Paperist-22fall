@@ -291,12 +291,19 @@ export default {
       })
       let es_request_body_function_score = {}
       es_request_body_function_score.query = {"function_score":{"query":es_request_body.query}}
-      es_request_body_function_score.query.function_score.field_value_factor = {
+      es_request_body_function_score.query.function_score.functions = [
+        {"field_value_factor":{
             "field": "n_citation",
             "modifier": "sqrt",
-            "factor": 10,
+            "factor": 1,
             "missing": 1
-          }
+          }},
+        {"script_score": {
+            "script": {
+              "source": "if(!doc['year'].empty && doc['year'].value>1990) { " +  1 + "* 0.5 *(doc['year'].value - 1990)} else {0}"
+            }
+          }}
+      ]
       es_request_body_function_score.query.function_score.boost_mode = "sum"
       this.route_push_params("common",es_request_body_function_score);
     },
@@ -340,7 +347,23 @@ export default {
       }
       if(this.advanced_search_query.year_begin) es_request_body.query.bool.must.push({"range":{"year":{"gte":this.advanced_search_query.year_begin}}})
       if(this.advanced_search_query.year_end) es_request_body.query.bool.must.push({"range":{"year":{"lte":this.advanced_search_query.year_end}}})
-      this.route_push_params("advanced",es_request_body)
+      let es_request_body_function_score = {}
+      es_request_body_function_score.query = {"function_score":{"query":es_request_body.query}}
+      es_request_body_function_score.query.function_score.functions = [
+        {"field_value_factor":{
+            "field": "n_citation",
+            "modifier": "sqrt",
+            "factor": 1,
+            "missing": 1
+          }},
+        {"script_score": {
+            "script": {
+              "source": "if(!doc['year'].empty && doc['year'].value>1990) { " +  this.weight_year/this.weight_default + "* 0.5 *(doc['year'].value - 1990)} else {0}"
+            }
+          }}
+      ]
+      es_request_body_function_score.query.function_score.boost_mode = "sum"
+      this.route_push_params("advanced",es_request_body_function_score)
     },
     route_push_params(search_type,es_request_body){
       sessionStorage.setItem("last_search",JSON.stringify({
