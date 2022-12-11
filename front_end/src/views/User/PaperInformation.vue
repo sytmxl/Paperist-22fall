@@ -756,16 +756,19 @@ export default {
 }
 .creat_comment{
   width:100%;
+  margin-top: 10px;
+ 
 }
 .creat_comment .el-button{
-  width:100%;
+  width:90%;
   // opacity: 0.6;
 }
 .creat_mark{
   width:100%;
+  margin-top: 10px;
 }
 .creat_mark .el-button{
-  width:100%;
+  width:90%;
   // opacity: 0.6;
 }
 .el-card {

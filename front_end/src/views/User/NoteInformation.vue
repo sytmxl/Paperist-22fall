@@ -435,8 +435,9 @@ export default {
 }
 .creat_comment{
   width:100%;
+  margin-top: 10px;
 	.el-button{
-		width:100%;
+		width:90%;
 		// opacity: 0.6;
 	}
 	// position: sticky;

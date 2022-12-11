@@ -1,5 +1,5 @@
 <template>
-  <div class="light-mode" style="height:calc(100vh) width:calc(100vh)">
+  <div style="min-height:calc(100vh) width:calc(100vh)">
     <el-row class="logo_area">
       <div id="logo1" class="home_logo"></div>
     </el-row>
@@ -25,7 +25,7 @@
               />
               <div id="load">
                 <el-button
-                  style="width: 100%"
+                  style="width: 90%"
                   @click="loadRec()"
                   v-loading="start"
                   >加载更多</el-button
@@ -45,7 +45,7 @@
               </div>
               <div
                 class="SubscribeNotePlaceInfo"
-                v-else-if="isEmptyObject(showSubscribePeopleList)"
+                v-else-if="isEmptyObject(SubscribePeopleList)"
               >
                 <el-empty
                   description="你还没有关注别人，快去逛逛吧！"
@@ -73,7 +73,7 @@
                 />
                 <div id="load">
                   <el-button
-                    style="width: 100%"
+                    style="width: 90%; margin-top: 20px;"
                     @click="loadSub()"
                     v-loading="start2"
                     >加载更多</el-button
@@ -94,7 +94,7 @@
               </div>
               <div
                 class="SubscribeNotePlaceInfo"
-                v-else-if="isEmptyObject(showSubscribePeopleList)"
+                v-else-if="isEmptyObject(SubscribePeopleList)"
               >
                 <el-empty
                   description="你还没有关注别人，快去逛逛吧！"
@@ -115,20 +115,20 @@
                 </el-empty>
               </div>
               <div v-else>
-                <aboutCard
-                  v-for="(item, index) in showSubscribeTextList"
-                  :key="index"
-                  :name="item.name"
-                  :author="item.author"
-                  :cite="item.cite"
-                  :origin="item.origin"
-                  :intro="item.intro"
-                  :date="item.date"
-                  :paper_id="item.paper_id"
-                />
+                <div v-for="item in showSubscribeTextList" :key="item.paper_id">
+                  <aboutCard
+                    :name="item.name"
+                    :author="item.author"
+                    :cite="item.cite"
+                    :origin="item.origin"
+                    :intro="item.intro"
+                    :date="item.date"
+                    :paper_id="item.paper_id"
+                  />
+                </div>
                 <div id="load">
                   <el-button
-                    style="width: 100%"
+                    style="width: 90%"
                     @click="loadSub2()"
                     v-loading="start3"
                     >加载更多</el-button
@@ -259,41 +259,8 @@ export default {
       SubscribeNoteList: [],
       showSubscribeNoteList: [],
       SubscribeTextList: [],
-      showSubscribeTextList: [
-        {
-          name: "论杰哥",
-          author: "马哥",
-          cite: "100",
-          origin: "中国科学院",
-          intro: "杰哥是个大帅哥",
-          date: "2020-10-10",
-          paper_id: "1",
-        },
-        {
-          name: "论杰哥",
-          author: "马哥",
-          cite: "100",
-          origin: "中国科学院",
-          intro: "杰哥是个大帅哥",
-          date: "2020-10-10",
-          paper_id: "1",
-        },
-        {
-          name: "论杰哥",
-          author: "马哥",
-          cite: "100",
-          origin: "中国科学院",
-          intro: "杰哥是个大帅哥",
-          date: "2020-10-10",
-          paper_id: "1",
-        },
-      ],
-      showSubscribePeopleList: [
-        {
-          name: "马哥",
-          id: "32",
-        },
-      ],
+      showSubscribeTextList: [],
+      SubscribePeopleList: [],
       hot: [
         {
           人工智能: 100,
@@ -343,6 +310,7 @@ export default {
     // this.getRecommendList();
     this.getFollowNoteList();
     this.getFollowTextList();
+    this.getSubscribe();
     // this.getHot();
     $("#topbar").css("display", "none");
     window.addEventListener("scroll", this.scroll, true);
@@ -351,6 +319,20 @@ export default {
     window.removeEventListener("scroll", this.scroll, true);
   },
   methods: {
+    // 获取关注的人
+    getSubscribe() {
+      this.$axios({
+        url: "/user/getSubscribe/",
+        method: "post",
+        data: {
+          token: sessionStorage.getItem("token"),
+          isToken: 1,
+          id: 1,
+        },
+      }).then((res) => {
+        this.SubscribePeopleList = res.data.data;
+      });
+    },
     // 获取推荐文章
     // getRecommendList() {
     //   this.$axios({
@@ -372,7 +354,7 @@ export default {
     getFollowNoteList() {
       this.$axios({
         method: "post",
-        url: "user/indexSubscribe/",
+        url: "user/indexSubscribeNote/",
       })
         .then((res) => {
           console.log("订阅笔记", res.data);
@@ -402,7 +384,7 @@ export default {
     getFollowTextList() {
       this.$axios({
         method: "post",
-        url: "/user/getPaperCollection/",
+        url: "/user/indexSubscribePaper/",
         data: {
           token: sessionStorage.getItem("token"),
           isToken: 1,
@@ -413,14 +395,22 @@ export default {
           console.log(res.data);
           let tmpFollowText = [];
           res.data.data.forEach((item) => {
+            let tmpAuthorList = [];
+            item.author.forEach((item2) => {
+              // console.log("ss", item2)
+              let tmpAuthorName = {
+                name: item2,
+              };
+              tmpAuthorList.push(tmpAuthorName);
+            });
             let tmpText = {
               name: item.name,
-              author: item.author,
+              author: tmpAuthorList,
               cite: item.cite,
               origin: item.origin,
-              intro: item.abstract,
-              date: item.time,
-              paper_id: item.id,
+              intro: item.intro,
+              date: item.date,
+              paper_id: item.paper_id,
             };
             tmpFollowText.push(tmpText);
           });
@@ -719,6 +709,7 @@ export default {
   line-height: calc(10vh);
   font-size: 20px;
   font-weight: bold;
+  
 }
 .index_bold_font {
   font-weight: 700;

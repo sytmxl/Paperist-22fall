@@ -10,8 +10,12 @@
   // transition: 0.3s;
   transition: 0.8s cubic-bezier(.23,1.38,.65,.99) 0s;
   &:hover {
+    transform: scale(110%);
     cursor: pointer;
     // border: #000 solid 2px;
+  }
+  &:active {
+    transform: scale(100%);
   }
 }
     

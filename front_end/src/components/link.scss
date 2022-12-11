@@ -1,0 +1,10 @@
+@mixin link() {
+    border-radius: 10px;
+    transition: 0.3s ;
+    &:hover {
+      padding: 7px;
+      // font-size: $size;
+      background-color: rgb(221, 224, 227);
+      transform: scale(102%);
+    }
+  }

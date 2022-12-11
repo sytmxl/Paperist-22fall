@@ -14,8 +14,7 @@
         name="dark_light"
         @click="toggleDarkLight"
         title="Toggle dark/light mode"
-        >日/夜</el-button
-      >
+        >日/夜</el-button>
       <search-box />
       <div v-if="loged" class="avatar" @click="gotoPersonalInformation">
         <el-dropdown size="medium" placement="bottom" @command="handleCommand">
@@ -115,6 +114,7 @@ export default {
       } else if (command == "b") {
         sessionStorage.removeItem("token");
         sessionStorage.removeItem("userInfo");
+        sessionStorage.removeItem("last_search");
         // 页面刷新
         location.reload();
         // location.href = "/FirstPage";

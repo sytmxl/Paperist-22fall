@@ -240,6 +240,7 @@ export default {
 
 <style lang="scss" scoped>
 @import './icon.scss';
+@import './link.scss';
 .image{
     float: left;
     width: 40px;
