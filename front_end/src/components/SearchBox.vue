@@ -156,6 +156,17 @@
                 <el-option label="英语" value="3"></el-option>
               </el-select>
             </el-form-item>
+            <p>检索权重</p>
+            <el-form-item label="关键词更匹配" prop="AdLang">
+              <el-input-number v-model="weight_default" :precision="2" :step="0.1" :max="10"></el-input-number>
+              <p></p>
+            </el-form-item>
+            <el-form-item label="年份较近" prop="AdLang">
+              <el-input-number v-model="weight_year" :precision="2" :step="0.1" :max="10"></el-input-number>
+            </el-form-item>
+            <el-form-item label="更多引用" prop="AdLang">
+              <el-input-number v-model="weight_n_citation" :precision="2" :step="0.1" :max="10"></el-input-number>
+            </el-form-item>
           </el-form>
           <el-button type="primary" class="but"  @click="advanced_search_jump"
             >立即搜索</el-button
@@ -212,6 +223,9 @@ export default {
           value: 2,
         },
       ],
+      weight_default : 1,
+      weight_year : 1,
+      weight_n_citation : 1
     };
   },
   mounted() {
@@ -275,7 +289,23 @@ export default {
             search_params : JSON.stringify(es_request_body)
           },
       })
-      this.route_push_params("common",es_request_body);
+      let es_request_body_function_score = {}
+      es_request_body_function_score.query = {"function_score":{"query":es_request_body.query}}
+      es_request_body_function_score.query.function_score.functions = [
+        {"field_value_factor":{
+            "field": "n_citation",
+            "modifier": "sqrt",
+            "factor": 1,
+            "missing": 1
+          }},
+        {"script_score": {
+            "script": {
+              "source": "if(!doc['year'].empty && doc['year'].value>1990) { " +  1 + "* 0.5 *(doc['year'].value - 1990)} else {0}"
+            }
+          }}
+      ]
+      es_request_body_function_score.query.function_score.boost_mode = "sum"
+      this.route_push_params("common",es_request_body_function_score);
     },
     advanced_search_jump(){
       let es_request_body = {
@@ -317,7 +347,23 @@ export default {
       }
       if(this.advanced_search_query.year_begin) es_request_body.query.bool.must.push({"range":{"year":{"gte":this.advanced_search_query.year_begin}}})
       if(this.advanced_search_query.year_end) es_request_body.query.bool.must.push({"range":{"year":{"lte":this.advanced_search_query.year_end}}})
-      this.route_push_params("advanced",es_request_body)
+      let es_request_body_function_score = {}
+      es_request_body_function_score.query = {"function_score":{"query":es_request_body.query}}
+      es_request_body_function_score.query.function_score.functions = [
+        {"field_value_factor":{
+            "field": "n_citation",
+            "modifier": "sqrt",
+            "factor": 1,
+            "missing": 1
+          }},
+        {"script_score": {
+            "script": {
+              "source": "if(!doc['year'].empty && doc['year'].value>1990) { " +  this.weight_year/this.weight_default + "* 0.5 *(doc['year'].value - 1990)} else {0}"
+            }
+          }}
+      ]
+      es_request_body_function_score.query.function_score.boost_mode = "sum"
+      this.route_push_params("advanced",es_request_body_function_score)
     },
     route_push_params(search_type,es_request_body){
       sessionStorage.setItem("last_search",JSON.stringify({

@@ -112,7 +112,7 @@
                 {{i.content}}
               </div>
               <el-button size="medium" style="width: 100%" round icon="el-icon-document-copy" v-clipboard:copy="i.content" v-clipboard:success="onCopy" v-clipboard:error="onError">
-                复制引用
+                复制链接
               </el-button>
             </div>
           </el-dialog>
@@ -557,18 +557,7 @@ onError (e) {
             data: JSON.stringify(obj)
           }
       ).then(res=>{
-        if(index==0){
-          this.about_list=res.data.hits.hits
-        }
-        else{
-          // console.log(res.data.hits.hits)
-          for(var i=0;i<res.data.hits.hits.length;i++){
-            this.about_list.push(res.data.hits.hits[i])
-          }
-          
-          // console.log(this.about_list)
-        }
-        
+        this.about_list=res.data.hits.hits
       })
     },
     },

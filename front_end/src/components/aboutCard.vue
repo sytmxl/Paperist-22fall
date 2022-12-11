@@ -62,6 +62,9 @@ export default {
 .el-card {
   width: auto !important;
   border-radius: 10px !important;
+  box-shadow: none !important;
+  border: solid 1px #003b55a7 !important;
+
   background: none;
   margin-bottom: 15px !important;
 }
@@ -70,8 +73,13 @@ export default {
     background-color: rgba(255, 255, 255, 0);
     // border: none !important;
     border-color: rgba(215, 215, 215, 0.691);
-    color: rgb(245, 245, 245) !important;
+    // color: rgb(245, 245, 245) !important;
     // backdrop-filter: blur(20px) brightness(100%);
   }
+}
+/deep/.el-card__header {
+  background-color: #003b55 !important;
+  color: white;
+  font-weight: bold;
 }
 </style>

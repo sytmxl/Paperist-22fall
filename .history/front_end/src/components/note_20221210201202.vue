@@ -223,7 +223,7 @@ export default {
 }
 .el-main .response a:hover{
     cursor:pointer;
-    color:rgb(255, 255, 254);
+    color:antiquewhite;
 }
 
 .name{
@@ -238,7 +238,7 @@ export default {
     cursor:pointer
 }
 .el-icon-star-off, .el-icon-star-on{
-    margin-left:10px;
+    margin-left:30px;
 }
 .el-icon-star-off:hover,.el-icon-star-on:hover{
   cursor:pointer
@@ -262,13 +262,9 @@ export default {
 a {
   padding: 3px;
   border-radius: 5px;
-  transition: 0.3s;
 }
 a:hover {
-  background-color: rgb(219, 219, 219) !important;
-  color: rgb(0, 0, 0) !important;
-}
-.thumb, .thumb-filled {
-  margin-left: 20px;
+  background-color: #003b558e !important;
+  color: white;
 }
 </style>

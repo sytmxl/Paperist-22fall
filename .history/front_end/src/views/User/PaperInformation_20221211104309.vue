@@ -112,7 +112,7 @@
                 {{i.content}}
               </div>
               <el-button size="medium" style="width: 100%" round icon="el-icon-document-copy" v-clipboard:copy="i.content" v-clipboard:success="onCopy" v-clipboard:error="onError">
-                复制引用
+                复制链接
               </el-button>
             </div>
           </el-dialog>
