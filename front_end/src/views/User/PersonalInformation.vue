@@ -1159,7 +1159,6 @@ export default {
   mounted() {
     // this.initSort();
     this.initScholarPaper();
-    this.getScholarInfo();
     this.initRelations();
     this.noteLabel = this.isOthers ? "他的笔记" : "我的笔记";
   },
@@ -1185,40 +1184,7 @@ export default {
   },
   methods: {
     // 根据esid获得作者信息
-    getScholarInfo() {
-      let obj = {
-        query: {
-          bool: {
-            must: [],
-            filter: {},
-          },
-        },
-      };
-      obj.query.bool.must.push({
-        match_phrase: { id: this.$route.params.id },
-      });
-      obj.query.bool.filter = {
-        match_phrase: { id: this.$route.params.id },
-      };
-      axios({
-        headers: {
-          "content-type": "application/json",
-        },
-        auth: {
-          username: "elastic",
-          password: "BZYvLA-d*pS0EpI7utmJ",
-        },
-        url: "/es/author/_search",
-        method: "post",
-        data: JSON.stringify(obj),
-      }).then((res) => {
-        console.log("学者信息",res.data.hits.hits);
-        this.realname = res.data.hits.hits[0]._source.name;
-      });
-    },
     initRelations() {
-      var nameList = [];
-      console.log(this.realname);
       let obj = {
         query: {
           bool: {
@@ -1228,7 +1194,7 @@ export default {
         },
       };
       obj.query.bool.must.push({
-        match_phrase: { "authors.id": this.$route.params.id },
+        match_phrase: { id: this.$route.params.id },
       });
       obj.query.bool.filter = {
         match_phrase: { id: this.$route.params.id },
@@ -1245,7 +1211,63 @@ export default {
         method: "post",
         data: JSON.stringify(obj),
       }).then((res) => {
-        console.log(res.data.hits.hits);
+        console.log("学者信息", res.data.hits.hits);
+        this.realname = res.data.hits.hits[0]._source.name;
+        // 根据作者信息筛出曲线
+        var nameList = [];
+        console.log(this.realname);
+        obj = {
+          query: {
+            bool: {
+              must: [],
+              filter: {},
+            },
+          },
+        };
+        obj.query.bool.must.push({
+          match_phrase: { "authors.id": this.$route.params.id },
+        });
+        obj.query.bool.filter = {
+          match_phrase: { "authors.id": this.$route.params.id },
+        };
+        axios({
+          headers: {
+            "content-type": "application/json",
+          },
+          auth: {
+            username: "elastic",
+            password: "BZYvLA-d*pS0EpI7utmJ",
+          },
+          url: "/es/paper/_search",
+          method: "post",
+          data: JSON.stringify(obj),
+        }).then((res) => {
+          console.log("论文", res.data.hits.hits);
+          var paperList = res.data.hits.hits;
+          for (var i = 0; i < paperList.length; i++) {
+            var authorList = paperList[i]._source.authors;
+            for (var j = 0; j < authorList.length; j++) {
+              if (authorList[j].name != this.realname) {
+                if(nameList[authorList[j].name]==undefined||nameList[authorList[j].name]==null)
+                nameList[authorList[j].name] ={
+                  id:authorList[j].id,
+                  name:authorList[j].name,
+                  value:1
+                }
+                else{
+                  nameList[authorList[j].name].value++;
+                }
+              }
+            }
+          }
+          console.log("字典",nameList);
+          // 遍历字典
+          var relationsData = [];
+          for (var key in nameList) {
+            relationsData.push(nameList[key]);
+          }
+          this.RelationsData=relationsData;
+        });
       });
     },
     // 获取学者文献（曲线）

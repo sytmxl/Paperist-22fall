@@ -268,11 +268,11 @@ export default {
                 window.location.href =
                   "/result?input=" + params.data.name + "&type=4";
               } else {
-                let routeData = this.$router.resolve({
-                  path: "/personalInformation",
-                  params: { id: that.relations[i].id },
-                });
-                window.open(routeData.href, "_blank");
+                // let routeData = that.$router.resolve({
+                //   name: "personalInformation",
+                //   params: { id: that.relations[i].id },
+                // });
+                window.open("" + that.relations[i].id, "_blank");
                 // window.location.href = "" + that.relations[i].id;
               }
             }
