@@ -10,7 +10,6 @@ module.exports = defineConfig({
         pathRewrite: {
           '^/user' : ''
         },
-
       },
       '/app/': {
         target: 'http://127.0.0.1:8000/app/',

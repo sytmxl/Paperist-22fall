@@ -254,6 +254,19 @@
               </h2>
               <el-divider />
               <ScholarLine :data="Linedata"> </ScholarLine>
+              <h2 style="text-align: left">
+                论文引用情况
+                <span>
+                  <el-tooltip class="item" effect="dark" placement="right">
+                    <div slot="content">
+                      论文引用情况展示了该学者在不同年份论文的引用情况
+                    </div>
+                    <i class="el-icon-info" style="font-size: 15px"></i>
+                  </el-tooltip>
+                </span>
+              </h2>
+              <el-divider />
+              <ScholarLine2 :data="Linedata2"> </ScholarLine2>
               <h2 style="text-align: left; margin-top: 20px">
                 学者关系网络
                 <span>
@@ -994,6 +1007,7 @@
 import qs from "qs";
 import RelationShip from "@/components/RelationShip.vue";
 import ScholarLine from "@/components/ScholarLine.vue";
+import ScholarLine2 from "@/components/ScholarLine2.vue";
 import TopBar from "@/components/TopBar";
 import PaperCard from "@/components/PaperCard.vue";
 import claimScholar from "@/components/claimScholar.vue";
@@ -1008,6 +1022,7 @@ export default {
     TopBar,
     PaperCard,
     claimScholar,
+    ScholarLine2,
   },
   data() {
     return {
@@ -1058,6 +1073,10 @@ export default {
       id: 0,
       papers: [],
       tmpPapers: [],
+      tmp2Papers: [],
+      tmp3Papers: [],
+      tmpLinedata: [],
+      tmpLinedata2: [],
       paperCollection: [],
       noteCollection: [],
       notes: [],
@@ -1073,6 +1092,7 @@ export default {
 
       RelationsData: [],
       Linedata: [],
+      Linedata2: [],
       ScholarLiteratureSort: "",
       ScholarLiteratureOptions: [
         {
@@ -1138,9 +1158,10 @@ export default {
   },
   mounted() {
     this.initRelations();
-    this.initLine();
     // this.initSort();
     this.initScholarPaper();
+    this.initLine();
+    this.initLine2();
     this.noteLabel = this.isOthers ? "他的笔记" : "我的笔记";
   },
   watch: {
@@ -1155,11 +1176,11 @@ export default {
         this.isToken = 1; //是自己，用token访问
         this.isOthers = false;
         this.id = 1; //无用
-        console.log('memememememememe');
+        console.log("memememememememe");
       } else if (this.isMyself == 0) {
         this.isToken = 0;
         this.isOthers = true;
-        console.log('youyouyouyou');
+        console.log("youyouyouyou");
       }
     },
   },
@@ -1178,16 +1199,38 @@ export default {
       });
     },
     initLine() {
-      this.$axios({
-        method: "post",
-        url: "/app/get_scholar_paper_list/",
-        data: {
-          id: this.$route.params.id,
+      let obj = {
+        query: {
+          bool: {
+            must: [],
+            filter: {},
+          },
         },
+      };
+      obj.query.bool.must.push({
+        match_phrase: { "authors.id": this.$route.params.id },
+      });
+      obj.query.bool.filter = {
+        match_phrase: { "authors.id": this.$route.params.id },
+      };
+      axios({
+        headers: {
+          "content-type": "application/json",
+        },
+        auth: {
+          username: "elastic",
+          password: "BZYvLA-d*pS0EpI7utmJ",
+        },
+        url: "/es/paper/_search",
+        method: "post",
+        data: JSON.stringify(obj),
       }).then((res) => {
+        this.tmp2Papers = res.data.hits.hits;
+        this.tmp2Papers.sort(this.compareUp("year"));
         var count = new Array(2500).fill(0);
-        res.data.data.forEach((item, index) => {
-          count[item.year]++;
+        console.log("initLine", this.tmp2Papers);
+        this.tmp2Papers.forEach((item, index) => {
+          count[item._source.year]++;
         });
         this.tmpLinedata = [];
         count.forEach((item, index) => {
@@ -1200,9 +1243,57 @@ export default {
         });
         this.Linedata = this.tmpLinedata;
         console.log("initLine");
-        console.log(res.data);
         console.log(count);
         console.log(this.Linedata);
+      });
+    },
+    initLine2() {
+      let obj = {
+        query: {
+          bool: {
+            must: [],
+            filter: {},
+          },
+        },
+      };
+      obj.query.bool.must.push({
+        match_phrase: { "authors.id": this.$route.params.id },
+      });
+      obj.query.bool.filter = {
+        match_phrase: { "authors.id": this.$route.params.id },
+      };
+      axios({
+        headers: {
+          "content-type": "application/json",
+        },
+        auth: {
+          username: "elastic",
+          password: "BZYvLA-d*pS0EpI7utmJ",
+        },
+        url: "/es/paper/_search",
+        method: "post",
+        data: JSON.stringify(obj),
+      }).then((res) => {
+        this.tmp3Papers = res.data.hits.hits;
+        this.tmp3Papers.sort(this.compareUp("year"));
+        var count2 = new Array(2500).fill(0);
+        console.log("initLine2", this.tmp3Papers);
+        this.tmp3Papers.forEach((item, index) => {
+          count2[item._source.year] += item._source.n_citation;
+        });
+        this.tmpLinedata2 = [];
+        count2.forEach((item, index) => {
+          if (item != 0) {
+            this.tmpLinedata2.push({
+              count: item,
+              content: index,
+            });
+          }
+        });
+        this.Linedata2 = this.tmpLinedata2;
+        console.log("initLine2");
+        console.log(count2);
+        console.log("ss", this.Linedata2);
       });
     },
     // 获取学者文献
@@ -1235,7 +1326,8 @@ export default {
       }).then((res) => {
         this.papers = res.data.hits.hits;
         this.tmpPapers = this.papers;
-        this.papers.sort(this.compareDown("year"));
+        this.papers.sort(this.compareUp("year"));
+        this.tmpPapers.sort(this.compareUp("year"));
         console.log(this.papers);
       });
     },
@@ -1257,14 +1349,14 @@ export default {
     // 筛选出学者指定标题文献
     searchScholarPaperCollection() {
       if (this.selectScholarLiterature != "") {
-        var arr=[];
+        var arr = [];
         arr = this.papers.filter((item) => {
           var reg = new RegExp(this.selectScholarLiterature, "gi");
           return reg.test(item._source.title);
         });
         this.papers = arr;
-        console.log(arr)
-        console.log(this.papers)
+        console.log(arr);
+        console.log(this.papers);
       } else {
         this.papers = this.tmpPapers;
       }

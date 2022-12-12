@@ -2,8 +2,7 @@
   <div class="main">
     <h1>{{ noteInfo.name }}</h1>
     <span>
-      <h2>用户名</h2>
-      <p>{{ noteInfo.author }}</p>
+      <h2>用户名: {{ noteInfo.author }}</h2>
     </span>
     <h2>笔记内容</h2>
     <p class="abstract">{{ noteInfo.content }}</p>
@@ -30,6 +29,11 @@ export default {
 .main {
   margin-left: 5%;
   margin-right: 5%;
+  text-align: left;
+}
+
+h2 {
+  margin-bottom: 5%;
 }
 
 .abstract {
