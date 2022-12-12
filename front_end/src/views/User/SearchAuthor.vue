@@ -6,25 +6,6 @@
         <el-col :span="4">
           <el-button type="primary" @click="back()">返回主页</el-button>
         </el-col>
-        <el-col :span="20">
-          <el-input
-            placeholder="请输入内容"
-            v-model="input3"
-            class="input-with-select"
-          >
-            <el-select
-              style="width: 7vw"
-              v-model="select"
-              slot="prepend"
-              placeholder="请选择"
-            >
-              <el-option label="按名字" value="1"></el-option>
-              <el-option label="按编号" value="2"></el-option>
-              <el-option label="按文献" value="3"></el-option>
-            </el-select>
-            <el-button slot="append" icon="el-icon-search"></el-button>
-          </el-input>
-        </el-col>
       </el-row>
       <el-row class="cards">
         <el-col
@@ -57,6 +38,7 @@ export default {
   name: "SearchAuthor",
   data() {
     return {
+      search_query: null,
       searchAuthors: [
         {
           name: "Ando",
@@ -77,6 +59,9 @@ export default {
     back() {
       this.$router.push("/firstPage");
     },
+  },
+  mounted() {
+    this.search_query = this.$route.query.search_query;
   },
 };
 </script>
