@@ -176,6 +176,20 @@
                   @click="gotoAuthorization()"
                   >学者认领</el-button
                 >
+                <el-button
+                  type="primary"
+                  size="small"
+                  v-if="isClaim && isScholar && isOthers && hasSub"
+                  @click="gotoSubScribe()"
+                  >取消订阅学者</el-button
+                >
+                <el-button
+                  type="primary"
+                  size="small"
+                  v-if="isClaim && isScholar && isOthers && !hasSub"
+                  @click="gotoSubScribe()"
+                  >订阅学者</el-button
+                >
               </template>
               <el-descriptions-item label="真实姓名">{{
                 realname
@@ -1099,8 +1113,9 @@ export default {
       myComment: [],
       commentToMe: [],
       subscribes: [],
+      SubscribePeopleList: [],
       isClaim: true,
-
+      hasSub: false,
       es_id: "",
       //图片
       profile: "",
@@ -1225,6 +1240,7 @@ export default {
     this.initScholarPaper();
     this.getScholarInfo();
     this.initRelations();
+    this.getSubscribe2();
     // }
 
     this.noteLabel = this.isOthers ? "他的笔记" : "我的笔记";
@@ -2362,6 +2378,62 @@ export default {
         return false;
       } else {
         return true;
+      }
+    },
+    getSubscribe2() {
+      this.$axios({
+        url: "/user/getSubscribe/",
+        method: "post",
+        data: {
+          token: sessionStorage.getItem("token"),
+          isToken: 1,
+          id: 1,
+        },
+      }).then((res) => {
+        this.SubscribePeopleList = res.data.data;
+        for(var i=0;i<this.SubscribePeopleList.length;i++){
+          if(this.SubscribePeopleList[i].id==this.$route.params.id){
+            this.hasSub=true;
+            break;
+          }
+        }
+      });
+    },
+    //订阅学者
+    gotoSubScribe() {
+      if (this.islogin) {
+        if (this.hasSub) {
+          this.$axios({
+            url: "http://127.0.0.1:8000/subscribe/",
+            method: "post",
+            data: {
+              author_id: this.$route.params.id,
+              op: 0,
+            },
+          }).then((res) => {
+            this.$message.success("已取消关注");
+            this.hasSub=false;
+          });
+        } else {
+          this.$axios({
+            url: "http://127.0.0.1:8000/subscribe/",
+            method: "post",
+            data: {
+              author_id: this.$route.params.id,
+              op: 1,
+            },
+          }).then((res) => {
+            this.$message.success("已关注");
+            this.hasSub=true;
+          });
+        }
+      } else {
+        this.$message.warning("请先登录");
+        setTimeout(() => {
+          this.$router.push({
+            name: "login",
+          });
+        }, 1000);
       }
     },
   },
