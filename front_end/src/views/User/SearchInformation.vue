@@ -76,10 +76,28 @@
         <div>
           <!-- <el-card style="min-height: calc(75vh)" class="display_zone" shadow="never"> -->
           <paper-card v-for="paper in papers" :key="card_index"
-                      :paper_data = "paper"
+                      :paper_data = "paper" @react_quote="react_card"
           />
           <!-- </el-card> -->
         </div>
+         <el-dialog
+            :lock-scroll="false"
+            title="引用"
+            :visible.sync="QuoteVisible"
+            width="30%"
+            >
+            <div v-for="i in quote_list" :key="i" style="margin-bottom:10px">
+              <div style="border-radius:10px;padding:5px;width:30%; font-size: medium;">
+                {{i.type}} 
+              </div>
+              <div style="border-radius:10px;padding:5px;margin:2px 0">
+                {{i.content}}
+              </div>
+              <el-button size="medium" style="width: 100%" round icon="el-icon-document-copy" v-clipboard:copy="i.content" v-clipboard:success="onCopy" v-clipboard:error="onError">
+                复制引用
+              </el-button>
+            </div>
+          </el-dialog>
         <el-pagination 
             @current-change="change_page"
             :current-page="currentPage"
@@ -164,9 +182,57 @@ export default {
       card_index:[],
       loading:true,
       loading_interested:true,
+      QuoteVisible:false,
+      quote_list:[]
     }
   },
   methods :{
+    async react_card(data){
+      // this.quote_list=[];
+      console.log(data)
+      if(data.quote==true){
+        this.QuoteVisible=true;
+        await this.$axios({
+            url:"http://127.0.0.1:8000/paperQuote/",
+            method:"post",
+            data:{
+                paper_id:data.paper_id
+            }
+        }).then(res=>{
+            this.quote_list = res.data.quote
+            
+        })
+      }
+      else{
+        if(data.collect==true){
+           this.$axios({
+              url:"http://127.0.0.1:8000/paperCollection/",
+              method:"post",
+              data:{
+                  paper_id:data.paper_id,
+                  note_id:"",
+                  op:1
+              }
+            }).then(res=>{
+              this.$message.success("已收藏")
+            })
+        }
+        else{
+          this.$axios({
+              url:"http://127.0.0.1:8000/paperCollection/",
+              method:"post",
+              data:{
+                  paper_id:data.paper_id,
+                  note_id:"",
+                  op:0
+              }
+            }).then(res=>{
+              this.$message.success("已取消收藏")
+            })
+        }
+      }
+      
+    },
     toThousands(num) {
       var result = [ ], counter = 0;
       num = (num || 0).toString().split('');
