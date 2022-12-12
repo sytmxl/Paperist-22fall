@@ -4,7 +4,7 @@
       <div id="logo1" class="home_logo"></div>
     </el-row>
     <el-row class="search_area">
-      <SearchBox ref="searchBox"/>
+      <SearchBox ref="searchBox" />
     </el-row>
     <!-- <note :list="1" @reaction_note="aboutNoteInit()" /> -->
     <el-row :gutter="10" class="display_zone">
@@ -476,9 +476,9 @@ export default {
     // },
     // 搜索热门领域
     search_field(arg) {
-      this.$refs.searchBox.common_search_type=2;
-      this.$refs.searchBox.common_search_query=arg;
-      this.$refs.searchBox. common_search_jump();
+      this.$refs.searchBox.common_search_type = 2;
+      this.$refs.searchBox.common_search_query = arg;
+      this.$refs.searchBox.common_search_jump();
     },
     isLogin() {
       if (sessionStorage.getItem("token")) {

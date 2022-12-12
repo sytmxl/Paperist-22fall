@@ -95,6 +95,14 @@ export default {
     };
   },
   methods: {
+    init() {
+      this.$axios({
+        url: "http://127.0.0.1:8000/manager/review_notes/list/",
+        method: "get",
+      }).then((res) => {
+        console.log(res);
+      });
+    },
     toFile(index) {
       console.log(index);
       this.$router.push("/literature");
@@ -113,10 +121,13 @@ export default {
       this.dialogFormVisible = false;
     },
   },
+  mounted() {
+    this.init();
+  },
 };
 </script>
 
-<style lang="scss" scoped>
+<style scoped>
 .main {
   margin-left: 5%;
   margin-right: 5%;
