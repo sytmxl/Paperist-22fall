@@ -4,10 +4,9 @@
        <el-main class="left base" v-if="author.length != 0">
         <div class="author" >
             <el-card v-if="author.length != 0">
-              <div class="author_img">
-                  <img :src="author.image" alt="">
+              <div class="author_img" @click="goto_person()">
+                  <img :src="author.image" alt=""  >
                   <span>{{author.name}}</span>
-                  <span @click="goto_person()">他的主页</span>
               </div>
               <div class="author_info">
                 <span v-if="author.institution.length!=0">所属机构：<div v-for="i in author.institution" :key="i">{{i}}</div></span>
@@ -382,6 +381,9 @@ export default {
 .author_img{
     width:100%;
     height:120px;
+    &:hover {
+    cursor: pointer;
+  }
 }
 .author_img span{
     margin-top:50px;
@@ -508,5 +510,4 @@ export default {
 		border: none !important;
 	}
 }
-
 </style>
