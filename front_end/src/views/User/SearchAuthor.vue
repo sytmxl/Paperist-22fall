@@ -62,13 +62,44 @@ export default {
   },
   mounted() {
     this.search_query = this.$route.query.search_query;
+    let obj = {
+      query: {
+        bool: {
+          must: [],
+          filter: {},
+        },
+      },
+    };
+    obj.query.bool.must.push({
+      match_phrase: { name: this.search_query },
+    });
+    obj.query.bool.filter = {
+      match_phrase: { name: this.search_query },
+    };
+    this.$axios({
+      headers: {
+        "content-type": "application/json",
+      },
+      auth: {
+        username: "elastic",
+        password: "BZYvLA-d*pS0EpI7utmJ",
+      },
+      url: "/es/author/_search",
+      method: "post",
+      data: JSON.stringify(obj),
+    }).then((res) => {
+      console.log(res.data.hits.hits);
+      for (let i = 0; i < res.data.hits.hits.length; i++) {
+        this.searchAuthors[i] = res.data.hits.hits[i]._source;
+      }
+    });
   },
 };
 </script>
 
 <style scoped>
 .main {
-  height: 100vh;
+  height: auto;
 }
 
 .content {
