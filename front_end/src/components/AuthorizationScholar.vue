@@ -61,7 +61,7 @@ export default {
     },
     submit() {
       this.$axios({
-        url: "/user/claimAuthor",
+        url: "/user/claimAuthor/",
         headers: { "Content-Type": "multipart/form-data" },
         method: "post",
         data: {
