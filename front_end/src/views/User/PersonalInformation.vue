@@ -1155,11 +1155,11 @@ export default {
         this.isToken = 1; //是自己，用token访问
         this.isOthers = false;
         this.id = 1; //无用
-        console.log(memememememememe);
+        console.log('memememememememe');
       } else if (this.isMyself == 0) {
         this.isToken = 0;
         this.isOthers = true;
-        console.log(youyouyouyou);
+        console.log('youyouyouyou');
       }
     },
   },

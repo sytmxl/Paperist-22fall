@@ -61,10 +61,20 @@
       <el-col :span="8">
         <el-button-group style="float: right; margin-bottom: 2%">
           <el-button type="default" @click="clickFavourite">
-            <i v-if="isFavourite === false" class="el-icon-star-off"></i>
-            <i v-else class="el-icon-star-on"></i>
+            <i
+              v-if="collect_flag === false"
+              class="el-icon-star-off"
+              @click="collect()"
+              title="收藏"
+            ></i>
+            <i
+              v-else
+              class="el-icon-star-on"
+              @click="collect()"
+              title="取消收藏"
+            ></i>
           </el-button>
-          <el-button type="primary" @click="clickFavourite">
+          <el-button type="primary" @click="quote()">
             <i class="el-icon-paperclip"></i>
           </el-button>
         </el-button-group>
@@ -74,6 +84,7 @@
 </template>
 
 <script>
+let isclick = true;
 export default {
   name: "PaperCard",
   props: {
@@ -91,10 +102,12 @@ export default {
     if (source.keywords != null) this.keywords = source.keywords;
     if (source.issue != null) this.issue = source.issue;
     if (source.id != null) this.es_id = source.id;
+    this.quoteInit();
   },
   data() {
     return {
-      isFavourite: false,
+      QuoteVisible: false,
+      collect_flag: false,
       title: "",
       authors: [],
       content: "未收录摘要",
@@ -104,9 +117,59 @@ export default {
       keywords: [],
       issue: "未知",
       es_id: "",
+      quote_list: [],
     };
   },
   methods: {
+    quoteInit() {
+      this.$axios({
+        url: "http://127.0.0.1:8000/paperQuote/",
+        method: "post",
+        data: {
+          paper_id: this.es_id,
+        },
+      }).then((res) => {
+        this.quote_list = res.data.quote;
+      });
+    },
+    quote() {
+      this.$emit("quoteEmit", this.quote_list);
+    },
+    collect() {
+      if (sessionStorage.getItem("token") == null) {
+        this.$message.warning("请先登录");
+      } else {
+        this.collect_flag = !this.collect_flag;
+        if (!this.collect_flag) {
+          this.$axios({
+            url: "http://127.0.0.1:8000/paperCollection/",
+            method: "post",
+            data: {
+              paper_id: this.es_id,
+              note_id: "",
+              op: 0,
+            },
+          }).then((res) => {
+            this.$message.success("已取消收藏");
+          });
+        } else {
+          this.$axios({
+            url: "http://127.0.0.1:8000/paperCollection/",
+            method: "post",
+            data: {
+              paper_id: this.es_id,
+              note_id: "",
+              op: 1,
+            },
+          }).then((res) => {
+            this.$message.success("已收藏");
+          });
+        }
+        setTimeout(() => {
+          isclick = true;
+        }, 500);
+      }
+    },
     limitWords(txt) {
       let str = txt;
       if (str == null) return "";
@@ -114,7 +177,7 @@ export default {
       return str;
     },
     clickFavourite() {
-      this.isFavourite = !this.isFavourite;
+      this.collect_flag = !this.collect_flag;
     },
     getAuthorsList() {
       let str = "";
