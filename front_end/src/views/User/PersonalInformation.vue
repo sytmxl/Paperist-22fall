@@ -172,7 +172,7 @@
                 <el-button
                   type="primary"
                   size="small"
-                  v-if="!isAuthorized"
+                  v-if="!isClaim"
                   @click="gotoAuthorization()"
                   >学者认领</el-button
                 >
@@ -1145,7 +1145,7 @@ export default {
       ],
       flag: true,
       AuthorizationDialogVisable: false,
-      isAuthorized: false,
+      hasClaimed: true,
     };
   },
   created() {
@@ -1180,6 +1180,20 @@ export default {
       if(res.data.id==""){
         console.log(123454321)
         this.isClaim=false;
+      }
+    });
+
+    this.$axios({
+      method: "post",
+      url: "/user/userToEs/",
+      data: {
+        user_id: this.$route.params.id,
+      },
+    }).then((res) => {
+      console.log("idtoes",res.data);
+      if(res.data.id==""){
+        console.log(123454321)
+        this.hasClaimed=false;
       }
     });
     //如果传的是id，上面那个也是空，不符合条件
