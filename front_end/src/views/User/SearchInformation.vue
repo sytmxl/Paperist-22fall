@@ -454,6 +454,7 @@ export default {
         this.filterGroup_author = Array.from(new Set(this.filterGroup_author));
         this.filterGroup_venue = Array.from(new Set(this.filterGroup_venue));
         this.filterGroup_year = Array.from(new Set(this.filterGroup_year));
+        this.filterGroup_year.sort()
 
         localStorage.setItem(
           "interested_keywords",
