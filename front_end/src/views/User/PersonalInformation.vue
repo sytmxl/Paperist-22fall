@@ -1758,6 +1758,7 @@ export default {
         this.new_personalProfile = "";
         this.new_researchField = "";
       });
+      this.windows.reload();
     },
     //个人收藏、个人订阅、我的笔记等初始化栏
     handleClickAll(tab, event) {

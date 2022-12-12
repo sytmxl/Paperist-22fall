@@ -272,8 +272,9 @@ export default {
                 //   name: "personalInformation",
                 //   params: { id: that.relations[i].id },
                 // });
-                window.open("" + that.relations[i].id, "_blank");
-                // window.location.href = "" + that.relations[i].id;
+                // window.open(routeData.href, '_blank')
+                // window.open("" + that.relations[i].id, "_blank");
+                window.location.href = "" + that.relations[i].id;
               }
             }
           }
