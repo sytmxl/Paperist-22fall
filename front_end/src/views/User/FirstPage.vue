@@ -869,6 +869,7 @@ export default {
 .search_area {
   position: sticky;
   top:0;
+  width: fit-content;
   z-index: 1000;
 }
 .avatar, .notLog {
