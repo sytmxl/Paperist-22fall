@@ -1168,10 +1168,10 @@ export default {
   },
   mounted() {
     // this.initSort();
+    this.es_id = this.$route.params.id;
     this.initScholarPaper();
     this.initRelations();
     this.noteLabel = this.isOthers ? "他的笔记" : "我的笔记";
-    this.es_id = this.$route.params.id;
   },
   watch: {
     isOthers: function (newVal, oldVal) {
