@@ -1,27 +1,22 @@
 <template>
   <div class="main">
     <h1>待审核缺失文献</h1>
-    <el-table :data="fileLacks">
-      <el-table-column fixed prop="date" label="提交时间" width="150">
-      </el-table-column>
-      <el-table-column prop="name" label="用户名" width="120">
-      </el-table-column>
-      <el-table-column prop="lackFileName" label="缺失文献名">
-      </el-table-column>
-      <el-table-column label="操作">
-        <template slot-scope="scope">
-           <el-button
-            type="primary"
-            @click="toFile(scope.row.index)"
-            size="small"
-            >查看申诉详情</el-button
-          >
+    <div v-for="i in fileLacks" :key="i">
+        <el-card style="margin-top:30px;text-align:left">
+          <span>提交时间：{{i.time}}</span>
+          <span>用户id: {{i.user_id}}</span>
           <el-button type="primary" size="small" @click="handleCreate"
             >审核</el-button
           >
-        </template>
-      </el-table-column>
-    </el-table>
+           <el-button
+            type="primary"
+            @click="info(i)"
+            size="small"
+            >查看申诉详情</el-button
+          >
+          
+        </el-card>
+    </div>
     <el-dialog :visible.sync="dialogFormVisible">
       <el-form
         :model="questionForm"
@@ -57,6 +52,17 @@
         <el-button type="primary" @click="createData()">确定</el-button>
       </div>
     </el-dialog>
+        <el-dialog :visible.sync="ContentVisible">
+        <el-descriptions title="文献详情信息" column="1">
+        <el-descriptions-item label="文献名">{{nowitem.title}}</el-descriptions-item>
+        <el-descriptions-item label="作者">{{nowitem.author}}</el-descriptions-item>
+        <el-descriptions-item label="关键词">{{nowitem.keyword}}</el-descriptions-item>
+        <el-descriptions-item label="发表年份">{{nowitem.date}}</el-descriptions-item>
+        <el-descriptions-item label="DOI">{{nowitem.doi}}</el-descriptions-item>
+        <el-descriptions-item label="摘要">{{nowitem.abstract}}</el-descriptions-item>
+        <el-descriptions-item label="阅读链接">{{nowitem.link}};</el-descriptions-item>
+</el-descriptions>
+    </el-dialog>
   </div>
 </template>
 
@@ -65,24 +71,10 @@ export default {
   name: "AuditLiterature",
   data() {
     return {
-      fileLacks: [
-        {
-          date: "2022.11.13",
-          name: "ando",
-          lackFileName: "Denoising Diffusion Probabilistic Models",
-        },
-        {
-          date: "2022.11.13",
-          name: "ando",
-          lackFileName: "Denoising Diffusion Probabilistic Models",
-        },
-        {
-          date: "2022.11.13",
-          name: "ando",
-          lackFileName: "Denoising Diffusion Probabilistic Models",
-        },
-      ],
+      fileLacks: [],
+      nowitem:{},
       dialogFormVisible: false,
+      ContentVisible:false,
       input: "",
       tabMapOptions: [
         { label: "通过", key: "pass" },
@@ -102,17 +94,31 @@ export default {
       };
       this.dialogFormVisible = true;
     },
-    toFile(index) {
-      console.log(index);
-      this.$router.push("/repre");
-    },
     async createData() {
       const params = this.questionForm;
       console.log("发送审核结果");
       console.log(JSON.stringify(params));
       this.dialogFormVisible = false;
     },
+    init(){
+      this.$axios({
+        url: "http://127.0.0.1:8000/manager/manageMissingPaper/",
+        method: "post",
+        data: {
+         
+        },
+      }).then((res) => {
+        this.fileLacks = res.data.data;
+      });
+    },
+    info(item){
+      this.ContentVisible = true;
+      this.nowitem = item
+    }
   },
+  mounted(){
+    this.init()
+  }
 };
 </script>
 
@@ -120,5 +126,9 @@ export default {
 .main {
   margin-left: 5%;
   margin-right: 5%;
+}
+.el-button{
+  float: right;
+  margin-right: 20px;
 }
 </style>

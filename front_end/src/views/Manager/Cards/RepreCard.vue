@@ -2,13 +2,19 @@
   <div class="main">
     <el-page-header @back="goBack" content="详情页面">
     </el-page-header>
-    <h1>{{ fileInfo.name }}</h1>
-    <span>
-      <h2>作者</h2>
-      <p>{{ fileInfo.author }}</p>
-    </span>
-    <h2>摘要</h2>
-    <p class="abstract">{{ fileInfo.abstract }}</p>
+      <el-descriptions title="文献详情信息" column="1">
+    <el-descriptions-item label="文献名">kooriookami</el-descriptions-item>
+    <el-descriptions-item label="作者">18100000000</el-descriptions-item>
+    <el-descriptions-item label="关键词">苏州市</el-descriptions-item>
+    <el-descriptions-item label="发表年份">1999</el-descriptions-item>
+    <el-descriptions-item label="DOI">江苏省苏州市吴中区吴中大道 1188 号</el-descriptions-item>
+    <el-descriptions-item label="摘要">江苏省苏州市吴中区吴中大道 1188 号</el-descriptions-item>
+    <el-descriptions-item label="阅读链接">
+      <div v-for="(i,index) in url" :key="index" style="margin-right:50px">
+         {{i}};
+      </div>
+    </el-descriptions-item>
+</el-descriptions>
   </div>
 </template>
 
@@ -17,12 +23,7 @@ export default {
   name: "RepreCard",
   data() {
     return {
-      fileInfo: {
-        name: "Denoising Diffusion Probabilistic Models",
-        author: "Jonathan HoAjay JainPieter Abbeel",
-        abstract:
-          "我们使用扩散概率模型呈现了高质量的图像合成结果，这种模型是受非平衡热力学考量启发的一种隐变量模型。我们的最佳结果是通过根据扩散概率模型和基于Langevin动力学的得分匹配模型的新连接设计的加权变分边界进行训练而获得的，并且我们的模型天然地承认是一种渐进式有损解压方案，也可以被解释为自回归解码的一种泛化。",
-      },
+      url:["666","888","+++"]
     };
   },
   methods:{

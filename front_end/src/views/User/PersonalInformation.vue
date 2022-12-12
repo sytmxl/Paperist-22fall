@@ -2547,6 +2547,12 @@ export default {
 //似乎必须要用deep、选择全部子标签、颜色用全透明才行
 /deep/.el-descriptions *:not(button) {
   background-color: #003b5500 !important;
+  color: #000000 !important;
+}
+.dark-mode {
+  /deep/.el-descriptions *:not(button) {
+    color: #ffffff !important;
+  }
 }
 .title {
   width: calc(100% - 80px);
