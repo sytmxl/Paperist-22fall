@@ -1,5 +1,6 @@
 <template>
   <div style="min-height:calc(100vh) width:calc(100vh)">
+    <div class="hide"></div>
     <el-row class="logo_area">
       <div id="logo1" class="home_logo"></div>
     </el-row>
@@ -354,7 +355,12 @@ export default {
     this.getSubscribe();
     this.load_interested(1);
     // this.getHot();
-    $("#topbar").css("display", "none");
+    // $(".search_input:first").css("visibility", "hidden");
+    // $(".logo:first").css("margin-right", "87vw");
+    $("#bar-content").css({
+          "width": "100%",
+        });
+    // $("#topbar").css("display", "none");
     window.addEventListener("scroll", this.scroll, true);
   },
   destroyed() {
@@ -568,10 +574,18 @@ export default {
     scroll() {
       var windowTop = $(window).scrollTop();
       // windowTop > 300 ?
-      if (windowTop > 300) {
-        $("#topbar").css("display", "block");
+      if (windowTop > 270) {
+        $("#bar-content").css({
+          // "display": "block",
+          // "width": "fit-content",
+        });
+        
       } else {
-        $("#topbar").css("display", "none");
+        $("#bar-content").css({
+          // "width": "100%",
+         
+        });
+        
       }
     },
     toggleDarkLight() {
@@ -659,8 +673,9 @@ export default {
 }
 .search_area {
   width: 100%;
-  min-height: calc(10vh);
+  // min-height: calc(10vh);
   margin: 0 auto;
+  // background: #000;
   // padding-top: calc(5vh);
   clear: both;
 }
@@ -844,5 +859,37 @@ export default {
   background: #003b55;
 }
 /deep/.el-input-group {
+}
+.long {
+
+}
+.short {
+
+}
+.search_area {
+  position: sticky;
+  top:0;
+  z-index: 1000;
+}
+.avatar, .notLog {
+  
+}
+.search_input {
+  margin-top: 5px;
+}
+/deep/.search_input:first {
+  visibility: hidden;
+}
+.logo {
+  
+}
+.hide {
+  width: 60vw;
+  height: 50px;
+  position: sticky;
+  top: 0;
+  left: 20%;
+  background: #003b55;
+  z-index: 999;
 }
 </style>
