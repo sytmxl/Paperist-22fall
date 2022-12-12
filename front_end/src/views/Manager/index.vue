@@ -8,6 +8,7 @@
             class="el-menu-vertical-demo"
             @open="handleOpen"
             @close="handleClose"
+            default-openeds="2"
           >
             <el-menu-item class="white" index="1" @click="goTo('/manageScholar')">
               <template slot="title">
@@ -21,11 +22,11 @@
                 <span class="white">管理审核</span>
               </template>
               <el-menu-item-group>
-                <el-menu-item index="2-1" @click="goTo('/auditRepresentation')"
+                <el-menu-item index="2-1" @click="goTo('/auditLiterature')"
                   >文献申述</el-menu-item
                 >
                 <el-menu-item index="2-2" @click="goTo('/auditIdentity')"
-                  >学者身份申述</el-menu-item
+                  >学者身份认领</el-menu-item
                 >
                 <el-menu-item index="2-3" @click="goTo('/auditLack')"
                   >文献缺失反馈</el-menu-item
@@ -34,11 +35,11 @@
                   >评论举报</el-menu-item
                 >
                 <el-menu-item index="2-5" @click="goTo('/auditNote')"
-                  >笔记</el-menu-item
+                  >笔记举报</el-menu-item
                 >
-                <el-menu-item index="2-6" @click="goTo('/auditLiterature')"
-                  >文献</el-menu-item
-                >
+                <!-- <el-menu-item index="2-6" @click="goTo('/auditLiterature')"
+                  >文献申诉</el-menu-item
+                > -->
               </el-menu-item-group>
             </el-submenu>
             <el-menu-item class="white" index="3" @click="goTo('/importLiterature')">

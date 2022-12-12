@@ -1,20 +1,21 @@
 <template>
   <div class="main">
-    <h1>待审核笔记</h1>
+    <h1>待审核笔记举报</h1>
     <el-table :data="notes">
       <el-table-column fixed prop="date" label="提交时间" width="150">
       </el-table-column>
       <el-table-column prop="name" label="用户名" width="120">
       </el-table-column>
       <el-table-column prop="noteName" label="笔记名"> </el-table-column>
+      <el-table-column prop="noteId" label="笔记id"> </el-table-column>
       <el-table-column label="操作">
         <template slot-scope="scope">
-          <el-button
+          <!-- <el-button
             type="primary"
             @click="toNote(scope.row.index)"
             size="small"
             >查看笔记详情</el-button
-          >
+          > -->
           <el-button type="primary" size="small" @click="handleCreate"
             >审核</el-button
           >

@@ -1,21 +1,23 @@
 <template>
   <div class="main">
-    <h1>待审核文献</h1>
+    <h1>待审核文献申诉</h1>
     <el-table :data="files">
       <el-table-column fixed prop="date" label="提交时间" width="150">
       </el-table-column>
       <el-table-column prop="name" label="用户名" width="120">
       </el-table-column>
-      <el-table-column prop="fileName" label="文献名"> </el-table-column>
+       <el-table-column prop="phone" label="用户联系方式" width="150">
+      </el-table-column>
+      <el-table-column prop="fileId" label="文献id"> </el-table-column>
       <el-table-column label="操作">
         <template slot-scope="scope">
           <el-button
             type="primary"
             @click="toFile(scope.row.index)"
             size="small"
-            >查看文献详情</el-button
+            >查看申诉详情</el-button
           >
-          <el-button type="primary" size="small">下载文献</el-button>
+          <!-- <el-button type="primary" size="small">下载文献</el-button> -->
           <el-button type="primary" size="small" @click="handleCreate"
             >审核</el-button
           >

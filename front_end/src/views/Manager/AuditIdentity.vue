@@ -1,6 +1,6 @@
 <template>
   <div class="main">
-    <h1>待审核身份申述</h1>
+    <h1>待审核学者身份认领请求</h1>
     <el-table :data="files">
       <el-table-column fixed prop="date" label="提交时间" width="150">
       </el-table-column>
@@ -13,7 +13,7 @@
             type="primary"
             @click="toFile(scope.row.index)"
             size="small"
-            >查看申述详情</el-button
+            >查看申请详情</el-button
           >
           <el-button type="primary" size="small" @click="handleCreate"
             >审核</el-button

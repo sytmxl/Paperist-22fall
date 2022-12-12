@@ -1,5 +1,7 @@
 <template>
   <div class="main">
+    <el-page-header @back="goBack" content="详情页面">
+    </el-page-header>
     <h1>{{ fileInfo.name }}</h1>
     <span>
       <h2>作者</h2>
@@ -23,6 +25,11 @@ export default {
       },
     };
   },
+  methods:{
+    goBack() {
+        window.history.go(-1)
+    }
+  }
 };
 </script>
 

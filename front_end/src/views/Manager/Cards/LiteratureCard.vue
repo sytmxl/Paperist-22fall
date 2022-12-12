@@ -1,12 +1,27 @@
 <template>
   <div class="main">
-    <h1>{{ fileInfo.name }}</h1>
-    <span>
-      <h2>作者</h2>
-      <p>{{ fileInfo.author }}</p>
+    <el-page-header @back="goBack" content="详情页面">
+    </el-page-header>
+    <div style="margin-top:50px">
+      <span style="text-align:left;">
+      <h2>问题描述</h2>
+      <p>{{ intro }}</p>
     </span>
-    <h2>摘要</h2>
-    <p class="abstract">{{ fileInfo.abstract }}</p>
+    </div>
+  <div style="margin-top:100px">
+    <span style="text-align:left;">
+      <h2>相关图片</h2>
+    </span>
+     <el-carousel :interval="4000" type="card" height="400px">
+         <el-carousel-item v-for="item in pic" :key="item">
+              <!-- <h3 class="medium">{{ item }}</h3> -->
+              <img :src="item" alt="">
+            </el-carousel-item>
+         </el-carousel>
+  </div>
+    
+    
+   
   </div>
 </template>
 
@@ -15,14 +30,17 @@ export default {
   name: "LiteratureCard",
   data() {
     return {
-      fileInfo: {
-        name: "Denoising Diffusion Probabilistic Models",
-        author: "Jonathan HoAjay JainPieter Abbeel",
-        abstract:
-          "我们使用扩散概率模型呈现了高质量的图像合成结果，这种模型是受非平衡热力学考量启发的一种隐变量模型。我们的最佳结果是通过根据扩散概率模型和基于Langevin动力学的得分匹配模型的新连接设计的加权变分边界进行训练而获得的，并且我们的模型天然地承认是一种渐进式有损解压方案，也可以被解释为自回归解码的一种泛化。",
-      },
+      
+        intro:"笔记涉嫌抄袭",
+        pic:[require("../../../assets/mosy.jpg"),require("../../../assets/mosy.jpg"),require("../../../assets/mosy.jpg")]
+ 
     };
   },
+  methods:{
+    goBack() {
+        window.history.go(-1)
+    }
+  }
 };
 </script>
 
@@ -36,4 +54,19 @@ export default {
   color: #919fb5;
   text-align: left;
 }
+ .el-carousel__item h3 {
+    color: #475669;
+    font-size: 14px;
+    opacity: 0.75;
+    line-height: 200px;
+    margin: 0;
+  }
+  
+  .el-carousel__item:nth-child(2n) {
+    background-color: #99a9bf;
+  }
+  
+  .el-carousel__item:nth-child(2n+1) {
+    background-color: #d3dce6;
+  }
 </style>

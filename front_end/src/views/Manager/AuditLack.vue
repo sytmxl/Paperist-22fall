@@ -10,6 +10,12 @@
       </el-table-column>
       <el-table-column label="操作">
         <template slot-scope="scope">
+           <el-button
+            type="primary"
+            @click="toFile(scope.row.index)"
+            size="small"
+            >查看申诉详情</el-button
+          >
           <el-button type="primary" size="small" @click="handleCreate"
             >审核</el-button
           >
@@ -95,6 +101,10 @@ export default {
         auditResult: [],
       };
       this.dialogFormVisible = true;
+    },
+    toFile(index) {
+      console.log(index);
+      this.$router.push("/repre");
     },
     async createData() {
       const params = this.questionForm;

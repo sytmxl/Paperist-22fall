@@ -1,6 +1,6 @@
 <template>
   <div class="main">
-    <h1>待审核举报</h1>
+    <h1>待审核评论举报</h1>
     <el-table :data="comments">
       <el-table-column fixed prop="date" label="提交时间" width="150">
       </el-table-column>
@@ -9,6 +9,7 @@
       <el-table-column prop="commentUserName" label="评论者用户名" width="120">
       </el-table-column>
       <el-table-column prop="content" label="评论内容"> </el-table-column>
+      <el-table-column prop="id" label="评论id"> </el-table-column>
       <el-table-column label="操作">
         <template slot-scope="scope">
           <el-button type="primary" size="small" @click="handleCreate"

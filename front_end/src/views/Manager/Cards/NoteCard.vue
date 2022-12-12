@@ -1,8 +1,10 @@
 <template>
   <div class="main">
+    <el-page-header @back="goBack" content="详情页面">
+    </el-page-header>
     <h1>{{ noteInfo.name }}</h1>
     <span>
-      <h2>用户名: {{ noteInfo.author }}</h2>
+      <h2>作者: {{ noteInfo.author }}</h2>
     </span>
     <h2>笔记内容</h2>
     <p class="abstract">{{ noteInfo.content }}</p>
@@ -22,6 +24,11 @@ export default {
       },
     };
   },
+  methods:{
+    goBack() {
+        window.history.go(-1)
+    }
+  }
 };
 </script>
 
