@@ -614,13 +614,14 @@ export default {
     margin: 5px;
     box-shadow: 0 0 7px rgba(204, 204, 204, 0.713);
     // background-color: rgba(255, 255, 255, 0.501) !important;
-    // backdrop-filter: blur(40px) brightness(95%);
+    backdrop-filter: blur(40px) brightness(95%);
     border: none;
     padding: 10px;
     // color: black;
     transition: 0.3s;
   }
 }
+
 @mixin overflow {
   // overflow: hidden;
   //不知道为什么溢出就变成只剩一个省略号了，先隐藏好了
