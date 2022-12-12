@@ -11,7 +11,7 @@
         <el-page-header @back="goback" content="个人主页" title="返回首页">
         </el-page-header>
         <el-row id="info" style="margin-top: 20px; margin-bottom: 20px">
-          <el-col :span="10">
+          <el-col v-if="realname != '暂无数据'" :span="10">
             <!--:span占据行数-->
             <!--头像-->
             <img
@@ -42,8 +42,7 @@
               </div>
             </el-upload>
           </el-col>
-
-          <el-col class="des" :span="11" style="margin-top: 1.5%">
+          <el-col v-if="realname != '暂无数据'" class="des" :span="11" style="margin-top: 1.5%">
             <!--column2表示每行两个-->
             <el-descriptions
               :title="realname"
@@ -54,12 +53,14 @@
                 <el-button
                   type="primary"
                   size="small"
+                  lock-scroll="false"
                   @click="isChangePassword = true"
                   >修改密码</el-button
                 >
                 <el-button
                   type="info"
                   size="small"
+                  lock-scroll="false"
                   @click="savePersonalInformation"
                   >保存</el-button
                 >
@@ -189,6 +190,7 @@
               >
             </el-descriptions>
           </el-col>
+          <el-skeleton v-else :rows="7" animated/>
         </el-row>
         <!--        <el-button @click="isScholar = !isScholar"-->
         <!--          >学者转换,去掉该按钮样式即恢复正常</el-button-->
@@ -2023,12 +2025,12 @@ export default {
   // height: 90%;
   width: 70%;
   // margin-top: 20px;
-  margin-bottom: 60px;
+  margin-bottom: 90px;
   min-height: calc(100vh);
   margin-left: 15%;
   transform: translate(
     0,
-    30px
+    70px
   ); //不知道为什么用margin顶栏也会受影响，用移动替代
   .el-card {
     background-color: rgba(255, 255, 255, 0.587) !important;

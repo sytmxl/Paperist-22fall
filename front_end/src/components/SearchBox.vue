@@ -7,7 +7,7 @@
           v-model="common_search_query"
           class="input-with-select"
           clearable
-          size="small"
+          
         >
           <el-select
             v-model="common_search_type"
