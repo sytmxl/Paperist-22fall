@@ -60,31 +60,23 @@
       </el-col>
       <el-col :span="8">
         <el-button-group style="float: right; margin-bottom: 2%">
-          <el-button type="default" @click="clickFavourite">
-            <i
-              v-if="collect_flag === false"
-              class="el-icon-star-off"
-              @click="collect()"
-              title="收藏"
-            ></i>
-            <i
-              v-else
-              class="el-icon-star-on"
-              @click="collect()"
-              title="取消收藏"
-            ></i>
+          <el-button type="default" @click="collect(paper_data._source.id)">
+            <i v-if="isFavourite === false" class="el-icon-star-off"></i>
+            <i v-else class="el-icon-star-on"></i>
           </el-button>
-          <el-button type="primary" @click="quote()">
+          <el-button type="primary" @click="quote(paper_data._source.id)">
             <i class="el-icon-paperclip"></i>
           </el-button>
         </el-button-group>
       </el-col>
     </el-row>
+     
   </el-card>
+  
 </template>
 
 <script>
-let isclick = true;
+let isclick = true
 export default {
   name: "PaperCard",
   props: {
@@ -117,58 +109,13 @@ export default {
       keywords: [],
       issue: "未知",
       es_id: "",
-      quote_list: [],
+      token:sessionStorage.getItem("token")
     };
   },
   methods: {
-    quoteInit() {
-      this.$axios({
-        url: "http://127.0.0.1:8000/paperQuote/",
-        method: "post",
-        data: {
-          paper_id: this.es_id,
-        },
-      }).then((res) => {
-        this.quote_list = res.data.quote;
-      });
-    },
-    quote() {
-      this.$emit("quoteEmit", this.quote_list);
-    },
-    collect() {
-      if (sessionStorage.getItem("token") == null) {
-        this.$message.warning("请先登录");
-      } else {
-        this.collect_flag = !this.collect_flag;
-        if (!this.collect_flag) {
-          this.$axios({
-            url: "http://127.0.0.1:8000/paperCollection/",
-            method: "post",
-            data: {
-              paper_id: this.es_id,
-              note_id: "",
-              op: 0,
-            },
-          }).then((res) => {
-            this.$message.success("已取消收藏");
-          });
-        } else {
-          this.$axios({
-            url: "http://127.0.0.1:8000/paperCollection/",
-            method: "post",
-            data: {
-              paper_id: this.es_id,
-              note_id: "",
-              op: 1,
-            },
-          }).then((res) => {
-            this.$message.success("已收藏");
-          });
-        }
-        setTimeout(() => {
-          isclick = true;
-        }, 500);
-      }
+    quote(id){
+      let data = {paper_id: id,quote:true,collect:false}
+      this.$emit('react_quote',data)
     },
     limitWords(txt) {
       let str = txt;
@@ -176,9 +123,60 @@ export default {
       if (str.length > 500) str = str.substr(0, 500) + "...";
       return str;
     },
-    clickFavourite() {
-      this.collect_flag = !this.collect_flag;
-    },
+    collect(id){
+      if(this.token!=null){
+        if(isclick){
+        isclick = false
+        this.isFavourite= !this.isFavourite
+        if(!this.isFavourite){
+          // this.$axios({
+          //   url:"http://127.0.0.1:8000/paperCollection/",
+          //   method:"post",
+          //   data:{
+          //       paper_id:id,
+          //       note_id:"",
+          //       op:0
+          //   }
+          // }).then(res=>{
+          //     this.$message.success("已取消收藏")
+          // })
+          let data = {paper_id: id,quote:false,collect:false}
+          this.$emit('react_quote',data)
+        }
+        else{
+          // this.$axios({
+          //   url:"http://127.0.0.1:8000/paperCollection/",
+          //   method:"post",
+          //   data:{
+          //       paper_id:id,
+          //       note_id:"",
+          //       op:1
+          //   }
+          // }).then(res=>{
+          //   this.$message.success("已收藏")
+          // })
+          let data = {paper_id: id,quote:false,collect:true}
+          this.$emit('react_quote',data)
+        }
+        setTimeout(()=>{isclick=true},500)
+      }
+      else{
+        this.$message.warning("请勿频繁操作")
+      }
+      }
+      else{
+        this.$message.warning("请先登录")
+        setTimeout(()=>{this.$router.push({
+        name: 'login',
+      })
+      //   setTimeout(()=>{let routeData = this.$router.resolve({
+      //   name: 'login',
+      // })
+      window.open(routeData.href, '_blank')},1000)
+        
+      }
+      
+      },
     getAuthorsList() {
       let str = "";
       let len = this.authors.length - 1;

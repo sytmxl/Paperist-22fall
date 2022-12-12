@@ -82,10 +82,13 @@ export default {
         })
     }else{
         this.$message.warning("请先登录")
-        setTimeout(()=>{let routeData = this.$router.resolve({
+        setTimeout(()=>{this.$router.push({
         name: 'login',
-      })
-      window.open(routeData.href, '_blank')},1000)
+      })},1000)
+      //   setTimeout(()=>{let routeData = this.$router.resolve({
+      //   name: 'login',
+      // })
+      // window.open(routeData.href, '_blank')},1000)
       }
         
     },
@@ -137,10 +140,13 @@ export default {
       }
       else{
         this.$message.warning("请先登录")
-        setTimeout(()=>{let routeData = this.$router.resolve({
+        setTimeout(()=>{this.$router.push({
         name: 'login',
-      })
-      window.open(routeData.href, '_blank')},1000)
+      })},1000)
+      //   setTimeout(()=>{let routeData = this.$router.resolve({
+      //   name: 'login',
+      // })
+      // window.open(routeData.href, '_blank')},1000)
       }
     },
     collect(id){
@@ -186,10 +192,13 @@ export default {
       }
       else{
         this.$message.warning("请先登录")
-        setTimeout(()=>{let routeData = this.$router.resolve({
+        setTimeout(()=>{this.$router.push({
         name: 'login',
-      })
-      window.open(routeData.href, '_blank')},1000)
+      })},1000)
+      //   setTimeout(()=>{let routeData = this.$router.resolve({
+      //   name: 'login',
+      // })
+      // window.open(routeData.href, '_blank')},1000)
         
       }
       

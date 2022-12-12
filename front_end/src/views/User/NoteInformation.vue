@@ -203,10 +203,13 @@ export default {
         }
         }else{
         this.$message.warning("请先登录")
-        setTimeout(()=>{let routeData = this.$router.resolve({
+        setTimeout(()=>{this.$router.push({
         name: 'login',
-      })
-      window.open(routeData.href, '_blank')},1000)
+      })},1000)
+      //   setTimeout(()=>{let routeData = this.$router.resolve({
+      //   name: 'login',
+      // })
+      // window.open(routeData.href, '_blank')},1000)
       }
         
     },
@@ -242,10 +245,13 @@ export default {
         }
         }else{
         this.$message.warning("请先登录")
-        setTimeout(()=>{let routeData = this.$router.resolve({
+        setTimeout(()=>{this.$router.push({
         name: 'login',
-      })
-      window.open(routeData.href, '_blank')},1000)
+      })},1000)
+      //   setTimeout(()=>{let routeData = this.$router.resolve({
+      //   name: 'login',
+      // })
+      // window.open(routeData.href, '_blank')},1000)
       }
 
        
@@ -279,11 +285,15 @@ export default {
           })
         }
         }else{
-        this.$message.warning("请先登录")
-        setTimeout(()=>{let routeData = this.$router.resolve({
+           this.$message.warning("请先登录")
+          setTimeout(()=>{this.$router.push({
         name: 'login',
-      })
-      window.open(routeData.href, '_blank')},1000)
+      })},1000)
+      //  
+      //   setTimeout(()=>{let routeData = this.$router.resolve({
+      //   name: 'login',
+      // })
+      // window.open(routeData.href, '_blank')},1000)
       }
 
         
@@ -419,13 +429,15 @@ export default {
 	margin-top: 30px;
 	overflow: hidden;
   height: fit-content;
-	.content{
-    min-height: calc(100vh);
-    height: fit-content;
-		.el-card{
-			height: 100%;
-			overflow-y: scroll;
-		}
+.content{
+    // min-height: calc(100vh);
+    // height: fit-content;
+    height: 800px;
+    overflow-y: hidden;
+		// .el-card{
+		// 	height: 100%;
+		// 	overflow-y: scroll;
+		// }
 	}
 	.remark{
     // height: 600px;

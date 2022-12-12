@@ -84,9 +84,16 @@ export default {
       loginmethod: "",
       activeName: "first",
       forgetDialogVisible: false,
+      ogpath:""
     };
   },
-
+  beforeRouteEnter (to, from, next){
+  next(vm => {
+    // 通过 `vm` 访问组件实例,将值传入fromPath
+      vm.ogpath = from.path
+    
+  })
+  },
   methods:{
     forgetPass(){
       // TODO
@@ -129,8 +136,13 @@ export default {
             type: 'success'
           });
           sessionStorage.setItem("token", res.data.token);
-          await this.$router.push("/FirstPage")
-          // await window.history.go(-1);
+          // await this.$router.push("/FirstPage")
+          if(this.ogpath!="/register"){
+            await window.history.go(-1);
+          }
+          else{
+            await this.$router.push("/FirstPage")
+          }
         }
       })
     }
