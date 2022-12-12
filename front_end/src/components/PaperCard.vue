@@ -93,7 +93,6 @@ export default {
     if (source.keywords != null) this.keywords = source.keywords;
     if (source.issue != null) this.issue = source.issue;
     if (source.id != null) this.es_id = source.id;
-    this.quoteInit();
   },
   data() {
     return {

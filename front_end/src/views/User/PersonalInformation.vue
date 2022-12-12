@@ -1165,7 +1165,6 @@ export default {
   mounted() {
     // this.initSort();
     this.initScholarPaper();
-    this.getScholarInfo();
     this.initRelations();
     this.noteLabel = this.isOthers ? "他的笔记" : "我的笔记";
   },
@@ -1191,7 +1190,7 @@ export default {
   },
   methods: {
     // 根据esid获得作者信息
-    getScholarInfo() {
+    initRelations() {
       let obj = {
         query: {
           bool: {
@@ -1218,7 +1217,7 @@ export default {
         method: "post",
         data: JSON.stringify(obj),
       }).then((res) => {
-        console.log("学者信息",res.data.hits.hits);
+        console.log("学者信息", res.data.hits.hits);
         this.realname = res.data.hits.hits[0]._source.name;
         this.researchField=res.data.hits.hits[0]._source.tags[0].t+", "+res.data.hits.hits[0]._source.tags[1].t+", "+res.data.hits.hits[0]._source.tags[2].t;
       });
