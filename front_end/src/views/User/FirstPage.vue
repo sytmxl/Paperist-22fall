@@ -891,5 +891,9 @@ export default {
   left: 20%;
   background: #003b55;
   z-index: 999;
+  
+}
+#topbar {
+  animation: none !important;
 }
 </style>

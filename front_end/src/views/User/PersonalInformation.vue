@@ -9,7 +9,7 @@
     <el-container>
       <el-main>
         <el-row id="info" style="margin-top: 20px; margin-bottom: 20px">
-          <el-col :span="10">
+          <el-col v-if="username != '暂无数据'" :span="10">
             <!--:span占据行数-->
             <!--头像-->
             <img
@@ -39,8 +39,7 @@
               </div>
             </el-upload>
           </el-col>
-
-          <el-col class="des" :span="11" style="margin-top: 1.5%">
+          <el-col v-if="username != '暂无数据'" class="des" :span="11" style="margin-top: 1.5%">
             <!--column2表示每行两个-->
             <el-descriptions
               :title="realname"
@@ -138,7 +137,7 @@
             </el-descriptions>
 
             <el-descriptions
-              :title="realname"
+              :title="username"
               :column="2"
               v-if="!isEditPersonalInformation"
             >
@@ -188,6 +187,7 @@
               >
             </el-descriptions>
           </el-col>
+          <el-skeleton v-else :rows="7" animated/>
         </el-row>
         <!--        <el-button @click="isScholar = !isScholar"-->
         <!--          >学者转换,去掉该按钮样式即恢复正常</el-button-->
