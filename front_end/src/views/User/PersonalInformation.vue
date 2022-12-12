@@ -51,12 +51,14 @@
                 <el-button
                   type="primary"
                   size="small"
+                  lock-scroll="false"
                   @click="isChangePassword = true"
                   >修改密码</el-button
                 >
                 <el-button
                   type="info"
                   size="small"
+                  lock-scroll="false"
                   @click="savePersonalInformation"
                   >保存</el-button
                 >
@@ -2014,12 +2016,12 @@ export default {
   // height: 90%;
   width: 70%;
   // margin-top: 20px;
-  margin-bottom: 60px;
+  margin-bottom: 90px;
   min-height: calc(100vh);
   margin-left: 15%;
   transform: translate(
     0,
-    30px
+    70px
   ); //不知道为什么用margin顶栏也会受影响，用移动替代
   .el-card {
     background-color: rgba(255, 255, 255, 0.587) !important;
