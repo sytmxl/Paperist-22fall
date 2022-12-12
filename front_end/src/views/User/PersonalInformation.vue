@@ -1157,11 +1157,10 @@ export default {
     this.noteLabel = this.isOthers ? "他的笔记" : "我的笔记";
   },
   mounted() {
-    this.initRelations();
     // this.initSort();
     this.initScholarPaper();
-    this.initLine();
-    this.initLine2();
+    this.getScholarInfo();
+    this.initRelations();
     this.noteLabel = this.isOthers ? "他的笔记" : "我的笔记";
   },
   watch: {
@@ -1185,20 +1184,41 @@ export default {
     },
   },
   methods: {
+    // 根据esid获得作者信息
+    getScholarInfo() {
+      let obj = {
+        query: {
+          bool: {
+            must: [],
+            filter: {},
+          },
+        },
+      };
+      obj.query.bool.must.push({
+        match_phrase: { id: this.$route.params.id },
+      });
+      obj.query.bool.filter = {
+        match_phrase: { id: this.$route.params.id },
+      };
+      axios({
+        headers: {
+          "content-type": "application/json",
+        },
+        auth: {
+          username: "elastic",
+          password: "BZYvLA-d*pS0EpI7utmJ",
+        },
+        url: "/es/author/_search",
+        method: "post",
+        data: JSON.stringify(obj),
+      }).then((res) => {
+        console.log("学者信息",res.data.hits.hits);
+        this.realname = res.data.hits.hits[0]._source.name;
+      });
+    },
     initRelations() {
-      console.log("initRelations");
-      this.$axios({
-        method: "post",
-        url: "/app/get_scholar_relation/",
-        data: {
-          id: this.$route.params.id,
-        },
-      }).then((res) => {
-        console.log("initRelations", res.data);
-        this.RelationsData = res.data.data;
-      });
-    },
-    initLine() {
+      var nameList = [];
+      console.log(this.realname);
       let obj = {
         query: {
           bool: {
@@ -1211,7 +1231,7 @@ export default {
         match_phrase: { "authors.id": this.$route.params.id },
       });
       obj.query.bool.filter = {
-        match_phrase: { "authors.id": this.$route.params.id },
+        match_phrase: { id: this.$route.params.id },
       };
       axios({
         headers: {
@@ -1221,82 +1241,14 @@ export default {
           username: "elastic",
           password: "BZYvLA-d*pS0EpI7utmJ",
         },
-        url: "/es/paper/_search",
+        url: "/es/author/_search",
         method: "post",
         data: JSON.stringify(obj),
       }).then((res) => {
-        this.tmp2Papers = res.data.hits.hits;
-        this.tmp2Papers.sort(this.compareUp("year"));
-        var count = new Array(2500).fill(0);
-        console.log("initLine", this.tmp2Papers);
-        this.tmp2Papers.forEach((item, index) => {
-          count[item._source.year]++;
-        });
-        this.tmpLinedata = [];
-        count.forEach((item, index) => {
-          if (item != 0) {
-            this.tmpLinedata.push({
-              count: item,
-              content: index,
-            });
-          }
-        });
-        this.Linedata = this.tmpLinedata;
-        console.log("initLine");
-        console.log(count);
-        console.log(this.Linedata);
+        console.log(res.data.hits.hits);
       });
     },
-    initLine2() {
-      let obj = {
-        query: {
-          bool: {
-            must: [],
-            filter: {},
-          },
-        },
-      };
-      obj.query.bool.must.push({
-        match_phrase: { "authors.id": this.$route.params.id },
-      });
-      obj.query.bool.filter = {
-        match_phrase: { "authors.id": this.$route.params.id },
-      };
-      axios({
-        headers: {
-          "content-type": "application/json",
-        },
-        auth: {
-          username: "elastic",
-          password: "BZYvLA-d*pS0EpI7utmJ",
-        },
-        url: "/es/paper/_search",
-        method: "post",
-        data: JSON.stringify(obj),
-      }).then((res) => {
-        this.tmp3Papers = res.data.hits.hits;
-        this.tmp3Papers.sort(this.compareUp("year"));
-        var count2 = new Array(2500).fill(0);
-        console.log("initLine2", this.tmp3Papers);
-        this.tmp3Papers.forEach((item, index) => {
-          count2[item._source.year] += item._source.n_citation;
-        });
-        this.tmpLinedata2 = [];
-        count2.forEach((item, index) => {
-          if (item != 0) {
-            this.tmpLinedata2.push({
-              count: item,
-              content: index,
-            });
-          }
-        });
-        this.Linedata2 = this.tmpLinedata2;
-        console.log("initLine2");
-        console.log(count2);
-        console.log("ss", this.Linedata2);
-      });
-    },
-    // 获取学者文献
+    // 获取学者文献（曲线）
     initScholarPaper() {
       let obj = {
         query: {
@@ -1329,22 +1281,44 @@ export default {
         this.papers.sort(this.compareUp("year"));
         this.tmpPapers.sort(this.compareUp("year"));
         console.log(this.papers);
+        // 数量曲线
+        this.tmp2Papers = res.data.hits.hits;
+        this.tmp2Papers.sort(this.compareUp("year"));
+        var count = new Array(2500).fill(0);
+        console.log("initLine", this.tmp2Papers);
+        this.tmp2Papers.forEach((item, index) => {
+          count[item._source.year]++;
+        });
+        this.tmpLinedata = [];
+        count.forEach((item, index) => {
+          if (item != 0) {
+            this.tmpLinedata.push({
+              count: item,
+              content: index,
+            });
+          }
+        });
+        this.Linedata = this.tmpLinedata;
+        // 引用曲线
+        this.tmp3Papers = res.data.hits.hits;
+        this.tmp3Papers.sort(this.compareUp("year"));
+        var count2 = new Array(2500).fill(0);
+        console.log("initLine2", this.tmp3Papers);
+        this.tmp3Papers.forEach((item, index) => {
+          count2[item._source.year] += item._source.n_citation;
+        });
+        this.tmpLinedata2 = [];
+        count2.forEach((item, index) => {
+          if (item != 0) {
+            this.tmpLinedata2.push({
+              count: item,
+              content: index,
+            });
+          }
+        });
+        this.Linedata2 = this.tmpLinedata2;
       });
     },
-    // 普通发包
-    // this.$axios({
-    //   method: "post",
-    //   url: "/app/get_scholar_paper_list/",
-    //   data: {
-    //     // id: this.$route.params.id,
-    //     token: sessionStorage.getItem("token"),
-    //   },
-    // }).then((res) => {
-    //   this.papers = res.data.data;
-    //   this.papars.sort(this.compareDown("year"));
-    //   console.log("initScholarPaper");
-    //   console.log(res.data);
-    // });
 
     // 筛选出学者指定标题文献
     searchScholarPaperCollection() {

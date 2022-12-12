@@ -117,7 +117,7 @@ export default {
           trigger: "axis",
         },
 
-        color: "#5c7bd9",
+        color: "#CC00FF",
         yAxis: {
           type: "value",
           name: "引用数量",
