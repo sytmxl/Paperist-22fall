@@ -377,7 +377,7 @@
             <el-tab-pane
               label="个人收藏"
               name="first"
-              v-if="!isOthers || (isOthers && isCollectionVisible)"
+              v-if="(!isOthers || (isOthers && isCollectionVisible))&&isClaim"
             >
               <el-tabs
                 v-model="collectionDefaultLocation"
@@ -560,7 +560,7 @@
                 </el-tab-pane>
               </el-tabs>
             </el-tab-pane>
-            <el-tab-pane label="个人订阅" name="second">
+            <el-tab-pane label="个人订阅" name="second" v-if="isClaim">
               <div v-if="subscribes.length != 0">
                 <div style="margin-left: 1%">
                   <div style="margin-top: 15px; width: 30%">
@@ -636,7 +636,7 @@
             <el-tab-pane
               :label="this.noteLabel"
               name="third"
-              v-if="!isOthers || (isOthers && isNoteVisible)"
+              v-if="(!isOthers || (isOthers && isNoteVisible))&&isClaim"
             >
               <div style="margin-left: 1%" v-if="notes.length != 0">
                 <div style="margin-top: 15px; width: 30%">
@@ -713,7 +713,7 @@
             <el-tab-pane
               label="我的评论"
               name="fourth"
-              v-if="!isScholar && !isOthers"
+              v-if="!isScholar && !isOthers &&isClaim"
             >
               <div style="margin-left: 1%" v-if="myComment.length != 0">
                 <div style="margin-top: 15px; width: 30%">
@@ -790,7 +790,7 @@
             <el-tab-pane
               label="评论管理"
               name="fourth"
-              v-if="isScholar && !isOthers"
+              v-if="isScholar && !isOthers &&isClaim"
             >
               <el-tabs
                 tab-position="left"
@@ -943,7 +943,7 @@
                 </el-tab-pane>
               </el-tabs>
             </el-tab-pane>
-            <el-tab-pane label="个人设置" name="fifth" v-if="!isOthers">
+            <el-tab-pane label="个人设置" name="fifth" v-if="!isOthers && isClaim">
               <div style="margin-left: 1%">
                 <el-card class="box-card1">
                   <el-form :inline="true">
@@ -1040,7 +1040,7 @@ import PaperCard from "@/components/PaperCard.vue";
 import claimScholar from "@/components/claimScholar.vue";
 import axios from "axios";
 import CryptoJS from "crypto-js";
-import AuthorizationScholar from "../../components/AuthorizationScholar.vue"
+import AuthorizationScholar from "../../components/AuthorizationScholar.vue";
 // import CryptoJS from "_crypto-js@4.1.1@crypto-js";
 export default {
   name: "PersonalInformation",
@@ -1051,7 +1051,7 @@ export default {
     PaperCard,
     claimScholar,
     ScholarLine2,
-    AuthorizationScholar
+    AuthorizationScholar,
   },
   data() {
     return {
@@ -1112,6 +1112,8 @@ export default {
       myComment: [],
       commentToMe: [],
       subscribes: [],
+      isClaim:true,
+
       es_id: "",
       //图片
       profile: "",
@@ -1154,8 +1156,6 @@ export default {
         id: this.$route.params.id,
       },
     }).then((res) => {
-      console.log(11111111);
-      console.log(res.data.flag);
       this.isMyself = res.data.flag;
     });
 
@@ -1169,6 +1169,20 @@ export default {
     //   this.isToken = 0;
     //   this.isOthers = true;
     // }
+    //是否被认领
+    this.$axios({
+      method: "post",
+      url: "/user/esToUser/",
+      data: {
+        es_id: this.$route.params.id,
+      },
+    }).then((res) => {
+      if(res.data.id==""){
+        console.log(123454321)
+        this.isClaim=false;
+      }
+    });
+    //如果传的是id，上面那个也是空，不符合条件
     //个人信息
     this.getPersonalInformation();
     this.getPaperCollection();
@@ -1191,6 +1205,7 @@ export default {
     // this.initSort();
     this.es_id = this.$route.params.id;
     this.initScholarPaper();
+    this.getScholarInfo();
     this.initRelations();
     this.noteLabel = this.isOthers ? "他的笔记" : "我的笔记";
   },
@@ -1216,6 +1231,38 @@ export default {
   },
   methods: {
     // 根据esid获得作者信息
+    getScholarInfo() {
+      let obj = {
+        query: {
+          bool: {
+            must: [],
+            filter: {},
+          },
+        },
+      };
+      obj.query.bool.must.push({
+        match_phrase: { id: this.$route.params.id },
+      });
+      obj.query.bool.filter = {
+        match_phrase: { id: this.$route.params.id },
+      };
+      axios({
+        headers: {
+          "content-type": "application/json",
+        },
+        auth: {
+          username: "elastic",
+          password: "BZYvLA-d*pS0EpI7utmJ",
+        },
+        url: "/es/author/_search",
+        method: "post",
+        data: JSON.stringify(obj),
+      }).then((res) => {
+        console.log("学者信息",res.data.hits.hits);
+        this.realname = res.data.hits.hits[0]._source.name;
+        this.researchField=res.data.hits.hits[0]._source.tags[0].t+", "+res.data.hits.hits[0]._source.tags[1].t+", "+res.data.hits.hits[0]._source.tags[2].t;
+      });
+    },
     // 根据esid获得关系曲线
     initRelations() {
       let obj = {
@@ -1244,7 +1291,7 @@ export default {
         method: "post",
         data: JSON.stringify(obj),
       }).then((res) => {
-        console.log("学者信息", res.data.hits.hits);
+        console.log("学者信息",res.data.hits.hits);
         this.realname = res.data.hits.hits[0]._source.name;
         // 根据作者信息筛出曲线
         var nameList = [];
@@ -1284,13 +1331,13 @@ export default {
                 if (
                   nameList[authorList[j].name] == undefined ||
                   nameList[authorList[j].name] == null
-                )
+                ) {
                   nameList[authorList[j].name] = {
                     id: authorList[j].id,
                     name: authorList[j].name,
                     value: 1,
                   };
-                else {
+                } else {
                   nameList[authorList[j].name].value++;
                 }
               }
@@ -1303,6 +1350,7 @@ export default {
             relationsData.push(nameList[key]);
           }
           this.RelationsData = relationsData;
+          console.log('relation',this.RelationsData)
         });
       });
     },
@@ -2058,9 +2106,9 @@ export default {
       this.$router.push("/FirstPage");
     },
     gotoAuthorization() {
-      if(sessionStorage.getItem("token") == null){
+      if (sessionStorage.getItem("token") == null) {
         this.$message.error("请先登录");
-      }else{
+      } else {
         this.AuthorizationDialogVisable = true;
       }
     },
