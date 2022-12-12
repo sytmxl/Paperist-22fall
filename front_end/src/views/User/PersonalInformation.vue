@@ -176,16 +176,7 @@
                   @click="gotoAuthorization()"
                   >学者认领</el-button
                 >
-                <el-dialog
-                  title="学者认证"
-                  :visible.sync="AuthorizationDialogVisable"
-                  width="40%"
-                >
-                  <AuthorizationScholar
-                    :es_id="this.$route.params.id"
-                    @finish_upload="AuthorizationDialogVisable = false"
-                  />
-                </el-dialog>
+                
               </template>
               <el-descriptions-item label="真实姓名">{{
                 realname
@@ -211,6 +202,16 @@
                 >{{ researchField }}</el-descriptions-item
               >
             </el-descriptions>
+            <el-dialog
+                  title="学者认证"
+                  :visible.sync="AuthorizationDialogVisable"
+                  width="40%"
+                >
+                  <AuthorizationScholar
+                    :es_id="es_id"
+                    @finish_upload="AuthorizationDialogVisable = false"
+                  />
+                </el-dialog>
           </el-col>
           <el-skeleton v-else :rows="7" animated />
         </el-row>
