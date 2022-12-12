@@ -8,6 +8,8 @@
     > -->
     <el-container>
       <el-main>
+        <el-page-header @back="goback" content="个人主页" title="返回首页">
+        </el-page-header>
         <el-row id="info" style="margin-top: 20px; margin-bottom: 20px">
           <el-col :span="10">
             <!--:span占据行数-->
@@ -32,9 +34,10 @@
                 type="primary"
                 round
                 style="margin-top: 10px"
+                v-if="isMyself"
                 >修改头像</el-button
               >
-              <div slot="tip" class="el-upload__tip">
+              <div slot="tip" class="el-upload__tip" v-if="isMyself">
                 只能上传jpg/png类型的图片,且不超过1MB
               </div>
             </el-upload>
@@ -136,7 +139,7 @@
             </el-descriptions>
 
             <el-descriptions
-              :title="realname"
+              :title="username"
               :column="2"
               v-if="!isEditPersonalInformation"
             >
@@ -1214,6 +1217,7 @@ export default {
       }).then((res) => {
         console.log("学者信息",res.data.hits.hits);
         this.realname = res.data.hits.hits[0]._source.name;
+        this.researchField=res.data.hits.hits[0]._source.tags[0].t+", "+res.data.hits.hits[0]._source.tags[1].t+", "+res.data.hits.hits[0]._source.tags[2].t;
       });
     },
     initRelations() {
@@ -1993,6 +1997,11 @@ export default {
       this.$router.push({
         path: "/NoteInformation/" + note_id,
       });
+    },
+    //返回上一界面
+    goback(){
+      //this.$router.go(-1);
+      this.$router.push("/FirstPage")
     },
   },
 };
