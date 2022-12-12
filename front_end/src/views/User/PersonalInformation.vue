@@ -1093,7 +1093,7 @@ export default {
       myComment: [],
       commentToMe: [],
       subscribes: [],
-      es_id="",
+      es_id: "",
       //图片
       profile: "",
       headers: {
