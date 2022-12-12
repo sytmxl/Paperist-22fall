@@ -82,7 +82,8 @@ export default {
     .el-card {
       background-color: rgba(255, 255, 255, 0.231) !important;
       border-radius: 15px !important;
-      border: none !important;
+      border: solid 1px #003b556d;
+      box-shadow: none;
     }
 }
 .other_note span{

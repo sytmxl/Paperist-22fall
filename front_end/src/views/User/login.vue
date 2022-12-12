@@ -32,7 +32,7 @@
                 v-model="form.password" autocomplete="off" @keyup.enter.native="login"></el-input>
             </el-form-item>
             <el-form-item>
-              <el-button type="primary" @click="login" round>登&nbsp;&nbsp;录</el-button>
+              <el-button  type="primary" @click="login" round>登&nbsp;&nbsp;录</el-button>
             </el-form-item>
           </el-form>
         </el-tab-pane>
@@ -177,8 +177,7 @@ export default {
 }
 
 .kuang:hover {
-  width: 420px;
-  height: auto;
+  // transform: scale(105%);
 }
 
 .login {
@@ -230,26 +229,26 @@ export default {
 
 .el-button:not(.forget) {
   border: none;
-  border-radius: 20px !important;
+  border-radius: 10px !important;
   background-color: rgba(121, 167, 213, 0.73);
   font-size: 20px;
-  width: 100%;
+  width: 90%;
   transition: 0.4s !important;
 }
 
-.el-button:hover:not(.forget:hover) {
-  border-radius: 20px !important;
-  background-color: rgba(121, 167, 213, 0.377);
-  margin: 10px 0px 10px 0px;
-  font-size: 20px;
-}
+// .el-button:hover:not(.forget:hover) {
+//   border-radius: 20px !important;
+//   background-color: rgba(121, 167, 213, 0.377);
+//   margin: 10px 0px 10px 0px;
+//   font-size: 20px;
+// }
 
-.el-button:active:not(.forget:active) {
-  border-radius: 20px !important;
-  background-color: rgb(82, 109, 137);
+// .el-button:active:not(.forget:active) {
+//   border-radius: 20px !important;
+//   background-color: rgb(82, 109, 137);
 
-  font-size: 20px;
-}
+//   font-size: 20px;
+// }
 .forget {
   width: 40%;
 }

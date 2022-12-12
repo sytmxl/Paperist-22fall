@@ -1,5 +1,5 @@
 <template>
-  <div class="light-mode" style="height:calc(100vh) width:calc(100vh)">
+  <div style="min-height:calc(100vh) width:calc(100vh)">
     <el-row class="logo_area">
       <div id="logo1" class="home_logo"></div>
     </el-row>
@@ -25,7 +25,7 @@
               />
               <div id="load">
                 <el-button
-                  style="width: 100%"
+                  style="width: 90%"
                   @click="loadRec()"
                   v-loading="start"
                   >加载更多</el-button
@@ -73,7 +73,7 @@
                 />
                 <div id="load">
                   <el-button
-                    style="width: 100%"
+                    style="width: 90%; margin-top: 20px;"
                     @click="loadSub()"
                     v-loading="start2"
                     >加载更多</el-button
@@ -128,7 +128,7 @@
                 </div>
                 <div id="load">
                   <el-button
-                    style="width: 100%"
+                    style="width: 90%"
                     @click="loadSub2()"
                     v-loading="start3"
                     >加载更多</el-button
@@ -709,6 +709,7 @@ export default {
   line-height: calc(10vh);
   font-size: 20px;
   font-weight: bold;
+  
 }
 .index_bold_font {
   font-weight: 700;
