@@ -169,6 +169,23 @@
                   @click="isEditPersonalInformation = true"
                   >修改信息</el-button
                 >
+                <el-button
+                  type="primary"
+                  size="small"
+                  v-if="!isAuthorized"
+                  @click="gotoAuthorization()"
+                  >学者认领</el-button
+                >
+                <el-dialog
+                  title="学者认证"
+                  :visible.sync="AuthorizationDialogVisable"
+                  width="40%"
+                >
+                  <AuthorizationScholar
+                    :es_id="es_id"
+                    @finish_upload="AuthorizationDialogVisable = false"
+                  />
+                </el-dialog>
               </template>
               <el-descriptions-item label="真实姓名">{{
                 realname
@@ -1023,6 +1040,7 @@ import PaperCard from "@/components/PaperCard.vue";
 import claimScholar from "@/components/claimScholar.vue";
 import axios from "axios";
 import CryptoJS from "crypto-js";
+import AuthorizationScholar from "../../components/AuthorizationScholar.vue"
 // import CryptoJS from "_crypto-js@4.1.1@crypto-js";
 export default {
   name: "PersonalInformation",
@@ -1033,6 +1051,7 @@ export default {
     PaperCard,
     claimScholar,
     ScholarLine2,
+    AuthorizationScholar
   },
   data() {
     return {
@@ -1123,6 +1142,8 @@ export default {
         },
       ],
       flag: true,
+      AuthorizationDialogVisable: false,
+      isAuthorized: false,
     };
   },
   created() {
@@ -1130,7 +1151,7 @@ export default {
       method: "post",
       url: "/user/judgeIsMyself/",
       data: {
-        id: this.es_id,
+        id: this.$route.params.id,
       },
     }).then((res) => {
       console.log(11111111);
@@ -1138,7 +1159,7 @@ export default {
       this.isMyself = res.data.flag;
     });
 
-    this.id = this.es_id;
+    this.id = this.$route.params.id;
     console.log(this.id);
     // if (this.id == undefined) {
     //   this.isToken = 1; //是自己，用token访问
@@ -2035,6 +2056,13 @@ export default {
     goback() {
       //this.$router.go(-1);
       this.$router.push("/FirstPage");
+    },
+    gotoAuthorization() {
+      if(sessionStorage.getItem("token") == null){
+        this.$message.error("请先登录");
+      }else{
+        this.AuthorizationDialogVisable = true;
+      }
     },
   },
 };
