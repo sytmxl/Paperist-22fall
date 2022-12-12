@@ -342,9 +342,6 @@ export default {
   },
   methods :{
     async react_card(data){
-      // this.quote_list=[];
-      console.log(data)
-      if(data.quote==true){
         this.QuoteVisible=true;
         await this.$axios({
             url:"http://127.0.0.1:8000/paperQuote/",
@@ -356,36 +353,6 @@ export default {
             this.quote_list = res.data.quote
             
         })
-      }
-      else{
-        if(data.collect==true){
-           this.$axios({
-              url:"http://127.0.0.1:8000/paperCollection/",
-              method:"post",
-              data:{
-                  paper_id:data.paper_id,
-                  note_id:"",
-                  op:1
-              }
-            }).then(res=>{
-              this.$message.success("已收藏")
-            })
-        }
-        else{
-          this.$axios({
-              url:"http://127.0.0.1:8000/paperCollection/",
-              method:"post",
-              data:{
-                  paper_id:data.paper_id,
-                  note_id:"",
-                  op:0
-              }
-            }).then(res=>{
-              this.$message.success("已取消收藏")
-            })
-        }
-      }
-      
     },
     toThousands(num) {
       var result = [],

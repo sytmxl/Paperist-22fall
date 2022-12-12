@@ -60,11 +60,10 @@
       </el-col>
       <el-col :span="8">
         <el-button-group style="float: right; margin-bottom: 2%">
-          <el-button type="default" @click="collect(paper_data._source.id)">
-            <i v-if="isFavourite === false" class="el-icon-star-off"></i>
-            <i v-else class="el-icon-star-on"></i>
+          <el-button type="default" title="分享" v-clipboard:copy="'localhost:8080/PaperInformation/'+paper_data._source.id" v-clipboard:success="onCopy" v-clipboard:error="onError">
+            <i class="el-icon-share"></i>
           </el-button>
-          <el-button type="primary" @click="quote(paper_data._source.id)">
+          <el-button type="primary" title="引用" @click="quote(paper_data._source.id)">
             <i class="el-icon-paperclip"></i>
           </el-button>
         </el-button-group>
@@ -113,8 +112,15 @@ export default {
     };
   },
   methods: {
+    onCopy (e) {
+      this.$message.success("内容已复制到剪切板！")
+    },
+// 复制失败时的回调函数
+    onError (e) {
+      this.$message.error("抱歉，复制失败！")
+    },
     quote(id){
-      let data = {paper_id: id,quote:true,collect:false}
+      let data = {paper_id: id}
       this.$emit('react_quote',data)
     },
     limitWords(txt) {
@@ -123,60 +129,7 @@ export default {
       if (str.length > 500) str = str.substr(0, 500) + "...";
       return str;
     },
-    collect(id){
-      if(this.token!=null){
-        if(isclick){
-        isclick = false
-        this.isFavourite= !this.isFavourite
-        if(!this.isFavourite){
-          // this.$axios({
-          //   url:"http://127.0.0.1:8000/paperCollection/",
-          //   method:"post",
-          //   data:{
-          //       paper_id:id,
-          //       note_id:"",
-          //       op:0
-          //   }
-          // }).then(res=>{
-          //     this.$message.success("已取消收藏")
-          // })
-          let data = {paper_id: id,quote:false,collect:false}
-          this.$emit('react_quote',data)
-        }
-        else{
-          // this.$axios({
-          //   url:"http://127.0.0.1:8000/paperCollection/",
-          //   method:"post",
-          //   data:{
-          //       paper_id:id,
-          //       note_id:"",
-          //       op:1
-          //   }
-          // }).then(res=>{
-          //   this.$message.success("已收藏")
-          // })
-          let data = {paper_id: id,quote:false,collect:true}
-          this.$emit('react_quote',data)
-        }
-        setTimeout(()=>{isclick=true},500)
-      }
-      else{
-        this.$message.warning("请勿频繁操作")
-      }
-      }
-      else{
-        this.$message.warning("请先登录")
-        setTimeout(()=>{this.$router.push({
-        name: 'login',
-      })
-      //   setTimeout(()=>{let routeData = this.$router.resolve({
-      //   name: 'login',
-      // })
-      window.open(routeData.href, '_blank')},1000)
-        
-      }
-      
-      },
+   
     getAuthorsList() {
       let str = "";
       let len = this.authors.length - 1;
