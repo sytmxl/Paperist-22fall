@@ -355,7 +355,7 @@
             <el-tab-pane
               label="个人收藏"
               name="first"
-              v-if="!isOthers || (isOthers && isCollectionVisible)"
+              v-if="(!isOthers || (isOthers && isCollectionVisible))&&isClaim"
             >
               <el-tabs
                 v-model="collectionDefaultLocation"
@@ -538,7 +538,7 @@
                 </el-tab-pane>
               </el-tabs>
             </el-tab-pane>
-            <el-tab-pane label="个人订阅" name="second">
+            <el-tab-pane label="个人订阅" name="second" v-if="isClaim">
               <div v-if="subscribes.length != 0">
                 <div style="margin-left: 1%">
                   <div style="margin-top: 15px; width: 30%">
@@ -614,7 +614,7 @@
             <el-tab-pane
               :label="this.noteLabel"
               name="third"
-              v-if="!isOthers || (isOthers && isNoteVisible)"
+              v-if="(!isOthers || (isOthers && isNoteVisible))&&isClaim"
             >
               <div style="margin-left: 1%" v-if="notes.length != 0">
                 <div style="margin-top: 15px; width: 30%">
@@ -691,7 +691,7 @@
             <el-tab-pane
               label="我的评论"
               name="fourth"
-              v-if="!isScholar && !isOthers"
+              v-if="!isScholar && !isOthers &&isClaim"
             >
               <div style="margin-left: 1%" v-if="myComment.length != 0">
                 <div style="margin-top: 15px; width: 30%">
@@ -768,7 +768,7 @@
             <el-tab-pane
               label="评论管理"
               name="fourth"
-              v-if="isScholar && !isOthers"
+              v-if="isScholar && !isOthers &&isClaim"
             >
               <el-tabs
                 tab-position="left"
@@ -921,7 +921,7 @@
                 </el-tab-pane>
               </el-tabs>
             </el-tab-pane>
-            <el-tab-pane label="个人设置" name="fifth" v-if="!isOthers">
+            <el-tab-pane label="个人设置" name="fifth" v-if="!isOthers && isClaim">
               <div style="margin-left: 1%">
                 <el-card class="box-card1">
                   <el-form :inline="true">
@@ -1088,6 +1088,7 @@ export default {
       myComment: [],
       commentToMe: [],
       subscribes: [],
+      isClaim:true,
 
       //图片
       profile: "",
@@ -1128,8 +1129,6 @@ export default {
         id: this.$route.params.id,
       },
     }).then((res) => {
-      console.log(11111111);
-      console.log(res.data.flag);
       this.isMyself = res.data.flag;
     });
 
@@ -1143,7 +1142,20 @@ export default {
     //   this.isToken = 0;
     //   this.isOthers = true;
     // }
-    //
+    //是否被认领
+    this.$axios({
+      method: "post",
+      url: "/user/esToUser/",
+      data: {
+        es_id: this.$route.params.id,
+      },
+    }).then((res) => {
+      if(res.data.id==""){
+        console.log(123454321)
+        this.isClaim=false;
+      }
+    });
+    //如果传的是id，上面那个也是空，不符合条件
     //个人信息
     this.getPersonalInformation();
     this.getPaperCollection();
@@ -1165,6 +1177,7 @@ export default {
   mounted() {
     // this.initSort();
     this.initScholarPaper();
+    this.getScholarInfo();
     this.initRelations();
     this.noteLabel = this.isOthers ? "他的笔记" : "我的笔记";
   },
@@ -1190,7 +1203,7 @@ export default {
   },
   methods: {
     // 根据esid获得作者信息
-    initRelations() {
+    getScholarInfo() {
       let obj = {
         query: {
           bool: {
@@ -1217,7 +1230,7 @@ export default {
         method: "post",
         data: JSON.stringify(obj),
       }).then((res) => {
-        console.log("学者信息", res.data.hits.hits);
+        console.log("学者信息",res.data.hits.hits);
         this.realname = res.data.hits.hits[0]._source.name;
         this.researchField=res.data.hits.hits[0]._source.tags[0].t+", "+res.data.hits.hits[0]._source.tags[1].t+", "+res.data.hits.hits[0]._source.tags[2].t;
       });
