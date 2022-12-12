@@ -1,7 +1,7 @@
 <template>
   <div class="search_input">
     <el-row :gutter="10">
-      <el-col :span="16">
+      <el-col :span="20">
         <el-input
           placeholder="请输入内容"
           v-model="common_search_query"
@@ -39,11 +39,6 @@
           round
           @click="isAdvanced = !isAdvanced"
           >高级搜索
-        </el-button>
-      </el-col>
-      <el-col :span="4">
-        <el-button type="primary" size="mini" round @click="toSearchScholar()"
-          >搜索学者
         </el-button>
       </el-col>
     </el-row>
@@ -219,6 +214,7 @@ export default {
         { label: "作者", value: 3 },
         { label: "摘要", value: 4 },
         { label: "机构", value: 5 },
+        { label: "学者", value: 6 },
       ],
       option: {
         // 1：摘要 2：标题
@@ -334,6 +330,14 @@ export default {
           };
           //es_request_body.aggs={"venue":{"terms":{"field":"venue.raw","execution_hint": "map"}}}
           break;
+        case 6:
+          this.$router.push({
+            path: "/SearchAuthor",
+            query: {
+              search_query: this.common_search_query,
+            },
+          });
+          return;
       }
       this.$router.push({
         path: "/SearchInformation",
