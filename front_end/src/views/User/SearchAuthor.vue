@@ -11,7 +11,7 @@
         <el-col
           :span="6"
           v-for="(item, index) in searchAuthors"
-          :key="item"
+          :key="item.id"
           :offset="index % 3 > 0 ? 2 : 0"
         >
           <el-card style="margin-bottom: 3vh" :body-style="{ padding: '0px' }">
@@ -20,7 +20,7 @@
               class="image"
             />
             <div style="padding: 14px">
-              <span>{{ item.name }}</span>
+              <span>{{ item._source.name }}</span>
               <div class="bottom clearfix">
                 <time class="time">2022.12.12</time>
                 <el-button type="text" class="button">查看学者</el-button>
@@ -39,20 +39,7 @@ export default {
   data() {
     return {
       search_query: null,
-      searchAuthors: [
-        {
-          name: "Ando",
-        },
-        {
-          name: "Ando",
-        },
-        {
-          name: "Ando",
-        },
-        {
-          name: "Ando",
-        },
-      ],
+      searchAuthors: [],
     };
   },
   methods: {
@@ -60,7 +47,7 @@ export default {
       this.$router.push("/firstPage");
     },
   },
-  mounted() {
+  created() {
     this.search_query = this.$route.query.search_query;
     let obj = {
       query: {
@@ -89,9 +76,11 @@ export default {
       data: JSON.stringify(obj),
     }).then((res) => {
       console.log(res.data.hits.hits);
-      for (let i = 0; i < res.data.hits.hits.length; i++) {
-        this.searchAuthors[i] = res.data.hits.hits[i]._source;
-      }
+      // for (let i = 0; i < res.data.hits.hits.length; i++) {
+      //   this.searchAuthors[i] = res.data.hits.hits[i]._source;
+      // }
+      this.searchAuthors = res.data.hits.hits;
+      console.log(this.searchAuthors);
     });
   },
 };
