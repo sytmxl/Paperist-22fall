@@ -436,7 +436,8 @@
                         ></el-button>
                         <div style="margin-bottom: 10px; text-align: left">
                           <!-- <h4>论文标题:</h4> -->
-                          <p class="title"
+                          <p
+                            class="title"
                             @click="jumpPaperCollection(item.id)"
                           >
                             {{ item.name }}
@@ -507,7 +508,7 @@
                         "
                       >
                         <el-button
-                          style="float: right; margin-left: 5px;"
+                          style="float: right; margin-left: 5px"
                           icon="el-icon-delete"
                           circle
                           size="small"
@@ -525,9 +526,7 @@
                           <p class="title">{{ item.introduction }}</p>
                           <br />
                           <h4>关联文献:</h4>
-                          <p 
-                            @click="jumpPaperCollection(item.paper_id)"
-                          >
+                          <p @click="jumpPaperCollection(item.paper_id)">
                             {{ item.paper_name }}
                           </p>
                           <br />
@@ -599,9 +598,7 @@
                       ></el-button>
                       <div style="margin-bottom: 10px; text-align: left">
                         <!-- <h4>订阅人:</h4> -->
-                        <p class="title"
-                          @click="jumpSubscribes(item.id)"
-                        >
+                        <p class="title" @click="jumpSubscribes(item.id)">
                           {{ item.name }}
                         </p>
                         <br />
@@ -673,7 +670,9 @@
                       @click="jumpNotes(item.id)"
                     ></el-button>
                     <div style="margin-bottom: 10px; text-align: left">
-                      <p class="title" @click="jumpNotes(item.id)">{{ item.introduction }}</p>
+                      <p class="title" @click="jumpNotes(item.id)">
+                        {{ item.introduction }}
+                      </p>
                       <br />
                       <h4>相关文献:</h4>
                       <p
@@ -683,7 +682,7 @@
                         {{ item.paper_name }}
                       </p>
                       <br />
-                      
+
                       <h4>收藏时间:</h4>
                       <p>{{ item.time.replace("T", " ") }}</p>
                     </div>
@@ -750,9 +749,7 @@
                       @click="jumpMyComment(item.id)"
                     ></el-button>
                     <div style="margin-bottom: 10px; text-align: left">
-                      <p class="title"
-                        @click="jumpPaperCollection(item.id)"
-                      >
+                      <p class="title" @click="jumpPaperCollection(item.id)">
                         {{ item.name }}
                       </p>
                       <br />
@@ -946,12 +943,11 @@
               <div style="margin-left: 1%">
                 <el-card class="box-card1">
                   <el-form :inline="true">
-                    
                     <el-form-item
                       label="系统配色方案"
                       style="margin-left: 100px"
                     >
-                      <div style="width: 40%;">
+                      <div style="width: 40%">
                         <el-select
                           :placeholder="color"
                           v-model="color"
@@ -962,10 +958,7 @@
                         </el-select>
                       </div>
                     </el-form-item>
-                    <el-form-item
-                      label="系统配置语言"
-                      style=""
-                    >
+                    <el-form-item label="系统配置语言" style="">
                       <div style="width: 40%">
                         <el-select
                           :placeholder="language"
@@ -980,10 +973,7 @@
                   </el-form>
 
                   <el-form :inline="true">
-                    <el-form-item
-                      label="笔记下是否可评论"
-                      style=""
-                    >
+                    <el-form-item label="笔记下是否可评论" style="">
                       <el-switch
                         v-model="isNoteCommentable"
                         @change="geteditSet"
@@ -1001,10 +991,7 @@
                   </el-form>
 
                   <el-form :inline="true">
-                    <el-form-item
-                      label="文章下是否可评论"
-                      style=""
-                    >
+                    <el-form-item label="文章下是否可评论" style="">
                       <el-switch
                         v-model="isLiteratureCommentable"
                         @change="geteditSet"
@@ -1068,7 +1055,7 @@ export default {
       selectCommentToMe: "",
       selectSubscribe: "",
       selectNote: "",
-      username: "暂无数据",
+      username: "尚未认领",
       realname: "暂无数据",
       gender: "暂无数据",
       region: "暂无数据",
@@ -1234,18 +1221,17 @@ export default {
     // this.initSort();
     // this.es_id = this.$route.params.id;
     // if (this.isESid) {
-      console.log("yes");
-      this.initScholarPaper();
-      this.getScholarInfo();
-      this.initRelations();
+    console.log("yes");
+    this.initScholarPaper();
+    this.getScholarInfo();
+    this.initRelations();
     // }
 
     this.noteLabel = this.isOthers ? "他的笔记" : "我的笔记";
   },
   watch: {
-
     es_id: function (newVal, oldVal) {
-      if (this.es_id!='') {
+      if (this.es_id != "") {
         console.log("yes");
         this.initScholarPaper2(this.es_id);
         this.getScholarInfo2(this.es_id);
@@ -2360,8 +2346,11 @@ export default {
       this.$router.push("/FirstPage");
     },
     gotoAuthorization() {
+      console.log("ssssss",JSON.parse(sessionStorage.getItem("userInfo")))
       if (sessionStorage.getItem("token") == null) {
         this.$message.error("请先登录");
+      } else if (JSON.parse(sessionStorage.getItem("userInfo")).isScholar == 1) {
+        this.$message.error("您已经认领学者了！请不要重复认领！");
       } else {
         this.AuthorizationDialogVisable = true;
       }
@@ -2480,9 +2469,9 @@ export default {
 }
 .title {
   width: calc(100% - 80px);
-  font-size: 20px; 
-  font-weight: 700; 
-  color: #003b55; 
+  font-size: 20px;
+  font-weight: 700;
+  color: #003b55;
   cursor: pointer;
   transition: 0.3s;
   &:hover {
@@ -2502,6 +2491,5 @@ export default {
   z-index: 999;
 }
 #paper {
-  
 }
 </style>
