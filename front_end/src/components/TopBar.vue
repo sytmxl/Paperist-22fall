@@ -14,7 +14,8 @@
         name="dark_light"
         @click="toggleDarkLight"
         title="Toggle dark/light mode"
-        >日/夜</el-button>
+        >日/夜</el-button
+      >
       <search-box />
       <div v-if="loged" class="avatar" @click="gotoPersonalInformation">
         <el-dropdown size="medium" placement="bottom" @command="handleCommand">
@@ -110,7 +111,18 @@ export default {
   methods: {
     handleCommand(command) {
       if (command == "a") {
-        this.$refs.claimScholar.initclaimScholar();
+        const h = this.$createElement;
+        this.$notify({
+          title: "如何认证学者？",
+          message: h(
+            "i",
+            { style: "color: teal" },
+            "您可以搜索学者，进入到学者主页，点击认证学者按钮，填写学者认证信息，等待管理员审核，管理员审核通过后，即可完成认证。"
+          ),
+          type: "warning",
+          duration:2000,
+          offset: 100
+        });
       } else if (command == "b") {
         sessionStorage.removeItem("token");
         sessionStorage.removeItem("userInfo");

@@ -36,7 +36,7 @@
     <el-button
       style="margin-top: 40px; float: right; width: 100%"
       @click="submit()"
-      >发布</el-button
+      >提交认证申请</el-button
     >
   </el-main>
 </template>
