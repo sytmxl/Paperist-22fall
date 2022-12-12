@@ -14,18 +14,15 @@
           :key="item.id"
           :offset="index % 3 > 0 ? 2 : 0"
         >
-          <el-card style="margin-bottom: 3vh" :body-style="{ padding: '0px' }">
-            <img
-              src="https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png"
-              class="image"
-            />
-            <div style="padding: 14px">
-              <span>{{ item._source.name }}</span>
-              <div class="bottom clearfix">
-                <time class="time">2022.12.12</time>
-                <el-button type="text" class="button">查看学者</el-button>
-              </div>
+          <el-card style="margin-bottom: 3vh">
+            <div class="title" @click="toPersonalInfo(item._source.id)">
+              {{ item._source.name }}
             </div>
+            <el-divider></el-divider>
+            <div class="text" style="margin-top: 1vh">国家/地区: 克罗地亚</div>
+            <div class="text">研究领域: 深度学习</div>
+            <div class="text">论文数量: 13</div>
+            <div class="text">被引用次数: 12</div>
           </el-card>
         </el-col>
       </el-row>
@@ -45,6 +42,13 @@ export default {
   methods: {
     back() {
       this.$router.push("/firstPage");
+    },
+    toPersonalInfo(id) {
+      let routeData = this.$router.resolve({
+        name: "PersonalInformation",
+        params: { id: id },
+      });
+      window.open(routeData.href, "_blank");
     },
   },
   created() {
@@ -90,7 +94,17 @@ export default {
 .main {
   height: auto;
 }
-
+.title {
+  font-weight: 600;
+  font-size: large;
+  text-align: left;
+  margin-bottom: 1vh;
+  cursor: pointer;
+}
+.text {
+  text-align: left;
+  font-size: small;
+}
 .content {
   margin-left: 15vw;
   margin-right: 15vw;
@@ -98,8 +112,8 @@ export default {
 
 .cards {
   margin-top: 3vh;
-  margin-left: 15vw;
-  margin-right: 15vw;
+  margin-left: 5vw;
+  margin-right: 5vw;
 }
 
 .el-select .el-input {

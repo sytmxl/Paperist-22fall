@@ -155,13 +155,13 @@
                   <a>
                     <div class="content_item_id">
                       <span v-if="index === 0">
-                        <i style="color: #fe2d46">{{ index + 1 }}</i>
+                        <i style="color: #003b55">{{ index + 1 }}</i>
                       </span>
                       <span v-else-if="index === 1">
-                        <i style="color: #f60">{{ index + 1 }}</i>
+                        <i style="color: #003b55">{{ index + 1 }}</i>
                       </span>
                       <span v-else-if="index === 2">
-                        <i style="color: #faa90e">{{ index + 1 }}</i>
+                        <i style="color: #003b55">{{ index + 1 }}</i>
                       </span>
                       <span v-else>
                         <i style="color: #9195a3">{{ index + 1 }}</i>
@@ -173,21 +173,21 @@
                     <div
                       class="content_item_cite"
                       v-if="index === 0"
-                      style="color: #fe2d46"
+                      style="color: #003b55"
                     >
                       {{ parseInt(value) }}
                     </div>
                     <div
                       class="content_item_cite"
                       v-else-if="index === 1"
-                      style="color: #f60"
+                      style="color: #003b55"
                     >
                       {{ parseInt(value) }}
                     </div>
                     <div
                       class="content_item_cite"
                       v-else-if="index === 2"
-                      style="color: #faa90e"
+                      style="color: #003b55"
                     >
                       {{ parseInt(value) }}
                     </div>
@@ -869,6 +869,7 @@ export default {
 .search_area {
   position: sticky;
   top:0;
+  width: fit-content;
   z-index: 1000;
 }
 .avatar, .notLog {

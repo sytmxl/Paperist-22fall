@@ -1,7 +1,7 @@
 <template>
   <div id="main">
     <!-- <el-row class="tac"> -->
-      <el-col :span="3">
+      <el-col :span="3" style="overflow: hidden !important">
         <div id="col">
           <el-menu
             default-active="2"
@@ -16,10 +16,10 @@
                 <span>管理学者</span>
               </template>
             </el-menu-item>
-            <el-submenu index="2">
+            <el-submenu  class="white" index="2">
               <template slot="title">
                 <i class="el-icon-setting"></i>
-                <span class="white">管理审核</span>
+                <span>管理审核</span>
               </template>
               <el-menu-item-group>
                 <el-menu-item index="2-1" @click="goTo('/auditLiterature')"
@@ -104,18 +104,29 @@ export default {
   margin: 80px 0 0 30px;
   border-radius: 20px 0px 0px 20px;
   background: #003b55;
-  overflow-y: hidden;
+  overflow: hidden;
   // transition: 0.3s;
   text-align: left;
+  // z-index: 1;
   .white {
     color: white;
   }
   .el-submenu {
+    color: white;
     .el-menu-item,
     .el-menu-item-group {
       background: #225870 !important;
       color: white;
     }
+    
+  }
+  /deep/.el-submenu__title {
+    color: white;
+
+  }
+  /deep/.el-submenu__title:hover {
+    background: #002c3f !important;
+    color: white;
   }
   .is-active,
   .el-menu-item:hover,
@@ -127,11 +138,13 @@ export default {
 .el-card {
   margin: 30px 30px 0px 0px;
   min-height: calc(90vh);
-
+  // z-index: 999;
   border-radius: 20px !important;
   border: none !important;
   box-shadow: 0 0 7px rgba(204, 204, 204, 0.713);
-  background-color: rgba(255, 255, 255, 0.5);
+  background-color: rgb(255, 255, 255);
+    // background-color: rgb(255, 255, 255);
+
   backdrop-filter: blur(40px) brightness(100%);
 }
 .el-form {

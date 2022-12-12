@@ -8,7 +8,7 @@
     > -->
     <el-container>
       <el-main>
-        <el-page-header @back="goback" content="个人主页" title="返回首页">
+        <el-page-header @back="goback" content="个人主页" title="">
         </el-page-header>
         <el-row id="info" style="margin-top: 20px; margin-bottom: 20px">
           <el-col v-if="realname != '暂无数据'" :span="10">
@@ -153,7 +153,7 @@
                 <el-button
                   type="primary"
                   size="small"
-                  v-if="!isOthers"
+                  v-if="!isOthers && islogin()"
                   @click="
                     isChangePassword = true;
                     newPassword = '';
@@ -165,27 +165,17 @@
                 <el-button
                   type="primary"
                   size="small"
-                  v-if="!isOthers"
+                  v-if="!isOthers && islogin()"
                   @click="isEditPersonalInformation = true"
                   >修改信息</el-button
                 >
                 <el-button
                   type="primary"
                   size="small"
-                  v-if="!isAuthorized"
+                  v-if="!isClaim"
                   @click="gotoAuthorization()"
                   >学者认领</el-button
                 >
-                <el-dialog
-                  title="学者认证"
-                  :visible.sync="AuthorizationDialogVisable"
-                  width="40%"
-                >
-                  <AuthorizationScholar
-                    :es_id="es_id"
-                    @finish_upload="AuthorizationDialogVisable = false"
-                  />
-                </el-dialog>
               </template>
               <el-descriptions-item label="真实姓名">{{
                 realname
@@ -211,6 +201,16 @@
                 >{{ researchField }}</el-descriptions-item
               >
             </el-descriptions>
+            <el-dialog
+              title="学者认证"
+              :visible.sync="AuthorizationDialogVisable"
+              width="40%"
+            >
+              <AuthorizationScholar
+                :es_id="es_id"
+                @finish_upload="AuthorizationDialogVisable = false"
+              />
+            </el-dialog>
           </el-col>
           <el-skeleton v-else :rows="7" animated />
         </el-row>
@@ -377,7 +377,7 @@
             <el-tab-pane
               label="个人收藏"
               name="first"
-              v-if="(!isOthers || (isOthers && isCollectionVisible))&&isClaim"
+              v-if="(!isOthers || (isOthers && isCollectionVisible)) && isClaim"
             >
               <el-tabs
                 v-model="collectionDefaultLocation"
@@ -413,6 +413,7 @@
                     >
                       <el-card
                         class="box-card"
+                        id="paper"
                         v-if="
                           index >= (currentPage - 1) * pageSize &&
                           index < currentPage * pageSize
@@ -434,15 +435,15 @@
                           @click="jumpPaperCollection(item.id)"
                         ></el-button>
                         <div style="margin-bottom: 10px; text-align: left">
-                          <h4>论文标题:</h4>
+                          <!-- <h4>论文标题:</h4> -->
                           <p
-                            style="color: mediumpurple; cursor: pointer"
+                            class="title"
                             @click="jumpPaperCollection(item.id)"
                           >
                             {{ item.name }}
                           </p>
                           <br />
-                          <h4>论文摘要:</h4>
+                          <h4>摘要:</h4>
                           <p>{{ item.abstract }}</p>
                           <br />
                           <h4>收藏时间:</h4>
@@ -522,16 +523,12 @@
                           @click="jumpNoteCollection(item.id)"
                         ></el-button>
                         <div style="margin-bottom: 10px; text-align: left">
-                          <h4>文献标题:</h4>
-                          <p
-                            style="color: mediumpurple; cursor: pointer"
-                            @click="jumpPaperCollection(item.paper_id)"
-                          >
+                          <p class="title">{{ item.introduction }}</p>
+                          <br />
+                          <h4>关联文献:</h4>
+                          <p @click="jumpPaperCollection(item.paper_id)">
                             {{ item.paper_name }}
                           </p>
-                          <br />
-                          <h4>笔记内容:</h4>
-                          <p>{{ item.introduction }}</p>
                           <br />
                           <h4>收藏时间:</h4>
                           <p>{{ item.time }}</p>
@@ -600,11 +597,8 @@
                         @click="jumpSubscribes(item.id)"
                       ></el-button>
                       <div style="margin-bottom: 10px; text-align: left">
-                        <h4>订阅人:</h4>
-                        <p
-                          style="color: mediumpurple; cursor: pointer"
-                          @click="jumpSubscribes(item.id)"
-                        >
+                        <!-- <h4>订阅人:</h4> -->
+                        <p class="title" @click="jumpSubscribes(item.id)">
                           {{ item.name }}
                         </p>
                         <br />
@@ -636,7 +630,7 @@
             <el-tab-pane
               :label="this.noteLabel"
               name="third"
-              v-if="(!isOthers || (isOthers && isNoteVisible))&&isClaim"
+              v-if="(!isOthers || (isOthers && isNoteVisible)) && isClaim"
             >
               <div style="margin-left: 1%" v-if="notes.length != 0">
                 <div style="margin-top: 15px; width: 30%">
@@ -676,17 +670,19 @@
                       @click="jumpNotes(item.id)"
                     ></el-button>
                     <div style="margin-bottom: 10px; text-align: left">
-                      <h4>文献标题:</h4>
+                      <p class="title" @click="jumpNotes(item.id)">
+                        {{ item.introduction }}
+                      </p>
+                      <br />
+                      <h4>相关文献:</h4>
                       <p
-                        style="color: mediumpurple; cursor: pointer"
+                        style="cursor: pointer"
                         @click="jumpPaperCollection(item.paper_id)"
                       >
                         {{ item.paper_name }}
                       </p>
                       <br />
-                      <h4>笔记内容:</h4>
-                      <p>{{ item.introduction }}</p>
-                      <br />
+
                       <h4>收藏时间:</h4>
                       <p>{{ item.time.replace("T", " ") }}</p>
                     </div>
@@ -713,7 +709,7 @@
             <el-tab-pane
               label="我的评论"
               name="fourth"
-              v-if="!isScholar && !isOthers &&isClaim"
+              v-if="!isScholar && !isOthers && isClaim"
             >
               <div style="margin-left: 1%" v-if="myComment.length != 0">
                 <div style="margin-top: 15px; width: 30%">
@@ -753,11 +749,7 @@
                       @click="jumpMyComment(item.id)"
                     ></el-button>
                     <div style="margin-bottom: 10px; text-align: left">
-                      <h4>文献标题:</h4>
-                      <p
-                        style="color: mediumpurple; cursor: pointer"
-                        @click="jumpPaperCollection(item.id)"
-                      >
+                      <p class="title" @click="jumpPaperCollection(item.id)">
                         {{ item.name }}
                       </p>
                       <br />
@@ -790,7 +782,7 @@
             <el-tab-pane
               label="评论管理"
               name="fourth"
-              v-if="isScholar && !isOthers &&isClaim"
+              v-if="isScholar && !isOthers && isClaim"
             >
               <el-tabs
                 tab-position="left"
@@ -943,19 +935,14 @@
                 </el-tab-pane>
               </el-tabs>
             </el-tab-pane>
-            <el-tab-pane label="个人设置" name="fifth" v-if="!isOthers && isClaim">
+            <el-tab-pane
+              label="个人设置"
+              name="fifth"
+              v-if="!isOthers && isClaim"
+            >
               <div style="margin-left: 1%">
                 <el-card class="box-card1">
                   <el-form :inline="true">
-                    <el-form-item
-                      label="笔记是否他人可见"
-                      style="margin-left: 10%"
-                    >
-                      <el-switch
-                        v-model="isNoteVisible"
-                        @change="geteditSet"
-                      ></el-switch>
-                    </el-form-item>
                     <el-form-item
                       label="系统配色方案"
                       style="margin-left: 100px"
@@ -971,22 +958,7 @@
                         </el-select>
                       </div>
                     </el-form-item>
-                  </el-form>
-
-                  <el-form :inline="true">
-                    <el-form-item
-                      label="笔记下是否可评论"
-                      style="margin-left: 10%"
-                    >
-                      <el-switch
-                        v-model="isNoteCommentable"
-                        @change="geteditSet"
-                      ></el-switch>
-                    </el-form-item>
-                    <el-form-item
-                      label="系统配置语言"
-                      style="margin-left: 100px"
-                    >
+                    <el-form-item label="系统配置语言" style="">
                       <div style="width: 40%">
                         <el-select
                           :placeholder="language"
@@ -1001,10 +973,25 @@
                   </el-form>
 
                   <el-form :inline="true">
+                    <el-form-item label="笔记下是否可评论" style="">
+                      <el-switch
+                        v-model="isNoteCommentable"
+                        @change="geteditSet"
+                      ></el-switch>
+                    </el-form-item>
                     <el-form-item
-                      label="文章下是否可评论"
-                      style="margin-left: -15%"
+                      label="笔记是否他人可见"
+                      style="margin-left: 100px"
                     >
+                      <el-switch
+                        v-model="isNoteVisible"
+                        @change="geteditSet"
+                      ></el-switch>
+                    </el-form-item>
+                  </el-form>
+
+                  <el-form :inline="true">
+                    <el-form-item label="文章下是否可评论" style="">
                       <el-switch
                         v-model="isLiteratureCommentable"
                         @change="geteditSet"
@@ -1068,7 +1055,7 @@ export default {
       selectCommentToMe: "",
       selectSubscribe: "",
       selectNote: "",
-      username: "暂无数据",
+      username: "尚未认领",
       realname: "暂无数据",
       gender: "暂无数据",
       region: "暂无数据",
@@ -1112,7 +1099,7 @@ export default {
       myComment: [],
       commentToMe: [],
       subscribes: [],
-      isClaim:true,
+      isClaim: true,
 
       es_id: "",
       //图片
@@ -1145,7 +1132,9 @@ export default {
       ],
       flag: true,
       AuthorizationDialogVisable: false,
-      isAuthorized: false,
+      hasClaimed: true,
+      isESid: false,
+      hasEsid: false,
     };
   },
   created() {
@@ -1177,9 +1166,36 @@ export default {
         es_id: this.$route.params.id,
       },
     }).then((res) => {
-      if(res.data.id==""){
-        console.log(123454321)
-        this.isClaim=false;
+      if (res.data.id == "") {
+        console.log(123454321);
+        this.isESid = true;
+        this.isClaim = false;
+        this.hasClaimed = false;
+      } else if (res.data.id == this.$route.params.id) {
+        this.isESid = false;
+        this.hasClaimed = false;
+      } else {
+        this.isESid = true;
+        this.hasClaimed = true;
+        this.$router.push({
+          path: "/personalInformation/" + res.data.id,
+        });
+      }
+    });
+
+    this.$axios({
+      method: "post",
+      url: "/user/userToEs/",
+      data: {
+        user_id: this.$route.params.id,
+      },
+    }).then((res) => {
+      console.log(res.data);
+      if (res.data.id == "") {
+        this.hasESid = false;
+      } else {
+        this.hasESid = true;
+        this.es_id = res.data.id;
       }
     });
     //如果传的是id，上面那个也是空，不符合条件
@@ -1203,13 +1219,32 @@ export default {
   },
   mounted() {
     // this.initSort();
-    this.es_id = this.$route.params.id;
+    // this.es_id = this.$route.params.id;
+    // if (this.isESid) {
+    console.log("yes");
     this.initScholarPaper();
     this.getScholarInfo();
     this.initRelations();
+    // }
+
     this.noteLabel = this.isOthers ? "他的笔记" : "我的笔记";
   },
   watch: {
+    es_id: function (newVal, oldVal) {
+      if (this.es_id != "") {
+        console.log("yes");
+        this.initScholarPaper2(this.es_id);
+        this.getScholarInfo2(this.es_id);
+        this.initRelations2(this.es_id);
+      }
+    },
+    // hasClaimed: function (newVal, oldVal) {
+    //   if (this.hasClaimed) {
+    //     this.initScholarPaper();
+    //     this.getScholarInfo();
+    //     this.initRelations();
+    //   }
+    // },
     isOthers: function (newVal, oldVal) {
       this.noteLabel = this.isOthers ? "他的笔记" : "我的笔记";
     },
@@ -1230,8 +1265,7 @@ export default {
     },
   },
   methods: {
-    // 根据esid获得作者信息
-    getScholarInfo() {
+    getScholarInfo2(val) {
       let obj = {
         query: {
           bool: {
@@ -1241,10 +1275,10 @@ export default {
         },
       };
       obj.query.bool.must.push({
-        match_phrase: { id: this.$route.params.id },
+        match_phrase: { id: val },
       });
       obj.query.bool.filter = {
-        match_phrase: { id: this.$route.params.id },
+        match_phrase: { id: val },
       };
       axios({
         headers: {
@@ -1258,13 +1292,18 @@ export default {
         method: "post",
         data: JSON.stringify(obj),
       }).then((res) => {
-        console.log("学者信息",res.data.hits.hits);
+        console.log("学者信息", res.data.hits.hits);
         this.realname = res.data.hits.hits[0]._source.name;
-        this.researchField=res.data.hits.hits[0]._source.tags[0].t+", "+res.data.hits.hits[0]._source.tags[1].t+", "+res.data.hits.hits[0]._source.tags[2].t;
+        this.researchField =
+          res.data.hits.hits[0]._source.tags[0].t +
+          ", " +
+          res.data.hits.hits[0]._source.tags[1].t +
+          ", " +
+          res.data.hits.hits[0]._source.tags[2].t;
       });
     },
     // 根据esid获得关系曲线
-    initRelations() {
+    initRelations2(val) {
       let obj = {
         query: {
           bool: {
@@ -1274,10 +1313,10 @@ export default {
         },
       };
       obj.query.bool.must.push({
-        match_phrase: { id: this.es_id },
+        match_phrase: { id: val },
       });
       obj.query.bool.filter = {
-        match_phrase: { id: this.es_id },
+        match_phrase: { id: val },
       };
       axios({
         headers: {
@@ -1291,7 +1330,7 @@ export default {
         method: "post",
         data: JSON.stringify(obj),
       }).then((res) => {
-        console.log("学者信息",res.data.hits.hits);
+        console.log("学者信息", res.data.hits.hits);
         this.realname = res.data.hits.hits[0]._source.name;
         // 根据作者信息筛出曲线
         var nameList = [];
@@ -1305,10 +1344,10 @@ export default {
           },
         };
         obj.query.bool.must.push({
-          match_phrase: { "authors.id": this.es_id },
+          match_phrase: { "authors.id": val },
         });
         obj.query.bool.filter = {
-          match_phrase: { "authors.id": this.es_id },
+          match_phrase: { "authors.id": val },
         };
         axios({
           headers: {
@@ -1350,7 +1389,207 @@ export default {
             relationsData.push(nameList[key]);
           }
           this.RelationsData = relationsData;
-          console.log('relation',this.RelationsData)
+          console.log("relation", this.RelationsData);
+        });
+      });
+    },
+    // 获取学者文献（曲线）
+    initScholarPaper2(val) {
+      let obj = {
+        query: {
+          bool: {
+            must: [],
+            filter: {},
+          },
+        },
+      };
+      obj.query.bool.must.push({
+        match_phrase: { "authors.id": val },
+      });
+      obj.query.bool.filter = {
+        match_phrase: { "authors.id": val },
+      };
+      axios({
+        headers: {
+          "content-type": "application/json",
+        },
+        auth: {
+          username: "elastic",
+          password: "BZYvLA-d*pS0EpI7utmJ",
+        },
+        url: "/es/paper/_search",
+        method: "post",
+        data: JSON.stringify(obj),
+      }).then((res) => {
+        this.papers = res.data.hits.hits;
+        this.tmpPapers = this.papers;
+        this.papers.sort(this.compareUp("year"));
+        this.tmpPapers.sort(this.compareUp("year"));
+        console.log(this.papers);
+        // 数量曲线
+        this.tmp2Papers = res.data.hits.hits;
+        this.tmp2Papers.sort(this.compareUp("year"));
+        var count = new Array(2500).fill(0);
+        console.log("initLine", this.tmp2Papers);
+        this.tmp2Papers.forEach((item, index) => {
+          count[item._source.year]++;
+        });
+        this.tmpLinedata = [];
+        count.forEach((item, index) => {
+          if (item != 0) {
+            this.tmpLinedata.push({
+              count: item,
+              content: index,
+            });
+          }
+        });
+        this.Linedata = this.tmpLinedata;
+        // 引用曲线
+        this.tmp3Papers = res.data.hits.hits;
+        this.tmp3Papers.sort(this.compareUp("year"));
+        var count2 = new Array(2500).fill(0);
+        console.log("initLine2", this.tmp3Papers);
+        this.tmp3Papers.forEach((item, index) => {
+          count2[item._source.year] += item._source.n_citation;
+        });
+        this.tmpLinedata2 = [];
+        count2.forEach((item, index) => {
+          if (item != 0) {
+            this.tmpLinedata2.push({
+              count: item,
+              content: index,
+            });
+          }
+        });
+        this.Linedata2 = this.tmpLinedata2;
+      });
+    },
+    // 根据esid获得作者信息
+    getScholarInfo() {
+      let obj = {
+        query: {
+          bool: {
+            must: [],
+            filter: {},
+          },
+        },
+      };
+      obj.query.bool.must.push({
+        match_phrase: { id: this.$route.params.id },
+      });
+      obj.query.bool.filter = {
+        match_phrase: { id: this.$route.params.id },
+      };
+      axios({
+        headers: {
+          "content-type": "application/json",
+        },
+        auth: {
+          username: "elastic",
+          password: "BZYvLA-d*pS0EpI7utmJ",
+        },
+        url: "/es/author/_search",
+        method: "post",
+        data: JSON.stringify(obj),
+      }).then((res) => {
+        console.log("学者信息", res.data.hits.hits);
+        this.realname = res.data.hits.hits[0]._source.name;
+        this.researchField =
+          res.data.hits.hits[0]._source.tags[0].t +
+          ", " +
+          res.data.hits.hits[0]._source.tags[1].t +
+          ", " +
+          res.data.hits.hits[0]._source.tags[2].t;
+      });
+    },
+    // 根据esid获得关系曲线
+    initRelations() {
+      let obj = {
+        query: {
+          bool: {
+            must: [],
+            filter: {},
+          },
+        },
+      };
+      obj.query.bool.must.push({
+        match_phrase: { id: this.$route.params.id },
+      });
+      obj.query.bool.filter = {
+        match_phrase: { id: this.$route.params.id },
+      };
+      axios({
+        headers: {
+          "content-type": "application/json",
+        },
+        auth: {
+          username: "elastic",
+          password: "BZYvLA-d*pS0EpI7utmJ",
+        },
+        url: "/es/author/_search",
+        method: "post",
+        data: JSON.stringify(obj),
+      }).then((res) => {
+        console.log("学者信息", res.data.hits.hits);
+        this.realname = res.data.hits.hits[0]._source.name;
+        // 根据作者信息筛出曲线
+        var nameList = [];
+        console.log(this.realname);
+        obj = {
+          query: {
+            bool: {
+              must: [],
+              filter: {},
+            },
+          },
+        };
+        obj.query.bool.must.push({
+          match_phrase: { "authors.id": this.$route.params.id },
+        });
+        obj.query.bool.filter = {
+          match_phrase: { "authors.id": this.$route.params.id },
+        };
+        axios({
+          headers: {
+            "content-type": "application/json",
+          },
+          auth: {
+            username: "elastic",
+            password: "BZYvLA-d*pS0EpI7utmJ",
+          },
+          url: "/es/paper/_search",
+          method: "post",
+          data: JSON.stringify(obj),
+        }).then((res) => {
+          console.log("论文", res.data.hits.hits);
+          var paperList = res.data.hits.hits;
+          for (var i = 0; i < paperList.length; i++) {
+            var authorList = paperList[i]._source.authors;
+            for (var j = 0; j < authorList.length; j++) {
+              if (authorList[j].name != this.realname) {
+                if (
+                  nameList[authorList[j].name] == undefined ||
+                  nameList[authorList[j].name] == null
+                ) {
+                  nameList[authorList[j].name] = {
+                    id: authorList[j].id,
+                    name: authorList[j].name,
+                    value: 1,
+                  };
+                } else {
+                  nameList[authorList[j].name].value++;
+                }
+              }
+            }
+          }
+          console.log("字典", nameList);
+          // 遍历字典
+          var relationsData = [];
+          for (var key in nameList) {
+            relationsData.push(nameList[key]);
+          }
+          this.RelationsData = relationsData;
+          console.log("relation", this.RelationsData);
         });
       });
     },
@@ -1365,10 +1604,10 @@ export default {
         },
       };
       obj.query.bool.must.push({
-        match_phrase: { "authors.id": this.es_id },
+        match_phrase: { "authors.id": this.$route.params.id },
       });
       obj.query.bool.filter = {
-        match_phrase: { "authors.id": this.es_id },
+        match_phrase: { "authors.id": this.$route.params.id },
       };
       axios({
         headers: {
@@ -1505,6 +1744,7 @@ export default {
         this.new_personalProfile = "";
         this.new_researchField = "";
       });
+      this.windows.reload();
     },
     //个人收藏、个人订阅、我的笔记等初始化栏
     handleClickAll(tab, event) {
@@ -2106,10 +2346,22 @@ export default {
       this.$router.push("/FirstPage");
     },
     gotoAuthorization() {
+      console.log("ssssss", JSON.parse(sessionStorage.getItem("userInfo")));
       if (sessionStorage.getItem("token") == null) {
-        this.$message.error("请先登录");
+        this.$message.error("您还未登录！请先登录");
+      } else if (
+        JSON.parse(sessionStorage.getItem("userInfo")).isScholar == 1
+      ) {
+        this.$message.error("您已经认领学者了！请不要重复认领！");
       } else {
         this.AuthorizationDialogVisable = true;
+      }
+    },
+    islogin() {
+      if (sessionStorage.getItem("token") == null) {
+        return false;
+      } else {
+        return true;
       }
     },
   },
@@ -2223,5 +2475,30 @@ export default {
 //似乎必须要用deep、选择全部子标签、颜色用全透明才行
 /deep/.el-descriptions *:not(button) {
   background-color: #003b5500 !important;
+}
+.title {
+  width: calc(100% - 80px);
+  font-size: 20px;
+  font-weight: 700;
+  color: #003b55;
+  cursor: pointer;
+  transition: 0.3s;
+  &:hover {
+    cursor: pointer;
+    border-radius: 10px;
+    background: rgb(226, 226, 226);
+    padding: 5px;
+    z-index: 99;
+    transform: scale(102%);
+    // border: solid 2px #003b55;
+  }
+  &:active {
+    transform: scale(95%);
+  }
+}
+.el-button {
+  z-index: 999;
+}
+#paper {
 }
 </style>
