@@ -54,6 +54,11 @@ const routes = [
         component: () => import( '../views/User/register.vue')
       },
       {
+        path: '/forgetPassword',
+        name: '/forgetPassword',
+        component: () => import( '../views/User/Forget.vue')
+      },
+      {
         path: '/NoteInformation/:note_id',
         name: 'NoteInformation',
         component: () => import( '../views/User/NoteInformation.vue')
