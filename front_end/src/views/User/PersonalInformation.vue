@@ -1143,6 +1143,7 @@ export default {
     //   this.isToken = 0;
     //   this.isOthers = true;
     // }
+    //
     //个人信息
     this.getPersonalInformation();
     this.getPaperCollection();
