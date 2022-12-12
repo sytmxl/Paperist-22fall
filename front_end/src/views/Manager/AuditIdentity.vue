@@ -2,11 +2,11 @@
   <div class="main">
     <h1>待审核学者身份认领请求</h1>
     <el-table :data="files">
-      <el-table-column fixed prop="date" label="提交时间" width="150">
+      <el-table-column fixed prop="time" label="提交时间" width="150">
       </el-table-column>
-      <el-table-column prop="name" label="用户名" width="120">
+      <el-table-column prop="" label="用户id" width="120">
       </el-table-column>
-      <el-table-column prop="fileName" label="文献名"> </el-table-column>
+      <el-table-column prop="author_id" label="学者id"> </el-table-column>
       <el-table-column label="操作">
         <template slot-scope="scope">
           <el-button
@@ -64,23 +64,7 @@ export default {
   name: "AuditIdentity",
   data() {
     return {
-      files: [
-        {
-          date: "2022.11.13",
-          name: "ando",
-          fileName: "Denoising Diffusion Probabilistic Models",
-        },
-        {
-          date: "2022.11.13",
-          name: "ando",
-          fileName: "Denoising Diffusion Probabilistic Models",
-        },
-        {
-          date: "2022.11.13",
-          name: "ando",
-          fileName: "Denoising Diffusion Probabilistic Models",
-        },
-      ],
+      files: [],
       dialogFormVisible: false,
       input: "",
       tabMapOptions: [
@@ -96,7 +80,7 @@ export default {
   methods: {
     toFile(index) {
       console.log(index);
-      this.$router.push("/identity");
+      this.$router.push(`/identity/${index.intro}/${index.image_url}`);
     },
     handleCreate() {
       this.questionForm = {
@@ -111,7 +95,20 @@ export default {
       console.log(JSON.stringify(params));
       this.dialogFormVisible = false;
     },
+    init(){
+      this.$axios({
+        url: "http://127.0.0.1:8000/manager/manageClaimAuthor/",
+        method: "post",
+        data: {
+        },
+      }).then((res) => {
+        this.files = res.data.data;
+      });
+    },
   },
+  mounted(){
+    this.init()
+  }
 };
 </script>
 
