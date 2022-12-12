@@ -4,7 +4,7 @@
       <div id="logo1" class="home_logo"></div>
     </el-row>
     <el-row class="search_area">
-      <SearchBox />
+      <SearchBox ref="searchBox"/>
     </el-row>
     <!-- <note :list="1" @reaction_note="aboutNoteInit()" /> -->
     <el-row :gutter="10" class="display_zone">
@@ -73,7 +73,7 @@
                 />
                 <div id="load">
                   <el-button
-                    style="width: 90%; margin-top: 20px;"
+                    style="width: 90%; margin-top: 20px"
                     @click="loadSub()"
                     v-loading="start2"
                     >加载更多</el-button
@@ -169,7 +169,34 @@
                     <div class="content_item_title" @click="search_field(key)">
                       {{ key }}
                     </div>
-                    <div class="content_item_cite">{{ parseInt(value) }}</div>
+                    <div
+                      class="content_item_cite"
+                      v-if="index === 0"
+                      style="color: #fe2d46"
+                    >
+                      {{ parseInt(value) }}
+                    </div>
+                    <div
+                      class="content_item_cite"
+                      v-else-if="index === 1"
+                      style="color: #f60"
+                    >
+                      {{ parseInt(value) }}
+                    </div>
+                    <div
+                      class="content_item_cite"
+                      v-else-if="index === 2"
+                      style="color: #faa90e"
+                    >
+                      {{ parseInt(value) }}
+                    </div>
+                    <div
+                      class="content_item_cite"
+                      v-else
+                      style="color: #9195a3"
+                    >
+                      {{ parseInt(value) }}
+                    </div>
                   </a>
                 </li>
               </div>
@@ -263,16 +290,28 @@ export default {
       SubscribePeopleList: [],
       hot: [
         {
-          人工智能: 100,
+          人工智能: 13482,
         },
         {
-          人工智能: 100,
+          机器人: 12000,
         },
         {
-          人工智能: 100,
+          神经网络: 10000,
         },
         {
-          人工智能: 100,
+          人机交互: 9300,
+        },
+        {
+          无线通信: 8000,
+        },
+        {
+          免疫治疗: 7100,
+        },
+        {
+          网络安全: 6500,
+        },
+        {
+          量子: 3400,
         },
       ],
       rules: {
@@ -436,15 +475,11 @@ export default {
     //     });
     // },
     // 搜索热门领域
-    // search_field(arg) {
-    //   this.$router.push({
-    //     path: "/result",
-    //     query: {
-    //       input: arg,
-    //       type: 2,
-    //     },
-    //   });
-    // },
+    search_field(arg) {
+      this.$refs.searchBox.common_search_type=2;
+      this.$refs.searchBox.common_search_query=arg;
+      this.$refs.searchBox. common_search_jump();
+    },
     isLogin() {
       if (sessionStorage.getItem("token")) {
         return true;
@@ -709,7 +744,6 @@ export default {
   line-height: calc(10vh);
   font-size: 20px;
   font-weight: bold;
-  
 }
 .index_bold_font {
   font-weight: 700;
