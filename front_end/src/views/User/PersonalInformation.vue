@@ -1040,7 +1040,7 @@ import PaperCard from "@/components/PaperCard.vue";
 import claimScholar from "@/components/claimScholar.vue";
 import axios from "axios";
 import CryptoJS from "crypto-js";
-import AuthorizationScholar from "../../components/AuthorizationScholar.vue"
+import AuthorizationScholar from "../../components/AuthorizationScholar.vue";
 // import CryptoJS from "_crypto-js@4.1.1@crypto-js";
 export default {
   name: "PersonalInformation",
@@ -1051,7 +1051,7 @@ export default {
     PaperCard,
     claimScholar,
     ScholarLine2,
-    AuthorizationScholar
+    AuthorizationScholar,
   },
   data() {
     return {
@@ -1284,13 +1284,13 @@ export default {
                 if (
                   nameList[authorList[j].name] == undefined ||
                   nameList[authorList[j].name] == null
-                )
+                ) {
                   nameList[authorList[j].name] = {
                     id: authorList[j].id,
                     name: authorList[j].name,
                     value: 1,
                   };
-                else {
+                } else {
                   nameList[authorList[j].name].value++;
                 }
               }
@@ -1303,6 +1303,7 @@ export default {
             relationsData.push(nameList[key]);
           }
           this.RelationsData = relationsData;
+          console.log('relation',this.RelationsData)
         });
       });
     },
@@ -2058,9 +2059,9 @@ export default {
       this.$router.push("/FirstPage");
     },
     gotoAuthorization() {
-      if(sessionStorage.getItem("token") == null){
+      if (sessionStorage.getItem("token") == null) {
         this.$message.error("请先登录");
-      }else{
+      } else {
         this.AuthorizationDialogVisable = true;
       }
     },
