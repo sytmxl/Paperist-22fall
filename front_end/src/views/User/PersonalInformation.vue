@@ -42,7 +42,12 @@
               </div>
             </el-upload>
           </el-col>
-          <el-col v-if="realname != '暂无数据'" class="des" :span="11" style="margin-top: 1.5%">
+          <el-col
+            v-if="realname != '暂无数据'"
+            class="des"
+            :span="11"
+            style="margin-top: 1.5%"
+          >
             <!--column2表示每行两个-->
             <el-descriptions
               :title="realname"
@@ -164,6 +169,23 @@
                   @click="isEditPersonalInformation = true"
                   >修改信息</el-button
                 >
+                <el-button
+                  type="primary"
+                  size="small"
+                  v-if="!isAuthorized"
+                  @click="gotoAuthorization()"
+                  >学者认领</el-button
+                >
+                <el-dialog
+                  title="学者认证"
+                  :visible.sync="AuthorizationDialogVisable"
+                  width="40%"
+                >
+                  <AuthorizationScholar
+                    :es_id="es_id"
+                    @finish_upload="AuthorizationDialogVisable = false"
+                  />
+                </el-dialog>
               </template>
               <el-descriptions-item label="真实姓名">{{
                 realname
@@ -190,7 +212,7 @@
               >
             </el-descriptions>
           </el-col>
-          <el-skeleton v-else :rows="7" animated/>
+          <el-skeleton v-else :rows="7" animated />
         </el-row>
         <!--        <el-button @click="isScholar = !isScholar"-->
         <!--          >学者转换,去掉该按钮样式即恢复正常</el-button-->
@@ -1018,6 +1040,7 @@ import PaperCard from "@/components/PaperCard.vue";
 import claimScholar from "@/components/claimScholar.vue";
 import axios from "axios";
 import CryptoJS from "crypto-js";
+import AuthorizationScholar from "../../components/AuthorizationScholar.vue";
 // import CryptoJS from "_crypto-js@4.1.1@crypto-js";
 export default {
   name: "PersonalInformation",
@@ -1028,6 +1051,7 @@ export default {
     PaperCard,
     claimScholar,
     ScholarLine2,
+    AuthorizationScholar,
   },
   data() {
     return {
@@ -1090,6 +1114,7 @@ export default {
       subscribes: [],
       isClaim:true,
 
+      es_id: "",
       //图片
       profile: "",
       headers: {
@@ -1119,6 +1144,8 @@ export default {
         },
       ],
       flag: true,
+      AuthorizationDialogVisable: false,
+      isAuthorized: false,
     };
   },
   created() {
@@ -1176,6 +1203,7 @@ export default {
   },
   mounted() {
     // this.initSort();
+    this.es_id = this.$route.params.id;
     this.initScholarPaper();
     this.getScholarInfo();
     this.initRelations();
@@ -1235,9 +1263,8 @@ export default {
         this.researchField=res.data.hits.hits[0]._source.tags[0].t+", "+res.data.hits.hits[0]._source.tags[1].t+", "+res.data.hits.hits[0]._source.tags[2].t;
       });
     },
+    // 根据esid获得关系曲线
     initRelations() {
-      var nameList = [];
-      console.log(this.realname);
       let obj = {
         query: {
           bool: {
@@ -1247,10 +1274,10 @@ export default {
         },
       };
       obj.query.bool.must.push({
-        match_phrase: { "authors.id": this.$route.params.id },
+        match_phrase: { id: this.es_id },
       });
       obj.query.bool.filter = {
-        match_phrase: { id: this.$route.params.id },
+        match_phrase: { id: this.es_id },
       };
       axios({
         headers: {
@@ -1264,7 +1291,67 @@ export default {
         method: "post",
         data: JSON.stringify(obj),
       }).then((res) => {
-        console.log(res.data.hits.hits);
+        console.log("学者信息",res.data.hits.hits);
+        this.realname = res.data.hits.hits[0]._source.name;
+        // 根据作者信息筛出曲线
+        var nameList = [];
+        console.log(this.realname);
+        obj = {
+          query: {
+            bool: {
+              must: [],
+              filter: {},
+            },
+          },
+        };
+        obj.query.bool.must.push({
+          match_phrase: { "authors.id": this.es_id },
+        });
+        obj.query.bool.filter = {
+          match_phrase: { "authors.id": this.es_id },
+        };
+        axios({
+          headers: {
+            "content-type": "application/json",
+          },
+          auth: {
+            username: "elastic",
+            password: "BZYvLA-d*pS0EpI7utmJ",
+          },
+          url: "/es/paper/_search",
+          method: "post",
+          data: JSON.stringify(obj),
+        }).then((res) => {
+          console.log("论文", res.data.hits.hits);
+          var paperList = res.data.hits.hits;
+          for (var i = 0; i < paperList.length; i++) {
+            var authorList = paperList[i]._source.authors;
+            for (var j = 0; j < authorList.length; j++) {
+              if (authorList[j].name != this.realname) {
+                if (
+                  nameList[authorList[j].name] == undefined ||
+                  nameList[authorList[j].name] == null
+                ) {
+                  nameList[authorList[j].name] = {
+                    id: authorList[j].id,
+                    name: authorList[j].name,
+                    value: 1,
+                  };
+                } else {
+                  nameList[authorList[j].name].value++;
+                }
+              }
+            }
+          }
+          console.log("字典", nameList);
+          // 遍历字典
+          var relationsData = [];
+          for (var key in nameList) {
+            relationsData.push(nameList[key]);
+          }
+          this.RelationsData = relationsData;
+          console.log('relation',this.RelationsData)
+        });
       });
     },
     // 获取学者文献（曲线）
@@ -1278,10 +1365,10 @@ export default {
         },
       };
       obj.query.bool.must.push({
-        match_phrase: { "authors.id": this.$route.params.id },
+        match_phrase: { "authors.id": this.es_id },
       });
       obj.query.bool.filter = {
-        match_phrase: { "authors.id": this.$route.params.id },
+        match_phrase: { "authors.id": this.es_id },
       };
       axios({
         headers: {
@@ -2014,9 +2101,16 @@ export default {
       });
     },
     //返回上一界面
-    goback(){
+    goback() {
       //this.$router.go(-1);
-      this.$router.push("/FirstPage")
+      this.$router.push("/FirstPage");
+    },
+    gotoAuthorization() {
+      if (sessionStorage.getItem("token") == null) {
+        this.$message.error("请先登录");
+      } else {
+        this.AuthorizationDialogVisable = true;
+      }
     },
   },
 };
