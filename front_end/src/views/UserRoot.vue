@@ -21,6 +21,12 @@ export default {
     // window.addEventListener("scroll", this.scroll0,true);
     var topbar = document.getElementById("topbar");
     var content = document.getElementById("bar-content");
+    console.log(this.$route.path)
+    if(this.$route.path=="/"){
+       this.$router.push({
+          name:'FirstPage',
+        })
+    }
     // content.style.width='100%';
     // body.style.backgroundColor='#003b55';
 

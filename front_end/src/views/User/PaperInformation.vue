@@ -7,7 +7,8 @@
               <div style="margin-bottom:20px">
                 <span style="font-size:35px;font-weight:700;color: #003B55;">{{info_list.title}}</span>
                 <el-divider></el-divider>
-                <h4 style="margin-top:20px">来源：{{info_list.venue.raw}} &#12288; 引用次数：{{info_list.n_citation}}</h4>
+                <h4 style="margin-top:20px" v-if="info_list.venue!=null">来源：{{info_list.venue.raw}} &#12288; 引用次数：{{info_list.n_citation}}</h4>
+                <h4 style="margin-top:20px" v-else>来源：暂无数据 &#12288; 引用次数：{{info_list.n_citation}}</h4>
               </div>
               
               <div  class="text item">
@@ -39,7 +40,7 @@
             </el-card>
             <el-card class="box-card2" v-if="info_list.length != 0">
                 <span style="font-size:25px;font-weight:bolder">全部来源</span>
-                <div class="origion" v-if="info_list.url.length != 0">
+                <div class="origion" v-if="info_list.url!=null">
                     <div class="org" v-for="(i,index) in info_list.url" :key="index">
                         <div class="logo">
                              <a :href="i"  target="_blank" >阅读链接{{index+1}}</a>
@@ -47,7 +48,7 @@
                          
                     </div>
                 </div>
-                <div v-else><el-empty description="还没有笔记，发表第一篇笔记吧"></el-empty></div>
+                <div v-else><el-empty description="目前尚无原文链接"></el-empty></div>
             </el-card>
             <el-card style="margin-top: 30px" v-else>
               <el-skeleton :rows="4" animated/>
@@ -210,7 +211,8 @@
               <div class="about_content" style="width:100%;height: fit-content;">
                 来源期刊
                 <div class="ogjournal">
-                  <a style="text-decoration:none" class="journal_content" @click="goto_search(info_list.venue.raw)">{{info_list.venue.raw}}</a>
+                  <a style="text-decoration:none" class="journal_content" @click="goto_search(info_list.venue.raw)" v-if="info_list.venue!=null">{{info_list.venue.raw}}</a>
+                  <a style="text-decoration:none" class="journal_content" @click="goto_search(info_list.venue.raw)" v-else>暂无数据</a>
                 </div> 
               </div>
             </el-card>
@@ -563,7 +565,8 @@ export default {
         }
         }
       }
-      obj.query.bool.must.push({"match_phrase":{"authors.id":authors[index].id}})
+      if(authors[index].id!=null){
+        obj.query.bool.must.push({"match_phrase":{"authors.id":authors[index].id}})
       obj.query.bool.filter={"match_phrase":{"authors.id":authors[index].id}}
       axios({
             headers: {
@@ -590,6 +593,8 @@ export default {
         }
         
       })
+      }
+      
     },
     },
     components:{
