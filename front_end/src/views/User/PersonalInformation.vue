@@ -187,12 +187,12 @@
             </el-descriptions>
           </el-col>
         </el-row>
-<!--        <el-button @click="isScholar = !isScholar"-->
-<!--          >学者转换,去掉该按钮样式即恢复正常</el-button-->
-<!--        >-->
-<!--        <el-button @click="isOthers = !isOthers"-->
-<!--          >视角转换,去掉该按钮样式即恢复正常</el-button-->
-<!--        >-->
+        <!--        <el-button @click="isScholar = !isScholar"-->
+        <!--          >学者转换,去掉该按钮样式即恢复正常</el-button-->
+        <!--        >-->
+        <!--        <el-button @click="isOthers = !isOthers"-->
+        <!--          >视角转换,去掉该按钮样式即恢复正常</el-button-->
+        <!--        >-->
         <el-dialog
           title="更改您的密码"
           :visible.sync="isChangePassword"
@@ -312,7 +312,7 @@
               </div>
               <!-- 用v-if代替slice，解决v-for，slice不敏感 -->
               <!-- 同时利用flag解决排序更新问题 -->
-              <div v-for="(paper, index) in papers" :key="paper.id">
+              <div v-for="(paper, index) in papers" :key="paper._id">
                 <paper-card
                   v-if="
                     index >= (currentPage - 1) * pageSize &&
@@ -348,7 +348,10 @@
                   <span slot="label"
                     ><i class="el-icon-message-solid"></i>论文收藏</span
                   >
-                  <div style="margin-left: 1%" v-if="paperCollection.length!=0">
+                  <div
+                    style="margin-left: 1%"
+                    v-if="paperCollection.length != 0"
+                  >
                     <div style="margin-top: 15px; width: 30%">
                       <div style="margin-top: 15px">
                         <el-input
@@ -393,10 +396,7 @@
                         <div style="margin-bottom: 10px; text-align: left">
                           <h4>论文标题:</h4>
                           <p
-                            style="
-                              color: mediumpurple;
-                              cursor: pointer;
-                            "
+                            style="color: mediumpurple; cursor: pointer"
                             @click="jumpPaperCollection(item.id)"
                           >
                             {{ item.name }}
@@ -427,14 +427,19 @@
                     </el-pagination>
                   </div>
                   <div v-else>
-                    <el-empty description="还没有收藏论文，收藏第一篇论文吧"></el-empty>
+                    <el-empty
+                      description="还没有收藏论文，收藏第一篇论文吧"
+                    ></el-empty>
                   </div>
                 </el-tab-pane>
                 <el-tab-pane name="collectionSecond">
                   <span slot="label">
                     <i class="el-icon-message-solid"></i>笔记收藏</span
                   >
-                  <div style="margin-left: 1%" v-if="noteCollection.length!=0">
+                  <div
+                    style="margin-left: 1%"
+                    v-if="noteCollection.length != 0"
+                  >
                     <div style="margin-top: 15px; width: 30%">
                       <div style="margin-top: 15px">
                         <el-input
@@ -479,10 +484,7 @@
                         <div style="margin-bottom: 10px; text-align: left">
                           <h4>文献标题:</h4>
                           <p
-                            style="
-                              color: mediumpurple;
-                              cursor: pointer;
-                            "
+                            style="color: mediumpurple; cursor: pointer"
                             @click="jumpPaperCollection(item.paper_id)"
                           >
                             {{ item.paper_name }}
@@ -511,92 +513,92 @@
                     </el-pagination>
                   </div>
                   <div v-else>
-                    <el-empty description="还没有收藏笔记，收藏第一个笔记吧"></el-empty>
+                    <el-empty
+                      description="还没有收藏笔记，收藏第一个笔记吧"
+                    ></el-empty>
                   </div>
                 </el-tab-pane>
               </el-tabs>
             </el-tab-pane>
             <el-tab-pane label="个人订阅" name="second">
-              <div v-if="subscribes.length!=0">
+              <div v-if="subscribes.length != 0">
                 <div style="margin-left: 1%">
                   <div style="margin-top: 15px; width: 30%">
                     <el-input
-                        placeholder="请输入你需要搜索的订阅"
-                        v-model="selectSubscribe"
-                        class="input-with-select"
+                      placeholder="请输入你需要搜索的订阅"
+                      v-model="selectSubscribe"
+                      class="input-with-select"
                     >
                       <el-button
-                          slot="append"
-                          icon="el-icon-search"
-                          @click="searchSubscribe"
+                        slot="append"
+                        icon="el-icon-search"
+                        @click="searchSubscribe"
                       ></el-button>
                     </el-input>
                   </div>
                   <div v-for="(item, index) in this.subscribes" :key="index">
                     <el-card
-                        class="box-card"
-                        v-if="
-                      index >= (currentPage - 1) * pageSize &&
-                      index < currentPage * pageSize
-                    "
+                      class="box-card"
+                      v-if="
+                        index >= (currentPage - 1) * pageSize &&
+                        index < currentPage * pageSize
+                      "
                     >
                       <el-button
-                          style="float: right; margin-left: 5px"
-                          icon="el-icon-delete"
-                          circle
-                          size="small"
-                          @click="delSubscribe(item.subscribe_id)"
-                          v-if="!isOthers"
+                        style="float: right; margin-left: 5px"
+                        icon="el-icon-delete"
+                        circle
+                        size="small"
+                        @click="delSubscribe(item.subscribe_id)"
+                        v-if="!isOthers"
                       ></el-button>
                       <el-button
-                          style="float: right"
-                          icon="el-icon-more-outline"
-                          circle
-                          size="small"
-                          @click="jumpSubscribes(item.id)"
+                        style="float: right"
+                        icon="el-icon-more-outline"
+                        circle
+                        size="small"
+                        @click="jumpSubscribes(item.id)"
                       ></el-button>
                       <div style="margin-bottom: 10px; text-align: left">
                         <h4>订阅人:</h4>
                         <p
-                            style="
-                          color: mediumpurple;
-                          cursor: pointer;
-                        "
-                            @click="jumpSubscribes(item.id)"
+                          style="color: mediumpurple; cursor: pointer"
+                          @click="jumpSubscribes(item.id)"
                         >
                           {{ item.name }}
                         </p>
                         <br />
                         <h4>订阅时间:</h4>
-                        <p>{{ item.time.replace("T"," ") }}</p>
+                        <p>{{ item.time.replace("T", " ") }}</p>
                       </div>
                     </el-card>
                   </div>
                 </div>
 
                 <el-pagination
-                    :current-page.sync="currentPage"
-                    :page-size="pageSize"
-                    @size-change="handleSizeChange"
-                    @current-change="handleCurrentChange"
-                    background
-                    layout="prev, pager, next, jumper"
-                    :total="subscribes.length > 0 ? subscribes.length : null"
-                    style="margin-top: 40px"
+                  :current-page.sync="currentPage"
+                  :page-size="pageSize"
+                  @size-change="handleSizeChange"
+                  @current-change="handleCurrentChange"
+                  background
+                  layout="prev, pager, next, jumper"
+                  :total="subscribes.length > 0 ? subscribes.length : null"
+                  style="margin-top: 40px"
                 >
                 </el-pagination>
               </div>
               <div v-else>
-                <el-empty description="还没有订阅作者，订阅第一个作者吧"></el-empty>
+                <el-empty
+                  description="还没有订阅作者，订阅第一个作者吧"
+                ></el-empty>
               </div>
-
             </el-tab-pane>
             <el-tab-pane
               :label="this.noteLabel"
               name="third"
               v-if="!isOthers || (isOthers && isNoteVisible)"
             >
-              <div style="margin-left: 1%" v-if="notes.length!=0">
+              <div style="margin-left: 1%" v-if="notes.length != 0">
                 <div style="margin-top: 15px; width: 30%">
                   <el-input
                     placeholder="请输入你需要搜索的笔记"
@@ -636,10 +638,7 @@
                     <div style="margin-bottom: 10px; text-align: left">
                       <h4>文献标题:</h4>
                       <p
-                        style="
-                          color: mediumpurple;
-                          cursor: pointer;
-                        "
+                        style="color: mediumpurple; cursor: pointer"
                         @click="jumpPaperCollection(item.paper_id)"
                       >
                         {{ item.paper_name }}
@@ -649,7 +648,7 @@
                       <p>{{ item.introduction }}</p>
                       <br />
                       <h4>收藏时间:</h4>
-                      <p>{{ item.time.replace("T"," ") }}</p>
+                      <p>{{ item.time.replace("T", " ") }}</p>
                     </div>
                   </el-card>
                 </div>
@@ -666,7 +665,9 @@
                 </el-pagination>
               </div>
               <div v-else>
-                <el-empty description="还没有发表笔记，发表第一个笔记吧"></el-empty>
+                <el-empty
+                  description="还没有发表笔记，发表第一个笔记吧"
+                ></el-empty>
               </div>
             </el-tab-pane>
             <el-tab-pane
@@ -674,7 +675,7 @@
               name="fourth"
               v-if="!isScholar && !isOthers"
             >
-              <div style="margin-left: 1%" v-if="myComment.length!=0">
+              <div style="margin-left: 1%" v-if="myComment.length != 0">
                 <div style="margin-top: 15px; width: 30%">
                   <el-input
                     placeholder="请输入你需要搜索的评论"
@@ -714,11 +715,8 @@
                     <div style="margin-bottom: 10px; text-align: left">
                       <h4>文献标题:</h4>
                       <p
-                          style="
-                          color: mediumpurple;
-                          cursor: pointer;
-                        "
-                          @click="jumpPaperCollection(item.id)"
+                        style="color: mediumpurple; cursor: pointer"
+                        @click="jumpPaperCollection(item.id)"
                       >
                         {{ item.name }}
                       </p>
@@ -727,7 +725,7 @@
                       <p>{{ item.content }}</p>
                       <br />
                       <h4>评论时间:</h4>
-                      <p>{{ item.time.replace("T"," ") }}</p>
+                      <p>{{ item.time.replace("T", " ") }}</p>
                     </div>
                   </el-card>
                 </div>
@@ -744,7 +742,9 @@
                 </el-pagination>
               </div>
               <div v-else>
-                <el-empty description="还没有发表评论，发表第一个评论吧"></el-empty>
+                <el-empty
+                  description="还没有发表评论，发表第一个评论吧"
+                ></el-empty>
               </div>
             </el-tab-pane>
             <el-tab-pane
@@ -761,48 +761,45 @@
                   <span slot="label"
                     ><i class="el-icon-message-solid"></i>我给他人的</span
                   >
-                  <div v-if="myComment.length!=0">
+                  <div v-if="myComment.length != 0">
                     <div style="margin-top: 15px; width: 30%">
                       <el-input
-                          placeholder="请输入你需要搜索的评论"
-                          v-model="selectComment"
-                          class="input-with-select"
+                        placeholder="请输入你需要搜索的评论"
+                        v-model="selectComment"
+                        class="input-with-select"
                       >
                         <el-button
-                            slot="append"
-                            icon="el-icon-search"
-                            @click="searchPaperComment"
+                          slot="append"
+                          icon="el-icon-search"
+                          @click="searchPaperComment"
                         ></el-button>
                       </el-input>
                     </div>
                     <el-card
-                        class="box-card"
-                        v-for="(item, index) in this.myComment"
-                        :key="index"
+                      class="box-card"
+                      v-for="(item, index) in this.myComment"
+                      :key="index"
                     >
                       <el-button
-                          style="float: right; margin-left: 5px"
-                          icon="el-icon-delete"
-                          circle
-                          size="small"
-                          @click="delComment(item.comment_id)"
-                          v-if="!isOthers"
+                        style="float: right; margin-left: 5px"
+                        icon="el-icon-delete"
+                        circle
+                        size="small"
+                        @click="delComment(item.comment_id)"
+                        v-if="!isOthers"
                       ></el-button>
                       <el-button
-                          style="float: right"
-                          icon="el-icon-more-outline"
-                          circle
-                          size="small"
-                          @click="jumpMyComment(item.id)"
+                        style="float: right"
+                        icon="el-icon-more-outline"
+                        circle
+                        size="small"
+                        @click="jumpMyComment(item.id)"
                       ></el-button>
                       <div style="margin-bottom: 10px; text-align: left">
                         <h4>文献标题:</h4>
                         <p
-                            style="
-                          color: mediumpurple;
-                          cursor: pointer;
-                        "
-                            @click="jumpPaperCollection(item.id)"
+                          style="color: mediumpurple; cursor: pointer"
+                          @click="jumpPaperCollection(item.id)"
                         >
                           {{ item.name }}
                         </p>
@@ -811,71 +808,70 @@
                         <p>{{ item.content }}</p>
                         <br />
                         <h4>评论时间:</h4>
-                        <p>{{ item.time.replace("T"," ") }}</p>
+                        <p>{{ item.time.replace("T", " ") }}</p>
                       </div>
                     </el-card>
                     <el-pagination
-                        :current-page.sync="currentPage"
-                        :page-size="pageSize"
-                        @size-change="handleSizeChange"
-                        @current-change="handleCurrentChange"
-                        background
-                        layout="prev, pager, next, jumper"
-                        :total="myComment.length > 0 ? myComment.length : null"
-                        style="margin-top: 40px"
+                      :current-page.sync="currentPage"
+                      :page-size="pageSize"
+                      @size-change="handleSizeChange"
+                      @current-change="handleCurrentChange"
+                      background
+                      layout="prev, pager, next, jumper"
+                      :total="myComment.length > 0 ? myComment.length : null"
+                      style="margin-top: 40px"
                     >
                     </el-pagination>
                   </div>
                   <div v-else>
-                    <el-empty description="还没有发表评论，发表第一个评论吧"></el-empty>
+                    <el-empty
+                      description="还没有发表评论，发表第一个评论吧"
+                    ></el-empty>
                   </div>
                 </el-tab-pane>
                 <el-tab-pane name="commentSecond">
                   <span slot="label"
                     ><i class="el-icon-message-solid"></i>他人给我的</span
                   >
-                  <div v-if="commentToMe.length!=0">
+                  <div v-if="commentToMe.length != 0">
                     <div style="margin-top: 15px; width: 30%">
                       <el-input
-                          placeholder="请输入你需要搜索的评论"
-                          v-model="selectCommentToMe"
-                          class="input-with-select"
+                        placeholder="请输入你需要搜索的评论"
+                        v-model="selectCommentToMe"
+                        class="input-with-select"
                       >
                         <el-button
-                            slot="append"
-                            icon="el-icon-search"
-                            @click="searchPaperCommentToMe"
+                          slot="append"
+                          icon="el-icon-search"
+                          @click="searchPaperCommentToMe"
                         ></el-button>
                       </el-input>
                     </div>
                     <el-card
-                        class="box-card"
-                        v-for="(item, index) in this.commentToMe"
-                        :key="index"
+                      class="box-card"
+                      v-for="(item, index) in this.commentToMe"
+                      :key="index"
                     >
                       <el-button
-                          style="float: right; margin-left: 5px"
-                          icon="el-icon-delete"
-                          circle
-                          size="small"
-                          v-if="!isOthers"
-                          @click="delComment(item.comment_id)"
+                        style="float: right; margin-left: 5px"
+                        icon="el-icon-delete"
+                        circle
+                        size="small"
+                        v-if="!isOthers"
+                        @click="delComment(item.comment_id)"
                       ></el-button>
                       <el-button
-                          style="float: right"
-                          icon="el-icon-more-outline"
-                          circle
-                          size="small"
-                          @click="jumpMyComment(item.id)"
+                        style="float: right"
+                        icon="el-icon-more-outline"
+                        circle
+                        size="small"
+                        @click="jumpMyComment(item.id)"
                       ></el-button>
                       <div style="margin-bottom: 10px; text-align: left">
                         <h4>文献标题:</h4>
                         <p
-                            style="
-                          color: mediumpurple;
-                          cursor: pointer;
-                        "
-                            @click="jumpPaperCollection(item.id)"
+                          style="color: mediumpurple; cursor: pointer"
+                          @click="jumpPaperCollection(item.id)"
                         >
                           {{ item.name }}
                         </p>
@@ -884,23 +880,25 @@
                         <p>{{ item.content }}</p>
                         <br />
                         <h4>评论时间:</h4>
-                        <p>{{ item.time.replace("T"," ") }}</p>
+                        <p>{{ item.time.replace("T", " ") }}</p>
                       </div>
                     </el-card>
                     <el-pagination
-                        :current-page.sync="currentPage"
-                        :page-size="pageSize"
-                        @size-change="handleSizeChange"
-                        @current-change="handleCurrentChange"
-                        background
-                        layout="prev, pager, next, jumper"
-                        :total="myComment.length > 0 ? myComment.length : null"
-                        style="margin-top: 40px"
+                      :current-page.sync="currentPage"
+                      :page-size="pageSize"
+                      @size-change="handleSizeChange"
+                      @current-change="handleCurrentChange"
+                      background
+                      layout="prev, pager, next, jumper"
+                      :total="myComment.length > 0 ? myComment.length : null"
+                      style="margin-top: 40px"
                     >
                     </el-pagination>
                   </div>
                   <div v-else>
-                    <el-empty description="还没有人给你的论文进行评论"></el-empty>
+                    <el-empty
+                      description="还没有人给你的论文进行评论"
+                    ></el-empty>
                   </div>
                 </el-tab-pane>
               </el-tabs>
@@ -1044,7 +1042,7 @@ export default {
       collectionDefaultLocation: "collectionFirst",
       commentDefaultLocation: "commentFirst",
       noteLabel: "",
-      isScholar: false,
+      isScholar: true,
       researchField: "暂无数据",
       isOthers: false,
       showRelation: true,
@@ -1058,62 +1056,8 @@ export default {
       pageSize: 5,
       isToken: 0,
       id: 0,
-      papers: [
-        {
-          _source: {
-            authors: [
-              {
-                name: "杰哥",
-              },
-            ],
-            id: "56d850c8dabfae2eee0100f0",
-            issue: "是多少",
-            lang: "en",
-            n_citation: 12,
-            page_end: "",
-            page_start: "",
-            title: "动态式12数学课堂中“交流”艺术的探寻",
-            volume: "",
-            year: 2019,
-          },
-        },
-        {
-          _source: {
-            authors: [
-              {
-                name: "杰哥",
-              },
-            ],
-            id: "56d850c8dabfae2eee0100f0",
-            issue: "是多少",
-            lang: "en",
-            n_citation: 12,
-            page_end: "",
-            page_start: "",
-            title: "动态式123数学课堂中“交流”艺术的探寻",
-            volume: "",
-            year: 2015,
-          },
-        },
-        {
-          _source: {
-            authors: [
-              {
-                name: "杰哥",
-              },
-            ],
-            id: "56d850c8dabfae2eee0100f0",
-            issue: "是多少",
-            lang: "en",
-            n_citation: 15,
-            page_end: "",
-            page_start: "",
-            title: "动态式12数学课堂中“交流”艺术的探寻",
-            volume: "",
-            year: 2019,
-          },
-        },
-      ],
+      papers: [],
+      tmpPapers: [],
       paperCollection: [],
       noteCollection: [],
       notes: [],
@@ -1198,7 +1142,6 @@ export default {
     // this.initSort();
     this.initScholarPaper();
     this.noteLabel = this.isOthers ? "他的笔记" : "我的笔记";
-
   },
   watch: {
     isOthers: function (newVal, oldVal) {
@@ -1264,35 +1207,68 @@ export default {
     },
     // 获取学者文献
     initScholarPaper() {
-      this.$axios({
-        method: "post",
-        url: "/app/get_scholar_paper_list/",
-        data: {
-          // id: this.$route.params.id,
-          token: sessionStorage.getItem("token"),
+      let obj = {
+        query: {
+          bool: {
+            must: [],
+            filter: {},
+          },
         },
+      };
+      obj.query.bool.must.push({
+        match_phrase: { "authors.id": this.$route.params.id },
+      });
+      obj.query.bool.filter = {
+        match_phrase: { "authors.id": this.$route.params.id },
+      };
+      axios({
+        headers: {
+          "content-type": "application/json",
+        },
+        auth: {
+          username: "elastic",
+          password: "BZYvLA-d*pS0EpI7utmJ",
+        },
+        url: "/es/paper/_search",
+        method: "post",
+        data: JSON.stringify(obj),
       }).then((res) => {
-        this.papers = res.data.data;
-        this.papars.sort(this.compareDown("year"));
-        console.log("initScholarPaper");
-        console.log(res.data);
+        this.papers = res.data.hits.hits;
+        this.tmpPapers = this.papers;
+        this.papers.sort(this.compareDown("year"));
+        console.log(this.papers);
       });
     },
-    // 搜索学者指定标题文献
-    // searchScholarPaperCollection() {
-    //   this.$axios({
-    //     url: "/app/get_scholar_paper_list/",
-    //     method: "post",
-    //     data: {
-    //       id:this.$route.params.id,//页面学者id
-    //       token: sessionStorage.getItem("token"),
-    //       content: this.selectLiterature,
-    //     },
-    //   }).then((res) => {
-    //     this.paperCollection = res.data.data;
-    //     this.selectLiterature = "";
-    //   });
-    // },
+    // 普通发包
+    // this.$axios({
+    //   method: "post",
+    //   url: "/app/get_scholar_paper_list/",
+    //   data: {
+    //     // id: this.$route.params.id,
+    //     token: sessionStorage.getItem("token"),
+    //   },
+    // }).then((res) => {
+    //   this.papers = res.data.data;
+    //   this.papars.sort(this.compareDown("year"));
+    //   console.log("initScholarPaper");
+    //   console.log(res.data);
+    // });
+
+    // 筛选出学者指定标题文献
+    searchScholarPaperCollection() {
+      if (this.selectScholarLiterature != "") {
+        var arr=[];
+        arr = this.papers.filter((item) => {
+          var reg = new RegExp(this.selectScholarLiterature, "gi");
+          return reg.test(item._source.title);
+        });
+        this.papers = arr;
+        console.log(arr)
+        console.log(this.papers)
+      } else {
+        this.papers = this.tmpPapers;
+      }
+    },
     //获取个人信息
     getPersonalInformation() {
       this.$axios({
@@ -1305,13 +1281,18 @@ export default {
         },
       }).then((res) => {
         console.log(res.data.data);
-        if(res.data.data[0].realname!="") this.realname = res.data.data[0].realname;
-        if(res.data.data[0].email!="") this.email = res.data.data[0].email;
-        if(res.data.data[0].sex!="") this.gender = res.data.data[0].sex;
-        if(res.data.data[0].username!="") this.username = res.data.data[0].username;
-        if(res.data.data[0].sign!="") this.personalProfile = res.data.data[0].sign;
-        if(res.data.data[0].country!="") this.region = res.data.data[0].country;
-        if(res.data.data[0].profile!="") this.profile = res.data.data[0].profile;
+        if (res.data.data[0].realname != "")
+          this.realname = res.data.data[0].realname;
+        if (res.data.data[0].email != "") this.email = res.data.data[0].email;
+        if (res.data.data[0].sex != "") this.gender = res.data.data[0].sex;
+        if (res.data.data[0].username != "")
+          this.username = res.data.data[0].username;
+        if (res.data.data[0].sign != "")
+          this.personalProfile = res.data.data[0].sign;
+        if (res.data.data[0].country != "")
+          this.region = res.data.data[0].country;
+        if (res.data.data[0].profile != "")
+          this.profile = res.data.data[0].profile;
 
         this.researchField = res.data.data[0].field;
         //异步访问，created结束还未执行完
