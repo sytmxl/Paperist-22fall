@@ -49,7 +49,13 @@
                 :max="end_year"
               ></el-input-number>
             </el-collapse-item>
-            <el-checkbox-group
+            
+            <el-collapse-item 
+              title="年份标签"
+              style="margin-bottom: 10px"
+              class="display_zone"
+              shadow="never">
+                 <el-checkbox-group
               v-model="secondarySearchFilters_year"
               size="mini"
             >
@@ -62,7 +68,11 @@
                 @change="secondary_search(false)"
               />
             </el-checkbox-group>
+            </el-collapse-item>
+         
           </el-collapse-item>
+
+
           <el-collapse-item
             title="来源"
             style="margin-bottom: 10px"
