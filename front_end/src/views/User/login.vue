@@ -65,6 +65,7 @@
 import axios from "axios";
 import CryptoJS from 'crypto-js'
 import instance from "@/http";
+import qs from "qs"
 export default {
   name: "Login",
   mounted(){
@@ -96,10 +97,55 @@ export default {
   },
   methods:{
     forgetPass(){
-      // TODO
+      this.forgetDialogVisible = true;
     },
     toRegister(){
       this.$router.push("/register")
+    },
+    toReset(i) {
+      if (
+          this.forget.forget_email === ""
+      ) {
+        this.$message.warning("注册邮箱不能为空！");
+        return;
+      }
+      if (
+          !/^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/.exec(
+              this.forget.forget_email
+          )
+      ) {
+        this.$message.warning("请检查您的邮箱格式！");
+        return;
+      }
+      this.$axios({
+        method: "post",
+        url: "app/send_email/",
+        data: qs.stringify({
+          email: i,
+          type: 1,
+        }),
+      })
+          .then((res) => {
+
+
+                if (res.data.errno == 0) {
+                  this.$message.success("邮件已发送,请前往您的邮箱查看信息")
+                }
+                else {
+                  this.$message({
+                    message: res.data.msg,
+                    center: true,
+                    type: "error",
+                  });
+                }
+              },
+              this.forgetDialogVisible=false,
+              this.resetForm('forget'),
+              this.$router.push("/forgetPassword"),
+          )
+          .catch((err) => {
+
+          });
     },
     resetForm(){
       this.form = {

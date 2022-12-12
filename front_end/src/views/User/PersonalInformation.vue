@@ -8,7 +8,7 @@
     > -->
     <el-container>
       <el-main>
-        <el-page-header @back="goback" content="个人主页" title="返回首页">
+        <el-page-header @back="goback" content="个人主页" title="">
         </el-page-header>
         <el-row id="info" style="margin-top: 20px; margin-bottom: 20px">
           <el-col v-if="realname != '暂无数据'" :span="10">
@@ -413,6 +413,7 @@
                     >
                       <el-card
                         class="box-card"
+                        id="paper"
                         v-if="
                           index >= (currentPage - 1) * pageSize &&
                           index < currentPage * pageSize
@@ -434,15 +435,14 @@
                           @click="jumpPaperCollection(item.id)"
                         ></el-button>
                         <div style="margin-bottom: 10px; text-align: left">
-                          <h4>论文标题:</h4>
-                          <p
-                            style="color: mediumpurple; cursor: pointer"
+                          <!-- <h4>论文标题:</h4> -->
+                          <p class="title"
                             @click="jumpPaperCollection(item.id)"
                           >
                             {{ item.name }}
                           </p>
                           <br />
-                          <h4>论文摘要:</h4>
+                          <h4>摘要:</h4>
                           <p>{{ item.abstract }}</p>
                           <br />
                           <h4>收藏时间:</h4>
@@ -507,7 +507,7 @@
                         "
                       >
                         <el-button
-                          style="float: right; margin-left: 5px"
+                          style="float: right; margin-left: 5px;"
                           icon="el-icon-delete"
                           circle
                           size="small"
@@ -522,16 +522,14 @@
                           @click="jumpNoteCollection(item.id)"
                         ></el-button>
                         <div style="margin-bottom: 10px; text-align: left">
-                          <h4>文献标题:</h4>
-                          <p
-                            style="color: mediumpurple; cursor: pointer"
+                          <p class="title">{{ item.introduction }}</p>
+                          <br />
+                          <h4>关联文献:</h4>
+                          <p 
                             @click="jumpPaperCollection(item.paper_id)"
                           >
                             {{ item.paper_name }}
                           </p>
-                          <br />
-                          <h4>笔记内容:</h4>
-                          <p>{{ item.introduction }}</p>
                           <br />
                           <h4>收藏时间:</h4>
                           <p>{{ item.time }}</p>
@@ -600,9 +598,8 @@
                         @click="jumpSubscribes(item.id)"
                       ></el-button>
                       <div style="margin-bottom: 10px; text-align: left">
-                        <h4>订阅人:</h4>
-                        <p
-                          style="color: mediumpurple; cursor: pointer"
+                        <!-- <h4>订阅人:</h4> -->
+                        <p class="title"
                           @click="jumpSubscribes(item.id)"
                         >
                           {{ item.name }}
@@ -676,17 +673,17 @@
                       @click="jumpNotes(item.id)"
                     ></el-button>
                     <div style="margin-bottom: 10px; text-align: left">
-                      <h4>文献标题:</h4>
+                      <p class="title" @click="jumpNotes(item.id)">{{ item.introduction }}</p>
+                      <br />
+                      <h4>相关文献:</h4>
                       <p
-                        style="color: mediumpurple; cursor: pointer"
+                        style="cursor: pointer"
                         @click="jumpPaperCollection(item.paper_id)"
                       >
                         {{ item.paper_name }}
                       </p>
                       <br />
-                      <h4>笔记内容:</h4>
-                      <p>{{ item.introduction }}</p>
-                      <br />
+                      
                       <h4>收藏时间:</h4>
                       <p>{{ item.time.replace("T", " ") }}</p>
                     </div>
@@ -753,9 +750,7 @@
                       @click="jumpMyComment(item.id)"
                     ></el-button>
                     <div style="margin-bottom: 10px; text-align: left">
-                      <h4>文献标题:</h4>
-                      <p
-                        style="color: mediumpurple; cursor: pointer"
+                      <p class="title"
                         @click="jumpPaperCollection(item.id)"
                       >
                         {{ item.name }}
@@ -951,20 +946,12 @@
               <div style="margin-left: 1%">
                 <el-card class="box-card1">
                   <el-form :inline="true">
-                    <el-form-item
-                      label="笔记是否他人可见"
-                      style="margin-left: 10%"
-                    >
-                      <el-switch
-                        v-model="isNoteVisible"
-                        @change="geteditSet"
-                      ></el-switch>
-                    </el-form-item>
+                    
                     <el-form-item
                       label="系统配色方案"
                       style="margin-left: 100px"
                     >
-                      <div style="width: 40%">
+                      <div style="width: 40%;">
                         <el-select
                           :placeholder="color"
                           v-model="color"
@@ -975,21 +962,9 @@
                         </el-select>
                       </div>
                     </el-form-item>
-                  </el-form>
-
-                  <el-form :inline="true">
-                    <el-form-item
-                      label="笔记下是否可评论"
-                      style="margin-left: 10%"
-                    >
-                      <el-switch
-                        v-model="isNoteCommentable"
-                        @change="geteditSet"
-                      ></el-switch>
-                    </el-form-item>
                     <el-form-item
                       label="系统配置语言"
-                      style="margin-left: 100px"
+                      style=""
                     >
                       <div style="width: 40%">
                         <el-select
@@ -1006,8 +981,29 @@
 
                   <el-form :inline="true">
                     <el-form-item
+                      label="笔记下是否可评论"
+                      style=""
+                    >
+                      <el-switch
+                        v-model="isNoteCommentable"
+                        @change="geteditSet"
+                      ></el-switch>
+                    </el-form-item>
+                    <el-form-item
+                      label="笔记是否他人可见"
+                      style="margin-left: 100px"
+                    >
+                      <el-switch
+                        v-model="isNoteVisible"
+                        @change="geteditSet"
+                      ></el-switch>
+                    </el-form-item>
+                  </el-form>
+
+                  <el-form :inline="true">
+                    <el-form-item
                       label="文章下是否可评论"
-                      style="margin-left: -15%"
+                      style=""
                     >
                       <el-switch
                         v-model="isLiteratureCommentable"
@@ -2480,5 +2476,31 @@ export default {
 //似乎必须要用deep、选择全部子标签、颜色用全透明才行
 /deep/.el-descriptions *:not(button) {
   background-color: #003b5500 !important;
+}
+.title {
+  width: calc(100% - 80px);
+  font-size: 20px; 
+  font-weight: 700; 
+  color: #003b55; 
+  cursor: pointer;
+  transition: 0.3s;
+  &:hover {
+    cursor: pointer;
+    border-radius: 10px;
+    background: rgb(226, 226, 226);
+    padding: 5px;
+    z-index: 99;
+    transform: scale(102%);
+    // border: solid 2px #003b55;
+  }
+  &:active {
+    transform: scale(95%);
+  }
+}
+.el-button {
+  z-index: 999;
+}
+#paper {
+  
 }
 </style>
