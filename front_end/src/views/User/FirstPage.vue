@@ -1,31 +1,32 @@
 <template>
-  <div class="light-mode" style="height:calc(100vh) width:calc(100vh)">
+  <div style="min-height:calc(100vh) width:calc(100vh)">
+    <div class="hide"></div>
     <el-row class="logo_area">
       <div id="logo1" class="home_logo"></div>
     </el-row>
     <el-row class="search_area">
-      <SearchBox />
+      <SearchBox ref="searchBox" />
     </el-row>
-    <note :list="1" @reaction_note="aboutNoteInit()" />
+    <!-- <note :list="1" @reaction_note="aboutNoteInit()" /> -->
     <el-row :gutter="10" class="display_zone">
       <el-col :offset="3" :span="12">
         <div class="leftone">
           <el-tabs v-model="activeName" @tab-click="handleClick">
             <el-tab-pane label="推荐文章" name="first">
               <aboutCard
-                v-for="(item, index) in showRecommendList"
+                v-for="(item, index) in recommends"
                 :key="index"
-                :name="item.name"
-                :author="item.author"
-                :cite="item.cite"
-                :origin="item.origin"
-                :intro="item.intro"
-                :date="item.date"
-                :paper_id="item.paper_id"
+                :name="item._source.title"
+                :author="item._source.authors"
+                :cite="item._source.n_citation"
+                :origin="item._source.venue"
+                :intro="item._source.abstract"
+                :date="item._source.year"
+                :paper_id="item._source.id"
               />
               <div id="load">
                 <el-button
-                  style="width: 100%"
+                  style="width: 90%"
                   @click="loadRec()"
                   v-loading="start"
                   >加载更多</el-button
@@ -45,7 +46,7 @@
               </div>
               <div
                 class="SubscribeNotePlaceInfo"
-                v-else-if="isEmptyObject(showSubscribePeopleList)"
+                v-else-if="isEmptyObject(SubscribePeopleList)"
               >
                 <el-empty
                   description="你还没有关注别人，快去逛逛吧！"
@@ -67,13 +68,13 @@
               </div>
               <div v-else>
                 <noteCard
-                  v-for="(item, index) in showSubscribeNoteList"
-                  :key="index"
+                  v-for="item in showSubscribeNoteList"
+                  :key="item.note_id"
                   :note="item"
                 />
                 <div id="load">
                   <el-button
-                    style="width: 100%"
+                    style="width: 90%; margin-top: 20px"
                     @click="loadSub()"
                     v-loading="start2"
                     >加载更多</el-button
@@ -94,7 +95,7 @@
               </div>
               <div
                 class="SubscribeNotePlaceInfo"
-                v-else-if="isEmptyObject(showSubscribePeopleList)"
+                v-else-if="isEmptyObject(SubscribePeopleList)"
               >
                 <el-empty
                   description="你还没有关注别人，快去逛逛吧！"
@@ -115,20 +116,20 @@
                 </el-empty>
               </div>
               <div v-else>
-                <aboutCard
-                  v-for="(item, index) in showSubscribeTextList"
-                  :key="index"
-                  :name="item.name"
-                  :author="item.author"
-                  :cite="item.cite"
-                  :origin="item.origin"
-                  :intro="item.intro"
-                  :date="item.date"
-                  :paper_id="item.paper_id"
-                />
+                <div v-for="item in showSubscribeTextList" :key="item.paper_id">
+                  <aboutCard
+                    :name="item.name"
+                    :author="item.author"
+                    :cite="item.cite"
+                    :origin="item.origin"
+                    :intro="item.intro"
+                    :date="item.date"
+                    :paper_id="item.paper_id"
+                  />
+                </div>
                 <div id="load">
                   <el-button
-                    style="width: 100%"
+                    style="width: 90%"
                     @click="loadSub2()"
                     v-loading="start3"
                     >加载更多</el-button
@@ -169,7 +170,34 @@
                     <div class="content_item_title" @click="search_field(key)">
                       {{ key }}
                     </div>
-                    <div class="content_item_cite">{{ parseInt(value) }}</div>
+                    <div
+                      class="content_item_cite"
+                      v-if="index === 0"
+                      style="color: #fe2d46"
+                    >
+                      {{ parseInt(value) }}
+                    </div>
+                    <div
+                      class="content_item_cite"
+                      v-else-if="index === 1"
+                      style="color: #f60"
+                    >
+                      {{ parseInt(value) }}
+                    </div>
+                    <div
+                      class="content_item_cite"
+                      v-else-if="index === 2"
+                      style="color: #faa90e"
+                    >
+                      {{ parseInt(value) }}
+                    </div>
+                    <div
+                      class="content_item_cite"
+                      v-else
+                      style="color: #9195a3"
+                    >
+                      {{ parseInt(value) }}
+                    </div>
                   </a>
                 </li>
               </div>
@@ -199,7 +227,7 @@ import ScholarLine from "@/components/ScholarLine.vue";
 import TopBar from "@/components/TopBar";
 import noteCard from "../../components/noteCard.vue";
 import note from "../../components/note.vue";
-
+import axios from "axios"
 import $ from "jquery";
 export default {
   inject: ["reload"],
@@ -226,7 +254,7 @@ export default {
       recPage: 3,
       followNotePage: 3,
       followTextPage: 3,
-      RecommendList: [{}],
+      RecommendList: [],
       showRecommendList: [
         {
           name: "论杰哥",
@@ -256,84 +284,37 @@ export default {
           paper_id: "1",
         },
       ],
-      SubscribeNoteList: [{}],
-      showSubscribeNoteList: [
-        {
-          note_id: "3",
-          paper_id: "2",
-          paper_name: "杰哥",
-          introduction: "杰哥喜欢下围棋",
-          likes: "3",
-          collections: "1111",
-          remarks: "232",
-        },
-        {
-          note_id: "3",
-          paper_id: "2",
-          paper_name: "杰哥",
-          introduction: "杰哥喜欢下围棋",
-          likes: "3",
-          collections: "1111",
-          remarks: "232",
-        },
-        {
-          note_id: "3",
-          paper_id: "2",
-          paper_name: "杰哥",
-          introduction: "杰哥喜欢下围棋",
-          likes: "3",
-          collections: "1111",
-          remarks: "232",
-        },
-      ],
-      SubscribeTextList: [{}],
-      showSubscribeTextList: [
-        {
-          name: "论杰哥",
-          author: "马哥",
-          cite: "100",
-          origin: "中国科学院",
-          intro: "杰哥是个大帅哥",
-          date: "2020-10-10",
-          paper_id: "1",
-        },
-        {
-          name: "论杰哥",
-          author: "马哥",
-          cite: "100",
-          origin: "中国科学院",
-          intro: "杰哥是个大帅哥",
-          date: "2020-10-10",
-          paper_id: "1",
-        },
-        {
-          name: "论杰哥",
-          author: "马哥",
-          cite: "100",
-          origin: "中国科学院",
-          intro: "杰哥是个大帅哥",
-          date: "2020-10-10",
-          paper_id: "1",
-        },
-      ],
-      showSubscribePeopleList: [
-        {
-          name: "马哥",
-          id: "32",
-        },
-      ],
+      SubscribeNoteList: [],
+      showSubscribeNoteList: [],
+      SubscribeTextList: [],
+      showSubscribeTextList: [],
+      SubscribePeopleList: [],
+      recommends:[],
+      capacity:1,
       hot: [
         {
-          人工智能: 100,
+          人工智能: 13482,
         },
         {
-          人工智能: 100,
+          机器人: 12000,
         },
         {
-          人工智能: 100,
+          神经网络: 10000,
         },
         {
-          人工智能: 100,
+          人机交互: 9300,
+        },
+        {
+          无线通信: 8000,
+        },
+        {
+          免疫治疗: 7100,
+        },
+        {
+          网络安全: 6500,
+        },
+        {
+          量子: 3400,
         },
       ],
       rules: {
@@ -369,16 +350,37 @@ export default {
   mounted() {
     // 获取一些信息
     // this.getRecommendList();
-    // this.getFollowNoteList();
-    // this.getFollowTextList();
+    this.getFollowNoteList();
+    this.getFollowTextList();
+    this.getSubscribe();
+    this.load_interested(1);
     // this.getHot();
-    $("#topbar").css("display", "none");
+    // $(".search_input:first").css("visibility", "hidden");
+    // $(".logo:first").css("margin-right", "87vw");
+    $("#bar-content").css({
+          "width": "100%",
+        });
+    // $("#topbar").css("display", "none");
     window.addEventListener("scroll", this.scroll, true);
   },
   destroyed() {
     window.removeEventListener("scroll", this.scroll, true);
   },
   methods: {
+    // 获取关注的人
+    getSubscribe() {
+      this.$axios({
+        url: "/user/getSubscribe/",
+        method: "post",
+        data: {
+          token: sessionStorage.getItem("token"),
+          isToken: 1,
+          id: 1,
+        },
+      }).then((res) => {
+        this.SubscribePeopleList = res.data.data;
+      });
+    },
     // 获取推荐文章
     // getRecommendList() {
     //   this.$axios({
@@ -400,15 +402,27 @@ export default {
     getFollowNoteList() {
       this.$axios({
         method: "post",
-        url: "user/indexSubscribe/",
-        // data: {
-        //   token:sessionStorage.getItem("token")===null?"":sessionStorage.getItem("token")
-        // },
+        url: "user/indexSubscribeNote/",
       })
         .then((res) => {
           console.log("订阅笔记", res.data);
-          // this.SubscribeNoteList= res.data.data;
-          // this.showSubscribeNoteList = this.SubscribeNoteList.slice(0, 3);
+          let noteList = [];
+          res.data.followPeople.forEach((item) => {
+            item[0].note.forEach((item2) => {
+              let tmpNote = {
+                note_id: item2.note_id,
+                paper_id: item2.paper_id,
+                paper_name: item2.paper_name,
+                introduction: item2.note_introduction,
+                likes: item2.likes,
+                collections: item2.collections,
+                remarks: item2.remarks,
+              };
+              noteList.push(tmpNote);
+            });
+          });
+          this.SubscribeNoteList = noteList;
+          this.showSubscribeNoteList = this.SubscribeNoteList.slice(0, 3);
         })
         .catch((err) => {
           console.log(err);
@@ -417,17 +431,38 @@ export default {
     // 获取关注用户的文献
     getFollowTextList() {
       this.$axios({
-        method: "get",
-        url: "/user/getFollowPaper",
+        method: "post",
+        url: "/user/indexSubscribePaper/",
         data: {
-          token:
-            sessionStorage.getItem("token") === null
-              ? ""
-              : sessionStorage.getItem("token"), //     },
+          token: sessionStorage.getItem("token"),
+          isToken: 1,
+          id: 1,
         },
       })
         .then((res) => {
-          this.SubscribeTextList = res.data.data;
+          console.log(res.data);
+          let tmpFollowText = [];
+          res.data.data.forEach((item) => {
+            let tmpAuthorList = [];
+            item.author.forEach((item2) => {
+              // console.log("ss", item2)
+              let tmpAuthorName = {
+                name: item2,
+              };
+              tmpAuthorList.push(tmpAuthorName);
+            });
+            let tmpText = {
+              name: item.name,
+              author: tmpAuthorList,
+              cite: item.cite,
+              origin: item.origin,
+              intro: item.intro,
+              date: item.date,
+              paper_id: item.paper_id,
+            };
+            tmpFollowText.push(tmpText);
+          });
+          this.SubscribeTextList = tmpFollowText;
           this.showSubscribeTextList = this.SubscribeTextList.slice(0, 3);
         })
         .catch((err) => {
@@ -449,15 +484,11 @@ export default {
     //     });
     // },
     // 搜索热门领域
-    // search_field(arg) {
-    //   this.$router.push({
-    //     path: "/result",
-    //     query: {
-    //       input: arg,
-    //       type: 2,
-    //     },
-    //   });
-    // },
+    search_field(arg) {
+      this.$refs.searchBox.common_search_type = 2;
+      this.$refs.searchBox.common_search_query = arg;
+      this.$refs.searchBox.common_search_jump();
+    },
     isLogin() {
       if (sessionStorage.getItem("token")) {
         return true;
@@ -476,28 +507,24 @@ export default {
       });
     },
     loadRec() {
-      this.start = true;
-      setTimeout(() => {
-        this.start = false;
-        // 获取到全部数据，分布给用户展示
-        this.showRecommendList = this.showRecommendList.concat(
-          this.RecommendList.slice(this.recPage, this.recPage + 3)
-        );
-      }, 2000);
-      this.recPage += 3;
+      this.load_interested(this.capacity+1)
+      this.capacity = this.capacity+1
     },
     loadSub() {
       this.start2 = true;
       setTimeout(() => {
         this.start2 = false;
         // 获取到全部数据，分布给用户展示
+        console.log(this.followNotePage);
         this.showSubscribeNoteList = this.showSubscribeNoteList.concat(
           this.SubscribeNoteList.slice(
             this.followNotePage,
             this.followNotePage + 3
           )
         );
-      }, 2000);
+        console.log(this.showSubscribeNoteList);
+        this.followNotePage += 3;
+      }, 1400);
     },
     loadSub2() {
       this.start3 = true;
@@ -510,7 +537,8 @@ export default {
             this.followTextPage + 3
           )
         );
-      }, 2000);
+        this.followTextPage += 3;
+      }, 1400);
     },
     isEmptyObject(obj) {
       for (var key in obj) {
@@ -534,22 +562,30 @@ export default {
         this.$refs.MissTextComplain.uploadTextMiss();
       }
     },
-    handleClick(tab, event) {
-      if (tab.name == "second") {
-        window.alert("second");
-        this.getFollowNoteList();
-      } else if (tab.name == "third") {
-        window.alert("third");
-        this.getFollowTextList();
-      }
-    },
+    // handleClick(tab, event) {
+    //   if (tab.name == "second") {
+    //     window.alert("second");
+    //     this.getFollowNoteList();
+    //   } else if (tab.name == "third") {
+    //     window.alert("third");
+    //     this.getFollowTextList();
+    //   }
+    // },
     scroll() {
       var windowTop = $(window).scrollTop();
       // windowTop > 300 ?
-      if (windowTop > 300) {
-        $("#topbar").css("display", "block");
+      if (windowTop > 270) {
+        $("#bar-content").css({
+          // "display": "block",
+          // "width": "fit-content",
+        });
+        
       } else {
-        $("#topbar").css("display", "none");
+        $("#bar-content").css({
+          // "width": "100%",
+         
+        });
+        
       }
     },
     toggleDarkLight() {
@@ -557,6 +593,51 @@ export default {
       var currentClass = body.className;
       body.className = currentClass == "dark-mode" ? "light-mode" : "dark-mode";
     },
+    load_interested(index) {
+      let keywords = JSON.parse(localStorage.getItem("interested_keywords"));
+      // console.log('关键词有：'+keywords)
+      if (keywords == null) return;
+      let interested_search_request_body = {
+        query: {
+          bool: {
+            should: [],
+          },
+        },
+        from: 0,
+        size: 10*index,
+      };
+      for (let i = 0; i < 5; i++) {
+        let idx = parseInt(Math.random() * keywords.length);
+        interested_search_request_body.query.bool.should.push({
+          match: { keywords: keywords[idx] },
+        });
+        keywords.splice(idx, 1);
+      }
+
+      // this.loading_interested = true;
+      axios({
+        headers: {
+          "content-type": "application/json",
+        },
+        auth: {
+          username: "elastic",
+          password: "BZYvLA-d*pS0EpI7utmJ",
+        },
+        url: "es/paper/_search",
+        method: "post",
+        data: JSON.stringify(interested_search_request_body),
+      }).then((res) => {
+        if(index==1){
+            this.recommends = res.data.hits.hits;
+        }
+        else{
+          for(var i=0;i<res.data.hits.hits.length;i++){
+            this.recommends.push(res.data.hits.hits[i]);
+          }
+        }
+      });
+    },
+  
   },
 };
 </script>
@@ -580,8 +661,8 @@ export default {
   // overflow: hidden;
 }
 .home_logo {
-  width: 300px;
-  height: 200px;
+  width: 250px;
+  height: 180px;
   margin: 50px auto -70px;
 }
 .logo_area {
@@ -592,8 +673,9 @@ export default {
 }
 .search_area {
   width: 100%;
-  min-height: calc(10vh);
+  // min-height: calc(10vh);
   margin: 0 auto;
+  // background: #000;
   // padding-top: calc(5vh);
   clear: both;
 }
@@ -777,5 +859,41 @@ export default {
   background: #003b55;
 }
 /deep/.el-input-group {
+}
+.long {
+
+}
+.short {
+
+}
+.search_area {
+  position: sticky;
+  top:0;
+  z-index: 1000;
+}
+.avatar, .notLog {
+  
+}
+.search_input {
+  margin-top: 5px;
+}
+/deep/.search_input:first {
+  visibility: hidden;
+}
+.logo {
+  
+}
+.hide {
+  width: 60vw;
+  height: 50px;
+  position: sticky;
+  top: 0;
+  left: 20%;
+  background: #003b55;
+  z-index: 999;
+  
+}
+#topbar {
+  animation: none !important;
 }
 </style>

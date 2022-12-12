@@ -32,7 +32,7 @@
                 v-model="form.password" autocomplete="off" @keyup.enter.native="login"></el-input>
             </el-form-item>
             <el-form-item>
-              <el-button type="primary" @click="login" round>登&nbsp;&nbsp;录</el-button>
+              <el-button  type="primary" @click="login" round>登&nbsp;&nbsp;录</el-button>
             </el-form-item>
           </el-form>
         </el-tab-pane>
@@ -85,9 +85,16 @@ export default {
       loginmethod: "",
       activeName: "first",
       forgetDialogVisible: false,
+      ogpath:""
     };
   },
-
+  beforeRouteEnter (to, from, next){
+  next(vm => {
+    // 通过 `vm` 访问组件实例,将值传入fromPath
+      vm.ogpath = from.path
+    
+  })
+  },
   methods:{
     forgetPass(){
       this.forgetDialogVisible = true;
@@ -171,11 +178,17 @@ export default {
           }
         } else {
           this.$message({
-            message: '登陆成功',
+            message: '登录成功',
             type: 'success'
           });
           sessionStorage.setItem("token", res.data.token);
-          await this.$router.push("/FirstPage")
+          // await this.$router.push("/FirstPage")
+          if(this.ogpath!="/register"){
+            await window.history.go(-1);
+          }
+          else{
+            await this.$router.push("/FirstPage")
+          }
         }
       })
     }
@@ -193,7 +206,7 @@ export default {
 .logo_area {
   width: 100%;
   margin: 0 auto;
-  padding-top: 160px;
+  padding-top: 100px;
   clear: both;
 }
 
@@ -222,8 +235,7 @@ export default {
 }
 
 .kuang:hover {
-  width: 420px;
-  height: auto;
+  // transform: scale(105%);
 }
 
 .login {
@@ -275,26 +287,26 @@ export default {
 
 .el-button:not(.forget) {
   border: none;
-  border-radius: 20px !important;
+  border-radius: 10px !important;
   background-color: rgba(121, 167, 213, 0.73);
   font-size: 20px;
-  width: 100%;
+  width: 90%;
   transition: 0.4s !important;
 }
 
-.el-button:hover:not(.forget:hover) {
-  border-radius: 20px !important;
-  background-color: rgba(121, 167, 213, 0.377);
-  margin: 10px 0px 10px 0px;
-  font-size: 20px;
-}
+// .el-button:hover:not(.forget:hover) {
+//   border-radius: 20px !important;
+//   background-color: rgba(121, 167, 213, 0.377);
+//   margin: 10px 0px 10px 0px;
+//   font-size: 20px;
+// }
 
-.el-button:active:not(.forget:active) {
-  border-radius: 20px !important;
-  background-color: rgb(82, 109, 137);
+// .el-button:active:not(.forget:active) {
+//   border-radius: 20px !important;
+//   background-color: rgb(82, 109, 137);
 
-  font-size: 20px;
-}
+//   font-size: 20px;
+// }
 .forget {
   width: 40%;
 }

@@ -4,11 +4,20 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
+<<<<<<< HEAD
     <list default="true" id="f7cd59a5-8230-4e02-967e-454776429056" name="Changes" comment="Changes">
       <change afterPath="$PROJECT_DIR$/front_end/src/views/User/Forget.vue" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/front_end/src/router/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/front_end/src/router/index.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/front_end/src/views/User/login.vue" beforeDir="false" afterPath="$PROJECT_DIR$/front_end/src/views/User/login.vue" afterDir="false" />
+=======
+    <list default="true" id="f7cd59a5-8230-4e02-967e-454776429056" name="Changes" comment="">
+<<<<<<< HEAD
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+=======
+      <change beforePath="$PROJECT_DIR$/front_end/src/views/User/PaperInformation.vue" beforeDir="false" afterPath="$PROJECT_DIR$/front_end/src/views/User/PaperInformation.vue" afterDir="false" />
+>>>>>>> 7a20f65702437ebb447f3d3d4d7070e86af7a093
+>>>>>>> 2e9bda190a4dd5fb1290e9e3345cb50564d1da98
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -67,10 +76,17 @@
       <workItem from="1669989337916" duration="362000" />
       <workItem from="1669991343433" duration="431000" />
       <workItem from="1670545422436" duration="11385000" />
+<<<<<<< HEAD
+      <workItem from="1670563166610" duration="8698000" />
+=======
       <workItem from="1670563166610" duration="6140000" />
       <workItem from="1670588073101" duration="148000" />
+<<<<<<< HEAD
       <workItem from="1670652923490" duration="727000" />
       <workItem from="1670828084720" duration="13906000" />
+=======
+>>>>>>> 7a20f65702437ebb447f3d3d4d7070e86af7a093
+>>>>>>> 2e9bda190a4dd5fb1290e9e3345cb50564d1da98
     </task>
     <servers />
   </component>

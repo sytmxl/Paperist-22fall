@@ -1,6 +1,6 @@
 <template>
   <div id="app" class="light-mode">
-    <div class="main"><router-view /></div>
+    <div class="main"><router-view :key="$route.fullPath"/></div>
     <Footer v-show="!this.$route.path.includes('login')"></Footer>
   </div>
 </template>
@@ -30,7 +30,7 @@ export default {
 
 <style lang="scss">
   $dark-color: #111;
-  $light-color: #eee;
+  $light-color: rgb(217, 219, 222);
   $dark-theme: #001C2A;
   $theme: #003B55;
 
@@ -103,7 +103,15 @@ export default {
   .el-button {
     border: 0px;
     border-radius: 10px;
-    transition: 0.3s;
+    transition: 0.2s;
+    &:hover {
+    transform: scale(105%);
+      cursor: pointer;
+      // border: #000 solid 2px;
+    }
+    &:active {
+      transform: scale(90%);
+    }
   }
   el-card {
     border-radius: 10px !important;
@@ -112,6 +120,8 @@ export default {
 * {
   margin: 0;
   padding: 0;
+  
+  // transition: 0.3s;
   // animation-name: enter_blur;
   // animation-iteration-count: 1;
   // animation-duration: 0.3s;
@@ -211,21 +221,28 @@ el-icon:hover, el-icon-close:hover {
 
   border-radius: 20px !important;
   box-shadow: 0 0 20px rgba(204, 204, 204, 0.768);
-  background-color: rgba(255, 255, 255, 0.649) !important;
-  backdrop-filter: blur(40px) brightness(100%);
+  // 动态+模糊加载效果不是很好
+  // background-color: rgba(255, 255, 255, 0.649) !important;
+  // backdrop-filter: blur(40px) brightness(100%);
   font-family: 微软雅黑;
   animation: shift_down 0.3s cubic-bezier(.23,1.38,.65,.99);
-
 }
 .el-dialog__close {
   &:hover {
     color: $theme !important;
   }
 }
-// .el-dialog__wrapper, .el-message-box__wrapper {
-//   backdrop-filter: blur(15px) brightness(90%) !important;   
-//   transition: 1s !important; 
-// }
+.v-modal {
+  display: none;
+}
+/deep/.el-dialog {
+  animation: none !important;
+}
+.el-dialog__wrapper, .el-message-box__wrapper {
+  overflow: hidden;
+  // position: relative;
+  // width: fit-content;
+}
 
 .el-popper, 
 .el-dropdown-menu__item {
@@ -322,10 +339,5 @@ iframe {
 .material-theme .menu_item_expand {
   background: rgba(0, 0, 0, 0.04) !important;
 }
-.v-modal {
-  display: none;
-}
-/deep/.el-dialog {
-  animation: none !important;
-}
+
 </style>

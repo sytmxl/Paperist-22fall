@@ -202,7 +202,7 @@ export default {
 .logo_area {
   width: 100%;
   margin: 0 auto;
-  padding-top: 100px;
+  padding-top: 50px;
   clear: both;
 }
 .kuang {
@@ -236,8 +236,8 @@ export default {
 }
 
 .kuang:hover {
-  width: 420px;
-  height: auto;
+  // width: 420px;
+  // height: auto;
 }
 
 .register {
@@ -299,30 +299,30 @@ export default {
 
 .el-button:not(.send) {
   border: none;
-  border-radius: 20px !important;
+  border-radius: 10px !important;
   background-color: rgba(121, 167, 213, 0.73);
   font-size: 20px;
-  width: 30%;
+  width: 48%;
   transition: 0.4s !important;
 }
 
-.el-button:not(.send):hover {
-  border-radius: 20px !important;
-  background-color: rgba(121, 167, 213, 0.377);
-  margin: 10px 0px 10px 0px;
-  font-size: 20px;
-  color: rgb(255, 255, 255);
+// .el-button:not(.send):hover {
+//   border-radius: 10px !important;
+//   background-color: rgba(121, 167, 213, 0.377);
+//   margin: 10px 0px 10px 0px;
+//   font-size: 20px;
+//   color: rgb(255, 255, 255);
 
-  width: 60%;
-}
+//   // width: 60%;
+// }
 
-.el-button:active {
-  border-radius: 20px !important;
-  background-color: rgb(82, 109, 137);
-  color: rgb(255, 255, 255);
+// .el-button:active {
+//   border-radius: 20px !important;
+//   background-color: rgb(82, 109, 137);
+//   color: rgb(255, 255, 255);
 
-  font-size: 20px;
-}
+//   font-size: 20px;
+// }
 
 .send {
   height: 40px !important;

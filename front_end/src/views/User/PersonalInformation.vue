@@ -8,14 +8,16 @@
     > -->
     <el-container>
       <el-main>
+        <el-page-header @back="goback" content="个人主页" title="返回首页">
+        </el-page-header>
         <el-row id="info" style="margin-top: 20px; margin-bottom: 20px">
-          <el-col :span="10">
+          <el-col v-if="realname != '暂无数据'" :span="10">
             <!--:span占据行数-->
             <!--头像-->
             <img
               v-if="!profile"
               class="picture"
-              src="../../assets/mosy.jpg"
+              src="../../assets/white.png"
               alt=""
             />
             <img v-else class="picture" :src="profile" alt="" />
@@ -32,15 +34,20 @@
                 type="primary"
                 round
                 style="margin-top: 10px"
+                v-if="isMyself"
                 >修改头像</el-button
               >
-              <div slot="tip" class="el-upload__tip">
+              <div slot="tip" class="el-upload__tip" v-if="isMyself">
                 只能上传jpg/png类型的图片,且不超过1MB
               </div>
             </el-upload>
           </el-col>
-
-          <el-col class="des" :span="11" style="margin-top: 1.5%">
+          <el-col
+            v-if="realname != '暂无数据'"
+            class="des"
+            :span="11"
+            style="margin-top: 1.5%"
+          >
             <!--column2表示每行两个-->
             <el-descriptions
               :title="realname"
@@ -51,12 +58,14 @@
                 <el-button
                   type="primary"
                   size="small"
+                  lock-scroll="false"
                   @click="isChangePassword = true"
                   >修改密码</el-button
                 >
                 <el-button
                   type="info"
                   size="small"
+                  lock-scroll="false"
                   @click="savePersonalInformation"
                   >保存</el-button
                 >
@@ -136,7 +145,7 @@
             </el-descriptions>
 
             <el-descriptions
-              :title="realname"
+              :title="username"
               :column="2"
               v-if="!isEditPersonalInformation"
             >
@@ -163,10 +172,20 @@
                 <el-button
                   type="primary"
                   size="small"
-                  v-if="!isOthers && !isScholar"
-                  @click="$refs.claimScholar.initclaimScholar()"
-                  >学者认证</el-button
+                  v-if="!isClaim"
+                  @click="gotoAuthorization()"
+                  >学者认领</el-button
                 >
+                <el-dialog
+                  title="学者认证"
+                  :visible.sync="AuthorizationDialogVisable"
+                  width="40%"
+                >
+                  <AuthorizationScholar
+                    :es_id="es_id"
+                    @finish_upload="AuthorizationDialogVisable = false"
+                  />
+                </el-dialog>
               </template>
               <el-descriptions-item label="真实姓名">{{
                 realname
@@ -193,13 +212,14 @@
               >
             </el-descriptions>
           </el-col>
+          <el-skeleton v-else :rows="7" animated />
         </el-row>
-        <el-button @click="isScholar = !isScholar"
-          >学者转换,去掉该按钮样式即恢复正常</el-button
-        >
-        <el-button @click="isOthers = !isOthers"
-          >视角转换,去掉该按钮样式即恢复正常</el-button
-        >
+        <!--        <el-button @click="isScholar = !isScholar"-->
+        <!--          >学者转换,去掉该按钮样式即恢复正常</el-button-->
+        <!--        >-->
+        <!--        <el-button @click="isOthers = !isOthers"-->
+        <!--          >视角转换,去掉该按钮样式即恢复正常</el-button-->
+        <!--        >-->
         <el-dialog
           title="更改您的密码"
           :visible.sync="isChangePassword"
@@ -261,6 +281,19 @@
               </h2>
               <el-divider />
               <ScholarLine :data="Linedata"> </ScholarLine>
+              <h2 style="text-align: left">
+                论文引用情况
+                <span>
+                  <el-tooltip class="item" effect="dark" placement="right">
+                    <div slot="content">
+                      论文引用情况展示了该学者在不同年份论文的引用情况
+                    </div>
+                    <i class="el-icon-info" style="font-size: 15px"></i>
+                  </el-tooltip>
+                </span>
+              </h2>
+              <el-divider />
+              <ScholarLine2 :data="Linedata2"> </ScholarLine2>
               <h2 style="text-align: left; margin-top: 20px">
                 学者关系网络
                 <span>
@@ -319,7 +352,7 @@
               </div>
               <!-- 用v-if代替slice，解决v-for，slice不敏感 -->
               <!-- 同时利用flag解决排序更新问题 -->
-              <div v-for="(paper, index) in papers" :key="paper.id">
+              <div v-for="(paper, index) in papers" :key="paper._id">
                 <paper-card
                   v-if="
                     index >= (currentPage - 1) * pageSize &&
@@ -344,7 +377,7 @@
             <el-tab-pane
               label="个人收藏"
               name="first"
-              v-if="!isOthers || (isOthers && isCollectionVisible)"
+              v-if="(!isOthers || (isOthers && isCollectionVisible))&&isClaim"
             >
               <el-tabs
                 v-model="collectionDefaultLocation"
@@ -355,7 +388,10 @@
                   <span slot="label"
                     ><i class="el-icon-message-solid"></i>论文收藏</span
                   >
-                  <div style="margin-left: 1%">
+                  <div
+                    style="margin-left: 1%"
+                    v-if="paperCollection.length != 0"
+                  >
                     <div style="margin-top: 15px; width: 30%">
                       <div style="margin-top: 15px">
                         <el-input
@@ -395,14 +431,21 @@
                           icon="el-icon-more-outline"
                           circle
                           size="small"
+                          @click="jumpPaperCollection(item.id)"
                         ></el-button>
                         <div style="margin-bottom: 10px; text-align: left">
-                          <a href="">{{ item.name }}</a>
+                          <h4>论文标题:</h4>
+                          <p
+                            style="color: mediumpurple; cursor: pointer"
+                            @click="jumpPaperCollection(item.id)"
+                          >
+                            {{ item.name }}
+                          </p>
                           <br />
+                          <h4>论文摘要:</h4>
                           <p>{{ item.abstract }}</p>
                           <br />
-                          <br />
-                          <br />
+                          <h4>收藏时间:</h4>
                           <p>{{ item.time }}</p>
                         </div>
                       </el-card>
@@ -423,12 +466,20 @@
                     >
                     </el-pagination>
                   </div>
+                  <div v-else>
+                    <el-empty
+                      description="还没有收藏论文，收藏第一篇论文吧"
+                    ></el-empty>
+                  </div>
                 </el-tab-pane>
                 <el-tab-pane name="collectionSecond">
                   <span slot="label">
                     <i class="el-icon-message-solid"></i>笔记收藏</span
                   >
-                  <div style="margin-left: 1%">
+                  <div
+                    style="margin-left: 1%"
+                    v-if="noteCollection.length != 0"
+                  >
                     <div style="margin-top: 15px; width: 30%">
                       <div style="margin-top: 15px">
                         <el-input
@@ -468,14 +519,21 @@
                           icon="el-icon-more-outline"
                           circle
                           size="small"
+                          @click="jumpNoteCollection(item.id)"
                         ></el-button>
                         <div style="margin-bottom: 10px; text-align: left">
-                          <a href="">{{ item.id }}</a>
+                          <h4>文献标题:</h4>
+                          <p
+                            style="color: mediumpurple; cursor: pointer"
+                            @click="jumpPaperCollection(item.paper_id)"
+                          >
+                            {{ item.paper_name }}
+                          </p>
                           <br />
+                          <h4>笔记内容:</h4>
                           <p>{{ item.introduction }}</p>
                           <br />
-                          <br />
-                          <br />
+                          <h4>收藏时间:</h4>
                           <p>{{ item.time }}</p>
                         </div>
                       </el-card>
@@ -494,75 +552,93 @@
                     >
                     </el-pagination>
                   </div>
+                  <div v-else>
+                    <el-empty
+                      description="还没有收藏笔记，收藏第一个笔记吧"
+                    ></el-empty>
+                  </div>
                 </el-tab-pane>
               </el-tabs>
             </el-tab-pane>
-            <el-tab-pane label="个人订阅" name="second">
-              <div style="margin-left: 1%">
-                <div style="margin-top: 15px; width: 30%">
-                  <el-input
-                    placeholder="请输入你需要搜索的订阅"
-                    v-model="selectSubscribe"
-                    class="input-with-select"
-                  >
-                    <el-button
-                      slot="append"
-                      icon="el-icon-search"
-                      @click="searchSubscribe"
-                    ></el-button>
-                  </el-input>
+            <el-tab-pane label="个人订阅" name="second" v-if="isClaim">
+              <div v-if="subscribes.length != 0">
+                <div style="margin-left: 1%">
+                  <div style="margin-top: 15px; width: 30%">
+                    <el-input
+                      placeholder="请输入你需要搜索的订阅"
+                      v-model="selectSubscribe"
+                      class="input-with-select"
+                    >
+                      <el-button
+                        slot="append"
+                        icon="el-icon-search"
+                        @click="searchSubscribe"
+                      ></el-button>
+                    </el-input>
+                  </div>
+                  <div v-for="(item, index) in this.subscribes" :key="index">
+                    <el-card
+                      class="box-card"
+                      v-if="
+                        index >= (currentPage - 1) * pageSize &&
+                        index < currentPage * pageSize
+                      "
+                    >
+                      <el-button
+                        style="float: right; margin-left: 5px"
+                        icon="el-icon-delete"
+                        circle
+                        size="small"
+                        @click="delSubscribe(item.subscribe_id)"
+                        v-if="!isOthers"
+                      ></el-button>
+                      <el-button
+                        style="float: right"
+                        icon="el-icon-more-outline"
+                        circle
+                        size="small"
+                        @click="jumpSubscribes(item.id)"
+                      ></el-button>
+                      <div style="margin-bottom: 10px; text-align: left">
+                        <h4>订阅人:</h4>
+                        <p
+                          style="color: mediumpurple; cursor: pointer"
+                          @click="jumpSubscribes(item.id)"
+                        >
+                          {{ item.name }}
+                        </p>
+                        <br />
+                        <h4>订阅时间:</h4>
+                        <p>{{ item.time.replace("T", " ") }}</p>
+                      </div>
+                    </el-card>
+                  </div>
                 </div>
-                <div v-for="(item, index) in this.subscribes" :key="index">
-                  <el-card
-                    class="box-card"
-                    v-if="
-                      index >= (currentPage - 1) * pageSize &&
-                      index < currentPage * pageSize
-                    "
-                  >
-                    <el-button
-                      style="float: right; margin-left: 5px"
-                      icon="el-icon-delete"
-                      circle
-                      size="small"
-                      @click="delSubscribe(item.subscribe_id)"
-                      v-if="!isOthers"
-                    ></el-button>
-                    <el-button
-                      style="float: right"
-                      icon="el-icon-more-outline"
-                      circle
-                      size="small"
-                    ></el-button>
-                    <div style="margin-bottom: 10px; text-align: left">
-                      <a href="">{{ item.name }}</a>
-                      <br />
-                      <br />
-                      <br />
-                      <p>订阅时间: {{ item.time }}</p>
-                    </div>
-                  </el-card>
-                </div>
-              </div>
 
-              <el-pagination
-                :current-page.sync="currentPage"
-                :page-size="pageSize"
-                @size-change="handleSizeChange"
-                @current-change="handleCurrentChange"
-                background
-                layout="prev, pager, next, jumper"
-                :total="subscribes.length > 0 ? subscribes.length : null"
-                style="margin-top: 40px"
-              >
-              </el-pagination>
+                <el-pagination
+                  :current-page.sync="currentPage"
+                  :page-size="pageSize"
+                  @size-change="handleSizeChange"
+                  @current-change="handleCurrentChange"
+                  background
+                  layout="prev, pager, next, jumper"
+                  :total="subscribes.length > 0 ? subscribes.length : null"
+                  style="margin-top: 40px"
+                >
+                </el-pagination>
+              </div>
+              <div v-else>
+                <el-empty
+                  description="还没有订阅作者，订阅第一个作者吧"
+                ></el-empty>
+              </div>
             </el-tab-pane>
             <el-tab-pane
               :label="this.noteLabel"
               name="third"
-              v-if="!isOthers || (isOthers && isNoteVisible)"
+              v-if="(!isOthers || (isOthers && isNoteVisible))&&isClaim"
             >
-              <div style="margin-left: 1%">
+              <div style="margin-left: 1%" v-if="notes.length != 0">
                 <div style="margin-top: 15px; width: 30%">
                   <el-input
                     placeholder="请输入你需要搜索的笔记"
@@ -590,22 +666,29 @@
                       circle
                       size="small"
                       @click="delNotes(item.id)"
-                      v-if="!this.isOthers"
+                      v-if="!isOthers"
                     ></el-button>
                     <el-button
                       style="float: right"
                       icon="el-icon-more-outline"
                       circle
                       size="small"
+                      @click="jumpNotes(item.id)"
                     ></el-button>
                     <div style="margin-bottom: 10px; text-align: left">
-                      <a href="">{{ item.id }}</a>
+                      <h4>文献标题:</h4>
+                      <p
+                        style="color: mediumpurple; cursor: pointer"
+                        @click="jumpPaperCollection(item.paper_id)"
+                      >
+                        {{ item.paper_name }}
+                      </p>
                       <br />
+                      <h4>笔记内容:</h4>
                       <p>{{ item.introduction }}</p>
                       <br />
-                      <br />
-                      <br />
-                      <p>{{ item.time }}</p>
+                      <h4>收藏时间:</h4>
+                      <p>{{ item.time.replace("T", " ") }}</p>
                     </div>
                   </el-card>
                 </div>
@@ -621,13 +704,18 @@
                 >
                 </el-pagination>
               </div>
+              <div v-else>
+                <el-empty
+                  description="还没有发表笔记，发表第一个笔记吧"
+                ></el-empty>
+              </div>
             </el-tab-pane>
             <el-tab-pane
               label="我的评论"
               name="fourth"
-              v-if="!isScholar && !isOthers"
+              v-if="!isScholar && !isOthers &&isClaim"
             >
-              <div style="margin-left: 1%">
+              <div style="margin-left: 1%" v-if="myComment.length != 0">
                 <div style="margin-top: 15px; width: 30%">
                   <el-input
                     placeholder="请输入你需要搜索的评论"
@@ -662,15 +750,22 @@
                       icon="el-icon-more-outline"
                       circle
                       size="small"
+                      @click="jumpMyComment(item.id)"
                     ></el-button>
                     <div style="margin-bottom: 10px; text-align: left">
-                      <a href="">{{ item.paper_name }}</a>
+                      <h4>文献标题:</h4>
+                      <p
+                        style="color: mediumpurple; cursor: pointer"
+                        @click="jumpPaperCollection(item.id)"
+                      >
+                        {{ item.name }}
+                      </p>
                       <br />
+                      <h4>评论内容:</h4>
                       <p>{{ item.content }}</p>
                       <br />
-                      <br />
-                      <br />
-                      <p>{{ item.time }}</p>
+                      <h4>评论时间:</h4>
+                      <p>{{ item.time.replace("T", " ") }}</p>
                     </div>
                   </el-card>
                 </div>
@@ -686,56 +781,77 @@
                 >
                 </el-pagination>
               </div>
+              <div v-else>
+                <el-empty
+                  description="还没有发表评论，发表第一个评论吧"
+                ></el-empty>
+              </div>
             </el-tab-pane>
             <el-tab-pane
               label="评论管理"
               name="fourth"
-              v-if="isScholar && !isOthers"
+              v-if="isScholar && !isOthers &&isClaim"
             >
-              <el-tabs tab-position="left" @tab-click="handleClickComment" v-model="commentDefaultLocation">
+              <el-tabs
+                tab-position="left"
+                @tab-click="handleClickComment"
+                v-model="commentDefaultLocation"
+              >
                 <el-tab-pane name="commentFirst">
                   <span slot="label"
                     ><i class="el-icon-message-solid"></i>我给他人的</span
                   >
-                  <div style="margin-top: 15px; width: 30%">
-                    <el-input
-                      placeholder="请输入你需要搜索的评论"
-                      v-model="selectComment"
-                      class="input-with-select"
+                  <div v-if="myComment.length != 0">
+                    <div style="margin-top: 15px; width: 30%">
+                      <el-input
+                        placeholder="请输入你需要搜索的评论"
+                        v-model="selectComment"
+                        class="input-with-select"
+                      >
+                        <el-button
+                          slot="append"
+                          icon="el-icon-search"
+                          @click="searchPaperComment"
+                        ></el-button>
+                      </el-input>
+                    </div>
+                    <el-card
+                      class="box-card"
+                      v-for="(item, index) in this.myComment"
+                      :key="index"
                     >
                       <el-button
-                        slot="append"
-                        icon="el-icon-search"
-                        @click="searchPaperComment"
+                        style="float: right; margin-left: 5px"
+                        icon="el-icon-delete"
+                        circle
+                        size="small"
+                        @click="delComment(item.comment_id)"
+                        v-if="!isOthers"
                       ></el-button>
-                    </el-input>
-                  </div>
-                  <el-card class="box-card" v-for="(item, index) in this.myComment" :key="index">
-                    <el-button
-                      style="float: right; margin-left: 5px"
-                      icon="el-icon-delete"
-                      circle
-                      size="small"
-                      @click="delComment(item.comment_id)"
-                      v-if="!isOthers"
-                    ></el-button>
-                    <el-button
-                      style="float: right"
-                      icon="el-icon-more-outline"
-                      circle
-                      size="small"
-                    ></el-button>
-                    <div style="margin-bottom: 10px; text-align: left">
-                      <a href="">{{ item.paper_name }}</a>
-                      <br />
-                      <p>{{ item.content }}</p>
-                      <br />
-                      <br />
-                      <br />
-                      <p>{{ item.time }}</p>
-                    </div>
-                  </el-card>
-                  <el-pagination
+                      <el-button
+                        style="float: right"
+                        icon="el-icon-more-outline"
+                        circle
+                        size="small"
+                        @click="jumpMyComment(item.id)"
+                      ></el-button>
+                      <div style="margin-bottom: 10px; text-align: left">
+                        <h4>文献标题:</h4>
+                        <p
+                          style="color: mediumpurple; cursor: pointer"
+                          @click="jumpPaperCollection(item.id)"
+                        >
+                          {{ item.name }}
+                        </p>
+                        <br />
+                        <h4>评论内容:</h4>
+                        <p>{{ item.content }}</p>
+                        <br />
+                        <h4>评论时间:</h4>
+                        <p>{{ item.time.replace("T", " ") }}</p>
+                      </div>
+                    </el-card>
+                    <el-pagination
                       :current-page.sync="currentPage"
                       :page-size="pageSize"
                       @size-change="handleSizeChange"
@@ -744,53 +860,90 @@
                       layout="prev, pager, next, jumper"
                       :total="myComment.length > 0 ? myComment.length : null"
                       style="margin-top: 40px"
-                  >
-                  </el-pagination>
+                    >
+                    </el-pagination>
+                  </div>
+                  <div v-else>
+                    <el-empty
+                      description="还没有发表评论，发表第一个评论吧"
+                    ></el-empty>
+                  </div>
                 </el-tab-pane>
                 <el-tab-pane name="commentSecond">
                   <span slot="label"
                     ><i class="el-icon-message-solid"></i>他人给我的</span
                   >
-                  <div style="margin-top: 15px; width: 30%">
-                    <el-input
-                      placeholder="请输入你需要搜索的评论"
-                      v-model="selectComment"
-                      class="input-with-select"
+                  <div v-if="commentToMe.length != 0">
+                    <div style="margin-top: 15px; width: 30%">
+                      <el-input
+                        placeholder="请输入你需要搜索的评论"
+                        v-model="selectCommentToMe"
+                        class="input-with-select"
+                      >
+                        <el-button
+                          slot="append"
+                          icon="el-icon-search"
+                          @click="searchPaperCommentToMe"
+                        ></el-button>
+                      </el-input>
+                    </div>
+                    <el-card
+                      class="box-card"
+                      v-for="(item, index) in this.commentToMe"
+                      :key="index"
                     >
                       <el-button
-                        slot="append"
-                        icon="el-icon-search"
+                        style="float: right; margin-left: 5px"
+                        icon="el-icon-delete"
+                        circle
+                        size="small"
+                        v-if="!isOthers"
+                        @click="delComment(item.comment_id)"
                       ></el-button>
-                    </el-input>
+                      <el-button
+                        style="float: right"
+                        icon="el-icon-more-outline"
+                        circle
+                        size="small"
+                        @click="jumpMyComment(item.id)"
+                      ></el-button>
+                      <div style="margin-bottom: 10px; text-align: left">
+                        <h4>文献标题:</h4>
+                        <p
+                          style="color: mediumpurple; cursor: pointer"
+                          @click="jumpPaperCollection(item.id)"
+                        >
+                          {{ item.name }}
+                        </p>
+                        <br />
+                        <h4>评论内容:</h4>
+                        <p>{{ item.content }}</p>
+                        <br />
+                        <h4>评论时间:</h4>
+                        <p>{{ item.time.replace("T", " ") }}</p>
+                      </div>
+                    </el-card>
+                    <el-pagination
+                      :current-page.sync="currentPage"
+                      :page-size="pageSize"
+                      @size-change="handleSizeChange"
+                      @current-change="handleCurrentChange"
+                      background
+                      layout="prev, pager, next, jumper"
+                      :total="myComment.length > 0 ? myComment.length : null"
+                      style="margin-top: 40px"
+                    >
+                    </el-pagination>
                   </div>
-                  <el-card class="box-card">
-                    <el-button
-                      style="float: right; margin-left: 5px"
-                      icon="el-icon-delete"
-                      circle
-                      size="small"
-                      v-if="!this.isOthers"
-                    ></el-button>
-                    <el-button
-                      style="float: right"
-                      icon="el-icon-more-outline"
-                      circle
-                      size="small"
-                    ></el-button>
-                    <div style="margin-bottom: 10px; text-align: left">
-                      <a href="">文献名：你好你好</a>
-                      <br />
-                      <p>sssssssssssssssssssssssssssssssss</p>
-                      <br />
-                      <br />
-                      <br />
-                      <p>2022 Ma hu</p>
-                    </div>
-                  </el-card>
+                  <div v-else>
+                    <el-empty
+                      description="还没有人给你的论文进行评论"
+                    ></el-empty>
+                  </div>
                 </el-tab-pane>
               </el-tabs>
             </el-tab-pane>
-            <el-tab-pane label="个人设置" name="fifth" v-if="!isOthers">
+            <el-tab-pane label="个人设置" name="fifth" v-if="!isOthers && isClaim">
               <div style="margin-left: 1%">
                 <el-card class="box-card1">
                   <el-form :inline="true">
@@ -873,7 +1026,6 @@
           </el-tabs>
         </div>
       </el-main>
-      <claimScholar ref="claimScholar"></claimScholar>
     </el-container>
   </el-card>
 </template>
@@ -882,11 +1034,13 @@
 import qs from "qs";
 import RelationShip from "@/components/RelationShip.vue";
 import ScholarLine from "@/components/ScholarLine.vue";
+import ScholarLine2 from "@/components/ScholarLine2.vue";
 import TopBar from "@/components/TopBar";
 import PaperCard from "@/components/PaperCard.vue";
 import claimScholar from "@/components/claimScholar.vue";
 import axios from "axios";
 import CryptoJS from "crypto-js";
+import AuthorizationScholar from "../../components/AuthorizationScholar.vue";
 // import CryptoJS from "_crypto-js@4.1.1@crypto-js";
 export default {
   name: "PersonalInformation",
@@ -896,9 +1050,12 @@ export default {
     TopBar,
     PaperCard,
     claimScholar,
+    ScholarLine2,
+    AuthorizationScholar,
   },
   data() {
     return {
+      isMyself: "",
       isNoteVisible: true,
       isNoteCommentable: true,
       isLiteratureCommentable: true,
@@ -911,12 +1068,12 @@ export default {
       selectCommentToMe: "",
       selectSubscribe: "",
       selectNote: "",
-      username: "",
-      realname: "",
-      gender: "",
-      region: "",
-      email: "",
-      personalProfile: "",
+      username: "暂无数据",
+      realname: "暂无数据",
+      gender: "暂无数据",
+      region: "暂无数据",
+      email: "暂无数据",
+      personalProfile: "暂无数据",
       isEditPersonalInformation: false,
       new_username: "",
       new_realname: "",
@@ -930,7 +1087,7 @@ export default {
       commentDefaultLocation: "commentFirst",
       noteLabel: "",
       isScholar: true,
-      researchField: "打篮球",
+      researchField: "暂无数据",
       isOthers: false,
       showRelation: true,
       oldPassword: "",
@@ -943,158 +1100,21 @@ export default {
       pageSize: 5,
       isToken: 0,
       id: 0,
-      papers: [
-        {
-          authors: [
-            {
-              name: "杰哥",
-            },
-          ],
-          id: "56d850c8dabfae2eee0100f0",
-          issue: "是多少",
-          lang: "en",
-          n_citation: 12,
-          page_end: "",
-          page_start: "",
-          title: "动态式12数学课堂中“交流”艺术的探寻",
-          volume: "",
-          year: 2019,
-        },
-        {
-          authors: [
-            {
-              name: "杰哥",
-            },
-          ],
-          id: "56d850c8dabfae2eee0100f0",
-          issue: "是多少",
-          lang: "en",
-          n_citation: 13,
-          page_end: "",
-          page_start: "",
-          title: "动态式23数学课堂中“交流”艺术的探寻",
-          volume: "",
-          year: 2001,
-        },
-        {
-          authors: [
-            {
-              name: "杰哥",
-            },
-          ],
-          id: "56d850c8dabfae2eee0100f0",
-          issue: "是多少",
-          lang: "en",
-          n_citation: 11,
-          page_end: "",
-          page_start: "",
-          title: "动态式数学232课堂中“交流”艺术的探寻",
-          volume: "",
-          year: 2011,
-        },
-        {
-          authors: [
-            {
-              name: "杰哥",
-            },
-          ],
-          id: "56d850c8dabfae2eee0100f0",
-          issue: "是多少",
-          lang: "en",
-          n_citation: 18,
-          page_end: "",
-          page_start: "",
-          title: "动态式数学课堂1中“交流”艺术的探寻",
-          volume: "",
-          year: 2009,
-        },
-        {
-          authors: [
-            {
-              name: "杰哥",
-            },
-          ],
-          id: "56d850c8dabfae2eee0100f0",
-          issue: "是多少",
-          lang: "en",
-          n_citation: 12,
-          page_end: "",
-          page_start: "",
-          title: "动态式数学课堂2中“交流”艺术的探寻",
-          volume: "",
-          year: 2012,
-        },
-        {
-          authors: [
-            {
-              name: "杰哥",
-            },
-          ],
-          id: "56d850c8dabfae2eee0100f0",
-          issue: "是多少",
-          lang: "en",
-          n_citation: 12,
-          page_end: "",
-          page_start: "",
-          title: "动态式数学课3堂中“交流”艺术的探寻",
-          volume: "",
-          year: 2013,
-        },
-        {
-          authors: [
-            {
-              name: "杰哥",
-            },
-          ],
-          id: "56d850c8dabfae2eee0100f0",
-          issue: "是多少",
-          lang: "en",
-          n_citation: 12,
-          page_end: "",
-          page_start: "",
-          title: "4动态式数学课堂中“交流”艺术的探寻",
-          volume: "",
-          year: 2011,
-        },
-        {
-          authors: [
-            {
-              name: "杰哥",
-            },
-          ],
-          id: "56d850c8dabfae2eee0100f0",
-          issue: "是多少",
-          lang: "en",
-          n_citation: 13,
-          page_end: "",
-          page_start: "",
-          title: "5动态式数学课堂中“交流”艺术的探寻",
-          volume: "",
-          year: 2011,
-        },
-        {
-          authors: [
-            {
-              name: "杰哥",
-            },
-          ],
-          id: "56d850c8dabfae2eee0100f0",
-          issue: "是多少",
-          lang: "en",
-          n_citation: 14,
-          page_end: "",
-          page_start: "",
-          title: "6动态式数学课堂中“交流”艺术的探寻",
-          volume: "",
-          year: 2010,
-        },
-      ],
+      papers: [],
+      tmpPapers: [],
+      tmp2Papers: [],
+      tmp3Papers: [],
+      tmpLinedata: [],
+      tmpLinedata2: [],
       paperCollection: [],
       noteCollection: [],
       notes: [],
       myComment: [],
+      commentToMe: [],
       subscribes: [],
+      isClaim:true,
 
+      es_id: "",
       //图片
       profile: "",
       headers: {
@@ -1103,6 +1123,7 @@ export default {
 
       RelationsData: [],
       Linedata: [],
+      Linedata2: [],
       ScholarLiteratureSort: "",
       ScholarLiteratureOptions: [
         {
@@ -1123,23 +1144,68 @@ export default {
         },
       ],
       flag: true,
+      AuthorizationDialogVisable: false,
+      hasClaimed: true,
     };
   },
   created() {
+    this.$axios({
+      method: "post",
+      url: "/user/judgeIsMyself/",
+      data: {
+        id: this.$route.params.id,
+      },
+    }).then((res) => {
+      this.isMyself = res.data.flag;
+    });
+
     this.id = this.$route.params.id;
     console.log(this.id);
-    if (this.id == undefined) {
-      this.isToken = 1; //是自己，用token访问
-      this.isOthers = false;
-      this.id = 1; //无用
-    } else {
-      this.isToken = 0;
-      this.isOthers = true;
-    }
+    // if (this.id == undefined) {
+    //   this.isToken = 1; //是自己，用token访问
+    //   this.isOthers = false;
+    //   this.id = 1; //无用
+    // } else {
+    //   this.isToken = 0;
+    //   this.isOthers = true;
+    // }
+    //是否被认领
+    this.$axios({
+      method: "post",
+      url: "/user/esToUser/",
+      data: {
+        es_id: this.$route.params.id,
+      },
+    }).then((res) => {
+      if(res.data.id==""){
+        console.log(123454321)
+        this.isClaim=false;
+      }
+    });
+
+    this.$axios({
+      method: "post",
+      url: "/user/userToEs/",
+      data: {
+        user_id: this.$route.params.id,
+      },
+    }).then((res) => {
+      console.log("idtoes",res.data);
+      if(res.data.id==""){
+        console.log(123454321)
+        this.hasClaimed=false;
+      }
+    });
+    //如果传的是id，上面那个也是空，不符合条件
     //个人信息
     this.getPersonalInformation();
     this.getPaperCollection();
     this.getSet();
+    this.getPaperComment();
+    this.getNoteCollection();
+    this.getSubscribe();
+    this.getCommentToMe();
+    this.getNote();
     // if (this.isScholar) this.DefaultLocation = "zero";
     // else this.DefaultLocation = "first";
     if (this.isScholar) {
@@ -1150,10 +1216,11 @@ export default {
     this.noteLabel = this.isOthers ? "他的笔记" : "我的笔记";
   },
   mounted() {
-    this.initRelations();
-    this.initLine();
     // this.initSort();
+    this.es_id = this.$route.params.id;
     this.initScholarPaper();
+    this.getScholarInfo();
+    this.initRelations();
     this.noteLabel = this.isOthers ? "他的笔记" : "我的笔记";
   },
   watch: {
@@ -1163,79 +1230,231 @@ export default {
     isScholar: function (newVal, oldVal) {
       this.DefaultLocation = this.isScholar ? "zero" : "first";
     },
+    isMyself: function (newVal, oldVal) {
+      if (this.isMyself == 1) {
+        this.isToken = 1; //是自己，用token访问
+        this.isOthers = false;
+        this.id = 1; //无用
+        console.log("memememememememe");
+      } else if (this.isMyself == 0) {
+        this.isToken = 0;
+        this.isOthers = true;
+        console.log("youyouyouyou");
+      }
+    },
   },
   methods: {
-    initRelations() {
-      console.log("initRelations");
-      this.$axios({
-        method: "post",
-        url: "/app/get_scholar_relation/",
-        data: {
-          id: this.$route.params.id,
+    // 根据esid获得作者信息
+    getScholarInfo() {
+      let obj = {
+        query: {
+          bool: {
+            must: [],
+            filter: {},
+          },
         },
+      };
+      obj.query.bool.must.push({
+        match_phrase: { id: this.$route.params.id },
+      });
+      obj.query.bool.filter = {
+        match_phrase: { id: this.$route.params.id },
+      };
+      axios({
+        headers: {
+          "content-type": "application/json",
+        },
+        auth: {
+          username: "elastic",
+          password: "BZYvLA-d*pS0EpI7utmJ",
+        },
+        url: "/es/author/_search",
+        method: "post",
+        data: JSON.stringify(obj),
       }).then((res) => {
-        console.log("initRelations", res.data);
-        this.RelationsData = res.data.data;
+        console.log("学者信息",res.data.hits.hits);
+        this.realname = res.data.hits.hits[0]._source.name;
+        this.researchField=res.data.hits.hits[0]._source.tags[0].t+", "+res.data.hits.hits[0]._source.tags[1].t+", "+res.data.hits.hits[0]._source.tags[2].t;
       });
     },
-    initLine() {
-      this.$axios({
-        method: "post",
-        url: "/app/get_scholar_paper_list/",
-        data: {
-          id: this.$route.params.id,
+    // 根据esid获得关系曲线
+    initRelations() {
+      let obj = {
+        query: {
+          bool: {
+            must: [],
+            filter: {},
+          },
         },
+      };
+      obj.query.bool.must.push({
+        match_phrase: { id: this.es_id },
+      });
+      obj.query.bool.filter = {
+        match_phrase: { id: this.es_id },
+      };
+      axios({
+        headers: {
+          "content-type": "application/json",
+        },
+        auth: {
+          username: "elastic",
+          password: "BZYvLA-d*pS0EpI7utmJ",
+        },
+        url: "/es/author/_search",
+        method: "post",
+        data: JSON.stringify(obj),
       }).then((res) => {
-        var count = new Array(2500).fill(0);
-        res.data.data.forEach((item, index) => {
-          count[item.year]++;
+        console.log("学者信息",res.data.hits.hits);
+        this.realname = res.data.hits.hits[0]._source.name;
+        // 根据作者信息筛出曲线
+        var nameList = [];
+        console.log(this.realname);
+        obj = {
+          query: {
+            bool: {
+              must: [],
+              filter: {},
+            },
+          },
+        };
+        obj.query.bool.must.push({
+          match_phrase: { "authors.id": this.es_id },
         });
+        obj.query.bool.filter = {
+          match_phrase: { "authors.id": this.es_id },
+        };
+        axios({
+          headers: {
+            "content-type": "application/json",
+          },
+          auth: {
+            username: "elastic",
+            password: "BZYvLA-d*pS0EpI7utmJ",
+          },
+          url: "/es/paper/_search",
+          method: "post",
+          data: JSON.stringify(obj),
+        }).then((res) => {
+          console.log("论文", res.data.hits.hits);
+          var paperList = res.data.hits.hits;
+          for (var i = 0; i < paperList.length; i++) {
+            var authorList = paperList[i]._source.authors;
+            for (var j = 0; j < authorList.length; j++) {
+              if (authorList[j].name != this.realname) {
+                if (
+                  nameList[authorList[j].name] == undefined ||
+                  nameList[authorList[j].name] == null
+                ) {
+                  nameList[authorList[j].name] = {
+                    id: authorList[j].id,
+                    name: authorList[j].name,
+                    value: 1,
+                  };
+                } else {
+                  nameList[authorList[j].name].value++;
+                }
+              }
+            }
+          }
+          console.log("字典", nameList);
+          // 遍历字典
+          var relationsData = [];
+          for (var key in nameList) {
+            relationsData.push(nameList[key]);
+          }
+          this.RelationsData = relationsData;
+          console.log('relation',this.RelationsData)
+        });
+      });
+    },
+    // 获取学者文献（曲线）
+    initScholarPaper() {
+      let obj = {
+        query: {
+          bool: {
+            must: [],
+            filter: {},
+          },
+        },
+      };
+      obj.query.bool.must.push({
+        match_phrase: { "authors.id": this.es_id },
+      });
+      obj.query.bool.filter = {
+        match_phrase: { "authors.id": this.es_id },
+      };
+      axios({
+        headers: {
+          "content-type": "application/json",
+        },
+        auth: {
+          username: "elastic",
+          password: "BZYvLA-d*pS0EpI7utmJ",
+        },
+        url: "/es/paper/_search",
+        method: "post",
+        data: JSON.stringify(obj),
+      }).then((res) => {
+        this.papers = res.data.hits.hits;
+        this.tmpPapers = this.papers;
+        this.papers.sort(this.compareUp("year"));
+        this.tmpPapers.sort(this.compareUp("year"));
+        console.log(this.papers);
+        // 数量曲线
+        this.tmp2Papers = res.data.hits.hits;
+        this.tmp2Papers.sort(this.compareUp("year"));
+        var count = new Array(2500).fill(0);
+        console.log("initLine", this.tmp2Papers);
+        this.tmp2Papers.forEach((item, index) => {
+          count[item._source.year]++;
+        });
+        this.tmpLinedata = [];
         count.forEach((item, index) => {
           if (item != 0) {
-            this.Linedata.push({
+            this.tmpLinedata.push({
               count: item,
               content: index,
             });
           }
         });
-        // this.Linedata = res.data;
-        console.log("initLine");
-        console.log(res.data);
-        console.log(count);
-        console.log(this.Linedata);
+        this.Linedata = this.tmpLinedata;
+        // 引用曲线
+        this.tmp3Papers = res.data.hits.hits;
+        this.tmp3Papers.sort(this.compareUp("year"));
+        var count2 = new Array(2500).fill(0);
+        console.log("initLine2", this.tmp3Papers);
+        this.tmp3Papers.forEach((item, index) => {
+          count2[item._source.year] += item._source.n_citation;
+        });
+        this.tmpLinedata2 = [];
+        count2.forEach((item, index) => {
+          if (item != 0) {
+            this.tmpLinedata2.push({
+              count: item,
+              content: index,
+            });
+          }
+        });
+        this.Linedata2 = this.tmpLinedata2;
       });
     },
-    // 获取学者文献
-    initScholarPaper() {
-      this.$axios({
-        method: "post",
-        url: "/app/get_scholar_paper_list/",
-        data: {
-          // id: this.$route.params.id,
-          token: sessionStorage.getItem("token"),
-        },
-      }).then((res) => {
-        this.papers = res.data.data;
-        this.papars.sort(this.compareDown("year"));
-        console.log("initScholarPaper");
-        console.log(res.data);
-      });
+
+    // 筛选出学者指定标题文献
+    searchScholarPaperCollection() {
+      if (this.selectScholarLiterature != "") {
+        var arr = [];
+        arr = this.papers.filter((item) => {
+          var reg = new RegExp(this.selectScholarLiterature, "gi");
+          return reg.test(item._source.title);
+        });
+        this.papers = arr;
+        console.log(arr);
+        console.log(this.papers);
+      } else {
+        this.papers = this.tmpPapers;
+      }
     },
-    // 搜索学者指定标题文献
-    // searchScholarPaperCollection() {
-    //   this.$axios({
-    //     url: "/app/get_scholar_paper_list/",
-    //     method: "post",
-    //     data: {
-    //       id:this.$route.params.id,//页面学者id
-    //       token: sessionStorage.getItem("token"),
-    //       content: this.selectLiterature,
-    //     },
-    //   }).then((res) => {
-    //     this.paperCollection = res.data.data;
-    //     this.selectLiterature = "";
-    //   });
-    // },
     //获取个人信息
     getPersonalInformation() {
       this.$axios({
@@ -1248,17 +1467,22 @@ export default {
         },
       }).then((res) => {
         console.log(res.data.data);
-        this.realname = res.data.data[0].realname;
-        this.email = res.data.data[0].email;
-        this.gender = res.data.data[0].sex;
-        this.username = res.data.data[0].username;
-        this.personalProfile = res.data.data[0].sign;
-        this.region = res.data.data[0].country;
-        this.profile = res.data.data[0].profile;
+        if (res.data.data[0].realname != "")
+          this.realname = res.data.data[0].realname;
+        if (res.data.data[0].email != "") this.email = res.data.data[0].email;
+        if (res.data.data[0].sex != "") this.gender = res.data.data[0].sex;
+        if (res.data.data[0].username != "")
+          this.username = res.data.data[0].username;
+        if (res.data.data[0].sign != "")
+          this.personalProfile = res.data.data[0].sign;
+        if (res.data.data[0].country != "")
+          this.region = res.data.data[0].country;
+        if (res.data.data[0].profile != "")
+          this.profile = res.data.data[0].profile;
 
         this.researchField = res.data.data[0].field;
         //异步访问，created结束还未执行完
-        if (res.data.data[0].isScholar != null) {
+        if (res.data.data[0].isScholar == 1) {
           this.isScholar = true;
         } else {
           this.isScholar = false;
@@ -1332,8 +1556,8 @@ export default {
       } else if (tab.name == "commentSecond") {
         this.getNoteCollection();
       }
-      this.currentPage=1;
-      this.pageSize=3;
+      this.currentPage = 1;
+      this.pageSize = 3;
     },
     //获取个人论文收藏
     getPaperCollection() {
@@ -1360,6 +1584,7 @@ export default {
           id: this.id,
         },
       }).then((res) => {
+        console.log(res.data.data);
         this.noteCollection = res.data.data;
       });
     },
@@ -1388,6 +1613,7 @@ export default {
           id: this.id,
         },
       }).then((res) => {
+        console.log(res.data);
         this.notes = res.data.data;
       });
     },
@@ -1402,7 +1628,23 @@ export default {
           id: this.id,
         },
       }).then((res) => {
+        console.log(res.data);
         this.myComment = res.data.data;
+      });
+    },
+    //获取给我的评论
+    getCommentToMe() {
+      this.$axios({
+        url: "/user/getCommentToMe/",
+        method: "post",
+        data: {
+          token: sessionStorage.getItem("token"),
+          isToken: this.isToken,
+          id: this.id,
+        },
+      }).then((res) => {
+        console.log(res.data);
+        this.commentToMe = res.data.data;
       });
     },
     //获取个人设置
@@ -1529,6 +1771,22 @@ export default {
         this.selectComment = "";
       });
     },
+    //搜索他人给我的评论
+    searchPaperCommentToMe() {
+      this.$axios({
+        url: "user/searchPaperComment/",
+        method: "post",
+        data: {
+          token: sessionStorage.getItem("token"),
+          content: this.selectComment,
+          isToken: this.isToken,
+          id: this.id,
+        },
+      }).then((res) => {
+        this.commentToMe = res.data.data;
+        this.selectCommentToMe = "";
+      });
+    },
     //删除我的评论
     async delComment(id) {
       // 弹框询问用户是否删除数据
@@ -1559,15 +1817,16 @@ export default {
           id: this.id,
         },
       }).then((res) => {
-        this.$message.success("删除用户成功！");
+        this.$message.success("删除评论成功！");
         this.getPaperComment();
+        this.getCommentToMe();
       });
     },
     //删除我的笔记
     async delNotes(id) {
       // 弹框询问用户是否删除数据
       const confirmResult = await this.$confirm(
-        "此操作将永久删除该评论, 是否继续?",
+        "此操作将永久删除该笔记, 是否继续?",
         "提示",
         {
           confirmButtonText: "确定",
@@ -1593,7 +1852,7 @@ export default {
           id: this.id,
         },
       }).then((res) => {
-        this.$message.success("删除用户成功！");
+        this.$message.success("删除笔记成功！");
         this.getNote();
       });
     },
@@ -1601,7 +1860,7 @@ export default {
     async delSubscribe(id) {
       // 弹框询问用户是否删除数据
       const confirmResult = await this.$confirm(
-        "此操作将永久删除该评论, 是否继续?",
+        "此操作将永久删除该订阅, 是否继续?",
         "提示",
         {
           confirmButtonText: "确定",
@@ -1627,7 +1886,7 @@ export default {
           userid: this.id,
         }, //呜呜呜id重复了是我的问题
       }).then((res) => {
-        this.$message.success("删除用户成功！");
+        this.$message.success("删除订阅成功！");
         this.getSubscribe();
       });
     },
@@ -1635,7 +1894,7 @@ export default {
     async delPaperCollection(id) {
       // 弹框询问用户是否删除数据
       const confirmResult = await this.$confirm(
-        "此操作将永久删除该评论, 是否继续?",
+        "此操作将永久删除该论文收藏, 是否继续?",
         "提示",
         {
           confirmButtonText: "确定",
@@ -1661,7 +1920,7 @@ export default {
           id: this.id,
         },
       }).then((res) => {
-        this.$message.success("删除用户成功！");
+        this.$message.success("删除论文收藏成功！");
         this.getPaperCollection();
       });
     },
@@ -1669,7 +1928,7 @@ export default {
     async delNoteCollection(id) {
       // 弹框询问用户是否删除数据
       const confirmResult = await this.$confirm(
-        "此操作将永久删除该评论, 是否继续?",
+        "此操作将永久删除该笔记, 是否继续?",
         "提示",
         {
           confirmButtonText: "确定",
@@ -1695,7 +1954,7 @@ export default {
           id: this.id,
         },
       }).then((res) => {
-        this.$message.success("删除用户成功！");
+        this.$message.success("删除笔记成功！");
         this.getNoteCollection();
       });
     },
@@ -1717,13 +1976,13 @@ export default {
         );
         this.newPassword = "";
         this.oldPassword = "";
-        yhis.confirmNewPassword = "";
+        this.confirmNewPassword = "";
         return;
       } else if (this.newPassword != this.confirmNewPassword) {
         this.$message.warning("两次输入密码不一致，请检查");
         this.newPassword = "";
         this.oldPassword = "";
-        yhis.confirmNewPassword = "";
+        this.confirmNewPassword = "";
         return;
       }
       this.isChangePassword = false;
@@ -1778,16 +2037,16 @@ export default {
     // 封装升序排序规则
     compareUp(property) {
       return function (a, b) {
-        var value1 = a[property];
-        var value2 = b[property];
+        var value1 = a._source[property];
+        var value2 = b._source[property];
         return value1 - value2;
       };
     },
     // 封装降序排序规则
     compareDown(property) {
       return function (a, b) {
-        var value1 = a[property];
-        var value2 = b[property];
+        var value1 = a._source[property];
+        var value2 = b._source[property];
         return value2 - value1;
       };
     },
@@ -1825,6 +2084,48 @@ export default {
         });
       }
     },
+    //论文收藏跳转
+    jumpPaperCollection(paper_id) {
+      this.$router.push({
+        path: "/PaperInformation/" + paper_id,
+      });
+    },
+    //笔记收藏跳转
+    jumpNoteCollection(note_id) {
+      this.$router.push({
+        path: "/NoteInformation/" + note_id,
+      });
+    },
+    //订阅跳转
+    jumpSubscribes(id) {
+      this.$router.push({
+        path: "/PersonalInformation/" + id,
+      });
+    },
+    //我的评论跳转
+    jumpMyComment(id) {
+      this.$router.push({
+        path: "/PaperInformation/" + id,
+      });
+    },
+    //我的笔记跳转
+    jumpNotes(note_id) {
+      this.$router.push({
+        path: "/NoteInformation/" + note_id,
+      });
+    },
+    //返回上一界面
+    goback() {
+      //this.$router.go(-1);
+      this.$router.push("/FirstPage");
+    },
+    gotoAuthorization() {
+      if (sessionStorage.getItem("token") == null) {
+        this.$message.error("请先登录");
+      } else {
+        this.AuthorizationDialogVisable = true;
+      }
+    },
   },
 };
 </script>
@@ -1845,12 +2146,12 @@ export default {
   // height: 90%;
   width: 70%;
   // margin-top: 20px;
-  margin-bottom: 60px;
+  margin-bottom: 90px;
   min-height: calc(100vh);
   margin-left: 15%;
   transform: translate(
     0,
-    30px
+    70px
   ); //不知道为什么用margin顶栏也会受影响，用移动替代
   .el-card {
     background-color: rgba(255, 255, 255, 0.587) !important;
