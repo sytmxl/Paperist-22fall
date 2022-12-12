@@ -4,7 +4,7 @@
       <div id="logo1" class="home_logo"></div>
     </el-row>
     <el-row class="search_area">
-      <SearchBox ref="searchBox"/>
+      <SearchBox ref="searchBox" />
     </el-row>
     <!-- <note :list="1" @reaction_note="aboutNoteInit()" /> -->
     <el-row :gutter="10" class="display_zone">
@@ -13,15 +13,15 @@
           <el-tabs v-model="activeName" @tab-click="handleClick">
             <el-tab-pane label="推荐文章" name="first">
               <aboutCard
-                v-for="(item, index) in showRecommendList"
+                v-for="(item, index) in recommends"
                 :key="index"
-                :name="item.name"
-                :author="item.author"
-                :cite="item.cite"
-                :origin="item.origin"
-                :intro="item.intro"
-                :date="item.date"
-                :paper_id="item.paper_id"
+                :name="item._source.title"
+                :author="item._source.authors"
+                :cite="item._source.n_citation"
+                :origin="item._source.venue"
+                :intro="item._source.abstract"
+                :date="item._source.year"
+                :paper_id="item._source.id"
               />
               <div id="load">
                 <el-button
@@ -226,7 +226,7 @@ import ScholarLine from "@/components/ScholarLine.vue";
 import TopBar from "@/components/TopBar";
 import noteCard from "../../components/noteCard.vue";
 import note from "../../components/note.vue";
-
+import axios from "axios"
 import $ from "jquery";
 export default {
   inject: ["reload"],
@@ -288,6 +288,8 @@ export default {
       SubscribeTextList: [],
       showSubscribeTextList: [],
       SubscribePeopleList: [],
+      recommends:[],
+      capacity:1,
       hot: [
         {
           人工智能: 13482,
@@ -350,6 +352,7 @@ export default {
     this.getFollowNoteList();
     this.getFollowTextList();
     this.getSubscribe();
+    this.load_interested(1);
     // this.getHot();
     $("#topbar").css("display", "none");
     window.addEventListener("scroll", this.scroll, true);
@@ -476,9 +479,9 @@ export default {
     // },
     // 搜索热门领域
     search_field(arg) {
-      this.$refs.searchBox.common_search_type=2;
-      this.$refs.searchBox.common_search_query=arg;
-      this.$refs.searchBox. common_search_jump();
+      this.$refs.searchBox.common_search_type = 2;
+      this.$refs.searchBox.common_search_query = arg;
+      this.$refs.searchBox.common_search_jump();
     },
     isLogin() {
       if (sessionStorage.getItem("token")) {
@@ -498,15 +501,8 @@ export default {
       });
     },
     loadRec() {
-      this.start = true;
-      setTimeout(() => {
-        this.start = false;
-        // 获取到全部数据，分布给用户展示
-        this.showRecommendList = this.showRecommendList.concat(
-          this.RecommendList.slice(this.recPage, this.recPage + 3)
-        );
-        this.recPage += 3;
-      }, 1400);
+      this.load_interested(this.capacity+1)
+      this.capacity = this.capacity+1
     },
     loadSub() {
       this.start2 = true;
@@ -583,6 +579,51 @@ export default {
       var currentClass = body.className;
       body.className = currentClass == "dark-mode" ? "light-mode" : "dark-mode";
     },
+    load_interested(index) {
+      let keywords = JSON.parse(localStorage.getItem("interested_keywords"));
+      // console.log('关键词有：'+keywords)
+      if (keywords == null) return;
+      let interested_search_request_body = {
+        query: {
+          bool: {
+            should: [],
+          },
+        },
+        from: 0,
+        size: 10*index,
+      };
+      for (let i = 0; i < 5; i++) {
+        let idx = parseInt(Math.random() * keywords.length);
+        interested_search_request_body.query.bool.should.push({
+          match: { keywords: keywords[idx] },
+        });
+        keywords.splice(idx, 1);
+      }
+
+      // this.loading_interested = true;
+      axios({
+        headers: {
+          "content-type": "application/json",
+        },
+        auth: {
+          username: "elastic",
+          password: "BZYvLA-d*pS0EpI7utmJ",
+        },
+        url: "es/paper/_search",
+        method: "post",
+        data: JSON.stringify(interested_search_request_body),
+      }).then((res) => {
+        if(index==1){
+            this.recommends = res.data.hits.hits;
+        }
+        else{
+          for(var i=0;i<res.data.hits.hits.length;i++){
+            this.recommends.push(res.data.hits.hits[i]);
+          }
+        }
+      });
+    },
+  
   },
 };
 </script>

@@ -49,7 +49,13 @@
                 :max="end_year"
               ></el-input-number>
             </el-collapse-item>
-            <el-checkbox-group
+            
+            <el-collapse-item 
+              title="年份标签"
+              style="margin-bottom: 10px"
+              class="display_zone"
+              shadow="never">
+                 <el-checkbox-group
               v-model="secondarySearchFilters_year"
               size="mini"
             >
@@ -62,7 +68,11 @@
                 @change="secondary_search(false)"
               />
             </el-checkbox-group>
+            </el-collapse-item>
+         
           </el-collapse-item>
+
+
           <el-collapse-item
             title="来源"
             style="margin-bottom: 10px"
@@ -332,9 +342,6 @@ export default {
   },
   methods :{
     async react_card(data){
-      // this.quote_list=[];
-      console.log(data)
-      if(data.quote==true){
         this.QuoteVisible=true;
         await this.$axios({
             url:"http://127.0.0.1:8000/paperQuote/",
@@ -346,36 +353,6 @@ export default {
             this.quote_list = res.data.quote
             
         })
-      }
-      else{
-        if(data.collect==true){
-           this.$axios({
-              url:"http://127.0.0.1:8000/paperCollection/",
-              method:"post",
-              data:{
-                  paper_id:data.paper_id,
-                  note_id:"",
-                  op:1
-              }
-            }).then(res=>{
-              this.$message.success("已收藏")
-            })
-        }
-        else{
-          this.$axios({
-              url:"http://127.0.0.1:8000/paperCollection/",
-              method:"post",
-              data:{
-                  paper_id:data.paper_id,
-                  note_id:"",
-                  op:0
-              }
-            }).then(res=>{
-              this.$message.success("已取消收藏")
-            })
-        }
-      }
-      
     },
     toThousands(num) {
       var result = [],
@@ -454,6 +431,7 @@ export default {
         this.filterGroup_author = Array.from(new Set(this.filterGroup_author));
         this.filterGroup_venue = Array.from(new Set(this.filterGroup_venue));
         this.filterGroup_year = Array.from(new Set(this.filterGroup_year));
+        this.filterGroup_year.sort()
 
         localStorage.setItem(
           "interested_keywords",

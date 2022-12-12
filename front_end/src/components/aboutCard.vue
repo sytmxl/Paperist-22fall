@@ -12,7 +12,7 @@
     <div class="text item">摘要：{{ limitWords(intro)}}</div>
     <div class="text item">
       作者：
-      <span v-for="i in author" :key="i" style="margin-right: 20px">
+      <span v-for="i in author" :key="i" style="margin-right: 20px" @click="goto_person(i.name)">
         {{ i.name }}
       </span>
     </div>
