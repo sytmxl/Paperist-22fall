@@ -1093,7 +1093,7 @@ export default {
       myComment: [],
       commentToMe: [],
       subscribes: [],
-
+      es_id="",
       //图片
       profile: "",
       headers: {
@@ -1130,7 +1130,7 @@ export default {
       method: "post",
       url: "/user/judgeIsMyself/",
       data: {
-        id: this.$route.params.id,
+        id: this.es_id,
       },
     }).then((res) => {
       console.log(11111111);
@@ -1138,7 +1138,7 @@ export default {
       this.isMyself = res.data.flag;
     });
 
-    this.id = this.$route.params.id;
+    this.id = this.es_id;
     console.log(this.id);
     // if (this.id == undefined) {
     //   this.isToken = 1; //是自己，用token访问
@@ -1171,6 +1171,7 @@ export default {
     this.initScholarPaper();
     this.initRelations();
     this.noteLabel = this.isOthers ? "他的笔记" : "我的笔记";
+    this.es_id = this.es_id;
   },
   watch: {
     isOthers: function (newVal, oldVal) {
@@ -1205,10 +1206,10 @@ export default {
         },
       };
       obj.query.bool.must.push({
-        match_phrase: { id: this.$route.params.id },
+        match_phrase: { id: this.es_id },
       });
       obj.query.bool.filter = {
-        match_phrase: { id: this.$route.params.id },
+        match_phrase: { id: this.es_id },
       };
       axios({
         headers: {
@@ -1236,10 +1237,10 @@ export default {
           },
         };
         obj.query.bool.must.push({
-          match_phrase: { "authors.id": this.$route.params.id },
+          match_phrase: { "authors.id": this.es_id },
         });
         obj.query.bool.filter = {
-          match_phrase: { "authors.id": this.$route.params.id },
+          match_phrase: { "authors.id": this.es_id },
         };
         axios({
           headers: {
@@ -1295,10 +1296,10 @@ export default {
         },
       };
       obj.query.bool.must.push({
-        match_phrase: { "authors.id": this.$route.params.id },
+        match_phrase: { "authors.id": this.es_id },
       });
       obj.query.bool.filter = {
-        match_phrase: { "authors.id": this.$route.params.id },
+        match_phrase: { "authors.id": this.es_id },
       };
       axios({
         headers: {
