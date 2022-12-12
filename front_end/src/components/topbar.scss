@@ -25,6 +25,7 @@ $height: 50px;
   height: $height;
   background-color: #003b55 !important;
   display: flex;
+  transition: 0.3s;
   border-radius: 0px 0px 20px 20px;
   box-shadow: 0 0 7px rgba(204, 204, 204, 0.713);
 }
@@ -42,7 +43,7 @@ $height: 50px;
   }
 }
 .search_input {
-  margin: 9px auto 0px auto;
+  margin: 5px auto 0px auto;
   width: 500px;
   transition: 0.3s;
   padding: auto;
@@ -79,6 +80,7 @@ $height: 50px;
 }
 .el-avatar {
   margin: 5px 5px 0px 10px;
+  // float: right;
   &:hover {
     cursor: pointer;
   }
@@ -100,11 +102,12 @@ $height: 50px;
   width: 34px;
   height: 34px;
   border-radius: 50%;
-  color: rgb(0, 0, 0);
-  background: #ffffff;
+  color: #003b55;
+  background-color: #e7edef;
   text-align: center;
   letter-spacing: 0;
   font-size: 14px;
+  font-weight: bolder;
   line-height: 36px;
   &:hover {
     cursor: pointer;

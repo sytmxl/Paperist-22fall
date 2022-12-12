@@ -8,8 +8,10 @@
     > -->
     <el-container>
       <el-main>
+        <el-page-header @back="goback" content="个人主页" title="返回首页">
+        </el-page-header>
         <el-row id="info" style="margin-top: 20px; margin-bottom: 20px">
-          <el-col :span="10">
+          <el-col v-if="realname != '暂无数据'" :span="10">
             <!--:span占据行数-->
             <!--头像-->
             <img
@@ -32,15 +34,15 @@
                 type="primary"
                 round
                 style="margin-top: 10px"
+                v-if="isMyself"
                 >修改头像</el-button
               >
-              <div slot="tip" class="el-upload__tip">
+              <div slot="tip" class="el-upload__tip" v-if="isMyself">
                 只能上传jpg/png类型的图片,且不超过1MB
               </div>
             </el-upload>
           </el-col>
-
-          <el-col class="des" :span="11" style="margin-top: 1.5%">
+          <el-col v-if="realname != '暂无数据'" class="des" :span="11" style="margin-top: 1.5%">
             <!--column2表示每行两个-->
             <el-descriptions
               :title="realname"
@@ -51,12 +53,14 @@
                 <el-button
                   type="primary"
                   size="small"
+                  lock-scroll="false"
                   @click="isChangePassword = true"
                   >修改密码</el-button
                 >
                 <el-button
                   type="info"
                   size="small"
+                  lock-scroll="false"
                   @click="savePersonalInformation"
                   >保存</el-button
                 >
@@ -136,7 +140,7 @@
             </el-descriptions>
 
             <el-descriptions
-              :title="realname"
+              :title="username"
               :column="2"
               v-if="!isEditPersonalInformation"
             >
@@ -186,6 +190,7 @@
               >
             </el-descriptions>
           </el-col>
+          <el-skeleton v-else :rows="7" animated/>
         </el-row>
         <!--        <el-button @click="isScholar = !isScholar"-->
         <!--          >学者转换,去掉该按钮样式即恢复正常</el-button-->
@@ -1213,61 +1218,39 @@ export default {
       }).then((res) => {
         console.log("学者信息", res.data.hits.hits);
         this.realname = res.data.hits.hits[0]._source.name;
-        // 根据作者信息筛出曲线
-        var nameList = [];
-        console.log(this.realname);
-        obj = {
-          query: {
-            bool: {
-              must: [],
-              filter: {},
-            },
+        this.researchField=res.data.hits.hits[0]._source.tags[0].t+", "+res.data.hits.hits[0]._source.tags[1].t+", "+res.data.hits.hits[0]._source.tags[2].t;
+      });
+    },
+    initRelations() {
+      var nameList = [];
+      console.log(this.realname);
+      let obj = {
+        query: {
+          bool: {
+            must: [],
+            filter: {},
           },
-        };
-        obj.query.bool.must.push({
-          match_phrase: { "authors.id": this.$route.params.id },
-        });
-        obj.query.bool.filter = {
-          match_phrase: { "authors.id": this.$route.params.id },
-        };
-        axios({
-          headers: {
-            "content-type": "application/json",
-          },
-          auth: {
-            username: "elastic",
-            password: "BZYvLA-d*pS0EpI7utmJ",
-          },
-          url: "/es/paper/_search",
-          method: "post",
-          data: JSON.stringify(obj),
-        }).then((res) => {
-          console.log("论文", res.data.hits.hits);
-          var paperList = res.data.hits.hits;
-          for (var i = 0; i < paperList.length; i++) {
-            var authorList = paperList[i]._source.authors;
-            for (var j = 0; j < authorList.length; j++) {
-              if (authorList[j].name != this.realname) {
-                if(nameList[authorList[j].name]==undefined||nameList[authorList[j].name]==null)
-                nameList[authorList[j].name] ={
-                  id:authorList[j].id,
-                  name:authorList[j].name,
-                  value:1
-                }
-                else{
-                  nameList[authorList[j].name].value++;
-                }
-              }
-            }
-          }
-          console.log("字典",nameList);
-          // 遍历字典
-          var relationsData = [];
-          for (var key in nameList) {
-            relationsData.push(nameList[key]);
-          }
-          this.RelationsData=relationsData;
-        });
+        },
+      };
+      obj.query.bool.must.push({
+        match_phrase: { "authors.id": this.$route.params.id },
+      });
+      obj.query.bool.filter = {
+        match_phrase: { id: this.$route.params.id },
+      };
+      axios({
+        headers: {
+          "content-type": "application/json",
+        },
+        auth: {
+          username: "elastic",
+          password: "BZYvLA-d*pS0EpI7utmJ",
+        },
+        url: "/es/author/_search",
+        method: "post",
+        data: JSON.stringify(obj),
+      }).then((res) => {
+        console.log(res.data.hits.hits);
       });
     },
     // 获取学者文献（曲线）
@@ -2016,6 +1999,11 @@ export default {
         path: "/NoteInformation/" + note_id,
       });
     },
+    //返回上一界面
+    goback(){
+      //this.$router.go(-1);
+      this.$router.push("/FirstPage")
+    },
   },
 };
 </script>
@@ -2036,12 +2024,12 @@ export default {
   // height: 90%;
   width: 70%;
   // margin-top: 20px;
-  margin-bottom: 60px;
+  margin-bottom: 90px;
   min-height: calc(100vh);
   margin-left: 15%;
   transform: translate(
     0,
-    30px
+    70px
   ); //不知道为什么用margin顶栏也会受影响，用移动替代
   .el-card {
     background-color: rgba(255, 255, 255, 0.587) !important;
