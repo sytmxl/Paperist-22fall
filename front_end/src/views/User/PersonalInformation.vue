@@ -153,7 +153,7 @@
                 <el-button
                   type="primary"
                   size="small"
-                  v-if="!isOthers"
+                  v-if="!isOthers && islogin()"
                   @click="
                     isChangePassword = true;
                     newPassword = '';
@@ -165,7 +165,7 @@
                 <el-button
                   type="primary"
                   size="small"
-                  v-if="!isOthers"
+                  v-if="!isOthers && islogin()"
                   @click="isEditPersonalInformation = true"
                   >修改信息</el-button
                 >
@@ -176,7 +176,6 @@
                   @click="gotoAuthorization()"
                   >学者认领</el-button
                 >
-                
               </template>
               <el-descriptions-item label="真实姓名">{{
                 realname
@@ -203,15 +202,15 @@
               >
             </el-descriptions>
             <el-dialog
-                  title="学者认证"
-                  :visible.sync="AuthorizationDialogVisable"
-                  width="40%"
-                >
-                  <AuthorizationScholar
-                    :es_id="es_id"
-                    @finish_upload="AuthorizationDialogVisable = false"
-                  />
-                </el-dialog>
+              title="学者认证"
+              :visible.sync="AuthorizationDialogVisable"
+              width="40%"
+            >
+              <AuthorizationScholar
+                :es_id="es_id"
+                @finish_upload="AuthorizationDialogVisable = false"
+              />
+            </el-dialog>
           </el-col>
           <el-skeleton v-else :rows="7" animated />
         </el-row>
@@ -2347,13 +2346,22 @@ export default {
       this.$router.push("/FirstPage");
     },
     gotoAuthorization() {
-      console.log("ssssss",JSON.parse(sessionStorage.getItem("userInfo")))
+      console.log("ssssss", JSON.parse(sessionStorage.getItem("userInfo")));
       if (sessionStorage.getItem("token") == null) {
-        this.$message.error("请先登录");
-      } else if (JSON.parse(sessionStorage.getItem("userInfo")).isScholar == 1) {
+        this.$message.error("您还未登录！请先登录");
+      } else if (
+        JSON.parse(sessionStorage.getItem("userInfo")).isScholar == 1
+      ) {
         this.$message.error("您已经认领学者了！请不要重复认领！");
       } else {
         this.AuthorizationDialogVisable = true;
+      }
+    },
+    islogin() {
+      if (sessionStorage.getItem("token") == null) {
+        return false;
+      } else {
+        return true;
       }
     },
   },

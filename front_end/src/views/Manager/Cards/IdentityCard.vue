@@ -2,16 +2,14 @@
   <div class="main">
     <el-page-header @back="goBack" content="详情页面">
     </el-page-header>
-    <div style="margin-top:100px">
+    <div style="margin-top:50px">
     <span style="text-align:left;">
-      <h2>图片材料</h2>
+      <h2>个人认证简介</h2>
+      {{intro}}
+      <h2>个人材料</h2>
+       <iframe style="width: 100%; height: 100%" :src="'/pdfjs-2.14.305-legacy-dist/web/viewer.html?file='+src" title="myFrame"></iframe>
     </span>
-     <el-carousel :interval="4000" type="card" height="400px">
-         <el-carousel-item v-for="item in pic" :key="item">
-              <!-- <h3 class="medium">{{ item }}</h3> -->
-              <img :src="item" alt="">
-            </el-carousel-item>
-      </el-carousel>
+   
     </div>
   </div>
 </template>
@@ -21,9 +19,11 @@ export default {
   name: "IdentityCard",
   data() {
     return {
-      pic:[require("../../../assets/mosy.jpg"),require("../../../assets/mosy.jpg"),require("../../../assets/mosy.jpg")]
-    };
+      intro:this.$route.intro,
+       src:this.$route.src,
+      };
   },
+
   methods:{
     goBack() {
         window.history.go(-1)

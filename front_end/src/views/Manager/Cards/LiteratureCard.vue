@@ -49,7 +49,6 @@ export default {
   margin-left: 5%;
   margin-right: 5%;
 }
-
 .abstract {
   color: #919fb5;
   text-align: left;
