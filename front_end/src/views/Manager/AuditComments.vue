@@ -17,13 +17,13 @@
         </template>
       </el-table-column>
     </el-table>
-    <el-dialog :visible.sync="dialogFormVisible">
-      <el-form
+    <el-dialog :visible.sync="dialogFormVisible" :lock-scroll="false">
+      <el-form 
         :model="questionForm"
         ref="dataForm"
         label-position="left"
         label-width="90px"
-        style="width: 400px; margin-left: 50px"
+        style="width: 100%; "
       >
         <el-form-item label="审核结果">
           <el-select

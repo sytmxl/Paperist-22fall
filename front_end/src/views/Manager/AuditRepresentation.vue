@@ -21,7 +21,7 @@
         </template>
       </el-table-column>
     </el-table>
-    <el-dialog :visible.sync="dialogFormVisible">
+    <el-dialog :lock-scroll="false" :visible.sync="dialogFormVisible">
       <el-form
         :model="questionForm"
         ref="dataForm"
