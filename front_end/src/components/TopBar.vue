@@ -6,7 +6,7 @@
         src="../assets/logo/cube_logo.svg"
         @click="gotoFirstPage"
       />
-
+      
       <el-button
         size="mini"
         type="default"
@@ -14,7 +14,7 @@
         name="dark_light"
         @click="toggleDarkLight"
         title="Toggle dark/light mode"
-        >日/夜</el-button
+        ></el-button
       >
       <search-box />
       <div v-if="loged" class="avatar" @click="gotoPersonalInformation">
@@ -69,6 +69,7 @@ import SearchBox from "@/components/SearchBox";
 import axios from "axios";
 import localAvatar from "@/assets/mosy.jpg";
 import claimScholar from "@/components/claimScholar.vue";
+import $ from 'jquery';
 export default {
   name: "TopBar",
   components: { SearchBox, claimScholar },
@@ -152,6 +153,7 @@ export default {
       let body = document.getElementById("app");
       let currentClass = body.className;
       body.className = currentClass == "dark-mode" ? "light-mode" : "dark-mode";
+      
     },
   },
 };
