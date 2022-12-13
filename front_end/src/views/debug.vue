@@ -55,7 +55,7 @@ export default {
       }
       this.es_request_body_json = JSON.stringify(es_request_body_common)
       es_axios({
-        url: 'paper_test/_search', method: "post",
+        url: 'es/paper_test/_search', method: "post",
         data: JSON.stringify(es_request_body_common)
         }
       ).then(res=>{

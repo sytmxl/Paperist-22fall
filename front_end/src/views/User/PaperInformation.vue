@@ -535,7 +535,7 @@ export default {
       obj.query.bool.must.push({"match_phrase":{"id":this.$route.params.paper_id}})
       obj.query.bool.filter={"match_phrase":{"id":this.$route.params.paper_id}}
       es_axios({
-            url: '/paper/_search', method: "post",
+            url: 'es/paper/_search', method: "post",
             data: JSON.stringify(obj)
           }
       ).then(res=>{
@@ -562,7 +562,7 @@ export default {
         obj.query.bool.must.push({"match_phrase":{"authors.id":authors[index].id}})
       obj.query.bool.filter={"match_phrase":{"authors.id":authors[index].id}}
       es_axios({
-            url: '/paper/_search', method: "post",
+            url: 'es/paper/_search', method: "post",
             data: JSON.stringify(obj)
           }
       ).then(res=>{

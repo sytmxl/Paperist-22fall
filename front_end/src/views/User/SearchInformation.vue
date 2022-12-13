@@ -386,7 +386,7 @@ export default {
       condition_filter_query.from = 0;
       condition_filter_query.size = 50;
       es_axios({
-        url: "/paper/_search",
+        url: "es/paper/_search",
         method: "post",
         data: JSON.stringify(condition_filter_query),
       }).then((res) => {
@@ -436,7 +436,7 @@ export default {
     post_es_search() {
       this.loading = true;
       es_axios({
-        url: "/paper/_search",
+        url: "es/paper/_search",
         method: "post",
         data: JSON.stringify(this.es_request_body),
       }).then((res) => {
@@ -518,7 +518,7 @@ export default {
 
       this.loading_interested = true;
       es_axios({
-        url: "/paper/_search",
+        url: "es/paper/_search",
         method: "post",
         data: JSON.stringify(interested_search_request_body),
       }).then((res) => {
