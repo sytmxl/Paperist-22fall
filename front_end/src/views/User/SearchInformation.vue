@@ -715,7 +715,9 @@ export default {
     &:hover {
       cursor: pointer;
       border-radius: 10px;
-      background: rgb(226, 226, 226);
+      // background: rgb(226, 226, 226);
+      background: rgba(198, 212, 220, 0.457);
+
       // padding: 5px;
       transform: scale(105%);
       // border: solid 2px #003b55;

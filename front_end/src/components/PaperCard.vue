@@ -2,7 +2,6 @@
   <el-card shadow="hover">
     <h3
       class="PaperTitle title"
-      style="text-align: left; color: #003b55;"
       @click="jump2PaperInforMation"
     >
       {{ title }}
@@ -174,8 +173,15 @@ export default {
   // margin-top: 10px;
 }
 .PaperTitle {
+  text-align: left; 
+  color: #003b55;
   &:hover {
     cursor: pointer;
+  }
+}
+.dark-mode {
+  .PaperTitle {
+    // color: rgb(238, 238, 239);
   }
 }
 .title {
@@ -183,7 +189,8 @@ export default {
   &:hover {
     cursor: pointer;
     border-radius: 10px;
-    background: rgb(226, 226, 226);
+    background: rgba(198, 212, 220, 0.457);
+    margin-bottom: 5px;
     padding: 5px;
     z-index: 99;
     transform: scale(102%);

@@ -929,13 +929,18 @@ export default {
 }
 a {
   padding: 3px;
-  border-radius: 5px;
+  border-radius: 10px;
   transition: 0.2s;
 }
 a:hover {
-  background-color: rgb(219, 219, 219) !important;
+  background: rgba(198, 212, 220, 0.457) !important;
   color: rgb(0, 0, 0) !important;
   cursor: pointer;
+  padding: 5px;
+  transform: scale(105%);
+}
+a:focus {
+  transform: scale(90%);
 }
 
 /deep/.el-tag {
