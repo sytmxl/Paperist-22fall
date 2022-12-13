@@ -19,10 +19,10 @@
               {{ item._source.name }}
             </div>
             <el-divider></el-divider>
-            <div class="text" style="margin-top: 1vh">国家/地区: 克罗地亚</div>
-            <div class="text">研究领域: 深度学习</div>
-            <div class="text">论文数量: 13</div>
-            <div class="text">被引用次数: 12</div>
+            <div class="text" style="margin-top: 1vh">国家/地区: 暂无数据</div>
+            <div class="text">研究领域: <span v-for="i in item._source.tags" :key="i">{{i.t}}</span></div>
+            <div class="text">论文数量: {{item._source.n_pubs}}</div>
+            <div class="text">被引用次数: {{item._source.n_citation}}</div>
           </el-card>
         </el-col>
       </el-row>
