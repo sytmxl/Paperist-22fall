@@ -121,6 +121,22 @@
                     <el-option label="以色列" value="以色列"></el-option>
                     <el-option label="西班牙" value="西班牙"></el-option>
                     <el-option label="波兰" value="波兰"></el-option>
+                    <el-option label="俄罗斯" value="俄罗斯"></el-option>
+                    <el-option label="澳大利亚" value="澳大利亚"></el-option>
+                    <el-option label="新加坡" value="新加坡"></el-option>
+                    <el-option label="瑞典" value="瑞典"></el-option>
+                    <el-option label="荷兰" value="荷兰"></el-option>
+                    <el-option label="比利时" value="比利时"></el-option>
+                    <el-option label="奥地利" value="奥地利"></el-option>
+                    <el-option label="瑞士" value="瑞士"></el-option>
+                    <el-option label="丹麦" value="丹麦"></el-option>
+                    <el-option label="印度" value="印度"></el-option>
+                    <el-option label="巴西" value="巴西"></el-option>
+                    <el-option label="墨西哥" value="墨西哥"></el-option>
+                    <el-option label="南非" value="南非"></el-option>
+                    <el-option label="克罗地亚" value="克罗地亚"></el-option>
+                    <el-option label="其他" value="其他"></el-option>
+
                   </el-select>
                 </div>
               </el-descriptions-item>
@@ -1752,15 +1768,17 @@ export default {
         } else {
           this.$message.error(res.data.errormsg);
         }
-        this.getPersonalInformation();
+        location.reload()
+        // this.getPersonalInformation();
         this.new_email = "";
         this.new_realname = "";
         this.new_gender = "";
         this.new_region = "";
         this.new_personalProfile = "";
         this.new_researchField = "";
+        
       });
-      this.windows.reload();
+      
     },
     //个人收藏、个人订阅、我的笔记等初始化栏
     handleClickAll(tab, event) {
