@@ -121,6 +121,22 @@
                     <el-option label="以色列" value="以色列"></el-option>
                     <el-option label="西班牙" value="西班牙"></el-option>
                     <el-option label="波兰" value="波兰"></el-option>
+                    <el-option label="俄罗斯" value="俄罗斯"></el-option>
+                    <el-option label="澳大利亚" value="澳大利亚"></el-option>
+                    <el-option label="新加坡" value="新加坡"></el-option>
+                    <el-option label="瑞典" value="瑞典"></el-option>
+                    <el-option label="荷兰" value="荷兰"></el-option>
+                    <el-option label="比利时" value="比利时"></el-option>
+                    <el-option label="奥地利" value="奥地利"></el-option>
+                    <el-option label="瑞士" value="瑞士"></el-option>
+                    <el-option label="丹麦" value="丹麦"></el-option>
+                    <el-option label="印度" value="印度"></el-option>
+                    <el-option label="巴西" value="巴西"></el-option>
+                    <el-option label="墨西哥" value="墨西哥"></el-option>
+                    <el-option label="南非" value="南非"></el-option>
+                    <el-option label="克罗地亚" value="克罗地亚"></el-option>
+                    <el-option label="其他" value="其他"></el-option>
+
                   </el-select>
                 </div>
               </el-descriptions-item>
@@ -175,6 +191,20 @@
                   v-if="!isClaim"
                   @click="gotoAuthorization()"
                   >学者认领</el-button
+                >
+                <el-button
+                  type="primary"
+                  size="small"
+                  v-if="isClaim && isScholar && isOthers && hasSub"
+                  @click="gotoSubScribe()"
+                  >取消订阅学者</el-button
+                >
+                <el-button
+                  type="primary"
+                  size="small"
+                  v-if="isClaim && isScholar && isOthers && !hasSub"
+                  @click="gotoSubScribe()"
+                  >订阅学者</el-button
                 >
               </template>
               <el-descriptions-item label="真实姓名">{{
@@ -1099,8 +1129,9 @@ export default {
       myComment: [],
       commentToMe: [],
       subscribes: [],
+      SubscribePeopleList: [],
       isClaim: true,
-
+      hasSub: false,
       es_id: "",
       //图片
       profile: "",
@@ -1225,6 +1256,7 @@ export default {
     this.initScholarPaper();
     this.getScholarInfo();
     this.initRelations();
+    this.getSubscribe2();
     // }
 
     this.noteLabel = this.isOthers ? "他的笔记" : "我的笔记";
@@ -1736,15 +1768,17 @@ export default {
         } else {
           this.$message.error(res.data.errormsg);
         }
-        this.getPersonalInformation();
+        location.reload()
+        // this.getPersonalInformation();
         this.new_email = "";
         this.new_realname = "";
         this.new_gender = "";
         this.new_region = "";
         this.new_personalProfile = "";
         this.new_researchField = "";
+        
       });
-      this.windows.reload();
+      
     },
     //个人收藏、个人订阅、我的笔记等初始化栏
     handleClickAll(tab, event) {
@@ -2364,6 +2398,62 @@ export default {
         return true;
       }
     },
+    getSubscribe2() {
+      this.$axios({
+        url: "/user/getSubscribe/",
+        method: "post",
+        data: {
+          token: sessionStorage.getItem("token"),
+          isToken: 1,
+          id: 1,
+        },
+      }).then((res) => {
+        this.SubscribePeopleList = res.data.data;
+        for(var i=0;i<this.SubscribePeopleList.length;i++){
+          if(this.SubscribePeopleList[i].id==this.$route.params.id){
+            this.hasSub=true;
+            break;
+          }
+        }
+      });
+    },
+    //订阅学者
+    gotoSubScribe() {
+      if (this.islogin) {
+        if (this.hasSub) {
+          this.$axios({
+            url: "http://127.0.0.1:8000/subscribe/",
+            method: "post",
+            data: {
+              author_id: this.$route.params.id,
+              op: 0,
+            },
+          }).then((res) => {
+            this.$message.success("已取消关注");
+            this.hasSub=false;
+          });
+        } else {
+          this.$axios({
+            url: "http://127.0.0.1:8000/subscribe/",
+            method: "post",
+            data: {
+              author_id: this.$route.params.id,
+              op: 1,
+            },
+          }).then((res) => {
+            this.$message.success("已关注");
+            this.hasSub=true;
+          });
+        }
+      } else {
+        this.$message.warning("请先登录");
+        setTimeout(() => {
+          this.$router.push({
+            name: "login",
+          });
+        }, 1000);
+      }
+    },
   },
 };
 </script>
@@ -2475,6 +2565,12 @@ export default {
 //似乎必须要用deep、选择全部子标签、颜色用全透明才行
 /deep/.el-descriptions *:not(button) {
   background-color: #003b5500 !important;
+  color: #000000 !important;
+}
+.dark-mode {
+  /deep/.el-descriptions *:not(button) {
+    color: #ffffff !important;
+  }
 }
 .title {
   width: calc(100% - 80px);

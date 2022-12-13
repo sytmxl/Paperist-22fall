@@ -227,7 +227,7 @@ import ScholarLine from "@/components/ScholarLine.vue";
 import TopBar from "@/components/TopBar";
 import noteCard from "../../components/noteCard.vue";
 import note from "../../components/note.vue";
-import axios from "axios"
+import axios from "axios";
 import $ from "jquery";
 export default {
   inject: ["reload"],
@@ -289,8 +289,8 @@ export default {
       SubscribeTextList: [],
       showSubscribeTextList: [],
       SubscribePeopleList: [],
-      recommends:[],
-      capacity:1,
+      recommends: [],
+      capacity: 1,
       hot: [
         {
           人工智能: 13482,
@@ -358,8 +358,8 @@ export default {
     // $(".search_input:first").css("visibility", "hidden");
     // $(".logo:first").css("margin-right", "87vw");
     $("#bar-content").css({
-          "width": "100%",
-        });
+      width: "100%",
+    });
     // $("#topbar").css("display", "none");
     window.addEventListener("scroll", this.scroll, true);
   },
@@ -462,8 +462,10 @@ export default {
             };
             tmpFollowText.push(tmpText);
           });
+          
           this.SubscribeTextList = tmpFollowText;
           this.showSubscribeTextList = this.SubscribeTextList.slice(0, 3);
+          console.log("tmpFollowText", this.SubscribeTextList);
         })
         .catch((err) => {
           console.log(err);
@@ -507,8 +509,8 @@ export default {
       });
     },
     loadRec() {
-      this.load_interested(this.capacity+1)
-      this.capacity = this.capacity+1
+      this.load_interested(this.capacity + 1);
+      this.capacity = this.capacity + 1;
     },
     loadSub() {
       this.start2 = true;
@@ -579,13 +581,10 @@ export default {
           // "display": "block",
           // "width": "fit-content",
         });
-        
       } else {
         $("#bar-content").css({
           // "width": "100%",
-         
         });
-        
       }
     },
     toggleDarkLight() {
@@ -604,7 +603,7 @@ export default {
           },
         },
         from: 0,
-        size: 10*index,
+        size: 10 * index,
       };
       for (let i = 0; i < 5; i++) {
         let idx = parseInt(Math.random() * keywords.length);
@@ -627,17 +626,15 @@ export default {
         method: "post",
         data: JSON.stringify(interested_search_request_body),
       }).then((res) => {
-        if(index==1){
-            this.recommends = res.data.hits.hits;
-        }
-        else{
-          for(var i=0;i<res.data.hits.hits.length;i++){
+        if (index == 1) {
+          this.recommends = res.data.hits.hits;
+        } else {
+          for (var i = 0; i < res.data.hits.hits.length; i++) {
             this.recommends.push(res.data.hits.hits[i]);
           }
         }
       });
     },
-  
   },
 };
 </script>
@@ -718,13 +715,11 @@ export default {
     box-shadow: 0 0 0px #ccc;
   }
   .hot {
-    background-color: rgba(143, 155, 167, 0.49);
-    box-shadow: 0 0 0px #ccc;
-    color: rgb(245, 245, 245) !important;
+    // color: rgb(245, 245, 245) !important;
     .content_item_title,
     .content_item_cite,
     .meau_params {
-      color: rgb(245, 245, 245) !important;
+      // color: rgb(245, 245, 245) !important;
     }
   }
 }
@@ -861,19 +856,17 @@ export default {
 /deep/.el-input-group {
 }
 .long {
-
 }
 .short {
-
 }
 .search_area {
   position: sticky;
-  top:0;
+  top: 0;
   width: fit-content;
   z-index: 1000;
 }
-.avatar, .notLog {
-  
+.avatar,
+.notLog {
 }
 .search_input {
   margin-top: 5px;
@@ -882,7 +875,6 @@ export default {
   visibility: hidden;
 }
 .logo {
-  
 }
 .hide {
   width: 60vw;
@@ -892,7 +884,6 @@ export default {
   left: 20%;
   background: #003b55;
   z-index: 999;
-  
 }
 #topbar {
   animation: none !important;

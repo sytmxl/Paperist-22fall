@@ -62,6 +62,15 @@ export default {
   .el-button--primary {
     background-color: #9aadbd;
   }
+  .el-card {
+    // background: rgb(220, 223, 229);
+    background-color: rgba(143, 155, 167, 0.648);
+    border: none;
+    box-shadow: none;
+  }
+  .el-dialog {
+    background: rgb(220, 223, 229);
+  }
 }
 
 #app.light-mode {

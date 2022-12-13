@@ -121,13 +121,18 @@
     padding-bottom: 12px;
     min-height: 20vh;
     color: #a4acb7;
-    background-color: rgba(255, 255, 255, 0.5);
-    backdrop-filter: blur(40px) brightness(105%);
+    background-color: rgb(255, 255, 255);
+    // backdrop-filter: blur(40px) brightness(105%);
   }
   .dark-mode {
     * {
       color: rgba(245, 245, 245, 0.775) !important;
     }
+    .footer {
+      backdrop-filter: blur(40px) brightness(105%);
+      background-color: #003b5568;
+    }
+
   }
   
   .footer-left {
