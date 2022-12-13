@@ -26,7 +26,6 @@
             <el-checkbox-group
               v-model="secondarySearchFilters_venue"
               size="mini"
-              :max="1"
             >
               <el-checkbox
                 border
@@ -615,7 +614,7 @@ export default {
   .display_zone {
     border-radius: 20px !important;
     margin: 5px;
-    // box-shadow: 0 0 7px rgba(204, 204, 204, 0.713);
+    box-shadow: 0 0 7px rgba(204, 204, 204, 0.713);
     background-color: rgba(255, 255, 255, 0.501) !important;
     backdrop-filter: blur(40px) brightness(95%);
     border: none;
@@ -716,9 +715,7 @@ export default {
     &:hover {
       cursor: pointer;
       border-radius: 10px;
-      // background: rgb(226, 226, 226);
-      background: rgba(198, 212, 220, 0.457);
-
+      background: rgb(226, 226, 226);
       // padding: 5px;
       transform: scale(105%);
       // border: solid 2px #003b55;
