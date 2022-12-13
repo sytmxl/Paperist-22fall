@@ -421,7 +421,8 @@ export default {
         this.filterGroup_venue = Array.from(new Set(this.filterGroup_venue));
         this.filterGroup_year = Array.from(new Set(this.filterGroup_year));
         this.filterGroup_year.sort()
-
+        this.filterGroup_venue.sort()
+        this.filterGroup_author.sort()
         localStorage.setItem(
           "interested_keywords",
           JSON.stringify(Array.from(new Set(keywords)))
