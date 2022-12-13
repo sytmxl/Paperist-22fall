@@ -98,6 +98,7 @@
             <el-checkbox-group
               v-model="secondarySearchFilters_year"
               size="mini"
+              :max="1"
             >
               <el-checkbox
                 border
@@ -468,7 +469,6 @@ export default {
       console.log(condition_filter_query)
       if (condition_filter_query.query.function_score.query.bool.filter == null){
         condition_filter_query.query.function_score.query.bool.filter = [];
-        console.log(66666)
       }
 
       for (let i in this.secondarySearchFilters_author) {
@@ -486,14 +486,14 @@ export default {
         });
       }
       for (let i in this.secondarySearchFilters_year) {
-        condition_filter_query.query.function_score.query.bool.should.push({
+        condition_filter_query.query.function_score.query.bool.filter.push({
           match_phrase: { year: this.secondarySearchFilters_year[i] },
         });
       }
       if (use_slow_method) {
         condition_filter_query.query.function_score.query.bool.filter.push({
           range: {
-            year: {
+            "year": {
               gte: this.begin_year_secondary,
               lte: this.end_year_secondary,
             },
