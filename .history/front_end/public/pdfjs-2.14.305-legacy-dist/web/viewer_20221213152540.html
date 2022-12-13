@@ -34,6 +34,15 @@ See https://github.com/adobe-type-tools/cmap-resources
 <script src="../build/pdf.js"></script>
 
   <script src="viewer.js"></script>
+  <script type = "text/javascript" >
+   window.onload = function() {
+        var all_href = location.href;
+        var file_id = all_href.split('?')[1];
+        var pdfUrl = file_id.split('=')[1];
+        // var pdfUrl='https://fireflycos.libertynlp.com/firefly-static/new_shouce.pdf';
+        webViewerLoad(pdfUrl);
+    }
+</script>
   </head>
 
   <body tabindex="1">

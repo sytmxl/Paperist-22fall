@@ -102,6 +102,7 @@
 
 <script>
 let isclick = true
+let file = new FormData()
 import pdf from 'vue-pdf'
 let PDFJS = require('pdfjs-dist');
 PDFJS.GlobalWorkerOptions.workerSrc = require("pdfjs-dist/build/pdf.worker.entry.js");

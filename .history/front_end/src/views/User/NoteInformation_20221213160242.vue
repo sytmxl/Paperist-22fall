@@ -316,7 +316,7 @@ export default {
             }
         }).then(res=>{
             // this.pdf_src = res.data.note_info[0].note_url
-            this.pdf_src = encodeURIComponent(res.data.note_info[0].note_url)
+            this.pdf_src = encodeURIComponent('https://pch5.test.com/api/requestFile.pdf?requestUrl='+"https://mozilla.github.io/pdf.js/web/compressed.tracemonkey-pldi-09.pdf")
             this.note = res.data.note_info[0]
         })
      },

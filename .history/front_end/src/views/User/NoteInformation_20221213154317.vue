@@ -315,8 +315,7 @@ export default {
                 note_id:this.$route.params.note_id
             }
         }).then(res=>{
-            // this.pdf_src = res.data.note_info[0].note_url
-            this.pdf_src = encodeURIComponent(res.data.note_info[0].note_url)
+            this.pdf_src = res.data.note_info[0].note_url
             this.note = res.data.note_info[0]
         })
      },
