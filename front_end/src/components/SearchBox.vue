@@ -7,7 +7,6 @@
           v-model="common_search_query"
           class="input-with-select"
           clearable
-          
         >
           <el-select
             v-model="common_search_type"
@@ -252,19 +251,22 @@ export default {
   },
   mounted() {
     let last_search = JSON.parse(sessionStorage.getItem("last_search"));
-    if (last_search !== null) {
-      if (last_search.common_search_query !== null)
-        this.common_search_query = last_search.common_search_query;
-      if (last_search.PublishSelect !== null)
-        this.PublishSelect = last_search.PublishSelect;
-      if (last_search.LangValue !== null)
-        this.LangValue = last_search.LangValue;
-      if (last_search.common_search_type !== null)
-        this.common_search_type = last_search.common_search_type;
-      if (last_search.isAdvanced !== null)
-        this.isAdvanced = last_search.isAdvanced;
-      if (last_search.advanced_search_query !== null)
-        this.advanced_search_query = last_search.advanced_search_query;
+    console.log(this.$router.history.current);
+    if (this.$router.history.current.name === "SearchInformation") {
+      if (last_search !== null) {
+        if (last_search.common_search_query !== null)
+          this.common_search_query = last_search.common_search_query;
+        if (last_search.PublishSelect !== null)
+          this.PublishSelect = last_search.PublishSelect;
+        if (last_search.LangValue !== null)
+          this.LangValue = last_search.LangValue;
+        if (last_search.common_search_type !== null)
+          this.common_search_type = last_search.common_search_type;
+        if (last_search.isAdvanced !== null)
+          this.isAdvanced = last_search.isAdvanced;
+        if (last_search.advanced_search_query !== null)
+          this.advanced_search_query = last_search.advanced_search_query;
+      }
     }
   },
   methods: {
