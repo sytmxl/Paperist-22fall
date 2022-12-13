@@ -126,19 +126,32 @@ export default {
 };
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .main {
-  height: auto;
+  min-height: 100vh;
 }
+
 .title {
+  color: #003b55;
   font-weight: 600;
   font-size: large;
   text-align: left;
   margin-top: 1vh;
   margin-bottom: 1vh;
-  cursor: pointer;
-  height: 2vh;
-  overflow: hidden;
+  transition: 0.3s;
+  &:hover {
+    cursor: pointer;
+    border-radius: 10px;
+    background: rgba(198, 212, 220, 0.457);
+    // margin-bottom: 5px;
+    padding: 5px;
+    z-index: 99;
+    transform: scale(102%);
+    // border: solid 2px #003b55;
+  }
+  &:active {
+    transform: scale(95%);
+  }
 }
 .subtitle {
   font-weight: 700;
@@ -152,8 +165,8 @@ export default {
   font-size: small;
 }
 .content {
-  margin-left: 15vw;
-  margin-right: 15vw;
+  width: 70%;
+  margin: auto;
 }
 
 .cards {
