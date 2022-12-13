@@ -12,17 +12,40 @@
           :span="6"
           v-for="(item, index) in searchAuthors"
           :key="item.id"
-          :offset="index % 3 > 0 ? 2 : 0"
+          :offset="index % 3 > 0 ? 1 : 0"
         >
-          <el-card style="margin-bottom: 3vh">
+          <el-card style="margin-bottom: 3vh; width: 80%">
+            <div class="avatar" @click="toPersonalInfo(item._source.id)">
+              <el-avatar :size="medium" :src="circleUrl"></el-avatar>
+            </div>
             <div class="title" @click="toPersonalInfo(item._source.id)">
               {{ item._source.name }}
             </div>
             <el-divider></el-divider>
-            <div class="text" style="margin-top: 1vh">国家/地区: 克罗地亚</div>
-            <div class="text">研究领域: 深度学习</div>
-            <div class="text">论文数量: 13</div>
-            <div class="text">被引用次数: 12</div>
+            <div class="text" style="margin-top: 1vh">
+              <span class="subtitle">国家/地区:</span>
+              <span class="subcontent">{{
+                item._source.n_posts == null ? "未知" : item._source.n_posts
+              }}</span>
+            </div>
+            <div class="text">
+              <span class="subtitle">研究领域:</span>
+              <span style="overflow: hidden">{{
+                item._source.tags[0] == null ? "未知" : item._source.tags[0].t
+              }}</span>
+            </div>
+            <div class="text">
+              论文数量:
+              {{ item._source.n_pubs == null ? "未知" : item._source.n_pubs }}
+            </div>
+            <div class="text">
+              被引用次数:
+              {{
+                item._source.n_citation == null
+                  ? "未知"
+                  : item._source.n_citation
+              }}
+            </div>
           </el-card>
         </el-col>
       </el-row>
@@ -35,8 +58,20 @@ export default {
   name: "SearchAuthor",
   data() {
     return {
+      circleUrl:
+        "https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png",
       search_query: null,
-      searchAuthors: [],
+      searchAuthors: [
+        {
+          _source: {
+            tags: [
+              {
+                t: "1",
+              },
+            ],
+          },
+        },
+      ],
     };
   },
   methods: {
@@ -44,6 +79,7 @@ export default {
       this.$router.push("/firstPage");
     },
     toPersonalInfo(id) {
+      console.log(1);
       let routeData = this.$router.resolve({
         name: "PersonalInformation",
         params: { id: id },
@@ -98,9 +134,19 @@ export default {
   font-weight: 600;
   font-size: large;
   text-align: left;
+  margin-top: 1vh;
   margin-bottom: 1vh;
   cursor: pointer;
+  height: 2vh;
+  overflow: hidden;
 }
+.subtitle {
+  font-weight: 700;
+}
+.avatar {
+  cursor: pointer;
+}
+
 .text {
   text-align: left;
   font-size: small;
@@ -112,8 +158,8 @@ export default {
 
 .cards {
   margin-top: 3vh;
-  margin-left: 5vw;
-  margin-right: 5vw;
+  margin-left: 10vw;
+  margin-right: 10vw;
 }
 
 .el-select .el-input {

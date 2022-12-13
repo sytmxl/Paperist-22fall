@@ -31,7 +31,7 @@
                 show-password
                 type="password"
                 clearable
-                v-model="form.password"
+                v-model="form.password1"
                 autocomplete="off"
                 @keyup.enter.native="login"
               ></el-input>
@@ -69,7 +69,7 @@
                 show-password
                 type="password"
                 clearable
-                v-model="form.password"
+                v-model="form.password2"
                 autocomplete="off"
                 @keyup.enter.native="login"
               ></el-input>
@@ -156,8 +156,9 @@ export default {
     return {
       form: {
         email: "",
+        password1: "",
+        password2: "",
         username: "",
-        password: "",
       },
       forget: {
         forget_email: "",
@@ -224,45 +225,92 @@ export default {
       this.form = {
         email: "",
         username: "",
-        password: "",
+        password1: "",
+        password2: "",
       };
     },
     async login() {
-      this.$axios({
-        url: "user/login/",
-        method: "post",
-        data: {
-          email: this.form.email,
-          encrypted_pwd: CryptoJS.MD5(this.form.password).toString(),
-        },
-      }).then(async (res) => {
-        console.log(res.data);
-        if (res.data.errornumber == "-1") {
-          this.$message({
-            message: "邮箱账号不存在，请您检查输入",
-            type: "warning",
-          });
-        } else if (res.data.errornumber == "-2") {
-          this.$message({
-            message: "您输入的密码不正确，请您检查输入",
-            type: "warning",
-          });
-        } else {
-          this.$message({
-            message: "登录成功，正在为您跳转",
-            type: "success",
-          });
-          sessionStorage.setItem("token", res.data.token);
-          // await this.$router.push("/FirstPage")
-          setTimeout(async () => {
-            if (this.ogpath != "/register") {
-              await window.history.go(-1);
-            } else {
-              await this.$router.push("/FirstPage");
-            }
-          }, 1000);
-        }
-      });
+      //login by email
+      if (this.activeName === "first"){
+        this.$axios({
+          url: "user/login/",
+          method: "post",
+          data: {
+            email: this.form.email,
+            encrypted_pwd: CryptoJS.MD5(this.form.password1).toString(),
+          },
+        }).then(async (res) => {
+          console.log(res.data);
+          if (res.data.errornumber == "-1") {
+            this.$message({
+              message: "邮箱账号不存在，请您检查输入",
+              type: "warning",
+            });
+          } else if (res.data.errornumber == "-2") {
+            this.$message({
+              message: "您输入的密码不正确，请您检查输入",
+              type: "warning",
+            });
+          } else {
+            this.$message({
+              message: "登录成功，正在为您跳转",
+              type: "success",
+            });
+            sessionStorage.setItem("token", res.data.token);
+            // await this.$router.push("/FirstPage")
+            setTimeout(async () => {
+              if (this.ogpath != "/register") {
+                await window.history.go(-1);
+              } else {
+                await this.$router.push("/FirstPage");
+              }
+            }, 1000);
+          }
+        });
+      }
+      //login by username
+      else {
+        // this.$confirm(
+        //     JSON.stringify(this.activeName)+' '
+        //     +JSON.stringify(this.form.email)+' '
+        //     +JSON.stringify(this.form.username)+' '
+        //     +JSON.stringify(this.form.password2))
+        this.$axios({
+          url: "user/login/",
+          method: "post",
+          data: {
+            username: this.form.username,
+            encrypted_pwd: CryptoJS.MD5(this.form.password2).toString(),
+          },
+        }).then(async (res) => {
+          console.log(res.data);
+          if (res.data.errornumber == "-1") {
+            this.$message({
+              message: "用户名账号不存在，请您检查输入",
+              type: "warning",
+            });
+          } else if (res.data.errornumber == "-2") {
+            this.$message({
+              message: "您输入的密码不正确，请您检查输入",
+              type: "warning",
+            });
+          } else {
+            this.$message({
+              message: "登录成功，正在为您跳转",
+              type: "success",
+            });
+            sessionStorage.setItem("token", res.data.token);
+            // await this.$router.push("/FirstPage")
+            setTimeout(async () => {
+              if (this.ogpath != "/register") {
+                await window.history.go(-1);
+              } else {
+                await this.$router.push("/FirstPage");
+              }
+            }, 1000);
+          }
+        });
+      }
     },
   },
 };

@@ -1,19 +1,20 @@
 <template>
   <div class="tab-container">
-    <el-button
+    <!-- <el-button
         class="filter-item"
         style="margin-left: 10px;"
         type="primary"
         icon="el-icon-edit"
         @click="handleCreate"
     >导入文献</el-button>
-    <el-dialog :visible.sync="dialogFormVisible">
+    <el-dialog :visible.sync="dialogFormVisible"> -->
+      
       <el-form
           :model="questionForm"
           ref="dataForm"
           label-position="left"
           label-width="90px"
-          style="width: 70%; margin-left: 20%;"
+          style="width: 50%; margin: auto; margin-top: 40px; border: solid 2px #003b55; padding: 20px; border-radius: 20px; margin-bottom: 20px;"
       >
         <el-form-item label="文献doi">
           <el-input type="text" v-model="questionForm.doi"></el-input>
@@ -115,7 +116,7 @@
         <el-button @click="dialogFormVisible = false">取消</el-button>
         <el-button type="primary" @click=" createData() ">确定</el-button>
       </div>
-    </el-dialog>
+    <!-- </el-dialog> -->
   </div>
 </template>
 <script>
@@ -205,5 +206,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.tab-container {
 
+}
 </style>
