@@ -252,7 +252,10 @@ export default {
   mounted() {
     let last_search = JSON.parse(sessionStorage.getItem("last_search"));
     console.log(this.$router.history.current);
-    if (this.$router.history.current.name === "SearchInformation") {
+    if (
+      this.$router.history.current.name === "SearchInformation" ||
+      this.$router.history.current.name === "SearchAuthor"
+    ) {
       if (last_search !== null) {
         if (last_search.common_search_query !== null)
           this.common_search_query = last_search.common_search_query;
@@ -284,7 +287,7 @@ export default {
           bool: {
             must: [],
             should: [],
-            filter:[]
+            filter: [],
           },
         },
       };
@@ -305,14 +308,14 @@ export default {
           });
           es_request_body.query.bool.filter.push({
             term: { keywords: this.common_search_query },
-          }) 
+          });
           //es_request_body.aggs={"keywords":{"terms":{"field":"keywords","execution_hint": "map"}}}
           break;
         case 3:
           es_request_body.query.bool.must.push({
             match_phrase: { "authors.name": this.common_search_query },
           });
-          es_request_body.query.bool.filter.push( {
+          es_request_body.query.bool.filter.push({
             match_phrase: { "authors.name": this.common_search_query },
           });
           //es_request_body.aggs={"authors.name":{"terms":{"field":"authors.name.raw","execution_hint": "map"}}}
@@ -333,6 +336,17 @@ export default {
           //es_request_body.aggs={"venue":{"terms":{"field":"venue.raw","execution_hint": "map"}}}
           break;
         case 6:
+          sessionStorage.setItem(
+            "last_search",
+            JSON.stringify({
+              common_search_query: this.common_search_query,
+              PublishSelect: this.PublishSelect,
+              LangValue: this.LangValue,
+              common_search_type: this.common_search_type,
+              isAdvanced: this.isAdvanced,
+              advanced_search_query: this.advanced_search_query,
+            })
+          );
           this.$router.push({
             path: "/SearchAuthor",
             query: {
@@ -378,7 +392,7 @@ export default {
       this.route_push_params("common", es_request_body_function_score);
     },
     advanced_search_jump() {
-      this.isAdvanced = !this.isAdvanced
+      this.isAdvanced = !this.isAdvanced;
       let es_request_body = {
         query: {
           bool: {
