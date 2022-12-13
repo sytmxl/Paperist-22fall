@@ -14,70 +14,70 @@
           <el-tabs v-model="activeName" @tab-click="handleClick">
             <el-tab-pane label="推荐文章" name="first">
               <aboutCard
-                v-for="(item, index) in recommends"
-                :key="index"
-                :name="item._source.title"
-                :author="item._source.authors"
-                :cite="item._source.n_citation"
-                :origin="item._source.venue"
-                :intro="item._source.abstract"
-                :date="item._source.year"
-                :paper_id="item._source.id"
+                  v-for="(item, index) in recommends"
+                  :key="index"
+                  :name="item._source.title"
+                  :author="item._source.authors"
+                  :cite="item._source.n_citation"
+                  :origin="item._source.venue"
+                  :intro="item._source.abstract"
+                  :date="item._source.year"
+                  :paper_id="item._source.id"
               />
               <div id="load">
                 <el-button
-                  style="width: 90%"
-                  @click="loadRec()"
-                  v-loading="start"
-                  >加载更多</el-button
+                    style="width: 90%"
+                    @click="loadRec()"
+                    v-loading="start"
+                >加载更多</el-button
                 >
               </div>
             </el-tab-pane>
             <el-tab-pane label="关注笔记" name="second">
               <div v-if="!isLogin()" class="SubscribeNotePlaceInfo">
                 <el-empty
-                  description="你还没有登录，快去登录吧！"
-                  :image-size="120"
+                    description="你还没有登录，快去登录吧！"
+                    :image-size="120"
                 >
                   <el-button type="primary" @click="tologin()"
-                    >立即登录</el-button
+                  >立即登录</el-button
                   >
                 </el-empty>
               </div>
               <div
-                class="SubscribeNotePlaceInfo"
-                v-else-if="isEmptyObject(SubscribePeopleList)"
+                  class="SubscribeNotePlaceInfo"
+                  v-else-if="isEmptyObject(SubscribePeopleList)"
               >
                 <el-empty
-                  description="你还没有关注别人，快去逛逛吧！"
-                  :image="require('@/assets/followuser.svg')"
-                  :image-size="100"
+                    description="你还没有关注别人，快去逛逛吧！"
+                    :image="require('@/assets/followuser.svg')"
+                    :image-size="100"
                 >
                 </el-empty>
               </div>
               <div
-                class="SubscribeNotePlaceInfo"
-                v-else-if="isEmptyObject(showSubscribeNoteList)"
+                  class="SubscribeNotePlaceInfo"
+                  v-else-if="isEmptyObject(showSubscribeNoteList)"
               >
                 <el-empty
-                  description="你关注的人，并没有笔记更新，快去逛逛吧！"
-                  :image="require('@/assets/followNote.svg')"
-                  :image-size="100"
+                    description="你关注的人，并没有笔记更新，快去逛逛吧！"
+                    :image="require('@/assets/followNote.svg')"
+                    :image-size="100"
                 >
                 </el-empty>
               </div>
               <div v-else>
                 <noteCard
-                  v-for="item in showSubscribeNoteList"
-                  :key="item.note_id"
-                  :note="item"
+                    v-for="item in showSubscribeNoteList"
+                    :key="item.note_id"
+                    :note="item"
                 />
                 <div id="load">
                   <el-button
-                    style="width: 90%; margin-top: 20px"
-                    @click="loadSub()"
-                    v-loading="start2"
-                    >加载更多</el-button
+                      style="width: 90%; margin-top: 20px"
+                      @click="loadSub()"
+                      v-loading="start2"
+                  >加载更多</el-button
                   >
                 </div>
               </div></el-tab-pane
@@ -85,54 +85,54 @@
             <el-tab-pane label="订阅文章" name="third">
               <div v-if="!isLogin()" class="SubscribeNotePlaceInfo">
                 <el-empty
-                  description="你还没有登录，快去登录吧！"
-                  :image-size="120"
+                    description="你还没有登录，快去登录吧！"
+                    :image-size="120"
                 >
                   <el-button type="primary" @click="tologin()"
-                    >立即登录</el-button
+                  >立即登录</el-button
                   >
                 </el-empty>
               </div>
               <div
-                class="SubscribeNotePlaceInfo"
-                v-else-if="isEmptyObject(SubscribePeopleList)"
+                  class="SubscribeNotePlaceInfo"
+                  v-else-if="isEmptyObject(SubscribePeopleList)"
               >
                 <el-empty
-                  description="你还没有关注别人，快去逛逛吧！"
-                  :image="require('@/assets/followuser.svg')"
-                  :image-size="100"
+                    description="你还没有关注别人，快去逛逛吧！"
+                    :image="require('@/assets/followuser.svg')"
+                    :image-size="100"
                 >
                 </el-empty>
               </div>
               <div
-                class="SubscribeNotePlaceInfo"
-                v-else-if="isEmptyObject(showSubscribeTextList)"
+                  class="SubscribeNotePlaceInfo"
+                  v-else-if="isEmptyObject(showSubscribeTextList)"
               >
                 <el-empty
-                  description="你关注的人，并没有文章更新，快去逛逛吧！"
-                  :image="require('@/assets/followText.svg')"
-                  :image-size="100"
+                    description="你关注的人，并没有文章更新，快去逛逛吧！"
+                    :image="require('@/assets/followText.svg')"
+                    :image-size="100"
                 >
                 </el-empty>
               </div>
               <div v-else>
                 <div v-for="item in showSubscribeTextList" :key="item.paper_id">
                   <aboutCard
-                    :name="item.name"
-                    :author="item.author"
-                    :cite="item.cite"
-                    :origin="item.origin"
-                    :intro="item.intro"
-                    :date="item.date"
-                    :paper_id="item.paper_id"
+                      :name="item.name"
+                      :author="item.author"
+                      :cite="item.cite"
+                      :origin="item.origin"
+                      :intro="item.intro"
+                      :date="item.date"
+                      :paper_id="item.paper_id"
                   />
                 </div>
                 <div id="load">
                   <el-button
-                    style="width: 90%"
-                    @click="loadSub2()"
-                    v-loading="start3"
-                    >加载更多</el-button
+                      style="width: 90%"
+                      @click="loadSub2()"
+                      v-loading="start3"
+                  >加载更多</el-button
                   >
                 </div>
               </div></el-tab-pane
@@ -171,30 +171,30 @@
                       {{ key }}
                     </div>
                     <div
-                      class="content_item_cite"
-                      v-if="index === 0"
-                      style="color: #003b55"
+                        class="content_item_cite"
+                        v-if="index === 0"
+                        style="color: #003b55"
                     >
                       {{ parseInt(value) }}
                     </div>
                     <div
-                      class="content_item_cite"
-                      v-else-if="index === 1"
-                      style="color: #003b55"
+                        class="content_item_cite"
+                        v-else-if="index === 1"
+                        style="color: #003b55"
                     >
                       {{ parseInt(value) }}
                     </div>
                     <div
-                      class="content_item_cite"
-                      v-else-if="index === 2"
-                      style="color: #003b55"
+                        class="content_item_cite"
+                        v-else-if="index === 2"
+                        style="color: #003b55"
                     >
                       {{ parseInt(value) }}
                     </div>
                     <div
-                      class="content_item_cite"
-                      v-else
-                      style="color: #9195a3"
+                        class="content_item_cite"
+                        v-else
+                        style="color: #9195a3"
                     >
                       {{ parseInt(value) }}
                     </div>
@@ -208,7 +208,7 @@
           >上传特定文献</el-button
         > -->
         <el-button type="danger" style="width: 70%" @click="uploadTextMiss()"
-          >反馈文献缺失</el-button
+        >反馈文献缺失</el-button
         >
       </el-col>
     </el-row>
@@ -227,7 +227,6 @@ import ScholarLine from "@/components/ScholarLine.vue";
 import TopBar from "@/components/TopBar";
 import noteCard from "../../components/noteCard.vue";
 import note from "../../components/note.vue";
-import axios from "axios";
 import $ from "jquery";
 import {es_axios} from "@/http";
 export default {
@@ -405,29 +404,29 @@ export default {
         method: "post",
         url: "user/indexSubscribeNote/",
       })
-        .then((res) => {
-          console.log("订阅笔记", res.data);
-          let noteList = [];
-          res.data.followPeople.forEach((item) => {
-            item[0].note.forEach((item2) => {
-              let tmpNote = {
-                note_id: item2.note_id,
-                paper_id: item2.paper_id,
-                paper_name: item2.paper_name,
-                introduction: item2.note_introduction,
-                likes: item2.likes,
-                collections: item2.collections,
-                remarks: item2.remarks,
-              };
-              noteList.push(tmpNote);
+          .then((res) => {
+            console.log("订阅笔记", res.data);
+            let noteList = [];
+            res.data.followPeople.forEach((item) => {
+              item[0].note.forEach((item2) => {
+                let tmpNote = {
+                  note_id: item2.note_id,
+                  paper_id: item2.paper_id,
+                  paper_name: item2.paper_name,
+                  introduction: item2.note_introduction,
+                  likes: item2.likes,
+                  collections: item2.collections,
+                  remarks: item2.remarks,
+                };
+                noteList.push(tmpNote);
+              });
             });
+            this.SubscribeNoteList = noteList;
+            this.showSubscribeNoteList = this.SubscribeNoteList.slice(0, 3);
+          })
+          .catch((err) => {
+            console.log(err);
           });
-          this.SubscribeNoteList = noteList;
-          this.showSubscribeNoteList = this.SubscribeNoteList.slice(0, 3);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
     },
     // 获取关注用户的文献
     getFollowTextList() {
@@ -440,37 +439,37 @@ export default {
           id: 1,
         },
       })
-        .then((res) => {
-          console.log(res.data);
-          let tmpFollowText = [];
-          res.data.data.forEach((item) => {
-            let tmpAuthorList = [];
-            item.author.forEach((item2) => {
-              // console.log("ss", item2)
-              let tmpAuthorName = {
-                name: item2,
+          .then((res) => {
+            console.log(res.data);
+            let tmpFollowText = [];
+            res.data.data.forEach((item) => {
+              let tmpAuthorList = [];
+              item.author.forEach((item2) => {
+                // console.log("ss", item2)
+                let tmpAuthorName = {
+                  name: item2,
+                };
+                tmpAuthorList.push(tmpAuthorName);
+              });
+              let tmpText = {
+                name: item.name,
+                author: tmpAuthorList,
+                cite: item.cite,
+                origin: item.origin,
+                intro: item.intro,
+                date: item.date,
+                paper_id: item.paper_id,
               };
-              tmpAuthorList.push(tmpAuthorName);
+              tmpFollowText.push(tmpText);
             });
-            let tmpText = {
-              name: item.name,
-              author: tmpAuthorList,
-              cite: item.cite,
-              origin: item.origin,
-              intro: item.intro,
-              date: item.date,
-              paper_id: item.paper_id,
-            };
-            tmpFollowText.push(tmpText);
+
+            this.SubscribeTextList = tmpFollowText;
+            this.showSubscribeTextList = this.SubscribeTextList.slice(0, 3);
+            console.log("tmpFollowText", this.SubscribeTextList);
+          })
+          .catch((err) => {
+            console.log(err);
           });
-          
-          this.SubscribeTextList = tmpFollowText;
-          this.showSubscribeTextList = this.SubscribeTextList.slice(0, 3);
-          console.log("tmpFollowText", this.SubscribeTextList);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
     },
     // 获取热门领域
     // getHot() {
@@ -520,10 +519,10 @@ export default {
         // 获取到全部数据，分布给用户展示
         console.log(this.followNotePage);
         this.showSubscribeNoteList = this.showSubscribeNoteList.concat(
-          this.SubscribeNoteList.slice(
-            this.followNotePage,
-            this.followNotePage + 3
-          )
+            this.SubscribeNoteList.slice(
+                this.followNotePage,
+                this.followNotePage + 3
+            )
         );
         console.log(this.showSubscribeNoteList);
         this.followNotePage += 3;
@@ -535,10 +534,10 @@ export default {
         this.start3 = false;
         // 获取到全部数据，分布给用户展示
         this.showSubscribeTextList = this.showSubscribeTextList.concat(
-          this.SubscribeTextList.slice(
-            this.followTextPage,
-            this.followTextPage + 3
-          )
+            this.SubscribeTextList.slice(
+                this.followTextPage,
+                this.followTextPage + 3
+            )
         );
         this.followTextPage += 3;
       }, 1400);
@@ -616,7 +615,7 @@ export default {
 
       // this.loading_interested = true;
       es_axios({
-        url: "paper/_search",
+        url: "es/paper/_search",
         method: "post",
         data: JSON.stringify(interested_search_request_body),
       }).then((res) => {
