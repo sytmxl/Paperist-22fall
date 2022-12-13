@@ -53,7 +53,7 @@ export default {
     },
         submit(){
         this.$axios({
-            url:"http://127.0.0.1:8000/paper/uploadNote/",
+            url:"paper/uploadNote/",
             headers: { "Content-Type": "multipart/form-data" },
             method:"post",
             data:{

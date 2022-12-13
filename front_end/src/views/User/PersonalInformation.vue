@@ -2381,7 +2381,7 @@ export default {
       if (this.islogin) {
         if (this.hasSub) {
           this.$axios({
-            url: "http://127.0.0.1:8000/paper/subscribe/",
+            url: "paper/subscribe/",
             method: "post",
             data: {
               author_id: this.$route.params.id,
@@ -2393,7 +2393,7 @@ export default {
           });
         } else {
           this.$axios({
-            url: "http://127.0.0.1:8000/paper/subscribe/",
+            url: "paper/subscribe/",
             method: "post",
             data: {
               author_id: this.$route.params.id,

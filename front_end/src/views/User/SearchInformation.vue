@@ -334,7 +334,7 @@ export default {
     async react_card(data){
         this.QuoteVisible=true;
         await this.$axios({
-            url:"http://127.0.0.1:8000/paper/paperQuote/",
+            url:"paper/paperQuote/",
             method:"post",
             data:{
                 paper_id:data.paper_id

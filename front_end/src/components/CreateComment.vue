@@ -57,7 +57,7 @@
       },
       submit(){
         this.$axios({
-            url:"http://127.0.0.1:8000/paper/uploadComment/",
+            url:"paper/uploadComment/",
             method:"post",
             data:{
                 receiver_id:this.receiver_id,
