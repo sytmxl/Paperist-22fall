@@ -500,11 +500,19 @@ export default {
       }
     },
     goto_person(id) {
-      let routeData = this.$router.resolve({
-        name: "PersonalInformation",
-        params: { id: id },
-      });
-      window.open(routeData.href, "_blank");
+      if (id == null) {
+        this.$message.warning("作者信息不完整，无法查看其主页");
+      } else {
+        // 延时一秒跳转至作者主页
+        this.$message.success("正在跳转至作者主页");
+        setTimeout(() => {
+          let routeData = this.$router.resolve({
+            name: "PersonalInformation",
+            params: { id: id },
+          });
+          window.open(routeData.href, "_blank");
+        }, 1000);
+      }
     },
     // paperInfoInit(){
     //   this.$axios({
