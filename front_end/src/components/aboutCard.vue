@@ -21,8 +21,8 @@
         {{ i.name }}
       </span>
     </div>
-    <div class="text item" v-if="raw in origin">来源：{{ origin.raw }}</div>
-    <div class="text item" v-else>来源：未知来源</div>
+    <!-- <div class="text item" v-if="raw in origin">来源：{{ origin.raw }}</div>
+    <div class="text item" v-else>来源：未知来源</div> -->
     <div class="text item">引用量：{{ cite }}</div>
     <div class="text item">发表时间：{{ date }}</div>
   </el-card>
