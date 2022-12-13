@@ -136,7 +136,8 @@ export default {
 }
 .el-card {
   margin: 30px 30px 0px 0px;
-  min-height: calc(90vh);
+  height: calc(95vh);
+  overflow-y: scroll;
   // z-index: 999;
   border-radius: 20px !important;
   border: none !important;
