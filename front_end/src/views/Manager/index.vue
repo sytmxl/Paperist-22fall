@@ -65,7 +65,6 @@
 </template>
 
 <script>
-import TopBar from "@/components/TopBar";
 import $ from "jquery";
 export default {
   name: "index",
@@ -152,5 +151,8 @@ export default {
     background-color: rgba(255, 255, 255, 0.16) !important;
   }
   border-radius: 15px !important;
+}
+::-webkit-scrollbar {
+  display: none;
 }
 </style>

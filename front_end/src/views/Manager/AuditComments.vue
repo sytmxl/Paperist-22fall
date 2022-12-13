@@ -1,6 +1,6 @@
 <template>
   <div class="main">
-    <h1>待审核评论举报</h1>
+    <h1 style="float: left; color: #003B55; margin-left: 20px;">待审核评论举报</h1>
     <el-table :data="comments">
       <el-table-column fixed prop="time" label="提交时间" width="200">
       </el-table-column>
@@ -137,7 +137,7 @@ export default {
 
 <style lang="scss" scoped>
 .main {
-  margin-left: 5%;
-  margin-right: 5%;
+  // margin-left: 5%;
+  // margin-right: 5%;
 }
 </style>

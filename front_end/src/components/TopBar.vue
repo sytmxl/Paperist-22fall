@@ -7,6 +7,7 @@
         @click="gotoFirstPage"
       />
       
+      <search-box />
       <el-button
         size="mini"
         type="default"
@@ -16,7 +17,6 @@
         title="Toggle dark/light mode"
         ></el-button
       >
-      <search-box />
       <div v-if="loged" class="avatar" @click="gotoPersonalInformation">
         <el-dropdown size="medium" placement="bottom" @command="handleCommand">
           <span class="el-dropdown-link">

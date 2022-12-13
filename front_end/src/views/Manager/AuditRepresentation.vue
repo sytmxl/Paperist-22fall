@@ -1,6 +1,6 @@
 <template>
   <div class="main">
-    <h1>待审核身份申述</h1>
+    <h1 style="float: left; color: #003B55; margin-left: 20px;">待审核身份申述</h1>
     <el-table :data="files">
       <el-table-column fixed prop="date" label="提交时间" width="150">
       </el-table-column>
@@ -117,7 +117,7 @@ export default {
 
 <style lang="scss" scoped>
 .main {
-  margin-left: 5%;
-  margin-right: 5%;
+  // margin-left: 5%;
+  // margin-right: 5%;
 }
 </style>

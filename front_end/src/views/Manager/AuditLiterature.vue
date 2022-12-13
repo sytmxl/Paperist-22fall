@@ -1,6 +1,6 @@
 <template>
   <div class="main">
-    <h1>待审核文献申诉</h1>
+    <h1 style="float: left; color: #003B55; margin-left: 20px;">待审核文献申诉</h1>
      <el-table :data="files">
       <el-table-column fixed prop="time" label="提交时间" width="200">
       </el-table-column>
@@ -164,8 +164,8 @@ export default {
 
 <style scoped>
 .main {
-  margin-left: 5%;
-  margin-right: 5%;
+  /* margin-left: 5%;
+  margin-right: 5%; */
 }
 /* .el-button{
   float: right;
