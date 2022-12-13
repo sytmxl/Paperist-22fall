@@ -54,7 +54,7 @@
        </el-main>
         <el-main class="right base" v-if="author.length != 0">
             <div class="content">
-              <iframe style="width: 100%; height: 100%" :src="'/pdfjs-2.14.305-legacy-dist/web/viewer.html?file='+pdf_src" title="myFrame"></iframe>
+              <iframe style="width: 100%; height: 100%" :src="'/pdfjs-2.14.305-legacy-dist/web/viewer.html?file=/pdf/'+pdf_src" title="myFrame"></iframe>
                 <!-- <el-card> 
                     
                      <div class="home_wrap">
@@ -316,7 +316,8 @@ export default {
             }
         }).then(res=>{
             // this.pdf_src = res.data.note_info[0].note_url
-            this.pdf_src = encodeURIComponent(res.data.note_info[0].note_url)
+            let str = res.data.note_info[0].note_url.split('/')
+            this.pdf_src = encodeURIComponent(str[str.length-1])
             this.note = res.data.note_info[0]
         })
      },
