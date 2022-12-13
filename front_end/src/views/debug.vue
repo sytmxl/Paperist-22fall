@@ -24,8 +24,6 @@
 </template>
 
 <script>
-import axios from "axios";
-import CryptoJS from "crypto-js";
 import PaperCard from "@/components/PaperCard";
 import SearchBox from "@/components/SearchBox";
 import {es_axios} from "@/http";

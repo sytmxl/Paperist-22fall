@@ -144,9 +144,6 @@
 
 <script>
 import CryptoJS from 'crypto-js'
-import axios from "axios";
-import CryptoJS from "crypto-js";
-import instance from "@/http";
 import qs from "qs";
 export default {
   name: "Login",
