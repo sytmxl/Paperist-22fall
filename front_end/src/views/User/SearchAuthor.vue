@@ -1,20 +1,19 @@
 <template>
   <div class="main">
-    <div style="height: 10vh"></div>
+    <div style="height: 10vh; width: 100%;"></div>
     <div class="content">
-      <el-row>
+      <!-- <el-row>
         <el-col :span="4">
           <el-button type="primary" @click="back()">返回主页</el-button>
         </el-col>
       </el-row>
-      <el-row class="cards">
-        <el-col
+      <el-row class="cards"> -->
+        <!-- <el-col
           :span="6"
-          v-for="(item, index) in searchAuthors"
           :key="item.id"
           :offset="index % 3 > 0 ? 1 : 0"
-        >
-          <el-card style="margin-bottom: 3vh; width: 80%">
+        > -->
+          <el-card class="card" v-for="(item, index) in searchAuthors" >
             <div class="avatar" @click="toPersonalInfo(item._source.id)">
               <el-avatar :size="medium" :src="circleUrl"></el-avatar>
             </div>
@@ -50,8 +49,8 @@
               }}
             </div>
           </el-card>
-        </el-col>
-      </el-row>
+        <!-- </el-col> -->
+      <!-- </el-row> -->
     </div>
   </div>
 </template>
@@ -132,6 +131,8 @@ export default {
 <style lang="scss" scoped>
 .main {
   min-height: 100vh;
+  width: 100vw;
+  height: fit-content;
 }
 
 .title {
@@ -168,8 +169,12 @@ export default {
   font-size: small;
 }
 .content {
-  width: 70%;
+  width: 80%; 
+  height: fit-content;
   margin: auto;
+  margin-left: 16vw;
+  // float: left;
+  // display: flex;
 }
 
 .cards {
@@ -177,7 +182,15 @@ export default {
   margin-left: 10vw;
   margin-right: 10vw;
 }
-
+.card {
+  margin: 10px; 
+  width: 300px;
+  height: 220px;
+  float: left;
+  background-color: rgba(255, 255, 255, 0.501) !important;
+  backdrop-filter: blur(40px) brightness(95%);
+  border-radius: 20px;
+}
 .el-select .el-input {
   width: 130px;
 }
