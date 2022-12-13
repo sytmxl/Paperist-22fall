@@ -1021,8 +1021,8 @@ import ScholarLine2 from "@/components/ScholarLine2.vue";
 import TopBar from "@/components/TopBar";
 import PaperCard from "@/components/PaperCard.vue";
 import claimScholar from "@/components/claimScholar.vue";
-import axios from "axios";
 import CryptoJS from "crypto-js";
+import {es_axios} from "@/http";
 // import CryptoJS from "_crypto-js@4.1.1@crypto-js";
 export default {
   name: "PersonalInformation",
@@ -1210,14 +1210,7 @@ export default {
       obj.query.bool.filter = {
         match_phrase: { id: this.$route.params.id },
       };
-      axios({
-        headers: {
-          "content-type": "application/json",
-        },
-        auth: {
-          username: "elastic",
-          password: "BZYvLA-d*pS0EpI7utmJ",
-        },
+      es_axios({
         url: "/es/author/_search",
         method: "post",
         data: JSON.stringify(obj),
@@ -1241,14 +1234,7 @@ export default {
         obj.query.bool.filter = {
           match_phrase: { "authors.id": this.$route.params.id },
         };
-        axios({
-          headers: {
-            "content-type": "application/json",
-          },
-          auth: {
-            username: "elastic",
-            password: "BZYvLA-d*pS0EpI7utmJ",
-          },
+        es_axios({
           url: "/es/paper/_search",
           method: "post",
           data: JSON.stringify(obj),
@@ -1300,14 +1286,7 @@ export default {
       obj.query.bool.filter = {
         match_phrase: { "authors.id": this.$route.params.id },
       };
-      axios({
-        headers: {
-          "content-type": "application/json",
-        },
-        auth: {
-          username: "elastic",
-          password: "BZYvLA-d*pS0EpI7utmJ",
-        },
+      es_axios({
         url: "/es/paper/_search",
         method: "post",
         data: JSON.stringify(obj),

@@ -229,6 +229,7 @@ import noteCard from "../../components/noteCard.vue";
 import note from "../../components/note.vue";
 import axios from "axios"
 import $ from "jquery";
+import {es_axios} from "@/http";
 export default {
   inject: ["reload"],
   components: {
@@ -615,14 +616,7 @@ export default {
       }
 
       // this.loading_interested = true;
-      axios({
-        headers: {
-          "content-type": "application/json",
-        },
-        auth: {
-          username: "elastic",
-          password: "BZYvLA-d*pS0EpI7utmJ",
-        },
+      es_axios({
         url: "es/paper/_search",
         method: "post",
         data: JSON.stringify(interested_search_request_body),

@@ -283,9 +283,9 @@ import TopBar from "@/components/TopBar";
 import PaperCard from "@/components/PaperCard";
 import PaperInformation from "@/views/User/PaperInformation";
 import { $data } from "../../../static/pdf/build/pdf.worker";
-import axios from "axios";
 import SearchBox from "@/components/SearchBox";
 import $ from "jquery";
+import {es_axios} from "@/http";
 export default {
   name: "SearchInformation",
   components: { SearchBox, PaperInformation, PaperCard, TopBar },
@@ -385,14 +385,7 @@ export default {
       condition_filter_query._source = ["authors", "year", "venue", "keywords"];
       condition_filter_query.from = 0;
       condition_filter_query.size = 50;
-      axios({
-        headers: {
-          "content-type": "application/json",
-        },
-        auth: {
-          username: "elastic",
-          password: "BZYvLA-d*pS0EpI7utmJ",
-        },
+      es_axios({
         url: "/es/paper/_search",
         method: "post",
         data: JSON.stringify(condition_filter_query),
@@ -442,14 +435,7 @@ export default {
     // 给es发包
     post_es_search() {
       this.loading = true;
-      axios({
-        headers: {
-          "content-type": "application/json",
-        },
-        auth: {
-          username: "elastic",
-          password: "BZYvLA-d*pS0EpI7utmJ",
-        },
+      es_axios({
         url: "es/paper/_search",
         method: "post",
         data: JSON.stringify(this.es_request_body),
@@ -531,14 +517,7 @@ export default {
       }
 
       this.loading_interested = true;
-      axios({
-        headers: {
-          "content-type": "application/json",
-        },
-        auth: {
-          username: "elastic",
-          password: "BZYvLA-d*pS0EpI7utmJ",
-        },
+      es_axios({
         url: "es/paper/_search",
         method: "post",
         data: JSON.stringify(interested_search_request_body),
