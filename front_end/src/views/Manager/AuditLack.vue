@@ -1,7 +1,27 @@
 <template>
   <div class="main">
     <h1>待审核缺失文献</h1>
-    <div v-for="i in fileLacks" :key="i">
+    <el-table :data="files">
+      <el-table-column fixed prop="time" label="提交时间" width="200">
+      </el-table-column>
+      <el-table-column prop="user_id" label="用户id" width="300">
+      </el-table-column>
+      <el-table-column prop="title" label="缺失文献名" width="400"> </el-table-column>
+      <el-table-column label="操作">
+        <template slot-scope="scope">
+          <el-button
+            type="primary"
+            @click="info(scope.row)"
+            size="small"
+            >查看申请详情</el-button
+          >
+          <el-button type="primary" size="small" @click="handleCreate(scope.row)"
+            >审核</el-button
+          >
+        </template>
+      </el-table-column>
+    </el-table>
+    <!-- <div v-for="i in fileLacks" :key="i">
         <el-card style="margin-top:30px;text-align:left">
           <span>提交时间：{{i.time}}</span>
           <span>用户id: {{i.user_id}}</span>
@@ -16,7 +36,7 @@
           >
           
         </el-card>
-    </div>
+    </div> -->
     <el-dialog :visible.sync="dialogFormVisible">
       <el-form
         :model="questionForm"
@@ -60,7 +80,8 @@
         <el-descriptions-item label="发表年份">{{nowitem.date}}</el-descriptions-item>
         <el-descriptions-item label="DOI">{{nowitem.doi}}</el-descriptions-item>
         <el-descriptions-item label="摘要">{{nowitem.abstract}}</el-descriptions-item>
-        <el-descriptions-item label="阅读链接">{{nowitem.link}};</el-descriptions-item>
+        <el-descriptions-item label="阅读链接" v-if="nowitem.link!=null"><span v-for="i in nowitem.link" :key="i">{{i.value}}</span></el-descriptions-item>
+        <el-descriptions-item label="阅读链接" v-else><span>未提供</span></el-descriptions-item>
 </el-descriptions>
     </el-dialog>
   </div>
@@ -71,7 +92,7 @@ export default {
   name: "AuditLiterature",
   data() {
     return {
-      fileLacks: [],
+      files: [],
       nowitem:{},
       dialogFormVisible: false,
       ContentVisible:false,
@@ -84,21 +105,45 @@ export default {
         auditContent: "",
         auditResult: [],
       },
+      now_id:""
     };
   },
   methods: {
-    handleCreate() {
+    handleCreate(item) {
       this.questionForm = {
         auditContent: "",
         auditResult: [],
       };
       this.dialogFormVisible = true;
+      this.now_id = item.missingpaper_id
     },
     async createData() {
-      const params = this.questionForm;
-      console.log("发送审核结果");
-      console.log(JSON.stringify(params));
+      const params = this.questionForm.auditResult;
+      let op;
+      console.log(params);
+      if(params=="pass"){
+        op = 0;
+      }
+      else{
+        op = 1;
+      }
       this.dialogFormVisible = false;
+      this.$axios({
+        url: "http://127.0.0.1:8000/manager/getMissingPaper/",
+        method: "post",
+        data: {
+          missingpaper_id:this.now_id
+        },
+      }).then((res) => {
+        if(op==0){
+          this.$message.success("论文已通过")
+        }
+        else{
+          this.$message.success("论文未通过")
+        }
+        window.location.reload();
+      });
+      
     },
     init(){
       this.$axios({
@@ -108,12 +153,21 @@ export default {
          
         },
       }).then((res) => {
-        this.fileLacks = res.data.data;
+        this.files = res.data.data;
+         for(var i=0;i<this.files.length;i++){
+          this.files[i].time = this.files[i].time.split('\.')[0].split('T')[0]+' '+this.files[i].time.split('\.')[0].split('T')[1]
+          this.files[i].date = this.files[i].date.split('\.')[0].split('T')[0]+' '+this.files[i].date.split('\.')[0].split('T')[1]
+          // this.files[i].link = JSON.parse(this.files[i].link)
+          // console.log(this.files[i].link[0].value)
+        }
       });
     },
     info(item){
       this.ContentVisible = true;
       this.nowitem = item
+    
+      this.nowitem.link = JSON.parse(this.nowitem.link)
+        console.log(this.nowitem)
     }
   },
   mounted(){
@@ -127,8 +181,8 @@ export default {
   margin-left: 5%;
   margin-right: 5%;
 }
-.el-button{
-  float: right;
-  margin-right: 20px;
-}
+// .el-button{
+//   float: right;
+//   margin-right: 20px;
+// }
 </style>

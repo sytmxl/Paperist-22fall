@@ -96,7 +96,7 @@ const routes = [
             component: () => import("../views/Manager/Cards/RepreCard.vue"),
           },
           {
-            path: "/identity/:intro/:src",
+            path: "/identity/:src/:intro",
             name: "identyCard",
             component: () => import("../views/Manager/Cards/IdentityCard.vue"),
           },

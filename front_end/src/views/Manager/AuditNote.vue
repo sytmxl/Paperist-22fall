@@ -2,12 +2,12 @@
   <div class="main">
     <h1>待审核笔记举报</h1>
     <el-table :data="notes">
-      <el-table-column fixed prop="date" label="提交时间" width="150">
+      <el-table-column fixed prop="time" label="提交时间" width="200">
       </el-table-column>
-      <el-table-column prop="name" label="用户名" width="120">
+      <el-table-column prop="author_id" label="作者id" width="200">
       </el-table-column>
-      <el-table-column prop="noteName" label="笔记名"> </el-table-column>
-      <el-table-column prop="noteId" label="笔记id"> </el-table-column>
+      <el-table-column prop="note_id" label="笔记id" width="200"> </el-table-column>
+      <el-table-column prop="introduction" label="笔记简介" width="300"> </el-table-column>
       <el-table-column label="操作">
         <template slot-scope="scope">
           <!-- <el-button
@@ -16,7 +16,7 @@
             size="small"
             >查看笔记详情</el-button
           > -->
-          <el-button type="primary" size="small" @click="handleCreate"
+          <el-button type="primary" size="small" @click="handleCreate(scope.row)"
             >审核</el-button
           >
         </template>
@@ -66,24 +66,10 @@ export default {
   data() {
     return {
       notes: [
-        {
-          date: "2022.11.13",
-          name: "ando",
-          noteName: "关于扩散模型的一些思考",
-        },
-        {
-          date: "2022.11.13",
-          name: "ando",
-          noteName: "关于扩散模型的一些思考",
-        },
-        {
-          date: "2022.11.13",
-          name: "ando",
-          noteName: "关于扩散模型的一些思考",
-        },
       ],
       dialogFormVisible: false,
       input: "",
+      now_id:"",
       tabMapOptions: [
         { label: "通过", key: "pass" },
         { label: "不通过", key: "notPass" },
@@ -99,20 +85,59 @@ export default {
       console.log(index);
       this.$router.push("/note");
     },
-    handleCreate() {
+    handleCreate(item) {
       this.questionForm = {
         auditContent: "",
         auditResult: [],
       };
+      this.now_id = item.note_id
       this.dialogFormVisible = true;
     },
     async createData() {
-      const params = this.questionForm;
-      console.log("发送审核结果");
-      console.log(JSON.stringify(params));
+      const params = this.questionForm.auditResult;
+      let op;
+      console.log(params);
+      if(params=="pass"){
+        op = 0;
+      }
+      else{
+        op = 1;
+      }
       this.dialogFormVisible = false;
+      this.$axios({
+        url: "http://127.0.0.1:8000/manager/getTipOff/",
+        method: "post",
+        data: {
+          flag:op,
+          note_id:this.now_id,
+          comment_id:""
+        },
+      }).then((res) => {
+        if(op==0){
+          this.$message.success("笔记已通过")
+        }
+        else{
+          this.$message.success("笔记已删除")
+        }
+        window.location.reload();
+      });
+      
+    },
+    init() {
+      this.$axios({
+        url: "http://127.0.0.1:8000/manager/manageTipOff/",
+        method: "post",
+      }).then((res) => {
+        this.notes = res.data.note
+        for(var i=0;i<this.notes.length;i++){
+          this.notes[i].time = this.notes[i].time.split('\.')[0].split('T')[0]+' '+this.notes[i].time.split('\.')[0].split('T')[1]
+        }
+      });
     },
   },
+   mounted(){
+    this.init()
+  }
 };
 </script>
 

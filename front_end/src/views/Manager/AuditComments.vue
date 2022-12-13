@@ -2,17 +2,16 @@
   <div class="main">
     <h1>待审核评论举报</h1>
     <el-table :data="comments">
-      <el-table-column fixed prop="date" label="提交时间" width="150">
+      <el-table-column fixed prop="time" label="提交时间" width="200">
       </el-table-column>
-      <el-table-column prop="reportUserName" label="举报者用户名" width="120">
+      <el-table-column prop="sender_id" label="举报者id" width="200">
       </el-table-column>
-      <el-table-column prop="commentUserName" label="评论者用户名" width="120">
+      <el-table-column prop="remark_id" label="评论者id" width="200">
       </el-table-column>
-      <el-table-column prop="content" label="评论内容"> </el-table-column>
-      <el-table-column prop="id" label="评论id"> </el-table-column>
+      <el-table-column prop="content" label="评论内容" width="300"> </el-table-column>
       <el-table-column label="操作">
         <template slot-scope="scope">
-          <el-button type="primary" size="small" @click="handleCreate"
+          <el-button type="primary" size="small" @click="handleCreate(scope.row)"
             >审核</el-button
           >
         </template>
@@ -62,24 +61,6 @@ export default {
   data() {
     return {
       comments: [
-        {
-          date: "2022.11.13",
-          reportUserName: "ando",
-          commentUserName: "xxx",
-          content: "文献探讨的很深入，很有帮助！",
-        },
-        {
-          date: "2022.11.13",
-          reportUserName: "ando",
-          commentUserName: "xxx",
-          content: "1111",
-        },
-        {
-          date: "2022.11.13",
-          reportUserName: "ando",
-          commentUserName: "xxx",
-          content: "22222",
-        },
       ],
       dialogFormVisible: false,
       input: "",
@@ -91,6 +72,7 @@ export default {
         auditContent: "",
         auditResult: [],
       },
+      now_id:""
     };
   },
   methods: {
@@ -98,20 +80,58 @@ export default {
       console.log(index);
       this.$router.push("/literature");
     },
-    handleCreate() {
+    handleCreate(item) {
       this.questionForm = {
         auditContent: "",
         auditResult: [],
       };
+      this.now_id = item.remark_id
       this.dialogFormVisible = true;
     },
     async createData() {
-      const params = this.questionForm;
-      console.log("发送审核结果");
-      console.log(JSON.stringify(params));
+       const params = this.questionForm.auditResult;
+      let op;
+      console.log(params);
+      if(params=="pass"){
+        op = 0;
+      }
+      else{
+        op = 1;
+      }
       this.dialogFormVisible = false;
+      this.$axios({
+        url: "http://127.0.0.1:8000/manager/getTipOff/",
+        method: "post",
+        data: {
+          flag:op,
+          comment_id:this.now_id,
+          note_id:""
+        },
+      }).then((res) => {
+        if(op==0){
+          this.$message.success("评论已通过")
+        }
+        else{
+          this.$message.success("评论已删除")
+        }
+        window.location.reload();
+      });
+    },
+    init() {
+      this.$axios({
+        url: "http://127.0.0.1:8000/manager/manageTipOff/",
+        method: "post",
+      }).then((res) => {
+        this.comments = res.data.comment
+        for(var i=0;i<this.comments.length;i++){
+          this.comments[i].time = this.comments[i].time.split('\.')[0].split('T')[0]+' '+this.comments[i].time.split('\.')[0].split('T')[1]
+        }
+      });
     },
   },
+  mounted(){
+    this.init()
+  }
 };
 </script>
 

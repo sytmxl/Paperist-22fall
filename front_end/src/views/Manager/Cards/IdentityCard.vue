@@ -7,9 +7,11 @@
       <h2>个人认证简介</h2>
       {{intro}}
       <h2>个人材料</h2>
-       <iframe style="width: 100%; height: 100%" :src="'/pdfjs-2.14.305-legacy-dist/web/viewer.html?file='+src" title="myFrame"></iframe>
+       
     </span>
-   
+    <div style="height:500px">
+      <iframe style="width: 100%; height: 100%" :src="'/pdfjs-2.14.305-legacy-dist/web/viewer.html?file='+src" title="myFrame"></iframe>
+    </div>
     </div>
   </div>
 </template>
@@ -19,8 +21,8 @@ export default {
   name: "IdentityCard",
   data() {
     return {
-      intro:this.$route.intro,
-       src:this.$route.src,
+      intro:this.$route.params.intro,
+      src:this.$route.params.src,
       };
   },
 
@@ -28,6 +30,9 @@ export default {
     goBack() {
         window.history.go(-1)
     }
+  },
+  mounted(){
+    console.log(this.intro)
   }
 };
 </script>
