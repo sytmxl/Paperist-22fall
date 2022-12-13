@@ -52,11 +52,11 @@
           <el-input prefix-icon="el-icon-lock" placeholder="请确认密码" show-password type="password" clearable
             v-model="form.password2" autocomplete="off" @keyup.enter.native="register"></el-input>
         </el-form-item>
-<!--        <el-form-item id="code" prop="code" :rules="[{ required: true, message: '请输入验证码' }]">-->
-<!--          <el-input placeholder="请输入验证码" type="text" clearable v-model="form.code" autocomplete="off"-->
-<!--            prefix-icon="el-icon-s-check" @keyup.enter.native="register" style="width: 60%; float: left"></el-input>-->
-<!--          <el-button class="send" type="primary" style="float: right" @click="submit">发送</el-button>-->
-<!--        </el-form-item>-->
+        <el-form-item id="code" prop="code" :rules="[{ required: true, message: '请输入验证码' }]">
+          <el-input placeholder="请输入验证码" type="text" clearable v-model="form.code" autocomplete="off"
+            prefix-icon="el-icon-s-check" @keyup.enter.native="register" style="width: 60%; float: left"></el-input>
+          <el-button ref="btnSend" class="send" type="primary" style="float: right" @click="sendEmail(form.email)">发送验证码</el-button>
+        </el-form-item>
         <el-form-item>
           <el-button class="btn_register" type="primary" @click="register" round>注&nbsp;册</el-button>
           <el-button class="btn_reset" @click="resetForm('form')" round>重&nbsp;置</el-button>
@@ -84,7 +84,9 @@ export default {
         realname: "",
         password1: "",
         password2: "",
+        code: "",
       },
+      btnText: '已发送验证码',
     };
   },
   methods: {
@@ -142,11 +144,12 @@ export default {
           username: this.form.username,
           encrypted_pwd: CryptoJS.MD5(this.form.password1).toString(),
           realname: this.form.realname,
+          code: this.form.code,
         },
       })
         .then((res) => {
           /* res 是 response 的缩写 */
-          
+
           if (res.data.errornumber == 0) {
             this.$message({
               message: "注册成功",
@@ -175,7 +178,7 @@ export default {
           }
         })
         .catch((err) => {
-          
+
         });
     },
     toRegister() {
@@ -186,6 +189,43 @@ export default {
     },
     resetForm(formName) {
       this.$refs[formName].resetFields();
+    },
+    sendEmail(i) {
+      if (
+          this.form.email === ""
+      ) {
+        this.$message.warning("注册邮箱不能为空！");
+        return;
+      }
+      this.$axios({
+        method: "post",
+        url: "app/send_email/",
+        data: qs.stringify({
+          email: i,
+          type: 0,
+        }),
+      })
+          .then((res) => {
+
+
+                if (res.data.errno == 0) {
+                  this.$message.success("验证码已发送,请前往您的邮箱查看信息")
+                  var name = this.btnText;
+                  this.btnText = this.$refs.btnSend.$el.innerText;
+                  this.$refs.btnSend.$el.innerText = name;
+                }
+                else {
+                  this.$message({
+                    message: res.data.msg,
+                    center: true,
+                    type: "error",
+                  });
+                }
+              },
+          )
+          .catch((err) => {
+
+          });
     },
   },
 };

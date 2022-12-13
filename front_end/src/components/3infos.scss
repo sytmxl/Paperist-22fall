@@ -1,0 +1,29 @@
+.info {
+  float: right;
+}
+@mixin thumb-base {
+  height: 22px;
+  width: 30px;
+  position: relative;
+  padding-left: 20px;
+  margin: auto 0 auto 0px;
+  align-self: center;
+  display: inline-block;
+  background-repeat: no-repeat;
+  // transition: 0.3s;
+  transition: 0.8s cubic-bezier(0.23, 1.38, 0.65, 0.99) 0s;
+}
+.info {
+  margin-left: auto;
+  margin-bottom: 10px;
+  i {
+    border-radius: 10px;
+    transition: 0.2s;
+    margin: 3px 20px 3px 0px;
+    height: 100%;
+    // margin-left: 30px;
+  }
+  .thumb {
+    text-align: left;
+  }
+}

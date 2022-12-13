@@ -1,59 +1,58 @@
 <template>
   <el-card shadow="hover">
     <h3
-      class="PaperTitle"
-      style="text-align: left"
+      class="PaperTitle title"
       @click="jump2PaperInforMation"
     >
       {{ title }}
     </h3>
-    <p style="text-align: left; margin-top: 1%; margin-right: 1%">
+    <p v-if="content != '未收录摘要'" style="text-align: left; margin-top: 1%; margin-right: 1%">
       {{ limitWords(content) }}
     </p>
 
     <el-row>
-      <el-col :span="16">
+      <el-col id="infocol" :span="16">
         <span style="margin-top: 2%; float: left">
-          <p style="text-align: left; color: #b3c0d1; display: inline">作者:</p>
-          <p style="text-align: left; display: inline">
+          <p class="p1">作者:</p>
+          <p class="p2">
             {{ getAuthorsList() }}&nbsp;&nbsp;
           </p>
         </span>
         <span style="margin-top: 2%; float: left">
-          <p style="text-align: left; color: #b3c0d1; display: inline">来源:</p>
-          <p style="text-align: left; display: inline">
+          <p class="p1">来源:</p>
+          <p class="p2">
             {{ source }}&nbsp;&nbsp;
           </p>
         </span>
         <span style="margin-top: 2%; float: left">
-          <p style="text-align: left; color: #b3c0d1; display: inline">
+          <p class="p1">
             {{ "" }}被引:
           </p>
-          <p style="text-align: left; display: inline">
+          <p class="p2">
             {{ cite }} &nbsp;&nbsp;
           </p>
         </span>
         <span style="margin-top: 2%; float: left">
-          <p style="text-align: left; color: #b3c0d1; display: inline">
+          <p class="p1">
             {{ "" }}年份:
           </p>
-          <p style="text-align: left; display: inline">
+          <p class="p2">
             {{ year }} &nbsp;&nbsp;
           </p>
         </span>
-        <span style="margin-top: 2%; float: left">
-          <p style="text-align: left; color: #b3c0d1; display: inline">
+        <span v-if="issue != ''" style="margin-top: 2%; float: left">
+          <p class="p1">
             {{ "" }}issue:
           </p>
-          <p style="text-align: left; display: inline">
+          <p class="p2">
             {{ issue }} &nbsp;&nbsp;
           </p>
         </span>
         <span style="margin-top: 2%; float: left">
-          <p style="text-align: left; color: #b3c0d1; display: inline">
+          <p class="p1">
             {{ "" }}关键词:
           </p>
-          <p style="text-align: left; display: inline">
+          <p class="p2">
             {{ getKeywordsList() }}
           </p>
         </span>
@@ -174,8 +173,50 @@ export default {
   // margin-top: 10px;
 }
 .PaperTitle {
+  text-align: left; 
+  color: #003b55;
   &:hover {
     cursor: pointer;
   }
+}
+.dark-mode {
+  .PaperTitle {
+    // color: rgb(238, 238, 239);
+  }
+}
+.title {
+  transition: 0.3s;
+  &:hover {
+    cursor: pointer;
+    border-radius: 10px;
+    background: rgba(198, 212, 220, 0.457);
+    margin-bottom: 5px;
+    padding: 5px;
+    z-index: 99;
+    transform: scale(102%);
+    // border: solid 2px #003b55;
+  }
+  &:active {
+    transform: scale(95%);
+  }
+}
+span {
+  width: fit-content;
+  display: flex;
+}
+.p1 {
+  text-align: left; 
+  white-space: nowrap;
+  color: #003b5596; 
+  // display: inline;
+  // font-weight: bold;
+}
+.p2 {
+  text-align: left; 
+  // display: inline;
+}
+#infocol {
+  
+  float: left;
 }
 </style>

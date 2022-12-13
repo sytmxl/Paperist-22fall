@@ -38,6 +38,12 @@
   }
   animation: test 0.3s cubic-bezier(.23,1.38,.65,.99);
 }
+.dark-mode {
+  #advance .el-card {
+    background-color: rgb(198, 203, 211) !important;
+    box-shadow: none !important;
+  }
+}
 @keyframes test {
   0% {
     opacity: 0%;

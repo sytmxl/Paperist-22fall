@@ -6,8 +6,10 @@
           placeholder="请输入内容"
           v-model="common_search_query"
           class="input-with-select"
+          @keyup.enter.native="common_search_jump()"
           clearable
-          
+          maxlength="20"
+          show-word-limit
         >
           <el-select
             v-model="common_search_type"
@@ -252,19 +254,25 @@ export default {
   },
   mounted() {
     let last_search = JSON.parse(sessionStorage.getItem("last_search"));
-    if (last_search !== null) {
-      if (last_search.common_search_query !== null)
-        this.common_search_query = last_search.common_search_query;
-      if (last_search.PublishSelect !== null)
-        this.PublishSelect = last_search.PublishSelect;
-      if (last_search.LangValue !== null)
-        this.LangValue = last_search.LangValue;
-      if (last_search.common_search_type !== null)
-        this.common_search_type = last_search.common_search_type;
-      if (last_search.isAdvanced !== null)
-        this.isAdvanced = last_search.isAdvanced;
-      if (last_search.advanced_search_query !== null)
-        this.advanced_search_query = last_search.advanced_search_query;
+    console.log(this.$router.history.current);
+    if (
+      this.$router.history.current.name === "SearchInformation" ||
+      this.$router.history.current.name === "SearchAuthor"
+    ) {
+      if (last_search !== null) {
+        if (last_search.common_search_query !== null)
+          this.common_search_query = last_search.common_search_query;
+        if (last_search.PublishSelect !== null)
+          this.PublishSelect = last_search.PublishSelect;
+        if (last_search.LangValue !== null)
+          this.LangValue = last_search.LangValue;
+        if (last_search.common_search_type !== null)
+          this.common_search_type = last_search.common_search_type;
+        if (last_search.isAdvanced !== null)
+          this.isAdvanced = last_search.isAdvanced;
+        if (last_search.advanced_search_query !== null)
+          this.advanced_search_query = last_search.advanced_search_query;
+      }
     }
   },
   methods: {
@@ -277,12 +285,21 @@ export default {
       });
     },
     common_search_jump() {
+      console.log(456789);
+      // 判断输入为空
+      if (this.common_search_query === "") {
+        this.$message({
+          message: "输入为空！请您输入检索词",
+          type: "warning",
+        });
+        return;
+      }
       let es_request_body = {
         query: {
           bool: {
             must: [],
             should: [],
-            //"filter":{}
+            filter: [],
           },
         },
       };
@@ -301,36 +318,47 @@ export default {
           es_request_body.query.bool.must.push({
             match: { keywords: this.common_search_query },
           });
-          es_request_body.query.bool.filter = {
+          es_request_body.query.bool.filter.push({
             term: { keywords: this.common_search_query },
-          };
+          });
           //es_request_body.aggs={"keywords":{"terms":{"field":"keywords","execution_hint": "map"}}}
           break;
         case 3:
           es_request_body.query.bool.must.push({
             match_phrase: { "authors.name": this.common_search_query },
           });
-          es_request_body.query.bool.filter = {
+          es_request_body.query.bool.filter.push({
             match_phrase: { "authors.name": this.common_search_query },
-          };
+          });
           //es_request_body.aggs={"authors.name":{"terms":{"field":"authors.name.raw","execution_hint": "map"}}}
           break;
         case 4:
           es_request_body.query.bool.must.push({
             match: { abstract: this.common_search_query },
           });
-          es_request_body.query.bool.filter = {
+          es_request_body.query.bool.filter.push({
             term: { abstract: this.common_search_query },
-          };
+          });
           break;
         case 5:
           //es_request_body.query.bool.must.push({"match":{"venue.raw":this.common_search_query}})
-          es_request_body.query.bool.filter = {
+          es_request_body.query.bool.filter.push({
             match_phrase: { "venue.raw": this.common_search_query },
-          };
+          });
           //es_request_body.aggs={"venue":{"terms":{"field":"venue.raw","execution_hint": "map"}}}
           break;
         case 6:
+          sessionStorage.setItem(
+            "last_search",
+            JSON.stringify({
+              common_search_query: this.common_search_query,
+              PublishSelect: this.PublishSelect,
+              LangValue: this.LangValue,
+              common_search_type: this.common_search_type,
+              isAdvanced: this.isAdvanced,
+              advanced_search_query: this.advanced_search_query,
+            })
+          );
           this.$router.push({
             path: "/SearchAuthor",
             query: {
@@ -339,13 +367,15 @@ export default {
           });
           return;
       }
-      this.$router.push({
-        path: "/SearchInformation",
-        query: {
-          search_type: "common",
-          search_params: JSON.stringify(es_request_body),
-        },
-      });
+      // console.log(es_request_body)
+      // console.log(8888)
+      // this.$router.push({
+      //   path: "/SearchInformation",
+      //   query: {
+      //     search_type: "common",
+      //     search_params: JSON.stringify(es_request_body),
+      //   },
+      // });
       let es_request_body_function_score = {};
       es_request_body_function_score.query = {
         function_score: { query: es_request_body.query },
@@ -374,6 +404,27 @@ export default {
       this.route_push_params("common", es_request_body_function_score);
     },
     advanced_search_jump() {
+      // 输入不能为空
+      if (
+        this.advanced_search_query.fuzzy_search === null ||
+        this.advanced_search_query.must_contain === null ||
+        this.advanced_search_query.at_least_one === null ||
+        this.advanced_search_query.contains_none === null ||
+        this.advanced_search_query.authors === null ||
+        this.advanced_search_query.organization === null ||
+        this.advanced_search_query.venue === null ||
+        this.advanced_search_query.year_begin === null ||
+        this.advanced_search_query.year_end === null
+      ) {
+        this.$message({
+          message: "请至少输入一个高级搜索筛选项进行搜索",
+          type: "warning",
+          showClose: true,
+          duration: 1000,
+        });
+        return;
+      }
+      this.isAdvanced = !this.isAdvanced;
       let es_request_body = {
         query: {
           bool: {
@@ -489,7 +540,7 @@ export default {
             search_params: JSON.stringify(es_request_body),
           },
         });
-        location.reload();
+        // location.reload();
       }
     },
   },

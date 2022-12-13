@@ -6,7 +6,8 @@
         src="../assets/logo/cube_logo.svg"
         @click="gotoFirstPage"
       />
-
+      
+      <search-box/>
       <el-button
         size="mini"
         type="default"
@@ -14,8 +15,8 @@
         name="dark_light"
         @click="toggleDarkLight"
         title="Toggle dark/light mode"
-        >日/夜</el-button>
-      <search-box />
+        ></el-button
+      >
       <div v-if="loged" class="avatar" @click="gotoPersonalInformation">
         <el-dropdown size="medium" placement="bottom" @command="handleCommand">
           <span class="el-dropdown-link">
@@ -67,6 +68,7 @@
 import SearchBox from "@/components/SearchBox";
 import localAvatar from "@/assets/mosy.jpg";
 import claimScholar from "@/components/claimScholar.vue";
+import $ from 'jquery';
 export default {
   name: "TopBar",
   components: { SearchBox, claimScholar },
@@ -109,7 +111,18 @@ export default {
   methods: {
     handleCommand(command) {
       if (command == "a") {
-        this.$refs.claimScholar.initclaimScholar();
+        const h = this.$createElement;
+        this.$notify({
+          title: "如何认证学者？",
+          message: h(
+            "i",
+            { style: "color: teal" },
+            "您可以搜索学者，进入到学者主页，点击认证学者按钮，填写学者认证信息，等待管理员审核，管理员审核通过后，即可完成认证。"
+          ),
+          type: "warning",
+          duration:2000,
+          offset: 100
+        });
       } else if (command == "b") {
         sessionStorage.removeItem("token");
         sessionStorage.removeItem("userInfo");
@@ -139,6 +152,7 @@ export default {
       let body = document.getElementById("app");
       let currentClass = body.className;
       body.className = currentClass == "dark-mode" ? "light-mode" : "dark-mode";
+      
     },
   },
 };

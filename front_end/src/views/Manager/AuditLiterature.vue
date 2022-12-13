@@ -1,34 +1,33 @@
 <template>
   <div class="main">
-    <h1>待审核文献</h1>
-    <el-table :data="files">
-      <el-table-column fixed prop="date" label="提交时间" width="150">
+    <h1 style="float: left; color: #003B55; margin-left: 20px;">待审核文献申诉</h1>
+     <el-table :data="files">
+      <el-table-column fixed prop="time" label="提交时间" width="200">
       </el-table-column>
-      <el-table-column prop="name" label="用户名" width="120">
+      <el-table-column prop="paper_id" label="投诉论文id" width="300">
       </el-table-column>
-      <el-table-column prop="fileName" label="文献名"> </el-table-column>
+      <el-table-column prop="contact" label="投诉人联系方式" width="400"> </el-table-column>
       <el-table-column label="操作">
         <template slot-scope="scope">
           <el-button
             type="primary"
-            @click="toFile(scope.row.index)"
+            @click="info(scope.row)"
             size="small"
-            >查看文献详情</el-button
+            >查看申请详情</el-button
           >
-          <el-button type="primary" size="small">下载文献</el-button>
-          <el-button type="primary" size="small" @click="handleCreate"
+          <el-button type="primary" size="small" @click="handleCreate(scope.row)"
             >审核</el-button
           >
         </template>
       </el-table-column>
     </el-table>
-    <el-dialog :visible.sync="dialogFormVisible">
+    <el-dialog :lock-scroll="false" :visible.sync="dialogFormVisible">
       <el-form
         :model="questionForm"
         ref="dataForm"
         label-position="left"
         label-width="90px"
-        style="width: 400px; margin-left: 50px"
+        style="width: 100%"
       >
         <el-form-item label="审核结果">
           <el-select
@@ -57,6 +56,23 @@
         <el-button type="primary" @click="createData()">确定</el-button>
       </div>
     </el-dialog>
+        <el-dialog :lock-scroll="false" :visible.sync="ContentVisible">
+         
+      <span style="text-align:left;">
+      <h2>问题描述</h2>
+      <p>{{ introduction }}</p>
+    </span>
+   
+    <span style="text-align:left;">
+      <h2>相关图片</h2>
+    </span>
+     <el-carousel :interval="4000" type="card" height="400px">
+         <el-carousel-item v-for="item in url" :key="item">
+              <!-- <h3 class="medium">{{ item }}</h3> -->
+              <img :src="item" alt="">
+            </el-carousel-item>
+         </el-carousel>
+    </el-dialog>
   </div>
 </template>
 
@@ -65,24 +81,9 @@ export default {
   name: "AuditLiterature",
   data() {
     return {
-      files: [
-        {
-          date: "2022.11.13",
-          name: "ando",
-          fileName: "Denoising Diffusion Probabilistic Models",
-        },
-        {
-          date: "2022.11.13",
-          name: "ando",
-          fileName: "Denoising Diffusion Probabilistic Models",
-        },
-        {
-          date: "2022.11.13",
-          name: "ando",
-          fileName: "Denoising Diffusion Probabilistic Models",
-        },
-      ],
+      files: [],
       dialogFormVisible: false,
+      ContentVisible:false,
       input: "",
       tabMapOptions: [
         { label: "通过", key: "pass" },
@@ -92,33 +93,67 @@ export default {
         auditContent: "",
         auditResult: [],
       },
+      url:[],
+      introduction:"",
+      now_id:""
     };
   },
   methods: {
+    info(item){
+      this.ContentVisible = true;
+      this.url.push(item.image_url)
+      this.introduction=item.introduction
+    },
     init() {
       this.$axios({
-        url: "http://127.0.0.1:8000/manager/review_notes/list/",
-        method: "get",
+        url: "http://127.0.0.1:8000/manager/managePaperComplain/",
+        method: "post",
       }).then((res) => {
-        console.log(res);
+        this.files = res.data.data
+        for(var i=0;i<this.files.length;i++){
+          this.files[i].time = this.files[i].time.split('\.')[0].split('T')[0]+' '+this.files[i].time.split('\.')[0].split('T')[1]
+        }
       });
     },
     toFile(index) {
       console.log(index);
       this.$router.push("/literature");
     },
-    handleCreate() {
+    handleCreate(item) {
       this.questionForm = {
         auditContent: "",
         auditResult: [],
       };
+      this.now_id=item.complain_id
       this.dialogFormVisible = true;
     },
     async createData() {
-      const params = this.questionForm;
-      console.log("发送审核结果");
-      console.log(JSON.stringify(params));
+     const params = this.questionForm.auditResult;
+      let op;
+      console.log(params);
+      if(params=="pass"){
+        op = 0;
+      }
+      else{
+        op = 1;
+      }
       this.dialogFormVisible = false;
+      this.$axios({
+        url: "http://127.0.0.1:8000/manager/getPaperComplain/",
+        method: "post",
+        data: {
+          flag:op,
+          complain_id:this.now_id,
+        },
+      }).then((res) => {
+        if(op==0){
+          this.$message.success("申诉已通过")
+        }
+        else{
+          this.$message.success("申诉未通过")
+        }
+        window.location.reload();
+      });
     },
   },
   mounted() {
@@ -129,7 +164,11 @@ export default {
 
 <style scoped>
 .main {
-  margin-left: 5%;
-  margin-right: 5%;
+  /* margin-left: 5%;
+  margin-right: 5%; */
 }
+/* .el-button{
+  float: right;
+  margin-right: 20px;
+} */
 </style>

@@ -9,10 +9,15 @@
       >
       <!-- <el-button style="float: right; padding: 3px 0" type="text">操作按钮</el-button> -->
     </div>
-    <div class="text item">摘要：{{ limitWords(intro)}}</div>
+    <div class="text item">摘要：{{ limitWords(intro) }}</div>
     <div class="text item">
       作者：
-      <span v-for="i in author" :key="i" style="margin-right: 20px" @click="goto_person(i.name)">
+      <span
+        v-for="i in author"
+        :key="i"
+        style="margin-right: 20px"
+        @click="goto_person(i.name)"
+      >
         {{ i.name }}
       </span>
     </div>
@@ -24,6 +29,14 @@
 
 <script>
 export default {
+  mounted() {
+    if (this.$props.title == null) this.$props.title = "未知名称";
+    if (this.$props.author == null) this.$props.author = "未知作者";
+    if (this.$props.intro == null) this.$props.intro = "未知摘要";
+    if (this.$props.origin == null) this.$props.origin = { raw: "未知来源" };
+    if (this.$props.cite == null) this.$props.cite = "未知引用量";
+    if (this.$props.date == null) this.$props.date = "未知发表时间";
+  },
   props: {
     name: { default: "" },
     author: { default: "" },
@@ -76,7 +89,6 @@ export default {
 
   background: none;
   margin-bottom: 15px !important;
-  
 }
 .dark-mode {
   .el-card {
