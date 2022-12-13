@@ -54,9 +54,9 @@
        </el-main>
         <el-main class="right base" v-if="author.length != 0">
             <div class="content">
-              <iframe style="width: 100%; height: 100%" :src="'public/pdfjs-2.14.305-legacy-dist/web/viewer.html?file=http://124.70.8.57/pdf/'+pdf_src" title="myFrame"></iframe>
-                <!-- <el-card> 
-                    
+              <iframe style="width: 100%; height: 100%" :src="'http://124.70.8.57/pdfjs-2.14.305-legacy-dist/web/viewer.html?file=http://124.70.8.57/pdf/'+pdf_src" title="myFrame"></iframe>
+                <!-- <el-card>
+
                      <div class="home_wrap">
                           <div class="pdf_down" >
                               <div class="pdf_set_left"  @click="scaleD()">放大</div>
