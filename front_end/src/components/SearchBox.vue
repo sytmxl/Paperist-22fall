@@ -6,6 +6,7 @@
           placeholder="请输入内容"
           v-model="common_search_query"
           class="input-with-select"
+          @keyup.enter.native="common_search_jump()"
           clearable
         >
           <el-select
@@ -26,6 +27,7 @@
             slot="append"
             icon="el-icon-search"
             @click="common_search_jump()"
+            
           >
             <!-- 开始搜索 -->
           </el-button>
@@ -282,6 +284,7 @@ export default {
       });
     },
     common_search_jump() {
+      console.log(456789)
       let es_request_body = {
         query: {
           bool: {

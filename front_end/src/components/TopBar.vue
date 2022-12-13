@@ -7,7 +7,7 @@
         @click="gotoFirstPage"
       />
       
-      <search-box />
+      <search-box/>
       <el-button
         size="mini"
         type="default"
