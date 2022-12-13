@@ -30,9 +30,12 @@
             </div>
             <div class="text">
               <span class="subtitle">研究领域:</span>
-              <span style="overflow: hidden">{{
-                item._source.tags[0] == null ? "未知" : item._source.tags[0].t
+              <span style="overflow: hidden" v-if="tags in item._source">{{
+                item._source.tags[0].t
               }}</span>
+              <span style="overflow: hidden" v-else>
+                未知
+              </span>
             </div>
             <div class="text">
               论文数量:
@@ -62,15 +65,15 @@ export default {
         "https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png",
       search_query: null,
       searchAuthors: [
-        {
-          _source: {
-            tags: [
-              {
-                t: "1",
-              },
-            ],
-          },
-        },
+        // {
+        //   _source: {
+        //     tags: [
+        //       {
+        //         t: "1",
+        //       },
+        //     ],
+        //   },
+        // },
       ],
     };
   },
@@ -115,7 +118,7 @@ export default {
       method: "post",
       data: JSON.stringify(obj),
     }).then((res) => {
-      console.log(res.data.hits.hits);
+      // console.log(res.data.hits.hits);
       // for (let i = 0; i < res.data.hits.hits.length; i++) {
       //   this.searchAuthors[i] = res.data.hits.hits[i]._source;
       // }
