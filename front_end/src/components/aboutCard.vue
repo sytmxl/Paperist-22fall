@@ -33,7 +33,7 @@ export default {
     if (this.$props.title == null) this.$props.title = "未知名称";
     if (this.$props.author == null) this.$props.author = "未知作者";
     if (this.$props.intro == null) this.$props.intro = "未知摘要";
-    if (this.$props.origin == null) this.$props.origin = { raw: "未知来源" };
+    if (this.$props.origin == null||!(raw in this.$props.origin)) this.$props.origin = { raw: "未知来源" };
     if (this.$props.cite == null) this.$props.cite = "未知引用量";
     if (this.$props.date == null) this.$props.date = "未知发表时间";
   },
