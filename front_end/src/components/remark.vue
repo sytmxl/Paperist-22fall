@@ -112,7 +112,7 @@ export default {
         if(like){
 
           this.$axios({
-            url:"http://127.0.0.1:8000/likeIt/",
+            url:"http://127.0.0.1:8000/paper/likeIt/",
             method:"post",
             data:{
                 comment_id:id,
@@ -130,7 +130,7 @@ export default {
         }
         else{
           this.$axios({
-            url:"http://127.0.0.1:8000/likeIt/",
+            url:"http://127.0.0.1:8000/paper/likeIt/",
             method:"post",
             data:{
                 comment_id:id,
@@ -167,7 +167,7 @@ export default {
     tipoff(id){
         if(this.token){
                  this.$axios({
-            url:"http://127.0.0.1:8000/tipOff/",
+            url:"http://127.0.0.1:8000/paper/tipOff/",
             method:"post",
             data:{
                 comment_id:id,

@@ -71,7 +71,7 @@ export default {
    tipoff(id){
     if(this.token){
        this.$axios({
-            url:"http://127.0.0.1:8000/tipOff/",
+            url:"http://127.0.0.1:8000/paper/tipOff/",
             method:"post",
             data:{
                 comment_id:"",
@@ -106,7 +106,7 @@ export default {
             }
         if(!this.like_flag){
           this.$axios({
-            url:"http://127.0.0.1:8000/likeIt/",
+            url:"http://127.0.0.1:8000/paper/likeIt/",
             method:"post",
             data:{
                 comment_id:"",
@@ -120,7 +120,7 @@ export default {
         }
         else{
           this.$axios({
-            url:"http://127.0.0.1:8000/likeIt/",
+            url:"http://127.0.0.1:8000/paper/likeIt/",
             method:"post",
             data:{
                 comment_id:"",
@@ -156,7 +156,7 @@ export default {
         this.collect_flag= !this.collect_flag
         if(!this.collect_flag){
           this.$axios({
-            url:"http://127.0.0.1:8000/paperCollection/",
+            url:"http://127.0.0.1:8000/paper/paperCollection/",
             method:"post",
             data:{
                 paper_id:"",
@@ -171,7 +171,7 @@ export default {
         }
         else{
           this.$axios({
-            url:"http://127.0.0.1:8000/paperCollection/",
+            url:"http://127.0.0.1:8000/paper/paperCollection/",
             method:"post",
             data:{
                 paper_id:"",

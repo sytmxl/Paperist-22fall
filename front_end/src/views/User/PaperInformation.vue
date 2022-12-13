@@ -516,7 +516,7 @@ export default {
     },
     // paperInfoInit(){
     //   this.$axios({
-    //       url:"http://127.0.0.1:8000/paperInfoInit/",
+    //       url:"http://127.0.0.1:8000/paper/paperInfoInit/",
     //       method:"post",
     //       data:{
     //           paper_id:this.$route.params.paper_id
@@ -527,7 +527,7 @@ export default {
     // },
     aboutNoteInit() {
       this.$axios({
-        url: "http://127.0.0.1:8000/aboutNoteInitNoToken/",
+        url: "http://127.0.0.1:8000/paper/aboutNoteInitNoToken/",
         method: "post",
         data: {
           paper_id: this.$route.params.paper_id,
@@ -538,7 +538,7 @@ export default {
     },
     paperRemarkInit() {
       this.$axios({
-        url: "http://127.0.0.1:8000/paperRemarkInitNoToken/",
+        url: "http://127.0.0.1:8000/paper/paperRemarkInitNoToken/",
         method: "post",
         data: {
           paper_id: this.$route.params.paper_id,
@@ -549,7 +549,7 @@ export default {
     },
     quoteInit() {
       this.$axios({
-        url: "http://127.0.0.1:8000/paperQuote/",
+        url: "http://127.0.0.1:8000/paper/paperQuote/",
         method: "post",
         data: {
           paper_id: this.$route.params.paper_id,
@@ -570,7 +570,7 @@ export default {
           this.collect_flag = !this.collect_flag;
           if (!this.collect_flag) {
             this.$axios({
-              url: "http://127.0.0.1:8000/paperCollection/",
+              url: "http://127.0.0.1:8000/paper/paperCollection/",
               method: "post",
               data: {
                 paper_id: this.$route.params.paper_id,
@@ -582,7 +582,7 @@ export default {
             });
           } else {
             this.$axios({
-              url: "http://127.0.0.1:8000/paperCollection/",
+              url: "http://127.0.0.1:8000/paper/paperCollection/",
               method: "post",
               data: {
                 paper_id: this.$route.params.paper_id,
@@ -624,7 +624,7 @@ export default {
       this.$axios({
         method: "post",
         headers: { "Content-Type": "multipart/form-data" },
-        url: "http://127.0.0.1:8000/paperComplain/",
+        url: "http://127.0.0.1:8000/paper/paperComplain/",
         data: {
           img: formdata.get("img"),
           contact: this.contact,

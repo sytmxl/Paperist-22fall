@@ -185,7 +185,7 @@ export default {
         if(this.token){
           if(this.note.like_flag){
           this.$axios({
-            url:"http://127.0.0.1:8000/likeIt/",
+            url:"http://127.0.0.1:8000/paper/likeIt/",
             method:"post",
             data:{
                comment_id:"",
@@ -198,7 +198,7 @@ export default {
         }
         else{
           this.$axios({
-            url:"http://127.0.0.1:8000/likeIt/",
+            url:"http://127.0.0.1:8000/paper/likeIt/",
             method:"post",
             data:{
                comment_id:"",
@@ -225,7 +225,7 @@ export default {
         if(this.token){
            if(this.note.collect_flag){
           this.$axios({
-            url:"http://127.0.0.1:8000/paperCollection/",
+            url:"http://127.0.0.1:8000/paper/paperCollection/",
             method:"post",
             data:{
                 paper_id:"",
@@ -239,7 +239,7 @@ export default {
         }
         else{
           this.$axios({
-            url:"http://127.0.0.1:8000/paperCollection/",
+            url:"http://127.0.0.1:8000/paper/paperCollection/",
             method:"post",
             data:{
                 paper_id:"",
@@ -268,7 +268,7 @@ export default {
         if(this.token){
            if(author.subscribe_flag){
           this.$axios({
-            url:"http://127.0.0.1:8000/subscribe/",
+            url:"http://127.0.0.1:8000/paper/subscribe/",
             method:"post",
             data:{
                 author_id:author.id,
@@ -281,7 +281,7 @@ export default {
         }
         else{
           this.$axios({
-            url:"http://127.0.0.1:8000/subscribe/",
+            url:"http://127.0.0.1:8000/paper/subscribe/",
             method:"post",
             data:{
                 author_id:author.id,
@@ -309,7 +309,7 @@ export default {
 
      noteInfoInit(){
        this.$axios({
-            url:"http://127.0.0.1:8000/noteInfoInitNoToken/",
+            url:"http://127.0.0.1:8000/paper/noteInfoInitNoToken/",
             method:"post",
             data:{
                 note_id:this.$route.params.note_id
@@ -322,7 +322,7 @@ export default {
      },
      authorInit(){
       this.$axios({
-            url:"http://127.0.0.1:8000/authorInitNoToken/",
+            url:"http://127.0.0.1:8000/paper/authorInitNoToken/",
             method:"post",
             data:{
                 note_id:this.$route.params.note_id
@@ -333,7 +333,7 @@ export default {
      },
      otherNoteInit(){
       this.$axios({
-            url:"http://127.0.0.1:8000/otherNoteInitNoToken/",
+            url:"http://127.0.0.1:8000/paper/otherNoteInitNoToken/",
             method:"post",
             data:{
                 note_id:this.$route.params.note_id
@@ -344,7 +344,7 @@ export default {
      },
      noteRemarkInit(){
       this.$axios({
-            url:"http://127.0.0.1:8000/noteRemarkInitNoToken/",
+            url:"http://127.0.0.1:8000/paper/noteRemarkInitNoToken/",
             method:"post",
             data:{
                 note_id:this.$route.params.note_id
