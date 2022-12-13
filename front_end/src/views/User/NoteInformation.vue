@@ -316,7 +316,8 @@ export default {
             }
         }).then(res=>{
             // this.pdf_src = res.data.note_info[0].note_url
-            this.pdf_src = encodeURIComponent(res.data.note_info[0].note_url)
+            let str = res.data.note_info[0].note_url.split('/')
+            this.pdf_src = encodeURIComponent(str[str.length-1])
             this.note = res.data.note_info[0]
         })
      },
