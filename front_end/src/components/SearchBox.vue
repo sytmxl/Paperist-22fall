@@ -343,13 +343,13 @@ export default {
       }
       // console.log(es_request_body)
       // console.log(8888)
-      this.$router.push({
-        path: "/SearchInformation",
-        query: {
-          search_type: "common",
-          search_params: JSON.stringify(es_request_body),
-        },
-      });
+      // this.$router.push({
+      //   path: "/SearchInformation",
+      //   query: {
+      //     search_type: "common",
+      //     search_params: JSON.stringify(es_request_body),
+      //   },
+      // });
       let es_request_body_function_score = {};
       es_request_body_function_score.query = {
         function_score: { query: es_request_body.query },
@@ -378,6 +378,7 @@ export default {
       this.route_push_params("common", es_request_body_function_score);
     },
     advanced_search_jump() {
+      this.isAdvanced = !this.isAdvanced
       let es_request_body = {
         query: {
           bool: {
@@ -493,7 +494,7 @@ export default {
             search_params: JSON.stringify(es_request_body),
           },
         });
-        location.reload();
+        // location.reload();
       }
     },
   },
