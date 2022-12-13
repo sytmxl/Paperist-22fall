@@ -54,7 +54,7 @@
        </el-main>
         <el-main class="right base" v-if="author.length != 0">
             <div class="content">
-              <iframe style="width: 100%; height: 100%" :src="'http://124.70.8.57/pdfjs-2.14.305-legacy-dist/web/viewer.html?file=http://124.70.8.57/pdf/'+pdf_src" title="myFrame"></iframe>
+              <iframe style="width: 100%; height: 100%" :src="'/static/pdf/web/viewer.html?file='+pdf_src" title="myFrame"></iframe>
                 <!-- <el-card>
 
                      <div class="home_wrap">
@@ -63,7 +63,7 @@
                               <div class="pdf_set_middle" @click="scaleX()">缩小</div>
                           </div>
 
-                            <pdf 
+                            <pdf
                               ref="pdf"
                               :src="pdf_src">
                             </pdf>
@@ -84,11 +84,11 @@
 								</div>
 							</div>
 							<div v-else><el-empty description="还没有评论，发表第一个评论吧"></el-empty></div>
-				
+
 						</el-card>
-            		
+
 					</div>
-          
+
        </el-main>
        	<el-dialog
 								title="留下你的评论吧~"
@@ -145,7 +145,7 @@ export default {
         }
     },
       methods:{
-    
+
      goto_person(){
       let routeData = this.$router.resolve({
         name: 'PersonalInformation',
@@ -167,7 +167,7 @@ export default {
       window.open(routeData.href, '_blank')
      },
       react_remark(data){
-    
+
         if(data.op=="remark"){
              this.CreatCommentVisible = true;
             this.remark_id = data.remark_id
@@ -219,7 +219,7 @@ export default {
       // })
       // window.open(routeData.href, '_blank')},1000)
       }
-        
+
     },
      collect(){
         if(this.token){
@@ -262,7 +262,7 @@ export default {
       // window.open(routeData.href, '_blank')},1000)
       }
 
-       
+
      },
      subscribe(author){
         if(this.token){
@@ -297,14 +297,14 @@ export default {
           setTimeout(()=>{this.$router.push({
         name: 'login',
       })},1000)
-      //  
+      //
       //   setTimeout(()=>{let routeData = this.$router.resolve({
       //   name: 'login',
       // })
       // window.open(routeData.href, '_blank')},1000)
       }
 
-        
+
      },
 
      noteInfoInit(){
@@ -316,8 +316,7 @@ export default {
             }
         }).then(res=>{
             // this.pdf_src = res.data.note_info[0].note_url
-            let str = res.data.note_info[0].note_url.split('/')
-            this.pdf_src = encodeURIComponent(str[str.length-1])
+            this.pdf_src = encodeURIComponent(res.data.note_info[0].note_url)
             this.note = res.data.note_info[0]
         })
      },
