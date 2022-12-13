@@ -368,6 +368,7 @@ import note from "../../components/note.vue";
 import TopBar from "@/components/TopBar";
 import $ from "jquery";
 import axios from "axios";
+import {es_axios} from "@/http";
 let formdata = new FormData();
 let isclick = true;
 export default {
@@ -650,14 +651,7 @@ export default {
       obj.query.bool.filter = {
         match_phrase: { id: this.$route.params.paper_id },
       };
-      axios({
-        headers: {
-          "content-type": "application/json",
-        },
-        auth: {
-          username: "elastic",
-          password: "BZYvLA-d*pS0EpI7utmJ",
-        },
+      es_axios({
         url: "/es/paper/_search",
         method: "post",
         data: JSON.stringify(obj),
@@ -688,14 +682,7 @@ export default {
         obj.query.bool.filter = {
           match_phrase: { "authors.id": authors[index].id },
         };
-        axios({
-          headers: {
-            "content-type": "application/json",
-          },
-          auth: {
-            username: "elastic",
-            password: "BZYvLA-d*pS0EpI7utmJ",
-          },
+        es_axios({
           url: "/es/paper/_search",
           method: "post",
           data: JSON.stringify(obj),

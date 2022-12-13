@@ -8,6 +8,8 @@
           class="input-with-select"
           @keyup.enter.native="common_search_jump()"
           clearable
+          maxlength="20"
+          show-word-limit
         >
           <el-select
             v-model="common_search_type"
@@ -27,7 +29,6 @@
             slot="append"
             icon="el-icon-search"
             @click="common_search_jump()"
-            
           >
             <!-- 开始搜索 -->
           </el-button>
@@ -284,7 +285,15 @@ export default {
       });
     },
     common_search_jump() {
-      console.log(456789)
+      console.log(456789);
+      // 判断输入为空
+      if (this.common_search_query === "") {
+        this.$message({
+          message: "输入为空！请您输入检索词",
+          type: "warning",
+        });
+        return;
+      }
       let es_request_body = {
         query: {
           bool: {
@@ -395,6 +404,26 @@ export default {
       this.route_push_params("common", es_request_body_function_score);
     },
     advanced_search_jump() {
+      // 输入不能为空
+      if (
+        this.advanced_search_query.fuzzy_search === null ||
+        this.advanced_search_query.must_contain === null ||
+        this.advanced_search_query.at_least_one === null ||
+        this.advanced_search_query.contains_none === null ||
+        this.advanced_search_query.authors === null ||
+        this.advanced_search_query.organization === null ||
+        this.advanced_search_query.venue === null ||
+        this.advanced_search_query.year_begin === null ||
+        this.advanced_search_query.year_end === null
+      ) {
+        this.$message({
+          message: "请至少输入一个高级搜索筛选项进行搜索",
+          type: "warning",
+          showClose: true,
+          duration: 1000,
+        });
+        return;
+      }
       this.isAdvanced = !this.isAdvanced;
       let es_request_body = {
         query: {

@@ -1,4 +1,5 @@
 <template>
+
   <div class="login">
     <el-row class="logo_area">
       <div id="logo1" class="home_logo"></div>
@@ -21,8 +22,8 @@
               ></el-input>
             </el-form-item>
             <el-form-item
-              id="password"
-              prop="password"
+              id="password1"
+              prop="password1"
               :rules="[{ required: true, message: '密码不能为空' }]"
             >
               <el-input
@@ -59,8 +60,8 @@
               ></el-input>
             </el-form-item>
             <el-form-item
-              id="password"
-              prop="password"
+              id="password2"
+              prop="password2"
               :rules="[{ required: true, message: '密码不能为空' }]"
             >
               <el-input
@@ -142,9 +143,7 @@
 </template>
 
 <script>
-import axios from "axios";
-import CryptoJS from "crypto-js";
-import instance from "@/http";
+import CryptoJS from 'crypto-js'
 import qs from "qs";
 export default {
   name: "Login",

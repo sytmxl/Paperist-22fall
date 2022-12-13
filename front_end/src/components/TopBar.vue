@@ -66,7 +66,6 @@
 
 <script>
 import SearchBox from "@/components/SearchBox";
-import axios from "axios";
 import localAvatar from "@/assets/mosy.jpg";
 import claimScholar from "@/components/claimScholar.vue";
 import $ from 'jquery';

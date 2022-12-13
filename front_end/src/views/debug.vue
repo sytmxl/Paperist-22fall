@@ -24,10 +24,9 @@
 </template>
 
 <script>
-import axios from "axios";
-import CryptoJS from "crypto-js";
 import PaperCard from "@/components/PaperCard";
 import SearchBox from "@/components/SearchBox";
+import {es_axios} from "@/http";
 
 export default {
   name: "debug",
@@ -53,15 +52,7 @@ export default {
 
       }
       this.es_request_body_json = JSON.stringify(es_request_body_common)
-      axios({
-        headers: {
-          'content-type': 'application/json',
-
-        },
-        auth: {
-          username: 'elastic',
-          password: 'BZYvLA-d*pS0EpI7utmJ'
-        },
+      es_axios({
         url: 'es/paper_test/_search', method: "post",
         data: JSON.stringify(es_request_body_common)
         }
