@@ -1,5 +1,4 @@
 <template>
-
   <div class="login">
     <el-row class="logo_area">
       <div id="logo1" class="home_logo"></div>
@@ -8,49 +7,130 @@
       <el-tabs v-model="activeName" @tab-click="handleClick">
         <el-tab-pane label="邮箱登录" name="first">
           <el-form ref="form" :model="form" class="form">
-            <el-form-item prop="email" :rules="[{ required: true, message: '邮箱不能为空' }]">
-              <el-input v-model="form.email" placeholder="请输入您的邮箱" type="email" autocomplete="off" clearable
-                prefix-icon="el-icon-postcard"></el-input>
+            <el-form-item
+              prop="email"
+              :rules="[{ required: true, message: '邮箱不能为空' }]"
+            >
+              <el-input
+                v-model="form.email"
+                placeholder="请输入您的邮箱"
+                type="email"
+                autocomplete="off"
+                clearable
+                prefix-icon="el-icon-postcard"
+              ></el-input>
             </el-form-item>
-            <el-form-item id="password" prop="password" :rules="[{ required: true, message: '密码不能为空' }]">
-              <el-input prefix-icon="el-icon-lock" placeholder="请输入您的密码" show-password type="password" clearable
-                v-model="form.password" autocomplete="off" @keyup.enter.native="login"></el-input>
+            <el-form-item
+              id="password"
+              prop="password"
+              :rules="[{ required: true, message: '密码不能为空' }]"
+            >
+              <el-input
+                prefix-icon="el-icon-lock"
+                placeholder="请输入您的密码"
+                show-password
+                type="password"
+                clearable
+                v-model="form.password"
+                autocomplete="off"
+                @keyup.enter.native="login"
+              ></el-input>
             </el-form-item>
             <el-form-item>
-              <el-button type="primary" @click="login" round>登&nbsp;&nbsp;录</el-button>
+              <el-button type="primary" @click="login" round
+                >登&nbsp;&nbsp;录</el-button
+              >
             </el-form-item>
           </el-form>
         </el-tab-pane>
         <el-tab-pane label="用户名登录" name="second">
           <el-form ref="form" :model="form" class="form">
-            <el-form-item prop="username" :rules="[{ required: true, message: '用户名不能为空' }]">
-              <el-input v-model="form.username" placeholder="请输入您的用户名" type="username" autocomplete="off" clearable
-                prefix-icon="el-icon-postcard"></el-input>
+            <el-form-item
+              prop="username"
+              :rules="[{ required: true, message: '用户名不能为空' }]"
+            >
+              <el-input
+                v-model="form.username"
+                placeholder="请输入您的用户名"
+                type="username"
+                autocomplete="off"
+                clearable
+                prefix-icon="el-icon-postcard"
+              ></el-input>
             </el-form-item>
-            <el-form-item id="password" prop="password" :rules="[{ required: true, message: '密码不能为空' }]">
-              <el-input prefix-icon="el-icon-lock" placeholder="请输入您的密码" show-password type="password" clearable
-                v-model="form.password" autocomplete="off" @keyup.enter.native="login"></el-input>
+            <el-form-item
+              id="password"
+              prop="password"
+              :rules="[{ required: true, message: '密码不能为空' }]"
+            >
+              <el-input
+                prefix-icon="el-icon-lock"
+                placeholder="请输入您的密码"
+                show-password
+                type="password"
+                clearable
+                v-model="form.password"
+                autocomplete="off"
+                @keyup.enter.native="login"
+              ></el-input>
             </el-form-item>
             <el-form-item>
-              <el-button  type="primary" @click="login" round>登&nbsp;&nbsp;录</el-button>
+              <el-button type="primary" @click="login" round
+                >登&nbsp;&nbsp;录</el-button
+              >
             </el-form-item>
           </el-form>
         </el-tab-pane>
-        <el-dialog v-if="forgetDialogVisible" :modal="false" title="请输入您的邮箱" :visible.sync="forgetDialogVisible" width="30%" :close-on-click-modal="false"
-          :close-on-press-escape="false" :append-to-body="true" center>
-          <el-form ref="forget" :model="forget" class="forget" :hide-required-asterisk="true">
-            <el-form-item prop="forget_email" :rules="[
-              { required: true, message: '请输入邮箱地址', trigger: 'blur' },
-              { type: 'email', message: '请输入正确的邮箱 地址', trigger: ['blur', 'change'] }
-            ]">
-              <el-input id='forget' v-model="forget.forget_email" placeholder="请输入注册时所用邮箱，用于找回密码" type="email" autocomplete="off"
-                clearable prefix-icon="el-icon-postcard"></el-input>
+        <el-dialog
+          v-if="forgetDialogVisible"
+          :modal="false"
+          title="请输入您的邮箱"
+          :visible.sync="forgetDialogVisible"
+          width="30%"
+          :close-on-click-modal="false"
+          :close-on-press-escape="false"
+          :append-to-body="true"
+          center
+        >
+          <el-form
+            ref="forget"
+            :model="forget"
+            class="forget"
+            :hide-required-asterisk="true"
+          >
+            <el-form-item
+              prop="forget_email"
+              :rules="[
+                { required: true, message: '请输入邮箱地址', trigger: 'blur' },
+                {
+                  type: 'email',
+                  message: '请输入正确的邮箱 地址',
+                  trigger: ['blur', 'change'],
+                },
+              ]"
+            >
+              <el-input
+                id="forget"
+                v-model="forget.forget_email"
+                placeholder="请输入注册时所用邮箱，用于找回密码"
+                type="email"
+                autocomplete="off"
+                clearable
+                prefix-icon="el-icon-postcard"
+              ></el-input>
             </el-form-item>
           </el-form>
           <span slot="footer" class="dialog-footer">
-            <el-button class="forget" @click="forgetDialogVisible = false, resetForm('forget')">取 消</el-button>
-            <el-button class="forget" type="primary"
-              @click="toReset(forget.forget_email)">确 定
+            <el-button
+              class="forget"
+              @click="(forgetDialogVisible = false), resetForm('forget')"
+              >取 消</el-button
+            >
+            <el-button
+              class="forget"
+              type="primary"
+              @click="toReset(forget.forget_email)"
+              >确 定
             </el-button>
           </span>
         </el-dialog>
@@ -63,14 +143,14 @@
 
 <script>
 import axios from "axios";
-import CryptoJS from 'crypto-js'
+import CryptoJS from "crypto-js";
 import instance from "@/http";
-import qs from "qs"
+import qs from "qs";
 export default {
   name: "Login",
-  mounted(){
+  mounted() {
     var body = document.getElementById("topbar");
-    body.style.display="none";
+    body.style.display = "none";
   },
   data() {
     return {
@@ -85,34 +165,31 @@ export default {
       loginmethod: "",
       activeName: "first",
       forgetDialogVisible: false,
-      ogpath:""
+      ogpath: "",
     };
   },
-  beforeRouteEnter (to, from, next){
-  next(vm => {
-    // 通过 `vm` 访问组件实例,将值传入fromPath
-      vm.ogpath = from.path
-    
-  })
+  beforeRouteEnter(to, from, next) {
+    next((vm) => {
+      // 通过 `vm` 访问组件实例,将值传入fromPath
+      vm.ogpath = from.path;
+    });
   },
-  methods:{
-    forgetPass(){
+  methods: {
+    forgetPass() {
       this.forgetDialogVisible = true;
     },
-    toRegister(){
-      this.$router.push("/register")
+    toRegister() {
+      this.$router.push("/register");
     },
     toReset(i) {
-      if (
-          this.forget.forget_email === ""
-      ) {
+      if (this.forget.forget_email === "") {
         this.$message.warning("注册邮箱不能为空！");
         return;
       }
       if (
-          !/^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/.exec(
-              this.forget.forget_email
-          )
+        !/^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/.exec(
+          this.forget.forget_email
+        )
       ) {
         this.$message.warning("请检查您的邮箱格式！");
         return;
@@ -125,74 +202,69 @@ export default {
           type: 1,
         }),
       })
-          .then((res) => {
-
-
-                if (res.data.errno == 0) {
-                  this.$message.success("邮件已发送,请前往您的邮箱查看信息")
-                }
-                else {
-                  this.$message({
-                    message: res.data.msg,
-                    center: true,
-                    type: "error",
-                  });
-                }
-              },
-              this.forgetDialogVisible=false,
-              this.resetForm('forget'),
-              this.$router.push("/forgetPassword"),
-          )
-          .catch((err) => {
-
-          });
+        .then(
+          (res) => {
+            if (res.data.errno == 0) {
+              this.$message.success("邮件已发送,请前往您的邮箱查看信息");
+            } else {
+              this.$message({
+                message: res.data.msg,
+                center: true,
+                type: "error",
+              });
+            }
+          },
+          (this.forgetDialogVisible = false),
+          this.resetForm("forget"),
+          this.$router.push("/forgetPassword")
+        )
+        .catch((err) => {});
     },
-    resetForm(){
+    resetForm() {
       this.form = {
         email: "",
         username: "",
         password: "",
-      }
+      };
     },
     async login() {
-      this.$axios(
-          {
-            url: 'user/login/', method: "post",
-            data: {'email': this.form.email, encrypted_pwd: CryptoJS.MD5(this.form.password).toString()}
-          }
-      ).then(async res => {
-        if (res.data.errornumber < 0) {
-          switch (res.data.errornumber) {
-            case -1:
-              this.$message({
-                message: '邮箱不存在',
-                type: 'warning'
-              });
-              break;
-            case -2:
-              this.$message({
-                message: '密码不正确',
-                type: 'warning'
-              });
-              break;
-          }
+      this.$axios({
+        url: "user/login/",
+        method: "post",
+        data: {
+          email: this.form.email,
+          encrypted_pwd: CryptoJS.MD5(this.form.password).toString(),
+        },
+      }).then(async (res) => {
+        console.log(res.data);
+        if (res.data.errornumber == "-1") {
+          this.$message({
+            message: "邮箱账号不存在，请您检查输入",
+            type: "warning",
+          });
+        } else if (res.data.errornumber == "-2") {
+          this.$message({
+            message: "您输入的密码不正确，请您检查输入",
+            type: "warning",
+          });
         } else {
           this.$message({
-            message: '登录成功',
-            type: 'success'
+            message: "登录成功，正在为您跳转",
+            type: "success",
           });
           sessionStorage.setItem("token", res.data.token);
           // await this.$router.push("/FirstPage")
-          if(this.ogpath!="/register"){
-            await window.history.go(-1);
-          }
-          else{
-            await this.$router.push("/FirstPage")
-          }
+          setTimeout(async () => {
+            if (this.ogpath != "/register") {
+              await window.history.go(-1);
+            } else {
+              await this.$router.push("/FirstPage");
+            }
+          }, 1000);
         }
-      })
-    }
-  }
+      });
+    },
+  },
 };
 </script>
 
@@ -227,7 +299,7 @@ export default {
   transition: 0.4s;
 
   border-radius: 20px !important;
-	border: none !important;
+  border: none !important;
   box-shadow: 0 0 7px rgba(204, 204, 204, 0.713);
   background-color: rgba(255, 255, 255, 0.5);
   backdrop-filter: blur(40px) brightness(105%);
@@ -337,6 +409,6 @@ export default {
 /deep/ .el-tabs__active-bar {
   height: 4px;
   border-radius: 2px;
-  background: #003B55;
+  background: #003b55;
 }
 </style>
