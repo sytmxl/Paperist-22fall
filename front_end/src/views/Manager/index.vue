@@ -65,7 +65,6 @@
 </template>
 
 <script>
-import TopBar from "@/components/TopBar";
 import $ from "jquery";
 export default {
   name: "index",
@@ -137,7 +136,8 @@ export default {
 }
 .el-card {
   margin: 30px 30px 0px 0px;
-  min-height: calc(90vh);
+  height: calc(95vh);
+  overflow-y: scroll;
   // z-index: 999;
   border-radius: 20px !important;
   border: none !important;
@@ -152,5 +152,8 @@ export default {
     background-color: rgba(255, 255, 255, 0.16) !important;
   }
   border-radius: 15px !important;
+}
+::-webkit-scrollbar {
+  display: none;
 }
 </style>

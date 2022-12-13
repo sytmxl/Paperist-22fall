@@ -40,7 +40,7 @@
             title="作者"
             style="margin-bottom: 10px"
             class="display_zone"
-            name="2"
+            name="1"
           >
             <!--        复选框组  作者-->
             <!-- <p style="text-align: left; color: #b3c0d1">作者</p> -->
@@ -62,7 +62,7 @@
             style="margin-bottom: 10px"
             class="display_zone"
             shadow="never"
-            name="3"
+            name="1"
           >
             <!--        复选框组 时间-->
             <!-- <el-collapse-item
@@ -115,7 +115,7 @@
       </el-aside>
       <!--      搜索结果-->
       <el-main v-loading="loading">
-        <el-row :gutter="20" style="margin-top: 50px">
+        <el-row id="result" :gutter="20" style="margin-top: 50px">
           <el-col
             :span="16"
             style="
@@ -657,16 +657,26 @@ export default {
   font-size: larger;
   margin-left: 20px;
   color: #003b55;
+  position: sticky;
+  top: 0;
 }
 
 /deep/ .el-collapse{
   border: none;
+}
+.el-collapse-item {
+  max-height: 40vh;
+  overflow-y: scroll;
+  
 }
 .el-aside {
   position: sticky !important;
   top: 0;
 }
 .left {
+  ::-webkit-scrollbar {
+    display: none;
+  }
   .el-card {
     margin: 15px 0px 15px 15px;
   }
@@ -687,7 +697,6 @@ export default {
     padding: 5px !important;
   }
   .display_zone {
-    
     margin-bottom: 15px !important;
   }
   .recommend {
@@ -750,5 +759,12 @@ export default {
     &:active {
       transform: scale(90%);
     }
+}
+.dark-mode {
+  #result {
+    * {
+      color: white;
+    }
+  }
 }
 </style>

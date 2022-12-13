@@ -1,19 +1,19 @@
 <template>
   <div>
     <div class="btn-box">
-      <el-button type="primary" @click="add">添加</el-button>
+      <el-button style="float: right; font-size: larger; border-radius: 100px; " type="primary" @click="add">+</el-button>
     </div>
-    <el-table :data="tableData" :style="'width: 70%; margin-left: 20%'">
+    <el-table :data="tableData" :style="'width: 100%;'">
       <el-table-column prop="id" label="ID" width="100"> </el-table-column>
       <el-table-column prop="name" label="用户名" width="100"> </el-table-column>
       <el-table-column prop="email" label="邮箱"> </el-table-column>
 
       <el-table-column label="操作">
         <template slot-scope="scope">
-          <el-button type="text" @click="edit(scope.row, scope.$index)"
+          <el-button type="default" @click="edit(scope.row, scope.$index)"
           >修改</el-button
           >
-          <el-button type="text" @click="del(scope.row, scope.$index)"
+          <el-button type="primary" @click="del(scope.row, scope.$index)"
           >删除</el-button
           >
         </template>

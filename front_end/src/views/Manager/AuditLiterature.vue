@@ -1,6 +1,6 @@
 <template>
   <div class="main">
-    <h1>待审核文献申诉</h1>
+    <h1 style="float: left; color: #003B55; margin-left: 20px;">待审核文献申诉</h1>
      <el-table :data="files">
       <el-table-column fixed prop="time" label="提交时间" width="200">
       </el-table-column>
@@ -21,13 +21,13 @@
         </template>
       </el-table-column>
     </el-table>
-    <el-dialog :visible.sync="dialogFormVisible">
+    <el-dialog :lock-scroll="false" :visible.sync="dialogFormVisible">
       <el-form
         :model="questionForm"
         ref="dataForm"
         label-position="left"
         label-width="90px"
-        style="width: 400px; margin-left: 50px"
+        style="width: 100%"
       >
         <el-form-item label="审核结果">
           <el-select
@@ -56,7 +56,7 @@
         <el-button type="primary" @click="createData()">确定</el-button>
       </div>
     </el-dialog>
-        <el-dialog :visible.sync="ContentVisible">
+        <el-dialog :lock-scroll="false" :visible.sync="ContentVisible">
          
       <span style="text-align:left;">
       <h2>问题描述</h2>
@@ -164,8 +164,8 @@ export default {
 
 <style scoped>
 .main {
-  margin-left: 5%;
-  margin-right: 5%;
+  /* margin-left: 5%;
+  margin-right: 5%; */
 }
 /* .el-button{
   float: right;
