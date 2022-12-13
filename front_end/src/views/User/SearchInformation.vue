@@ -614,7 +614,7 @@ export default {
   .display_zone {
     border-radius: 20px !important;
     margin: 5px;
-    box-shadow: 0 0 7px rgba(204, 204, 204, 0.713);
+    // box-shadow: 0 0 7px rgba(204, 204, 204, 0.713);
     background-color: rgba(255, 255, 255, 0.501) !important;
     backdrop-filter: blur(40px) brightness(95%);
     border: none;

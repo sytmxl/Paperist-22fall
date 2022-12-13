@@ -17,7 +17,7 @@
             <img
               v-if="!profile"
               class="picture"
-              src="../../assets/white.png"
+              src="../../assets/logo.jpg"
               alt=""
             />
             <img v-else class="picture" :src="profile" alt="" />
