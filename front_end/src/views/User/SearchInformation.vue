@@ -286,6 +286,7 @@ export default {
       this.es_request_body_raw = JSON.parse(
         JSON.stringify(this.es_request_body)
       );
+      // console.log(this.es_request_body)
       this.es_request_body.from = 0;
       this.es_request_body.size = this.page_size;
     }
@@ -464,8 +465,12 @@ export default {
       let condition_filter_query = JSON.parse(
         JSON.stringify(this.es_request_body_raw)
       );
-      if (condition_filter_query.query.function_score.query.bool.filter == null)
+      console.log(condition_filter_query)
+      if (condition_filter_query.query.function_score.query.bool.filter == null){
         condition_filter_query.query.function_score.query.bool.filter = [];
+        console.log(66666)
+      }
+
       for (let i in this.secondarySearchFilters_author) {
         condition_filter_query.query.function_score.query.bool.must.push({
           match_phrase: {

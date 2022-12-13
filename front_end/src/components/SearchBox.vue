@@ -284,7 +284,7 @@ export default {
           bool: {
             must: [],
             should: [],
-            //"filter":{}
+            filter:[]
           },
         },
       };
@@ -303,33 +303,33 @@ export default {
           es_request_body.query.bool.must.push({
             match: { keywords: this.common_search_query },
           });
-          es_request_body.query.bool.filter = {
+          es_request_body.query.bool.filter.push({
             term: { keywords: this.common_search_query },
-          };
+          }) 
           //es_request_body.aggs={"keywords":{"terms":{"field":"keywords","execution_hint": "map"}}}
           break;
         case 3:
           es_request_body.query.bool.must.push({
             match_phrase: { "authors.name": this.common_search_query },
           });
-          es_request_body.query.bool.filter = {
+          es_request_body.query.bool.filter.push( {
             match_phrase: { "authors.name": this.common_search_query },
-          };
+          });
           //es_request_body.aggs={"authors.name":{"terms":{"field":"authors.name.raw","execution_hint": "map"}}}
           break;
         case 4:
           es_request_body.query.bool.must.push({
             match: { abstract: this.common_search_query },
           });
-          es_request_body.query.bool.filter = {
+          es_request_body.query.bool.filter.push({
             term: { abstract: this.common_search_query },
-          };
+          });
           break;
         case 5:
           //es_request_body.query.bool.must.push({"match":{"venue.raw":this.common_search_query}})
-          es_request_body.query.bool.filter = {
+          es_request_body.query.bool.filter.push({
             match_phrase: { "venue.raw": this.common_search_query },
-          };
+          });
           //es_request_body.aggs={"venue":{"terms":{"field":"venue.raw","execution_hint": "map"}}}
           break;
         case 6:
@@ -341,6 +341,8 @@ export default {
           });
           return;
       }
+      // console.log(es_request_body)
+      // console.log(8888)
       this.$router.push({
         path: "/SearchInformation",
         query: {
