@@ -6,7 +6,7 @@
             <el-card v-if="author.length != 0">
               <div class="author_img" @click="goto_person()">
                   <img :src="author.image" alt=""  >
-                  <span>{{author.name}}</span>
+                  <span class="title">{{author.name}}</span>
               </div>
               <div class="author_info">
                 <span v-if="author.institution.length!=0">所属机构：<div v-for="i in author.institution" :key="i">{{i}}</div></span>
@@ -16,22 +16,31 @@
               </div>
             </el-card>
             <el-card style="margin-top:10px" v-if="note.length != 0">
-              <div class="note_info">
-                <span @click="goto_paper()" title="了解此论文" style="cursor:pointer; ">原论文：{{note.paper_name}}</span>
+              <!-- <div class="note_info">
                 <span>获赞：{{note.likes}}</span>
                 <span>评论：{{note.remarks}}</span>
                 <span>收藏：{{note.collections}}</span>
                 <span>发表日期：{{note.time.split("T")[0]}}</span>
+              </div> -->
+              <div class="note_info">
+                <span @click="goto_paper()" title="了解此论文" style="cursor:pointer; ">原论文：{{note.paper_name}}</span>
               </div>
-              <div class="response">
-                <el-button type="primary" @click="likeit()" v-if="note.like_flag">已赞</el-button>
-                <el-button type="primary" @click="likeit()" v-else>点赞</el-button>
-                <el-button type="primary" @click="collect()" v-if="note.collect_flag" title="取消收藏">已收藏</el-button>
-                <el-button type="primary" @click="collect()" v-else title="收藏">收藏</el-button>
-                <el-button v-if="author.subscribe_flag" title="取消关注" @click="subscribe(author)">已关注</el-button>
-                <el-button v-else title="关注" @click="subscribe(author)">关注</el-button>
+              <div class="info">
+                <div class="thumb">{{ note.likes }}</div>
+                <i class="el-icon-star-off" title="收藏"
+                  >&nbsp;{{ note.collections }}</i
+                >
+                <i class="el-icon-chat-round">&nbsp;{{ note.remarks }}</i>
               </div>
             </el-card>
+            <div class="response">
+              <el-button type="primary" @click="likeit()" v-if="note.like_flag">已赞</el-button>
+              <el-button type="primary" @click="likeit()" v-else>点赞</el-button>
+              <el-button type="primary" @click="collect()" v-if="note.collect_flag" title="取消收藏">已收藏</el-button>
+              <el-button type="primary" @click="collect()" v-else title="收藏">收藏</el-button>
+              <el-button v-if="author.subscribe_flag" title="取消关注" @click="subscribe(author)">已关注</el-button>
+              <el-button v-else title="关注" @click="subscribe(author)">关注</el-button>
+            </div>
         </div>
         <div class="notes">
           <div class="notes_title">
@@ -356,6 +365,15 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import "../../components/3infos.scss";
+.thumb {
+  @include thumb-base;
+  background-image: url("../../assets/icon/like.svg");
+}
+.thumb-filled {
+  @include thumb-base;
+  background-image: url("../../assets/icon/like-filled.svg");
+}
 .root{
   margin: 0 auto;
   height: 100%;
@@ -371,25 +389,44 @@ export default {
     height: fit-content;
     margin-bottom: 20px;
 }
+.title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #003b55;
+  transition: 0.3s;
+ 
+  &:hover {
+    cursor: pointer;
+    border-radius: 10px;
+    background: rgb(226, 226, 226);
+    padding: 5px;
+    transform: scale(110%);
+    // border: solid 2px #003b55;
+  }
+  &:active {
+    transform: scale(90%);
+  }
+}
+$size: 60px;
 .author img{
-    width: 100px;
-    height: 100px;
+    width: $size;
+    height: $size;
     border-radius: 50%;
     border: 1px solid grey;
     float: left;
 }
 .author_img{
-    width:100%;
-    height:120px;
-    &:hover {
+  width:100%;
+  height:$size + 5px;
+  &:hover {
     cursor: pointer;
   }
+  span {
+    float: left;
+    margin: 20px 0px 0px 10px;
+  }
 }
-.author_img span{
-    margin-top:50px;
-    float: right;
-    margin-right: 100px;
-}
+
 .author_info span{
     display: block;
     margin-top: 15px;
@@ -397,7 +434,8 @@ export default {
 }
 .note_info span{
     display: block;
-    margin-top: 15px;
+    // margin-top: 15px;
+    margin-bottom: 10px;
     text-align: left;
 }
 .notes_title span{

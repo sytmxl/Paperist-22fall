@@ -82,6 +82,7 @@ export default {
 
 <style lang="scss" scoped>
 @import "./link.scss";
+@import "./3infos.scss";
 .other_note {
   margin-top: 15px;
   .el-card {
@@ -103,22 +104,6 @@ export default {
   margin-bottom: 15px;
   margin-right: 40px;
 }
-.info {
-  float: right;
-}
-@mixin thumb-base {
-  height: 22px;
-  width: 30px;
-  position: relative;
-  padding-left: 20px;
-  margin: auto 0 auto 0px;
-  align-self: center;
-  display: inline-block;
-  background-repeat: no-repeat;
-  // transition: 0.3s;
-  transition: 0.8s cubic-bezier(0.23, 1.38, 0.65, 0.99) 0s;
-}
-
 .thumb {
   @include thumb-base;
   background-image: url("../assets/icon/like.svg");
@@ -126,19 +111,6 @@ export default {
 .thumb-filled {
   @include thumb-base;
   background-image: url("../assets/icon/like-filled.svg");
-}
-.info {
-  margin-bottom: 10px;
-  i {
-    border-radius: 10px;
-    transition: 0.2s;
-    margin: 3px 20px 3px 0px;
-    height: 100%;
-    // margin-left: 30px;
-  }
-  .thumb {
-    text-align: left;
-  }
 }
 .link1 {
   @include link();
