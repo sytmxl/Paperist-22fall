@@ -193,15 +193,20 @@ export default {
     transform: scale(95%);
   }
 }
+span {
+  width: fit-content;
+  display: flex;
+}
 .p1 {
   text-align: left; 
+  white-space: nowrap;
   color: #003b5596; 
-  display: inline;
+  // display: inline;
   // font-weight: bold;
 }
 .p2 {
   text-align: left; 
-  display: inline;
+  // display: inline;
 }
 #infocol {
   
