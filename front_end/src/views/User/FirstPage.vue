@@ -617,7 +617,7 @@ export default {
 
       // this.loading_interested = true;
       es_axios({
-        url: "es/paper/_search",
+        url: "paper/_search",
         method: "post",
         data: JSON.stringify(interested_search_request_body),
       }).then((res) => {

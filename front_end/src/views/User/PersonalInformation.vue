@@ -1211,7 +1211,7 @@ export default {
         match_phrase: { id: this.$route.params.id },
       };
       es_axios({
-        url: "/es/author/_search",
+        url: "/author/_search",
         method: "post",
         data: JSON.stringify(obj),
       }).then((res) => {
@@ -1235,7 +1235,7 @@ export default {
           match_phrase: { "authors.id": this.$route.params.id },
         };
         es_axios({
-          url: "/es/paper/_search",
+          url: "/paper/_search",
           method: "post",
           data: JSON.stringify(obj),
         }).then((res) => {
@@ -1287,7 +1287,7 @@ export default {
         match_phrase: { "authors.id": this.$route.params.id },
       };
       es_axios({
-        url: "/es/paper/_search",
+        url: "/paper/_search",
         method: "post",
         data: JSON.stringify(obj),
       }).then((res) => {
