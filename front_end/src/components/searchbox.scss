@@ -39,7 +39,7 @@
   animation: test 0.3s cubic-bezier(.23,1.38,.65,.99);
 }
 .dark-mode {
-  .el-card {
+  #advance .el-card {
     background-color: rgb(198, 203, 211) !important;
     box-shadow: none !important;
   }

@@ -241,25 +241,20 @@
       </el-main>
       <!--右侧栏-->
       <el-aside class="right">
-        <el-card
+        <!-- <el-card
           class="display_zone"
           shadow="never"
           style="margin-left: 5px;"
           :v-loading="loading_interested"
         >
-          <h3 style="text-align: left; margin-left: 20px; margin-bottom: 20px">
-            推荐
-          </h3>
-          <div
-            class="recommend"
-            v-for="recommend in recommends"
-            :key="recommend"
-            shadow="never"
-          >
-            <!-- <el-divider></el-divider> -->
-            <h5
-              @click="goto_interested(recommend._source.id)"
-            >
+        </el-card> -->
+        <h3 style="text-align: left; margin-left: 10px; margin-bottom: 20px;  color: #003b55;">
+          推荐
+        </h3>
+        <el-card class="display_zone" v-for="recommend in recommends"
+            :key="recommend">
+          <div class="recommend" shadow="never">
+            <h5 @click="goto_interested(recommend._source.id)">
               {{ recommend._source.title }}
             </h5>
           </div>
@@ -296,6 +291,7 @@ export default {
     await this.update_secondary_search_condition();
     await this.load_interested();
     $("#topbar").css("display", "block");
+    $(".el-collapse-item__warp").css("background-color", "transparent");
     this.isAdvanced = false;
   },
   data() {
@@ -618,7 +614,7 @@ export default {
     border-radius: 20px !important;
     margin: 5px;
     box-shadow: 0 0 7px rgba(204, 204, 204, 0.713);
-    // background-color: rgba(255, 255, 255, 0.501) !important;
+    background-color: rgba(255, 255, 255, 0.501) !important;
     backdrop-filter: blur(40px) brightness(95%);
     border: none;
     padding: 10px;
@@ -641,21 +637,20 @@ export default {
   color:#003b55;
   margin: 3px !important;
   float: left;
-  background-color: #c6d6dd !important;
+  background-color: #c6d6dd76 !important;
   transition: 0.3s;
 }
 /deep/.el-checkbox__inner {
   //通过动画表现勾选 不可去除背景
     // background-color: #003b5500 !important;
 }
-/deep/.el-collapse-item__warp {
-  background: none !important;
-  background-color: none !important;
+/deep/.el-collapse-item__wrap {
+  // background: none !important;
+  background-color: transparent;
+  // visibility: hidden;
+  border: none;
 }
-/deep/.el-collapse-item {
-  background: none !important;
-  background-color: none !important;
-}
+
 /deep/ .el-collapse-item__header {
   background: none !important;
   border: none;
@@ -666,7 +661,6 @@ export default {
 
 /deep/ .el-collapse{
   border: none;
- 
 }
 .el-aside {
   position: sticky !important;
@@ -678,8 +672,8 @@ export default {
   }
   .display_zone {
     margin: 5px;
-    box-shadow: 0 0 7px rgba(204, 204, 204, 0.713);
-    background-color: rgb(255, 255, 255) !important;
+    // box-shadow: 0 0 7px rgba(204, 204, 204, 0.713);
+    // background-color: rgb(255, 255, 255) !important;
     &:hover {
       border: solid 2px #003b55;
     }
@@ -687,18 +681,25 @@ export default {
 }
 .right {
   margin-right: 20px;
+  margin-left: 0;
+  
   .el-card__body {
     padding: 5px !important;
   }
+  .display_zone {
+    
+    margin-bottom: 15px !important;
+  }
   .recommend {
+    color: #003b55;
     // border-radius: 10px !important;
     background: none;
     width: 100%;
     max-height: 75px; 
-    margin-bottom: 20px;
+    // margin-bottom: 20px;
     transition: 0.3s;
     padding: 2px;
-    border-top: solid 1px #003b554d;
+    // border-top: solid 1px #003b554d;
     overflow: hidden;
     text-overflow: ellipsis;
     &:hover {
@@ -726,7 +727,7 @@ export default {
     border-radius: 20px !important;
     border: none;
     // box-shadow: 0 0 7px rgba(204, 204, 204, 0.713);
-    background-color: rgba(255, 255, 255, 0.5);
+    background-color: rgba(255, 255, 255, 0.5) !important;
     backdrop-filter: blur(40px) brightness(95%);
   }
 }
