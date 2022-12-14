@@ -89,8 +89,8 @@
             justify="center"
             class="copyright"
           >
-            <el-col :span="12">
-              <h6> CopyRight © 2022 北京航空航天大学软件学院 - 软工九组作业</h6>
+            <el-col class="max" :span="12">
+              <h6 class="max"> CopyRight © 2022 北京航空航天大学软件学院 - 软工九组作业</h6>
             </el-col>
           </el-row>
         </el-col>
@@ -182,6 +182,9 @@
     margin: 0 !important;
   }
   @media (max-width: 800px) {
+    .footer {
+      width: 100%;
+    }
     .footer-left-image {
       height: 100%;
     }
