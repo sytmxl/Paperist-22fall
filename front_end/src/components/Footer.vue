@@ -18,7 +18,7 @@
                 type="flex"
                 justify="start"
               >
-                <el-col :span="10">
+                <el-col :span="10" class="change">
                   <el-image
                     :src="logoUrl"
                     fit="fill"
@@ -27,7 +27,7 @@
                 </el-col>
                 <el-col
                   :span="19"
-                  class="footer-rows"
+                  class="footer-rows  abandon"
                 >
                   <div>
                     <h3>关于我们</h3>
@@ -54,7 +54,8 @@
                   <div style="margin-left: 40px">
                     <el-popover
                       placement="top-start"
-                      trigger="hover"
+                      trigger="click"
+                      style="cursor: pointer"
                     >
                       <img :src="wxUrl" style="width: 200px; height: 200px"/>
                       <span
@@ -66,7 +67,8 @@
                     </el-popover>
                     <el-popover
                       placement="top-start"
-                      trigger="hover"
+                      trigger="click"
+                      style="cursor: pointer"
                     >
                       <el-image :src="qqUrl" style="width: 200px; height: 200px"/>
                       <span
@@ -130,7 +132,7 @@
     }
     .footer {
       backdrop-filter: blur(40px) brightness(105%);
-      background-color: #003b5568;
+      background-color: #d2dfe568;
     }
 
   }
@@ -178,5 +180,13 @@
   <style>
   .el-divider--horizontal {
     margin: 0 !important;
+  }
+  @media (max-width: 800px) {
+    .footer-left-image {
+      height: 100%;
+    }
+    .change {
+      width: 100% !important;
+    }
   }
   </style>

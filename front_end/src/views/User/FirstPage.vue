@@ -9,7 +9,7 @@
     </el-row>
     <!-- <note :list="1" @reaction_note="aboutNoteInit()" /> -->
     <el-row :gutter="10" class="display_zone">
-      <el-col :offset="3" :span="12">
+      <el-col class="max" :offset="3" :span="12">
         <div class="leftone">
           <el-tabs v-model="activeName" @tab-click="handleClick">
             <el-tab-pane label="推荐文章" name="first">
@@ -141,7 +141,7 @@
           </el-tabs>
         </div>
       </el-col>
-      <el-col :offset="1" :span="6">
+      <el-col class="abandon" :offset="1" :span="6">
         <el-card class="hot">
           <div class="index_new_paper_rank_meau">
             <div class="meau_title index_bold_font">热门领域</div>
@@ -208,7 +208,7 @@
         <!-- <el-button type="primary" style="width: 45%" @click="uploadText()"
           >上传特定文献</el-button
         > -->
-        <el-button type="danger" style="width: 70%" @click="uploadTextMiss()"
+        <el-button class="abandon" type="danger" style="width: 70%" @click="uploadTextMiss()"
         >反馈文献缺失</el-button
         >
       </el-col>
@@ -634,16 +634,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@media (max-width: 800px) {
-  .header_show {
-    height: 45px;
-    background-color: #6cdc93 !important;
-    color: #fff;
-    font-size: 20px;
-    line-height: 45px;
-    text-align: center;
-  }
-}
+
 .search_input {
   margin: 10px auto;
   width: 800px;
@@ -654,7 +645,7 @@ export default {
 .home_logo {
   width: 250px;
   height: 180px;
-  margin: 50px auto -70px;
+  margin: 0px auto -30px;
 }
 .logo_area {
   width: 100%;
@@ -871,15 +862,43 @@ export default {
 .logo {
 }
 .hide {
-  width: 60vw;
+  width: 70vw;
   height: 50px;
   position: sticky;
   top: 0;
-  left: 20%;
+  left: 15%;
   background: #003b55;
   z-index: 999;
 }
 #topbar {
   animation: none !important;
+}
+@media (max-width: 800px) {
+  .header_show {
+    height: 45px;
+    background-color: #6cdc93 !important;
+    color: #fff;
+    font-size: 20px;
+    line-height: 45px;
+    text-align: center;
+  }
+  .hot {
+    display: none; 
+  }
+  .search_area {
+    width: 100%;
+  }
+  .search_input {
+    width: 100vw;
+    margin-left: 8vw;
+  }
+  .leftone {
+    width: 90%;
+    margin-left: 3%;
+  }
+  .max {
+    width: 100%;
+    margin-left: 0;
+  }
 }
 </style>
