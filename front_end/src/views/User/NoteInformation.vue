@@ -147,7 +147,7 @@ export default {
       methods:{
     creatcomment(){
       if(this.token!=null){
-        CreatCommentVisible = true
+        this.CreatCommentVisible = true
       }
       else{
         this.$message.warning("请先登录")

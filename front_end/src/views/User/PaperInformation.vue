@@ -406,7 +406,7 @@ export default {
   methods: {
     creatcomment(){
       if(this.token!=null){
-        CreatCommentVisible = true
+        this.CreatCommentVisible = true
       }
       else{
         this.$message.warning("请先登录")
@@ -417,7 +417,7 @@ export default {
     },
     uploadnote(){
       if(this.token!=null){
-        CreatMark = true
+        this.CreatMark = true
       }
       else{
         this.$message.warning("请先登录")
