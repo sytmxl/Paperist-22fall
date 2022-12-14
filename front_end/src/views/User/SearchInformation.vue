@@ -598,6 +598,8 @@ export default {
   // min-width: 100vh !important;
   align-self: center;
   min-height: calc(100vh) !important;
+  backdrop-filter: blur(10px) brightness(100%);
+
 }
 .el-aside {
   // background: none;
