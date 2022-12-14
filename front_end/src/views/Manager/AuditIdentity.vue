@@ -107,10 +107,10 @@ export default {
       let op;
       console.log(params);
       if(params=="pass"){
-        op = 0;
+        op = 1;
       }
       else{
-        op = 1;
+        op = 0;
       }
       this.dialogFormVisible = false;
       this.$axios({
