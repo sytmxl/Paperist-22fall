@@ -4,7 +4,7 @@
       <div id="logo1" class="home_logo"></div>
     </el-row>
     <div class="kuang">
-      <p>欢迎注册</p>
+      <!-- <p>欢迎注册</p> -->
       <el-form ref="form" :model="form" class="form" :rules="rules1">
 
         <el-form-item
@@ -59,11 +59,11 @@
         <el-form-item id="code" prop="code" :rules="[{ required: true, message: '请输入验证码' }]">
           <el-input placeholder="请输入验证码" type="text" clearable v-model="form.code" autocomplete="off"
             prefix-icon="el-icon-s-check" @keyup.enter.native="register" style="width: 60%; float: left"></el-input>
-          <el-button ref="btnSend" class="send" type="primary" style="float: right" @click="sendEmail(form.email)">发送验证码</el-button>
+          <el-button  ref="btnSend" class="send" type="primary" style="float: right; width: 38%" @click="sendEmail(form.email)">发送验证码</el-button>
         </el-form-item>
         <el-form-item>
-          <el-button class="btn_register" type="primary" @click="register" round>注&nbsp;册</el-button>
-          <el-button class="btn_reset" @click="resetForm('form')" round>重&nbsp;置</el-button>
+          <el-button style="width: 48%" class="btn_register" type="primary" @click="register" round>注&nbsp;册</el-button>
+          <el-button style="width: 48%" class="btn_reset" @click="resetForm('form')" round>重&nbsp;置</el-button>
         </el-form-item>
         <div class="re" @click="toFirst">返回首页</div>
         <div class="regis" @click="toRegister">已有账号？前去登录</div>
@@ -264,7 +264,7 @@ export default {
 .kuang {
   width: 400px;
   height: auto;
-  padding: 30px 25px 0px 25px;
+  padding: 30px 15px 0px 15px;
   /* border: 1px solid grey; */
   margin: 21px auto;
   // border-radius: 40px;
@@ -326,6 +326,7 @@ export default {
   font-family: Avenir, Helvetica, Arial, sans-serif;
 } */
 .regis {
+  width: 40%;
   font-size: 12px;
   float: right;
   color: #999;
@@ -353,14 +354,14 @@ export default {
   padding: 0px 0px 10px 0px;
 }
 
-.el-button:not(.send) {
-  border: none;
-  border-radius: 10px !important;
-  background-color: rgba(121, 167, 213, 0.73);
-  font-size: 20px;
-  width: 48%;
-  transition: 0.4s !important;
-}
+// .el-button:not(.send) {
+//   border: none;
+//   border-radius: 10px !important;
+//   background-color: rgba(121, 167, 213, 0.73);
+//   font-size: 20px;
+//   width: 48%;
+//   transition: 0.4s !important;
+// }
 
 // .el-button:not(.send):hover {
 //   border-radius: 10px !important;
@@ -380,24 +381,24 @@ export default {
 //   font-size: 20px;
 // }
 
-.send {
-  height: 40px !important;
-  border: 2px rgba(121, 167, 213, 0.377) solid;
-  border-radius: 20px !important;
-  background-color: rgba(121, 167, 213, 0);
-  color: rgb(255, 255, 255);
-  font-size: 20px;
-  padding: 1px;
-  width: 30%;
-  transition: 0.4s !important;
-}
+// .send {
+//   height: 40px !important;
+//   border: 2px rgba(121, 167, 213, 0.377) solid;
+//   border-radius: 20px !important;
+//   background-color: rgba(121, 167, 213, 0);
+//   color: rgb(255, 255, 255);
+//   font-size: 20px;
+//   padding: 1px;
+//   width: 30%;
+//   transition: 0.4s !important;
+// }
 
-.send:hover {
-  border-radius: 20px !important;
-  background-color: rgb(121, 167, 213);
-  color: rgb(255, 255, 255);
-  width: 33%;
-}
+// .send:hover {
+//   border-radius: 20px !important;
+//   background-color: rgb(121, 167, 213);
+//   color: rgb(255, 255, 255);
+//   width: 33%;
+// }
 //tabs
 .el-tabs--left {
   color: rgb(164, 170, 183) !important;
@@ -423,5 +424,14 @@ export default {
   height: 4px;
   border-radius: 2px;
   background: #003B55;
+}
+@media (max-width: 800px) {
+  .kuang {
+    width: 80%;
+    top: 65%;
+  }
+  .logo_area {
+    padding-top: 50px;
+  }
 }
 </style>

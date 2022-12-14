@@ -331,7 +331,7 @@ export default {
 .kuang {
   width: 400px;
   height: auto;
-  padding: 30px 25px;
+  padding: 0px 15px;
   /* border: 1px solid grey; */
   margin: 21px auto;
   line-height: 80px;
@@ -456,5 +456,14 @@ export default {
   height: 4px;
   border-radius: 2px;
   background: #003b55;
+}
+@media (max-width: 800px) {
+  .kuang {
+    width: 80%;
+    // top: 55%;
+  }
+  .logo_area {
+    padding-top: 50px;
+  }
 }
 </style>
