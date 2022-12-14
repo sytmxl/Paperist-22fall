@@ -1,6 +1,14 @@
 <template>
-  <div style="min-height:calc(100vh); width: calc(100vw)">
-    <div class="hide abandon"></div>
+  <div style="min-height:calc(100vh); width: 100%">
+    <div class="hide abandon">
+      <el-button
+          class="abandon"
+          type="primary"
+          size="mini"
+          style=" margin-bottom: 10px; margin-top: 13px; float: right;"
+          @click="uploadTextMiss()"
+          >反馈文献缺失</el-button>
+    </div>
     <el-row class="logo_area">
       <div id="logo1" class="home_logo"></div>
     </el-row>
@@ -8,10 +16,10 @@
       <SearchBox ref="searchBox" />
     </el-row>
     <!-- <note :list="1" @reaction_note="aboutNoteInit()" /> -->
-    <el-row :gutter="10" class="display_zone">
-      <el-col class="max" :offset="4" :span="10">
+    <el-row :gutter="10" class="display_zone max">
+      <el-col class="max" :offset="2" :span="11">
         <div class="leftone">
-          <el-tabs v-model="activeName" @tab-click="handleClick">
+          <el-tabs class="max" v-model="activeName" @tab-click="handleClick">
             <!-- <el-tab-pane label="推荐文章" name="first">
               <aboutCard
                   v-for="(item, index) in recommends"
@@ -139,15 +147,88 @@
             </el-tab-pane>
           </el-tabs>
         </div>
+        <el-card class="hot appear">
+          <div class="index_new_paper_rank_meau">
+            <div class="meau_title index_bold_font">推荐文章</div>
+
+            <!-- <div class="meau_params">热度</div> -->
+          </div>
+          <div class="index_new_paper_rank_content">
+            <!-- 遍历列表 -->
+            <aboutCard
+              v-for="(item, index) in recommends"
+              :key="index"
+              :name="item._source.title"
+              :author="item._source.authors"
+              :cite="item._source.n_citation"
+              :origin="item._source.venue"
+              :intro="item._source.abstract"
+              :date="item._source.year"
+              :paper_id="item._source.id"
+            />
+            <div id="load">
+              <el-button style="width: 90%" @click="loadRec()" v-loading="start"
+                >加载更多</el-button
+              >
+            </div>
+            <!-- <div v-for="(item, index) in hot" :key="item"> -->
+            <!-- 遍历对象属性 -->
+            <!-- <div v-for="(value, key) in item" :key="key">
+                <li style="list-style: none">
+                  <a>
+                    <div class="content_item_id">
+                      <span v-if="index === 0">
+                        <i style="color: #003b55">{{ index + 1 }}</i>
+                      </span>
+                      <span v-else-if="index === 1">
+                        <i style="color: #003b55">{{ index + 1 }}</i>
+                      </span>
+                      <span v-else-if="index === 2">
+                        <i style="color: #003b55">{{ index + 1 }}</i>
+                      </span>
+                      <span v-else>
+                        <i style="color: #9195a3">{{ index + 1 }}</i>
+                      </span>
+                    </div>
+                    <div class="content_item_title" @click="search_field(key)">
+                      {{ key }}
+                    </div>
+                    <div
+                        class="content_item_cite"
+                        v-if="index === 0"
+                        style="color: #003b55"
+                    >
+                      {{ parseInt(value) }}
+                    </div>
+                    <div
+                        class="content_item_cite"
+                        v-else-if="index === 1"
+                        style="color: #003b55"
+                    >
+                      {{ parseInt(value) }}
+                    </div>
+                    <div
+                        class="content_item_cite"
+                        v-else-if="index === 2"
+                        style="color: #003b55"
+                    >
+                      {{ parseInt(value) }}
+                    </div>
+                    <div
+                        class="content_item_cite"
+                        v-else
+                        style="color: #9195a3"
+                    >
+                      {{ parseInt(value) }}
+                    </div>
+                  </a>
+                </li>
+              </div>
+            </div> -->
+          </div>
+        </el-card>
       </el-col>
-      <el-col class="abandon" :offset="1" :span="6">
-        <el-button
-          class="abandon"
-          type="success"
-          style="width: 100%; margin-bottom: 10px; margin-top: -20px"
-          @click="uploadTextMiss()"
-          >反馈文献缺失</el-button
-        >
+      <el-col class="abandon" :offset="1" :span="8">
         <el-card class="hot">
           <div class="index_new_paper_rank_meau">
             <div class="meau_title index_bold_font">推荐文章</div>
@@ -713,8 +794,10 @@ export default {
   border-radius: 20px !important;
   background-color: rgba(255, 255, 255, 0.5);
   backdrop-filter: blur(40px) brightness(105%);
-  margin-bottom: 15px !important;
+  // margin-bottom: 15px !important;
+  margin-top: 40px;
   border: none;
+  height: 100%;
 }
 .dark-mode {
   .leftone {
@@ -899,12 +982,12 @@ export default {
 }
 @media (max-width: 800px) {
   .home_logo {
-    margin-top: 40px;
+    margin-top: 20px;
+    margin-bottom: 0px;
+    height: 100px;
   }
   
-  .hot {
-    display: none;
-  }
+  
   .search_area {
     width: 100%;
   }
@@ -914,11 +997,22 @@ export default {
   }
   .leftone {
     width: 90%;
-    margin-left: 3%;
+    margin-left: 1%;
+    margin-top: 0;
+  }
+  .hot {
+    width: 98%;
+    margin: 0 1%;
+    .el-card {
+      width: 100% !important;
+    }
   }
   .max {
-    width: 100%;
-    margin-left: 0;
+    width: 100% !important;
+    margin: 0 !important;
+  }
+  .appear {
+    display: block;
   }
 }
 </style>

@@ -16,7 +16,7 @@ let es_axios = axios.create({
     timeout: 1000 * 12,
     //注释掉即可本地前端调试
     // baseURL:"http://124.70.8.57/",
-    baseURL:"http://paperist.mosymosy.cn/",
+    // baseURL:"http://paperist.mosymosy.cn/",
     //baseURL:"https://123.249.72.97:9200/",
     headers: {
         'content-type': 'application/json',
