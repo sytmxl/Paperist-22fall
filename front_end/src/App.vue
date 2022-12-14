@@ -351,6 +351,11 @@ iframe {
 .appear {
   display: none;
 }
+.el-card {
+  ::-webkit-scrollbar {
+    display: none;
+  }
+}
 @media (max-width: 800px) {
   #app {
     background-image: none !important;
@@ -371,6 +376,9 @@ iframe {
   }
   .el-dialog {
     width: 100% !important;
+  }
+  .max {
+    width: 100%;
   }
 }
 </style>
