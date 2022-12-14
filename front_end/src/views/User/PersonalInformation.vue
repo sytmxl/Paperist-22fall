@@ -474,7 +474,7 @@
                           </p>
                           <br />
                           <h4>摘要:</h4>
-                          <p class="limit">{{ item.abstract }}</p>
+                          <p>{{ limitWords(item.abstract) }}</p>
                           <br />
                           <h4>收藏时间:</h4>
                           <p>{{ item.time }}</p>
@@ -2406,6 +2406,13 @@ export default {
         }, 1000);
       }
     },
+    limitWords(txt) {
+      let str = txt;
+      let max = 200;
+      if (str == null) return "";
+      if (str.length > max) str = str.substr(0, max) + "...";
+      return str;
+    },
   },
 };
 </script>
@@ -2596,6 +2603,9 @@ export default {
   }
   .noright{
     margin-right: 0 !important;
+  }
+  .title {
+    font-size: 18px;
   }
 }
 </style>
