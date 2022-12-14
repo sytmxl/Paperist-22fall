@@ -70,6 +70,7 @@
 
 <script>
 import CryptoJS from 'crypto-js'
+import qs from "qs";
 export default {
   name: "Register",
   mounted(){
