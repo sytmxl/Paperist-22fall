@@ -840,6 +840,10 @@
                     <el-card
                       class="box-card"
                       v-for="(item, index) in this.myComment"
+                      v-if="
+                      index >= (currentPage - 1) * pageSize &&
+                      index < currentPage * pageSize
+                    "
                       :key="index"
                     >
                       <el-button
@@ -912,6 +916,10 @@
                     <el-card
                       class="box-card"
                       v-for="(item, index) in this.commentToMe"
+                      v-if="
+                      index >= (currentPage - 1) * pageSize &&
+                      index < currentPage * pageSize
+                    "
                       :key="index"
                     >
                       <el-button
@@ -952,7 +960,7 @@
                       @current-change="handleCurrentChange"
                       background
                       layout="prev, pager, next, jumper"
-                      :total="myComment.length > 0 ? myComment.length : null"
+                      :total="commentToMe.length > 0 ? commentToMe.length : null"
                       style="margin-top: 40px"
                     >
                     </el-pagination>
