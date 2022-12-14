@@ -121,7 +121,7 @@ export default {
           claim_id:this.now_id
         },
       }).then((res) => {
-        if(op==0){
+        if(op==1){
           this.$message.success("身份已通过")
         }
         else{
