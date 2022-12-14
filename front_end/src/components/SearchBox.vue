@@ -1,5 +1,14 @@
 <template>
   <div class="search_input">
+    <!-- <el-button
+      class="appear"
+      type="primary"
+      size="mini"
+      icon="el-icon-search"
+      round
+      @click="search = !search"
+      >
+    </el-button> -->
     <el-row :gutter="10">
       <el-col :span="20">
         <el-input
@@ -210,6 +219,7 @@ export default {
       LangValue: "1",
       common_search_type: 1,
       isAdvanced: false,
+      search: false,
       searchMods: [
         { label: "篇名", value: 1 },
         { label: "关键词", value: 2 },

@@ -11,7 +11,7 @@ export default {
   components: {
     Footer: footer,
   },
-
+  
   methods: {
 
     toggleDarkLight() {

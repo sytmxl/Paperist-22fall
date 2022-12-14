@@ -6,8 +6,7 @@
         src="../assets/logo/cube_logo.svg"
         @click="gotoFirstPage"
       />
-      
-      <search-box/>
+      <search-box class=""/>
       <el-button
         size="mini"
         type="default"
