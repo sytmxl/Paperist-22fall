@@ -831,8 +831,10 @@ export default {
 }
 .index_new_paper_rank_content {
   margin-top: 20px;
-  max-height: 650px;
+  max-height: 800px;
+  // height: 100%;
   overflow-y:auto;
+  overflow-x: hidden;
 }
 
 .index_new_paper_rank_content li {
@@ -1003,6 +1005,7 @@ export default {
   .hot {
     width: 98%;
     margin: 0 1%;
+    overflow-x: hidden;
     .el-card {
       width: 100% !important;
     }
@@ -1013,6 +1016,13 @@ export default {
   }
   .appear {
     display: block;
+  }
+  .index_new_paper_rank_content {
+    padding-right: 4px;
+    padding-top: 4px;
+  }
+  .meau_title {
+    margin-top: 1px;
   }
 }
 </style>

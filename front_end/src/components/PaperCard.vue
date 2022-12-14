@@ -6,7 +6,7 @@
     >
       {{ title }}
     </h3>
-    <p v-if="content != '未收录摘要'" style="text-align: left; margin-top: 1%; margin-right: 1%">
+    <p class="limit" v-if="content != '未收录摘要'" style="text-align: left; margin-top: 1%; margin-right: 1%">
       {{ limitWords(content) }}
     </p>
 
@@ -123,8 +123,9 @@ export default {
     },
     limitWords(txt) {
       let str = txt;
+      let max = 200;
       if (str == null) return "";
-      if (str.length > 500) str = str.substr(0, 500) + "...";
+      if (str.length > max) str = str.substr(0, max) + "...";
       return str;
     },
    
@@ -218,5 +219,8 @@ span {
 #infocol {
   
   float: left;
+}
+.limit {
+  max-height: 50px;
 }
 </style>

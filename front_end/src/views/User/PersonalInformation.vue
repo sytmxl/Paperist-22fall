@@ -295,7 +295,7 @@
 
         <div style="margin-top: 50px">
           <!--vmodel为打开时默认位置-->
-          <el-tabs v-model="DefaultLocation" @tab-click="handleClickAll"
+          <el-tabs class="max" v-model="DefaultLocation" @tab-click="handleClickAll"
             ><!--stretch="true"表示平分空间-->
             <el-tab-pane label="作者文献" name="zero" v-if="isScholar">
               <h2 style="text-align: left">
@@ -474,7 +474,7 @@
                           </p>
                           <br />
                           <h4>摘要:</h4>
-                          <p>{{ item.abstract }}</p>
+                          <p class="limit">{{ item.abstract }}</p>
                           <br />
                           <h4>收藏时间:</h4>
                           <p>{{ item.time }}</p>
@@ -2547,13 +2547,29 @@ export default {
 .el-button {
   z-index: 999;
 }
+.limit {
+  max-height: 100px;
+  overflow-y: hidden;
+  text-overflow: ellipsis;
+}
 #paper {
 }
 @media (max-width: 800px) {
   .mainCard {
     width: 96%;
     margin-left: 2%;
-    padding: 0;
+    padding: 0 !important;
+  }
+  /deep/.el-card__body {
+    padding: 10px !important;
+  }
+  .el-descriptions {
+    padding: 0 10px !important;
+  }
+  .el-container {
+    /deep/.el-card__body {
+      padding: 15px !important;
+    }
   }
   .el-main {
     padding: 0;
