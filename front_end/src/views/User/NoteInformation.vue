@@ -76,7 +76,7 @@
 					<div class="remark">
 						<el-card>
 							<div class="creat_comment">
-								<el-button id="comment" @click="CreatCommentVisible =true">我要评论</el-button>
+								<el-button id="comment" @click="creatcomment()">我要评论</el-button>
 							</div>
 							<div v-if="remark_list.length != 0">
 								<div class="comment" v-for="i in remark_list" :key="i">
@@ -145,7 +145,17 @@ export default {
         }
     },
       methods:{
-
+    creatcomment(){
+      if(this.token!=null){
+        CreatCommentVisible = true
+      }
+      else{
+        this.$message.warning("请先登录")
+        setTimeout(()=>{this.$router.push({
+        name: 'login',
+      })},1000)
+      }
+    },
      goto_person(){
       let routeData = this.$router.resolve({
         name: 'PersonalInformation',

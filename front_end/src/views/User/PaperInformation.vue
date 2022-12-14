@@ -133,7 +133,7 @@
                 style="height: 1000px; overflow-y: scroll"
               >
                 <div class="creat_comment">
-                  <el-button @click="CreatCommentVisible = true"
+                  <el-button @click="creatcomment()"
                     >我要评论</el-button
                   >
                 </div>
@@ -157,7 +157,7 @@
                 style="height: 1000px; overflow-y: scroll"
               >
                 <div class="creat_mark">
-                  <el-button @click="CreatMark = true">上传笔记</el-button>
+                  <el-button @click="uploadnote()">上传笔记</el-button>
                 </div>
                 <div v-if="Object.keys(mark_list).length != 0">
                   <div class="mark" v-for="i in mark_list" :key="i">
@@ -404,6 +404,28 @@ export default {
   },
 
   methods: {
+    creatcomment(){
+      if(this.token!=null){
+        CreatCommentVisible = true
+      }
+      else{
+        this.$message.warning("请先登录")
+        setTimeout(()=>{this.$router.push({
+        name: 'login',
+      })},1000)
+      }
+    },
+    uploadnote(){
+      if(this.token!=null){
+        CreatMark = true
+      }
+      else{
+        this.$message.warning("请先登录")
+        setTimeout(()=>{this.$router.push({
+        name: 'login',
+      })},1000)
+      }
+    },
     warning() {
       this.$message.warning("请先登录");
     },
