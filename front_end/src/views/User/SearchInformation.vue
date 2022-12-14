@@ -598,7 +598,7 @@ export default {
   // min-width: 100vh !important;
   align-self: center;
   min-height: calc(100vh) !important;
-  backdrop-filter: blur(10px) brightness(100%);
+  // backdrop-filter: blur(10px) brightness(100%);
 
 }
 .el-aside {
@@ -734,8 +734,8 @@ export default {
     border: none;
     
     // box-shadow: 0 0 7px rgba(204, 204, 204, 0.713);
-    background-color: rgba(255, 255, 255, 0.5) !important;
-    backdrop-filter: blur(40px) brightness(95%);
+    background-color: rgba(255, 255, 255, 0.5) ;
+    backdrop-filter: blur(40px) brightness(95%) !important;
   }
 }
 .search_input {

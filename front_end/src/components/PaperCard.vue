@@ -59,10 +59,10 @@
       </el-col>
       <el-col :span="8">
         <el-button-group style="float: right; margin-bottom: 2%">
-          <el-button type="default" title="分享" v-clipboard:copy="'http://paperist.mosymosy.cn/PaperInformation/'+paper_data._source.id" v-clipboard:success="onCopy" v-clipboard:error="onError">
+          <el-button style="float: right; margin-bottom: 10px;" type="default" title="分享" v-clipboard:copy="'http://paperist.mosymosy.cn/PaperInformation/'+paper_data._source.id" v-clipboard:success="onCopy" v-clipboard:error="onError">
             <i class="el-icon-share"></i>
           </el-button>
-          <el-button type="primary" title="引用" @click="quote(paper_data._source.id)">
+          <el-button style="float: right" type="primary" title="引用" @click="quote(paper_data._source.id)">
             <i class="el-icon-paperclip"></i>
           </el-button>
         </el-button-group>
@@ -220,7 +220,7 @@ span {
   
   float: left;
 }
-.limit {
-  max-height: 50px;
+@media (max-width: 800px) {
+
 }
 </style>
