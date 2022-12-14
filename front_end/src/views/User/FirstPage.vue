@@ -1,10 +1,10 @@
 <template>
-  <div style="min-height:calc(100vh) width:calc(100vh)">
-    <div class="hide"></div>
+  <div style="min-height:calc(100vh); width: calc(100vw)">
+    <div class="hide abandon"></div>
     <el-row class="logo_area">
       <div id="logo1" class="home_logo"></div>
     </el-row>
-    <el-row class="search_area">
+    <el-row class="search_area abandon">
       <SearchBox ref="searchBox" />
     </el-row>
     <!-- <note :list="1" @reaction_note="aboutNoteInit()" /> -->
@@ -898,14 +898,10 @@ export default {
   animation: none !important;
 }
 @media (max-width: 800px) {
-  .header_show {
-    height: 45px;
-    background-color: #6cdc93 !important;
-    color: #fff;
-    font-size: 20px;
-    line-height: 45px;
-    text-align: center;
+  .home_logo {
+    margin-top: 40px;
   }
+  
   .hot {
     display: none;
   }

@@ -105,7 +105,7 @@
                 { required: true, message: '请输入邮箱地址', trigger: 'blur' },
                 {
                   type: 'email',
-                  message: '请输入正确的邮箱 地址',
+                  message: '请输入正确的邮箱地址',
                   trigger: ['blur', 'change'],
                 },
               ]"
@@ -284,7 +284,7 @@ export default {
           console.log(res.data);
           if (res.data.errornumber == "-1") {
             this.$message({
-              message: "用户名账号不存在，请您检查输入",
+              message: "您输入的密码不正确，请您检查输入",
               type: "warning",
             });
           } else if (res.data.errornumber == "-2") {
@@ -331,7 +331,7 @@ export default {
 .kuang {
   width: 400px;
   height: auto;
-  padding: 30px 25px;
+  padding: 0px 15px;
   /* border: 1px solid grey; */
   margin: 21px auto;
   line-height: 80px;
@@ -456,5 +456,14 @@ export default {
   height: 4px;
   border-radius: 2px;
   background: #003b55;
+}
+@media (max-width: 800px) {
+  .kuang {
+    width: 80%;
+    // top: 55%;
+  }
+  .logo_area {
+    padding-top: 50px;
+  }
 }
 </style>

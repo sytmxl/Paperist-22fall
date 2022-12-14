@@ -5,7 +5,7 @@
         <div class="main">
           <el-card class="box-card" v-if="info_list.length != 0">
             <div style="margin-bottom: 20px">
-              <span style="font-size: 35px; font-weight: 700; color: #003b55">{{
+              <span class="size" style="font-size: 35px; font-weight: 700; color: #003b55">{{
                 info_list.title
               }}</span>
               <el-divider></el-divider>
@@ -41,7 +41,7 @@
             </div>
             <div class="text item">年份：{{ info_list.year }}</div>
             <div class="text item">DOI：{{ info_list.DOI }}</div>
-            <div class="button">
+            <div class="button abandon">
               <el-button
                 round
                 icon="el-icon-star-off"
@@ -71,6 +71,36 @@
                 >分享</el-button
               >
             </div>
+            <div class="button appear">
+              <el-button
+                round
+                icon="el-icon-star-off"
+                v-if="!collect_flag"
+                @click="collect()"
+                title="收藏"
+                ></el-button
+              >
+              <el-button
+                round
+                icon="el-icon-star-on"
+                v-else
+                @click="collect()"
+                title="取消收藏"
+                ></el-button
+              >
+              <el-button round icon="el-icon-link" @click="quote()"
+                ></el-button
+              >
+              <el-button
+                round
+                icon="el-icon-warning-outline"
+                @click="token ? (ComplainVisible = true) : warning()"
+                ></el-button
+              >
+              <el-button round icon="el-icon-share" @click="ShareVisible = true"
+                ></el-button
+              >
+            </div>
           </el-card>
           <el-card v-else>
             <el-skeleton :rows="10" animated />
@@ -90,6 +120,56 @@
           </el-card>
           <el-card style="margin-top: 30px" v-else>
             <el-skeleton :rows="4" animated />
+          </el-card>
+        </div>
+        <div class="about appear">
+          <el-card class="gap" v-if="info_list.length != 0">
+            <div class="about_content" style="width: 100%; height: fit-content">
+              来源期刊
+              <div class="ogjournal">
+                <a
+                  style="text-decoration: none"
+                  class="journal_content"
+                  @click="goto_search(info_list.venue.raw)"
+                  v-if="info_list.venue != null"
+                  >{{ info_list.venue.raw }}</a
+                >
+                <a
+                  style="text-decoration: none"
+                  class="journal_content"
+                  @click="goto_search(info_list.venue.raw)"
+                  v-else
+                  >暂无数据</a
+                >
+              </div>
+            </div>
+          </el-card>
+          <el-card style="margin-top: 20px" v-else>
+            <el-skeleton :rows="3" animated />
+          </el-card>
+          <el-card class="gap" v-if="info_list.length != 0">
+            <div class="about_content" style="width: 100%; height: fit-content">
+              研究领域
+              <div class="domain">
+                <el-tag
+                  class="domain_content"
+                  v-for="i in info_list.keywords"
+                  :key="i"
+                  >{{ i }}</el-tag
+                >
+              </div>
+            </div>
+          </el-card>
+          <el-card style="margin-top: 30px" v-else>
+            <el-skeleton :rows="4" animated />
+          </el-card>
+          <el-card class="gap" v-if="info_list.length != 0">
+            <div class="about_content">
+              <div id="echarts_box" style="width: 100%; height: 300px"></div>
+            </div>
+          </el-card>
+          <el-card style="margin-top: 30px" v-else>
+            <el-skeleton :rows="7" animated />
           </el-card>
         </div>
         <div class="remark">
@@ -301,7 +381,7 @@
           />
         </el-dialog>
       </el-main>
-      <el-aside>
+      <el-aside class="abandon">
         <div class="about">
           <el-card class="gap" v-if="info_list.length != 0">
             <div class="about_content" style="width: 100%; height: fit-content">
@@ -962,5 +1042,30 @@ a:focus {
   background-color: #003b55 !important;
   border: none;
   color: white;
+}
+@media (max-width: 800px) {
+  .root {
+    width: 100%;
+    padding: 0 !important;
+  }
+  .size {
+    font-size: 25px !important;
+  }
+  .button {
+    // display: flex;
+    * {
+      
+      margin-right: 10px !important;
+    }
+  }
+  .about {
+    width: 100%;
+    margin: 0 !important;
+  }
+  .remark {
+    .el-main {
+      padding: 0;
+    }
+  }
 }
 </style>

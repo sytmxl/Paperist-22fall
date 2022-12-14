@@ -1,7 +1,7 @@
 <template> 
     <el-container class="root">
         <!-- <TopBar/>  -->
-       <el-main class="left base" v-if="author.length != 0">
+       <el-main class="left base abandon" v-if="author.length != 0">
         <div class="author" >
             <el-card v-if="author.length != 0">
               <div class="author_img" @click="goto_person()">
@@ -73,6 +73,46 @@
 							</div>
 						</el-card> -->
 					</div>
+          <div class="author appear" >
+            <el-card v-if="author.length != 0">
+              <div class="author_img" @click="goto_person()">
+                  <img :src="author.image" alt=""  >
+                  <span class="title">{{author.name}}</span>
+              </div>
+              <div class="author_info">
+                <span v-if="author.institution.length!=0">所属机构：<div v-for="i in author.institution" :key="i">{{i}}</div></span>
+                <span v-else>所属机构：暂无数据</span>
+                <span>发表论文数：{{author.paper_num}}</span>
+                <span>发表笔记数：{{author.note_num}}</span>
+              </div>
+            </el-card>
+            <el-card style="margin-top:10px" v-if="note.length != 0">
+              <!-- <div class="note_info">
+                <span>获赞：{{note.likes}}</span>
+                <span>评论：{{note.remarks}}</span>
+                <span>收藏：{{note.collections}}</span>
+                <span>发表日期：{{note.time.split("T")[0]}}</span>
+              </div> -->
+              <div class="note_info">
+                <span @click="goto_paper()" title="了解此论文" style="cursor:pointer; ">原论文：{{note.paper_name}}</span>
+              </div>
+              <div class="info">
+                <div class="thumb">{{ note.likes }}</div>
+                <i class="el-icon-star-off" title="收藏"
+                  >&nbsp;{{ note.collections }}</i
+                >
+                <i class="el-icon-chat-round">&nbsp;{{ note.remarks }}</i>
+              </div>
+            </el-card>
+            <div class="response">
+              <el-button type="primary" @click="likeit()" v-if="note.like_flag">已赞</el-button>
+              <el-button type="primary" @click="likeit()" v-else>点赞</el-button>
+              <el-button type="primary" @click="collect()" v-if="note.collect_flag" title="取消收藏">已收藏</el-button>
+              <el-button type="primary" @click="collect()" v-else title="收藏">收藏</el-button>
+              <el-button v-if="author.subscribe_flag" title="取消关注" @click="subscribe(author)">已关注</el-button>
+              <el-button v-else title="关注" @click="subscribe(author)">关注</el-button>
+            </div>
+          </div>
 					<div class="remark">
 						<el-card>
 							<div class="creat_comment">
@@ -88,7 +128,15 @@
 						</el-card>
 
 					</div>
-
+          
+          <div class="notes appear">
+            <div class="notes_title">
+              <span>作者其他笔记</span>
+            </div>
+            <div v-for="i in list" :key="i">
+                <noteCard :note="i"/>
+            </div>
+          </div>
        </el-main>
        	<el-dialog
 								title="留下你的评论吧~"
@@ -578,5 +626,21 @@ $size: 60px;
 		border-radius: 15px !important;
 		border: none !important;
 	}
+}
+@media (max-width: 800px) {
+  .right {
+    width: 100%;
+    padding: 4% !important;
+    margin-right: 0;
+    box-shadow: none;
+    margin: 0%;
+    margin-top: 60px;
+    .el-main {
+      padding: 0;
+    }
+    .remark {
+      margin-bottom: 20px;
+    }
+  }
 }
 </style>

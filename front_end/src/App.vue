@@ -369,5 +369,8 @@ iframe {
   ::-webkit-scrollbar {
     display: none;
   }
+  .el-dialog {
+    width: 100% !important;
+  }
 }
 </style>
