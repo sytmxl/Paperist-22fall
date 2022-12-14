@@ -765,7 +765,7 @@ export default {
       }).then((res) => {
         this.info_list = res.data.hits.hits[0]._source;
         this.authors = res.data.hits.hits[0]._source.authors;
-        this.chart_init(this.info_list.n_citation);
+        this.chart_init(res.data.hits.hits[0]._source.n_citation);
         // for(var i=0;i<res.data.hits.hits[0]._source.authors.length;i++){
         //   this.aboutListInit(res.data.hits.hits[0]._source.authors[i])
         // }
