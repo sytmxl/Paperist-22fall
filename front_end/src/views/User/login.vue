@@ -116,7 +116,6 @@
                 placeholder="请输入注册时所用邮箱，用于找回密码"
                 type="email"
                 autocomplete="off"
-                clearable
                 prefix-icon="el-icon-postcard"
               ></el-input>
             </el-form-item>

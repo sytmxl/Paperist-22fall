@@ -523,7 +523,7 @@ export default {
     },
     goto_person(id) {
       if(this.token!=null){
-         if (id == null) {
+        if (id == null) {
         this.$message.warning("作者信息不完整，无法查看其主页");
       } else {
         // 延时一秒跳转至作者主页

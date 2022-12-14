@@ -59,7 +59,7 @@
       </el-col>
       <el-col :span="8">
         <el-button-group style="float: right; margin-bottom: 2%">
-          <el-button type="default" title="分享" v-clipboard:copy="'http://124.70.8.57/'+paper_data._source.id" v-clipboard:success="onCopy" v-clipboard:error="onError">
+          <el-button type="default" title="分享" v-clipboard:copy="'http://124.70.8.57/PaperInformation/'+paper_data._source.id" v-clipboard:success="onCopy" v-clipboard:error="onError">
             <i class="el-icon-share"></i>
           </el-button>
           <el-button type="primary" title="引用" @click="quote(paper_data._source.id)">
