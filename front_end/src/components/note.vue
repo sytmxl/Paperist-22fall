@@ -328,4 +328,9 @@ a:hover {
 .thumb, .thumb-filled {
   margin-left: 20px;
 }
+@media (max-width: 800px) {
+  .el-main {
+    margin-top: 15px;
+  }
+}
 </style>
