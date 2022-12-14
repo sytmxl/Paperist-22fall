@@ -350,12 +350,12 @@
                 论文列表
               </h2>
               <el-divider />
-              <div style="margin-top: 15px; margin-bottom: 15px; width: 30%">
+              <div class="max" style="margin-top: 15px; margin-bottom: 15px; width: 30%">
                 <div style="margin-top: 15px; display: flex">
                   <el-input
                     placeholder="请输入你需要搜索的文献"
                     v-model="selectScholarLiterature"
-                    class="input-with-select"
+                    class="p1 noright"
                     style="width: 400px; margin-right: 30px"
                   >
                     <el-button
@@ -367,8 +367,9 @@
                   <el-select
                     v-model="ScholarLiteratureSort"
                     placeholder="请选择排序方式"
+                    class="p2"
                     @change="changeScholarLiteratureSort"
-                    style="position: absolute; right: 0"
+                    style="position: absolute; right: 0;"
                   >
                     <el-option
                       v-for="item in ScholarLiteratureOptions"
@@ -421,7 +422,7 @@
                     style="margin-left: 1%"
                     v-if="paperCollection.length != 0"
                   >
-                    <div class="max" style="margin-top: 15px; width: 30%">
+                    <div class="half" style="margin-top: 15px; width: 30%">
                       <div style="margin-top: 15px">
                         <el-input
                           placeholder="请输入你需要搜索的文献"
@@ -510,7 +511,7 @@
                     style="margin-left: 1%"
                     v-if="noteCollection.length != 0"
                   >
-                    <div class="max" style="margin-top: 15px; width: 30%">
+                    <div class="half" style="margin-top: 15px; width: 30%">
                       <div style="margin-top: 15px">
                         <el-input
                           placeholder="请输入你需要搜索的笔记"
@@ -589,7 +590,7 @@
             <el-tab-pane label="个人订阅" name="second" v-if="isClaim">
               <div v-if="subscribes.length != 0">
                 <div style="margin-left: 1%">
-                  <div class="max" style="margin-top: 15px; width: 30%">
+                  <div class="half" style="margin-top: 15px; width: 30%">
                     <el-input
                       placeholder="请输入你需要搜索的订阅"
                       v-model="selectSubscribe"
@@ -662,7 +663,7 @@
               v-if="(!isOthers || (isOthers && isNoteVisible)) && isClaim"
             >
               <div style="margin-left: 1%" v-if="notes.length != 0">
-                <div class="max" style="margin-top: 15px; width: 30%">
+                <div class="half" style="margin-top: 15px; width: 30%">
                   <el-input
                     placeholder="请输入你需要搜索的笔记"
                     v-model="selectNote"
@@ -740,7 +741,7 @@
               v-if="!isScholar && !isOthers && isClaim"
             >
               <div style="margin-left: 1%" v-if="myComment.length != 0">
-                <div class="max" style="margin-top: 15px; width: 30%">
+                <div class="half" style="margin-top: 15px; width: 30%">
                   <el-input
                     placeholder="请输入你需要搜索的评论"
                     v-model="selectComment"
@@ -821,7 +822,7 @@
                     ><i class="el-icon-message-solid"></i>我给他人的</span
                   >
                   <div v-if="myComment.length != 0">
-                    <div class="max" style="margin-top: 15px; width: 30%">
+                    <div class="half" style="margin-top: 15px; width: 30%">
                       <el-input
                         placeholder="请输入你需要搜索的评论"
                         v-model="selectComment"
@@ -897,7 +898,7 @@
                     ><i class="el-icon-message-solid"></i>他人给我的</span
                   >
                   <div v-if="commentToMe.length != 0">
-                    <div class="max" style="margin-top: 15px; width: 30%">
+                    <div class="half" style="margin-top: 15px; width: 30%">
                       <el-input
                         placeholder="请输入你需要搜索的评论"
                         v-model="selectCommentToMe"
@@ -2574,12 +2575,25 @@ export default {
   .max {
     width: 100% !important;
   }
+  .half {
+    width: 100% !important;
+  }
+  .p1 {
+    width: 60% !important;
+  }
+  .p2 {
+    width: 38% !important;
+  }
   .box-card1 {
     width: 95%;
     margin-left: 0;
   }
+  
   .noleft {
     margin-left: 0 !important;
+  }
+  .noright{
+    margin-right: 0 !important;
   }
 }
 </style>
