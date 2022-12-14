@@ -317,7 +317,6 @@
                 <a
                   style="text-decoration: none"
                   class="journal_content"
-                  @click="goto_search(info_list.venue.raw)"
                   v-else
                   >暂无数据</a
                 >
@@ -523,7 +522,8 @@ export default {
       }
     },
     goto_person(id) {
-      if (id == null) {
+      if(this.token!=null){
+         if (id == null) {
         this.$message.warning("作者信息不完整，无法查看其主页");
       } else {
         // 延时一秒跳转至作者主页
@@ -536,6 +536,11 @@ export default {
           window.open(routeData.href, "_blank");
         }, 1000);
       }
+      }
+      else{
+        this.$message.warning("请先登录")
+      }
+     
     },
     // paperInfoInit(){
     //   this.$axios({

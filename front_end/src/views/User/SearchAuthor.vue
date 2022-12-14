@@ -74,6 +74,7 @@ export default {
         //   },
         // },
       ],
+      token:sessionStorage.getItem("token")
     };
   },
   methods: {
@@ -81,12 +82,17 @@ export default {
       this.$router.push("/firstPage");
     },
     toPersonalInfo(id) {
-      console.log(1);
-      let routeData = this.$router.resolve({
+      if(this.token!=null){
+        let routeData = this.$router.resolve({
         name: "PersonalInformation",
         params: { id: id },
       });
       window.open(routeData.href, "_blank");
+      }
+      else{
+        this.$message.warning("请先登录")
+      }
+      
     },
   },
   created() {
