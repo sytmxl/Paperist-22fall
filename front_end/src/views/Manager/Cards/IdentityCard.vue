@@ -10,7 +10,7 @@
        
     </span>
     <div style="height:500px">
-      <iframe style="width: 100%; height: 100%" :src="'/pdfjs-2.14.305-legacy-dist/web/viewer.html?file='+src" title="myFrame"></iframe>
+      <iframe style="width: 100%; height: 100%" :src="'/static/pdf/web/viewer.html?file='+pro()" title="myFrame"></iframe>
     </div>
     </div>
   </div>
@@ -23,10 +23,17 @@ export default {
     return {
       intro:this.$route.params.intro,
       src:this.$route.params.src,
+      url:"",
+      // src:encodeURIComponent('http://124.70.8.57/pdf/'+str.split('/')[str.split('/').length-1]),
       };
   },
 
   methods:{
+    pro(){
+      let str = this.src.split('/')
+      let url = encodeURIComponent('http://124.70.8.57/pdf/'+str[str.length-1])
+      return url;
+    },
     goBack() {
         window.history.go(-1)
     }
