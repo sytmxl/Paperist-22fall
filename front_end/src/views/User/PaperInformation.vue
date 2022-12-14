@@ -476,7 +476,7 @@ export default {
       remark_list: [],
       mark_list: [],
       authors: [],
-      path: "http://124.70.8.57" + this.$route.path,
+      path: "http://paperist.mosymosy.cn" + this.$route.path,
       collect_flag: "",
       token: sessionStorage.getItem("token"),
     };
