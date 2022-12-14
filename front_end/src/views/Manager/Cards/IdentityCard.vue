@@ -32,6 +32,7 @@ export default {
     pro(){
       let str = this.src.split('/')
       let url = encodeURIComponent('http://124.70.8.57/pdf/'+str[str.length-1])
+      let url = encodeURIComponent('http://paperist.mosymosy.cn/pdf/'+str[str.length-1])
       return url;
     },
     goBack() {
