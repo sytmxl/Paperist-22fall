@@ -72,9 +72,9 @@ export default {
       }).then((res) => {
         this.$message.success("上传成功，正在审核");
         // 延时2s显示审核通过
-        setTimeout(() => {
-          this.$message.success("恭喜您审核通过，认证成功！");
-        }, 2000);
+        // setTimeout(() => {
+        //   this.$message.success("恭喜您审核通过，认证成功！");
+        // }, 2000);
         let msg = "success";
         this.$emit("finish_upload", msg);
       });
