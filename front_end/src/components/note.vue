@@ -48,11 +48,17 @@ export default {
         //   id:this.list.id
         //   }
         // })
-        let routeData = this.$router.resolve({
+        if(this.token!=null){
+          let routeData = this.$router.resolve({
         name: 'PersonalInformation',
         params: { id: this.list.id }
       })
       window.open(routeData.href, '_blank')
+        }
+        else{
+          this.$message.warning("请先登录")
+        }
+        
     },
    goto_note(){
     //  this.$router.push({

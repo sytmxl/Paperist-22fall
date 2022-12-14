@@ -46,6 +46,7 @@ export default {
     cite: { default: "" },
     date: { default: "" },
     paper_id: "",
+    token:sessionStorage.getItem("token")
   },
   methods: {
     limitWords(txt) {
@@ -68,6 +69,25 @@ export default {
         params: { paper_id: paper_id },
       });
       window.open(routeData.href, "_blank");
+    },
+    goto_person(id){
+        // this.$router.push({
+        //   name:'PersonalInformation',
+        //   params:{
+        //   id:this.list.id
+        //   }
+        // })
+        if(this.token!=null){
+          let routeData = this.$router.resolve({
+        name: 'PersonalInformation',
+        params: { id: id }
+      })
+      window.open(routeData.href, '_blank')
+        }
+        else{
+          this.$message.warning("请先登录")
+        }
+        
     },
   },
 };

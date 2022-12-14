@@ -840,6 +840,10 @@
                     <el-card
                       class="box-card"
                       v-for="(item, index) in this.myComment"
+                      v-if="
+                      index >= (currentPage - 1) * pageSize &&
+                      index < currentPage * pageSize
+                    "
                       :key="index"
                     >
                       <el-button
@@ -912,6 +916,10 @@
                     <el-card
                       class="box-card"
                       v-for="(item, index) in this.commentToMe"
+                      v-if="
+                      index >= (currentPage - 1) * pageSize &&
+                      index < currentPage * pageSize
+                    "
                       :key="index"
                     >
                       <el-button
@@ -927,15 +935,15 @@
                         icon="el-icon-more-outline"
                         circle
                         size="small"
-                        @click="jumpMyComment(item.id)"
+                        @click="jumpMyComment(item.paper_id)"
                       ></el-button>
                       <div style="margin-bottom: 10px; text-align: left">
                         <h4>文献标题:</h4>
                         <p
                           style="color: mediumpurple; cursor: pointer"
-                          @click="jumpPaperCollection(item.id)"
+                          @click="jumpPaperCollection(item.paper_id)"
                         >
-                          {{ item.name }}
+                          {{ item.paper_name }}
                         </p>
                         <br />
                         <h4>评论内容:</h4>
@@ -952,7 +960,7 @@
                       @current-change="handleCurrentChange"
                       background
                       layout="prev, pager, next, jumper"
-                      :total="myComment.length > 0 ? myComment.length : null"
+                      :total="commentToMe.length > 0 ? commentToMe.length : null"
                       style="margin-top: 40px"
                     >
                     </el-pagination>

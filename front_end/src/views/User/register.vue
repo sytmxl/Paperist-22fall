@@ -5,7 +5,7 @@
     </el-row>
     <div class="kuang">
       <p>欢迎注册</p>
-      <el-form ref="form" :model="form" class="form">
+      <el-form ref="form" v-model="form" class="form">
         <el-form-item prop="email"
           :rules="[{ required: true, message: '邮箱不能为空', trigger: 'blur' }, { type: 'email', message: '请输入正确的邮箱地址', trigger: ['blur', 'change'] }]">
           <el-input v-model="form.email" placeholder="请输入邮箱" type="email" autocomplete="off" clearable
@@ -70,6 +70,7 @@
 
 <script>
 import CryptoJS from 'crypto-js'
+import qs from "qs";
 export default {
   name: "Register",
   mounted(){
@@ -90,19 +91,19 @@ export default {
     };
   },
   methods: {
-    sendEmail(email){
-       this.$axios({
-        method: "post",
-        url: "app/send_email/",
-        data: {
-          email: email,
-          type: 0,
-        },
-      })
-        .then((res) => {
-         this.$message.success("验证码已发送，请您查收")
-        });
-    },
+    // sendEmail(email){
+    //    this.$axios({
+    //     method: "post",
+    //     url: "app/send_email/",
+    //     data: {
+    //       email: email,
+    //       type: 0,
+    //     },
+    //   })
+    //     .then((res) => {
+    //      this.$message.success("验证码已发送，请您查收")
+    //     });
+    // },
     register() {
       if (
         this.form.username === "" ||
