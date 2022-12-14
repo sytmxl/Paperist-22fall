@@ -397,7 +397,7 @@ export default {
       remark_list: [],
       mark_list: [],
       authors: [],
-      path: "localhost:8080" + this.$route.path,
+      path: "http://124.70.8.57" + this.$route.path,
       collect_flag: "",
       token: sessionStorage.getItem("token"),
     };
