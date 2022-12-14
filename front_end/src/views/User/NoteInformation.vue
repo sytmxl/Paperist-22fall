@@ -338,7 +338,8 @@ export default {
         })
      },
      authorInit(){
-      this.$axios({
+      if(this.token==null){
+         this.$axios({
             url:"paper/authorInitNoToken/",
             method:"post",
             data:{
@@ -347,6 +348,18 @@ export default {
         }).then(res=>{
             this.author = res.data.author_info[0]
         })
+      }
+      else{
+        this.$axios({
+            url:"paper/authorInit/",
+            method:"post",
+            data:{
+                note_id:this.$route.params.note_id
+            }
+        }).then(res=>{
+            this.author = res.data.author_info[0]
+        })
+      }
      },
      otherNoteInit(){
       this.$axios({
