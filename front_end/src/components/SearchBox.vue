@@ -416,14 +416,14 @@ export default {
     advanced_search_jump() {
       // 输入不能为空
       if (
-        this.advanced_search_query.fuzzy_search === null ||
-        this.advanced_search_query.must_contain === null ||
-        this.advanced_search_query.at_least_one === null ||
-        this.advanced_search_query.contains_none === null ||
-        this.advanced_search_query.authors === null ||
-        this.advanced_search_query.organization === null ||
-        this.advanced_search_query.venue === null ||
-        this.advanced_search_query.year_begin === null ||
+        this.advanced_search_query.fuzzy_search === null &&
+        this.advanced_search_query.must_contain === null &&
+        this.advanced_search_query.at_least_one === null &&
+        this.advanced_search_query.contains_none === null&&
+        this.advanced_search_query.authors === null &&
+        this.advanced_search_query.organization === null &&
+        this.advanced_search_query.venue === null &&
+        this.advanced_search_query.year_begin === null &&
         this.advanced_search_query.year_end === null
       ) {
         this.$message({
