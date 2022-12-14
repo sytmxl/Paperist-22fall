@@ -5,14 +5,18 @@
     </el-row>
     <div class="kuang">
       <p>欢迎注册</p>
-      <el-form ref="form" v-model="form" class="form">
-        <el-form-item prop="email"
-          :rules="[{ required: true, message: '邮箱不能为空', trigger: 'blur' }, { type: 'email', message: '请输入正确的邮箱地址', trigger: ['blur', 'change'] }]">
+      <el-form ref="form" :model="form" class="form" :rules="rules1">
+
+        <el-form-item
+            prop="email"
+            :rules="[{ required: true, message: '邮箱不能为空', trigger: 'blur' }, { type: 'email', message: '请输入正确的邮箱地址', trigger: ['blur', 'change'] }]"
+        >
+
           <el-input v-model="form.email" placeholder="请输入邮箱" type="email" autocomplete="off" clearable
             prefix-icon="el-icon-postcard">
           </el-input>
         </el-form-item>
-        <el-form-item prop="username" :rules="[{ required: true, message: '用户名不能为空' }]">
+        <el-form-item prop="username" :rules="[{ required: true, message: '用户名不能为空'}]">
           <el-input v-model="form.username" placeholder="请输入用户名" type="text" autocomplete="off" clearable
             prefix-icon="el-icon-user" maxlength="15">
             <el-dropdown slot="suffix" size="mini" placement="top-start">
@@ -24,7 +28,7 @@
             </el-dropdown>
           </el-input>
         </el-form-item>
-        <el-form-item prop="realname" :rules="[{ required: true, message: '真实姓名不能为空' }]">
+        <el-form-item prop="realname" :rules="[{ required: true, message: '真实姓名不能为空'}]">
           <el-input v-model="form.realname" placeholder="请输入真实姓名" type="realname" autocomplete="off" clearable
             prefix-icon="el-icon-user" maxlength="15">
             <el-dropdown slot="suffix" size="mini" placement="top-start">
@@ -36,7 +40,7 @@
             </el-dropdown>
           </el-input>
         </el-form-item>
-        <el-form-item id="password1" prop="password1" :rules="[{ required: true, message: '密码不能为空' }]">
+        <el-form-item id="password1" prop="password1" :rules="[{ required: true, message: '密码不能为空'}]">
           <el-input prefix-icon="el-icon-lock" placeholder="请输入密码" show-password type="password" clearable
             v-model="form.password1" autocomplete="off" @keyup.enter.native="register">
             <el-dropdown slot="suffix" size="mini" placement="top-start">

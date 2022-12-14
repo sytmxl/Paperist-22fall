@@ -105,7 +105,7 @@
                 { required: true, message: '请输入邮箱地址', trigger: 'blur' },
                 {
                   type: 'email',
-                  message: '请输入正确的邮箱 地址',
+                  message: '请输入正确的邮箱地址',
                   trigger: ['blur', 'change'],
                 },
               ]"
@@ -285,7 +285,7 @@ export default {
           console.log(res.data);
           if (res.data.errornumber == "-1") {
             this.$message({
-              message: "用户名账号不存在，请您检查输入",
+              message: "您输入的密码不正确，请您检查输入",
               type: "warning",
             });
           } else if (res.data.errornumber == "-2") {
