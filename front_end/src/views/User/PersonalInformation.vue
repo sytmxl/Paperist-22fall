@@ -1547,14 +1547,7 @@ export default {
         obj.query.bool.filter = {
           match_phrase: { "authors.id": this.$route.params.id },
         };
-        axios({
-          headers: {
-            "content-type": "application/json",
-          },
-          auth: {
-            username: "elastic",
-            password: "BZYvLA-d*pS0EpI7utmJ",
-          },
+        es_axios({
           url: "/es/paper/_search",
           method: "post",
           data: JSON.stringify(obj),
@@ -1607,14 +1600,7 @@ export default {
       obj.query.bool.filter = {
         match_phrase: { "authors.id": this.$route.params.id },
       };
-      axios({
-        headers: {
-          "content-type": "application/json",
-        },
-        auth: {
-          username: "elastic",
-          password: "BZYvLA-d*pS0EpI7utmJ",
-        },
+      es_axios({
         url: "/es/paper/_search",
         method: "post",
         data: JSON.stringify(obj),
