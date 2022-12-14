@@ -62,7 +62,7 @@ export default {
                 pdf:formdata.get('pdf')
             }
         }).then(res=>{
-            this.$message.success("上传成功，等待审核")
+            this.$message.success("上传成功")
             let msg="success"
             this.$emit('finish_upload',msg)
         })
