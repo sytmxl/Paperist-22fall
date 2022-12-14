@@ -11,7 +11,7 @@ export default {
   components: {
     Footer: footer,
   },
-  
+
   methods: {
 
     toggleDarkLight() {
@@ -368,6 +368,9 @@ iframe {
   }
   ::-webkit-scrollbar {
     display: none;
+  }
+  .el-dialog {
+    width: 100% !important;
   }
 }
 </style>

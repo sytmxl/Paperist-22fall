@@ -264,7 +264,7 @@ export default {
 .kuang {
   width: 400px;
   height: auto;
-  padding: 30px 15px 0px 15px;
+  padding: 17px 15px 0px 15px;
   /* border: 1px solid grey; */
   margin: 21px auto;
   // border-radius: 40px;

@@ -8,10 +8,10 @@
     > -->
     <el-container>
       <el-main>
-        <el-page-header @back="goback" content="个人主页" title="">
-        </el-page-header>
+        <!-- <el-page-header @back="goback" content="个人主页" title="">
+        </el-page-header> -->
         <el-row id="info" style="margin-top: 20px; margin-bottom: 20px">
-          <el-col v-if="realname != '暂无数据'" :span="10">
+          <el-col class="max" v-if="realname != '暂无数据'" :span="10">
             <!--:span占据行数-->
             <!--头像-->
             <img
@@ -42,11 +42,11 @@
               </div>
             </el-upload>
           </el-col>
-          <el-col
+          <el-col 
             v-if="realname != '暂无数据'"
-            class="des"
+            class="des max"
             :span="11"
-            style="margin-top: 1.5%"
+            style="margin-top: 20px"
           >
             <!--column2表示每行两个-->
             <el-descriptions
@@ -404,14 +404,13 @@
               >
               </el-pagination>
             </el-tab-pane>
-            <el-tab-pane
-              label="个人收藏"
+            <el-tab-pane label="个人收藏"
               name="first"
               v-if="(!isOthers || (isOthers && isCollectionVisible)) && isClaim"
             >
               <el-tabs
                 v-model="collectionDefaultLocation"
-                tab-position="left"
+                
                 @tab-click="handleClickCollection"
               >
                 <el-tab-pane name="collectionFirst">
@@ -422,7 +421,7 @@
                     style="margin-left: 1%"
                     v-if="paperCollection.length != 0"
                   >
-                    <div style="margin-top: 15px; width: 30%">
+                    <div class="max" style="margin-top: 15px; width: 30%">
                       <div style="margin-top: 15px">
                         <el-input
                           placeholder="请输入你需要搜索的文献"
@@ -511,7 +510,7 @@
                     style="margin-left: 1%"
                     v-if="noteCollection.length != 0"
                   >
-                    <div style="margin-top: 15px; width: 30%">
+                    <div class="max" style="margin-top: 15px; width: 30%">
                       <div style="margin-top: 15px">
                         <el-input
                           placeholder="请输入你需要搜索的笔记"
@@ -590,7 +589,7 @@
             <el-tab-pane label="个人订阅" name="second" v-if="isClaim">
               <div v-if="subscribes.length != 0">
                 <div style="margin-left: 1%">
-                  <div style="margin-top: 15px; width: 30%">
+                  <div class="max" style="margin-top: 15px; width: 30%">
                     <el-input
                       placeholder="请输入你需要搜索的订阅"
                       v-model="selectSubscribe"
@@ -663,7 +662,7 @@
               v-if="(!isOthers || (isOthers && isNoteVisible)) && isClaim"
             >
               <div style="margin-left: 1%" v-if="notes.length != 0">
-                <div style="margin-top: 15px; width: 30%">
+                <div class="max" style="margin-top: 15px; width: 30%">
                   <el-input
                     placeholder="请输入你需要搜索的笔记"
                     v-model="selectNote"
@@ -736,13 +735,12 @@
                 ></el-empty>
               </div>
             </el-tab-pane>
-            <el-tab-pane
-              label="我的评论"
+            <el-tab-pane label="我的评论"
               name="fourth"
               v-if="!isScholar && !isOthers && isClaim"
             >
               <div style="margin-left: 1%" v-if="myComment.length != 0">
-                <div style="margin-top: 15px; width: 30%">
+                <div class="max" style="margin-top: 15px; width: 30%">
                   <el-input
                     placeholder="请输入你需要搜索的评论"
                     v-model="selectComment"
@@ -809,8 +807,7 @@
                 ></el-empty>
               </div>
             </el-tab-pane>
-            <el-tab-pane
-              label="评论管理"
+            <el-tab-pane label="评论管理"
               name="fourth"
               v-if="isScholar && !isOthers && isClaim"
             >
@@ -824,7 +821,7 @@
                     ><i class="el-icon-message-solid"></i>我给他人的</span
                   >
                   <div v-if="myComment.length != 0">
-                    <div style="margin-top: 15px; width: 30%">
+                    <div class="max" style="margin-top: 15px; width: 30%">
                       <el-input
                         placeholder="请输入你需要搜索的评论"
                         v-model="selectComment"
@@ -900,7 +897,7 @@
                     ><i class="el-icon-message-solid"></i>他人给我的</span
                   >
                   <div v-if="commentToMe.length != 0">
-                    <div style="margin-top: 15px; width: 30%">
+                    <div class="max" style="margin-top: 15px; width: 30%">
                       <el-input
                         placeholder="请输入你需要搜索的评论"
                         v-model="selectCommentToMe"
@@ -973,14 +970,13 @@
                 </el-tab-pane>
               </el-tabs>
             </el-tab-pane>
-            <el-tab-pane
-              label="个人设置"
+            <el-tab-pane label="个人设置"
               name="fifth"
               v-if="!isOthers && isClaim"
             >
               <div style="margin-left: 1%">
                 <el-card class="box-card1">
-                  <el-form :inline="true">
+                  <!-- <el-form :inline="true">
                     <el-form-item
                       label="系统配色方案"
                       style="margin-left: 100px"
@@ -1008,7 +1004,7 @@
                         </el-select>
                       </div>
                     </el-form-item>
-                  </el-form>
+                  </el-form> -->
 
                   <el-form :inline="true">
                     <el-form-item label="笔记下是否可评论" style="">
@@ -1018,6 +1014,7 @@
                       ></el-switch>
                     </el-form-item>
                     <el-form-item
+                      class="noleft"
                       label="笔记是否他人可见"
                       style="margin-left: 100px"
                     >
@@ -1037,6 +1034,7 @@
                     </el-form-item>
                     <el-form-item
                       label="收藏是否可见"
+                      class="noleft"
                       style="margin-left: 100px"
                     >
                       <el-switch
@@ -2563,5 +2561,25 @@ export default {
   z-index: 999;
 }
 #paper {
+}
+@media (max-width: 800px) {
+  .mainCard {
+    width: 96%;
+    margin-left: 2%;
+    padding: 0;
+  }
+  .el-main {
+    padding: 0;
+  }
+  .max {
+    width: 100% !important;
+  }
+  .box-card1 {
+    width: 95%;
+    margin-left: 0;
+  }
+  .noleft {
+    margin-left: 0 !important;
+  }
 }
 </style>
