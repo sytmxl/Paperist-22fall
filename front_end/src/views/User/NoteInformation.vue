@@ -382,7 +382,7 @@ export default {
             // this.pdf_src = res.data.note_info[0].note_url
             let str = res.data.note_info[0].note_url.split('/')
             // this.pdf_src = encodeURIComponent('http://124.70.8.57/pdf/'+str[str.length-1])
-            this.pdf_src = encodeURIComponent('http://paperist.mosymosy.cn/'+str[str.length-1])
+            this.pdf_src = encodeURIComponent('http://paperist.mosymosy.cn/pdf/'+str[str.length-1])
             this.note = res.data.note_info[0]
         })
      },
