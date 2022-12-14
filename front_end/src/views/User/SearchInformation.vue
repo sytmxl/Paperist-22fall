@@ -2,7 +2,7 @@
   <el-container>
     <el-container id="SearchInformation">
       <!--      左侧栏-->
-      <el-aside class="left">
+      <el-aside class="left abandon">
         <!-- <h3
           style="
             text-align: left;
@@ -116,13 +116,15 @@
       </el-aside>
       <!--      搜索结果-->
       <el-main v-loading="loading">
-        <el-row id="result" :gutter="20" style="margin-top: 50px">
+        <el-row id="result abandon" :gutter="20" style="margin-top: 50px">
           <el-col
-            :span="16"
+            class="abandon"
+            :span="20"
             style="
               text-align: left;
               margin-left: 20px;
               color: #003B55;
+              margin-bottom: 20px;
             "
           >
             找到{{
@@ -135,7 +137,7 @@
                 : ""
             }}</el-col
           >
-          <el-col
+          <!-- <el-col
             :span="4"
             style="
               text-align: left;
@@ -161,7 +163,7 @@
               class="el-icon-sort"
               @click="sortReserve"
             ></i>
-          </el-col>
+          </el-col> -->
         </el-row>
         <!-- <el-pagination
           style="margin-bottom: 20px"
@@ -232,6 +234,7 @@
             </div>
           </el-dialog>
         <el-pagination 
+            class="abandon"
             @current-change="change_page"
             :current-page="currentPage"
             :page-sizes="[10, 25, 50, 100]"
@@ -239,9 +242,18 @@
             layout="total, sizes, prev, pager, next, jumper"
             :total="resultNum">
         </el-pagination>
+        <el-pagination 
+            class="appear"
+            @current-change="change_page"
+            :current-page="currentPage"
+            :page-sizes="[10, 25, 50, 100]"
+            :page-size= "page_size"
+            layout="prev, pager, next"
+            :total="resultNum">
+        </el-pagination>
       </el-main>
       <!--右侧栏-->
-      <el-aside class="right">
+      <el-aside class="right abandon">
         <!-- <el-card
           class="display_zone"
           shadow="never"
@@ -583,7 +595,7 @@ export default {
 #SearchInformation {
   // margin-top: 60px;
   width: calc(85vw);
-  min-width: 100vh !important;
+  // min-width: 100vh !important;
   align-self: center;
   min-height: calc(100vh) !important;
 }
@@ -718,6 +730,7 @@ export default {
   .el-card {
     border-radius: 20px !important;
     border: none;
+    
     // box-shadow: 0 0 7px rgba(204, 204, 204, 0.713);
     background-color: rgba(255, 255, 255, 0.5) !important;
     backdrop-filter: blur(40px) brightness(95%);
@@ -748,6 +761,14 @@ export default {
     * {
       color: white;
     }
+  }
+}
+@media (max-width: 800px) {
+  .el-main {
+    // width: 100%;
+  }
+  .el-card {
+    // width: 100%;
   }
 }
 </style>

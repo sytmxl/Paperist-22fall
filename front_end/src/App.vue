@@ -348,5 +348,26 @@ iframe {
 .material-theme .menu_item_expand {
   background: rgba(0, 0, 0, 0.04) !important;
 }
-
+.appear {
+  display: none;
+}
+@media (max-width: 800px) {
+  #app {
+    background-image: none !important;
+    background-color: rgb(255, 255, 255);
+  }
+  #app.dark-mode {
+    background-image: none !important;
+    background-color: #001C2A;
+  }
+  .abandon {
+    display: none !important;
+  }
+  .appear {
+    display: block;
+  }
+  ::-webkit-scrollbar {
+    display: none;
+  }
+}
 </style>
