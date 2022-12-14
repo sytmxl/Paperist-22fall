@@ -106,7 +106,7 @@ export default {
     },
     init() {
       this.$axios({
-        url: "http://127.0.0.1:8000/manager/managePaperComplain/",
+        url: "manager/managePaperComplain/",
         method: "post",
       }).then((res) => {
         this.files = res.data.data
@@ -139,7 +139,7 @@ export default {
       }
       this.dialogFormVisible = false;
       this.$axios({
-        url: "http://127.0.0.1:8000/manager/getPaperComplain/",
+        url: "manager/getPaperComplain/",
         method: "post",
         data: {
           flag:op,

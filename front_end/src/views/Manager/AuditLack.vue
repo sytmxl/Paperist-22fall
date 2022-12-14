@@ -129,7 +129,7 @@ export default {
       }
       this.dialogFormVisible = false;
       this.$axios({
-        url: "http://127.0.0.1:8000/manager/getMissingPaper/",
+        url: "manager/getMissingPaper/",
         method: "post",
         data: {
           missingpaper_id:this.now_id
@@ -147,7 +147,7 @@ export default {
     },
     init(){
       this.$axios({
-        url: "http://127.0.0.1:8000/manager/manageMissingPaper/",
+        url: "manager/manageMissingPaper/",
         method: "post",
         data: {
          

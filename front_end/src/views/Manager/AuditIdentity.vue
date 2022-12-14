@@ -114,7 +114,7 @@ export default {
       }
       this.dialogFormVisible = false;
       this.$axios({
-        url: "http://127.0.0.1:8000/manager/getClaimAuthor/",
+        url: "manager/getClaimAuthor/",
         method: "post",
         data: {
           flag:op,
@@ -132,7 +132,7 @@ export default {
     },
     init(){
       this.$axios({
-        url: "http://127.0.0.1:8000/manager/manageClaimAuthor/",
+        url: "manager/manageClaimAuthor/",
         method: "post",
         data: {
         },

@@ -105,7 +105,7 @@ export default {
       }
       this.dialogFormVisible = false;
       this.$axios({
-        url: "http://127.0.0.1:8000/manager/getTipOff/",
+        url: "manager/getTipOff/",
         method: "post",
         data: {
           flag:op,
@@ -125,7 +125,7 @@ export default {
     },
     init() {
       this.$axios({
-        url: "http://127.0.0.1:8000/manager/manageTipOff/",
+        url: "manager/manageTipOff/",
         method: "post",
       }).then((res) => {
         this.notes = res.data.note
