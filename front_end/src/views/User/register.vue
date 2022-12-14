@@ -90,6 +90,19 @@ export default {
     };
   },
   methods: {
+    sendEmail(email){
+       this.$axios({
+        method: "post",
+        url: "app/send_email/",
+        data: {
+          email: email,
+          type: 0,
+        },
+      })
+        .then((res) => {
+         this.$message.success("验证码已发送，请您查收")
+        });
+    },
     register() {
       if (
         this.form.username === "" ||
