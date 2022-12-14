@@ -927,15 +927,15 @@
                         icon="el-icon-more-outline"
                         circle
                         size="small"
-                        @click="jumpMyComment(item.id)"
+                        @click="jumpMyComment(item.paper_id)"
                       ></el-button>
                       <div style="margin-bottom: 10px; text-align: left">
                         <h4>文献标题:</h4>
                         <p
                           style="color: mediumpurple; cursor: pointer"
-                          @click="jumpPaperCollection(item.id)"
+                          @click="jumpPaperCollection(item.paper_id)"
                         >
-                          {{ item.name }}
+                          {{ item.paper_name }}
                         </p>
                         <br />
                         <h4>评论内容:</h4>
